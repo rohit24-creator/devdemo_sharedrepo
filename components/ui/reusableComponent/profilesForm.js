@@ -171,6 +171,18 @@ export function ReusableForm({ sections = [] }) {
               />
             </PopoverContent>
           </Popover>
+          ) : type === "file" ? (
+              <Input
+                type="file"
+                onChange={(e) => field.onChange(e.target.files?.[0])}
+                className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
+              />
+            ) : type === "textarea" ? (
+              <textarea
+                {...field}
+                rows={2}
+                className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
+              />
         ) : (
               <Input
                 {...field}
