@@ -37,18 +37,37 @@ export default function ReusableTable({
   showActions = true,
 }) {
   const [displayCount, setDisplayCount] = useState(30);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(rows.length / displayCount);
+  const paginatedRows = rows.slice(
+    (currentPage - 1) * displayCount,
+    currentPage * displayCount
+  );
 
   return (
     <Card>
       <CardContent className="p-4">
-        {/* Top Controls */}
-        <div className="flex justify-between items-center mb-4">
-          {/* Left Button */}
-          <Button className="bg-[#006397] text-white px-3 py-1 rounded-sm text-sm">
-            Toggle Columns
-          </Button>
+        <div className="mb-4">
+        </div>
 
-          {/* Right Controls */}
+        {/* Controls */}
+        <div className="flex justify-between items-center mb-4">
+          {/* Toggle Columns Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-[#006397] text-white px-3 py-1 rounded-sm text-sm">
+                Toggle Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="start">
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>View</DropdownMenuItem>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Right side: Pagination & Display count */}
           <div className="flex items-center space-x-2">
             <label htmlFor="display" className="text-sm font-medium">
               Display
@@ -56,7 +75,10 @@ export default function ReusableTable({
 
             <Select
               value={displayCount.toString()}
-              onValueChange={(value) => setDisplayCount(Number(value))}
+              onValueChange={(value) => {
+                setDisplayCount(Number(value));
+                setCurrentPage(1);
+              }}
             >
               <SelectTrigger className="w-[70px] h-[32px] text-sm px-2">
                 <SelectValue placeholder="Select" />
@@ -72,32 +94,48 @@ export default function ReusableTable({
 
             <span className="text-sm">records</span>
 
-            {/* Pagination arrows */}
-            <Button size="sm" variant="outline">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            >
               {"<"}
             </Button>
-            <Button size="sm" variant="outline">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={currentPage === totalPages}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+            >
               {">"}
             </Button>
           </div>
         </div>
 
+        {/* Divider */}
+        <hr className="border-t border-gray-300 mb-4" />
+
         {/* Table */}
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">
+            <TableRow className="border-b border-gray-200">
+              <TableHead className="w-12 px-4 py-2">
                 <Checkbox />
               </TableHead>
 
               {showActions && rows.length > 0 && (
-                <TableHead className="w-12" />
+                <TableHead className="w-12 px-4 py-2" />
               )}
 
-              {columns.map((col) => (
+              {columns.map((col, index) => (
                 <TableHead
                   key={col.accessorKey}
-                  className="text-[#006397] text-left text-sm font-semibold"
+                  className={`text-[#006397] text-left text-sm font-semibold px-6 py-3 ${
+                    index !== 0 ? "border-l border-gray-300" : ""
+                  }`}
                 >
                   {col.header}
                 </TableHead>
@@ -106,15 +144,15 @@ export default function ReusableTable({
           </TableHeader>
 
           <TableBody>
-            {rows.length > 0 ? (
-              rows.slice(0, displayCount).map((row, rowIndex) => (
+            {paginatedRows.length > 0 ? (
+              paginatedRows.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
-                  <TableCell>
+                  <TableCell className="px-4 py-3">
                     <Checkbox />
                   </TableCell>
 
                   {showActions && (
-                    <TableCell>
+                    <TableCell className="px-6 py-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -130,8 +168,10 @@ export default function ReusableTable({
                             <DropdownMenuItem
                               key={idx}
                               onClick={() => action.onClick(row)}
+                              className="flex items-center gap-2"
                             >
-                              {action.icon} {action.label}
+                              {action.icon}
+                              {action.label}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuContent>
@@ -140,7 +180,7 @@ export default function ReusableTable({
                   )}
 
                   {columns.map((col) => (
-                    <TableCell key={col.accessorKey} className="text-sm">
+                    <TableCell key={col.accessorKey} className="text-sm px-6 py-3">
                       {row[col.accessorKey] ?? ""}
                     </TableCell>
                   ))}
