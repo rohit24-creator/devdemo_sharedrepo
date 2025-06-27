@@ -25,11 +25,8 @@ export default function ShipmentTypeFormPage() {
 
   const fields = [
     { name: "name", label: "Name*" },
-    { name: "description", label: "Description", type: "textarea"},
+    { name: "description", label: "Description", type: "textarea", wide: true },
     { name: "departmentCode", label: "Department Code ", type: "select", options: ["Standard", "Premium"] },
-   
-
-   
   ];
 
   return (
