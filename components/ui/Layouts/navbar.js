@@ -53,6 +53,8 @@ const navItems = [
   { href: '/regions', label: 'Regions' },
   { href: '/shipmentType', label: 'Shipment Type' },
   { href: '/trafficCode', label: 'Traffic Code' },
+  { href: '/allocationRules', label: 'Allocation Rules' },
+    { href: '/communication', label: 'Communication' },
 ]
 
 export default function Navbar() {
