@@ -3,17 +3,17 @@ import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Edit, Eye, Trash2 } from "lucide-react";
 
 const columns = [
-  { accessorKey: "region", header: "Region Name" },
-  { accessorKey: "description", header: "Description" },
+   { accessorKey: "region", header: "Region"},
   { accessorKey: "status", header: "Status" },
+  { accessorKey: "description", header: "Description", sortable: false },
   
-  { accessorKey: "region", header: "Region Name" },
-  { accessorKey: "description", header: "Description" },
-  { accessorKey: "status", header: "Status" },
+  // { accessorKey: "region", header: "Region Name" },
+  // { accessorKey: "description", header: "Description" },
+  // { accessorKey: "status", header: "Status" },
   
-  { accessorKey: "region", header: "Region Name" },
-  { accessorKey: "description", header: "Description" },
-  { accessorKey: "status", header: "Status" },
+  // { accessorKey: "region", header: "Region Name" },
+  // { accessorKey: "description", header: "Description" },
+  // { accessorKey: "status", header: "Status" },
   
   
 ];
