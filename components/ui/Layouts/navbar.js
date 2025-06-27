@@ -29,15 +29,18 @@ const navGroups = [
       { href: '/profiles/vehicleProfile', label: 'Vehicle Profile' },
     ],
   },
-    {
+  {
     label: 'Fleet',
     items: [
+      { href: '/fleet/Drivers', label: 'Drivers' },
+      { href: '/fleet/vehicles', label: 'Vehicles' },
+      { href: '/fleet/Co2form', label: 'Co2form' },
       { href: '/fleet/costCenter', label: 'Cost Center' },
       { href: '/fleet/orderType', label: 'Order Type' },
       { href: '/fleet/vehicleType', label: 'Vehicle Type' },
     ],
   },
-    {
+  {
     label: 'PinCodes',
     items: [
       { href: '/pinCodes/pinCode', label: 'Pincode' },
@@ -54,7 +57,7 @@ const navItems = [
   { href: '/shipmentType', label: 'Shipment Type' },
   { href: '/trafficCode', label: 'Traffic Code' },
   { href: '/allocationRules', label: 'Allocation Rules' },
-    { href: '/communication', label: 'Communication' },
+  { href: '/communication', label: 'Communication' },
 ]
 
 export default function Navbar() {
@@ -78,9 +81,8 @@ export default function Navbar() {
             <NavigationMenuItem key={group.label} className="relative">
               <button
                 onClick={() => handleDropdownToggle(group.label)}
-                className={`text-white px-3 py-2 rounded-md hover:bg-[#02abf5] transition ${
-                  openDropdown === group.label ? 'bg-[#02abf5]' : ''
-                }`}
+                className={`text-white px-3 py-2 rounded-md hover:bg-[#02abf5] transition ${openDropdown === group.label ? 'bg-[#02abf5]' : ''
+                  }`}
               >
                 {group.label}
               </button>
@@ -92,9 +94,8 @@ export default function Navbar() {
                       key={item.href}
                       href={item.href}
                       onClick={handleLinkClick}
-                      className={`block px-4 py-2 rounded-md transition hover:bg-[#f0f0f0] ${
-                        pathname === item.href ? 'bg-[#02abf5] text-white' : 'text-black'
-                      }`}
+                      className={`block px-4 py-2 rounded-md transition hover:bg-[#f0f0f0] ${pathname === item.href ? 'bg-[#02abf5] text-white' : 'text-black'
+                        }`}
                     >
                       {item.label}
                     </Link>
@@ -110,9 +111,8 @@ export default function Navbar() {
               <NavigationMenuLink asChild>
                 <Link
                   href={item.href}
-                  className={`text-white px-3 py-2 rounded-md hover:bg-[#02abf5] transition ${
-                    pathname === item.href ? 'bg-[#02abf5]' : ''
-                  }`}
+                  className={`text-white px-3 py-2 rounded-md hover:bg-[#02abf5] transition ${pathname === item.href ? 'bg-[#02abf5]' : ''
+                    }`}
                 >
                   {item.label}
                 </Link>
