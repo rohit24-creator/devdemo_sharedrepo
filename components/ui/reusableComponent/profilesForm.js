@@ -217,11 +217,21 @@ export function ReusableForm({ sections = [] }) {
                     onSubmit={section.form.handleSubmit(section.onSubmit)}
                     className="space-y-4"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      {section.fields.map((fieldConfig) =>
-                        renderFieldWithModals(fieldConfig)
-                      )}
-                    </div>
+                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+  {section.fields.map((fieldConfig) => {
+    const isTextarea = fieldConfig.type === "textarea";
+
+    return (
+      <div
+        key={fieldConfig.name}
+        className={isTextarea ? "md:col-span-2" : "md:col-span-1"}
+      >
+        {renderFieldWithModals(fieldConfig)}
+      </div>
+    );
+  })}
+</div>
+
                     {section.children}
                   </form>
                 </Form>
