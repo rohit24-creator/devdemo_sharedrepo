@@ -81,11 +81,11 @@ export function ReusableForm({ sections = [] }) {
   const currentSectionForm = sections.find((sec) => sec.type === "form")?.form
 
   const renderFieldWithModals = (fieldConfig) => {
-    const { name, label, type = "text", disabled = false, options = [] } = fieldConfig
+    const { name, label, type = "text", disabled = false, options = [], wide = false, } = fieldConfig
 
-    return (
+  return (
+    <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
       <FormField
-        key={name}
         control={currentSectionForm.control}
         name={name}
         render={({ field }) => (
@@ -105,12 +105,15 @@ export function ReusableForm({ sections = [] }) {
                         key={actionType}
                         type="button"
                         onClick={() => {
-                          setModalField(name)
-                          setModalType(actionType)
+                          setModalField(name);
+                          setModalType(actionType);
                           if (name === "branchCode") {
-                            const selectedCompany = currentSectionForm.getValues("companyCode")
-                            const filtered = branchListData.filter((b) => b.companyCode === selectedCompany)
-                            setFilteredBranchData(filtered)
+                            const selectedCompany =
+                              currentSectionForm.getValues("companyCode");
+                            const filtered = branchListData.filter(
+                              (b) => b.companyCode === selectedCompany
+                            );
+                            setFilteredBranchData(filtered);
                           }
                         }}
                       >
@@ -126,78 +129,84 @@ export function ReusableForm({ sections = [] }) {
                   </div>
                 </div>
               ) : type === "select" ? (
-              <Select
-                onValueChange={field.onChange}
-                value={field.value}
-              >
-                <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
-                  <SelectValue placeholder={`Select ${label}`} />
-                </SelectTrigger>
-                    <SelectContent>
-                      {options.map((option) =>
-                        typeof option === "string" ? (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ) : (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        )
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
+                    <SelectValue placeholder={`Select ${label}`} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {options.map((option) =>
+                      typeof option === "string" ? (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ) : (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+              ) : type === "date" ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal border-2 border-[#E7ECFD] focus:border-[#0088d2]",
+                        !field.value && "text-muted-foreground"
                       )}
-                    </SelectContent>
-              </Select>
-            ) : type === "date" ? (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal border-2 border-[#E7ECFD] focus:border-[#0088d2]",
-                  !field.value && "text-muted-foreground"
-                )}
-              >
-                {field.value ? format(new Date(field.value), "yyyy-MM-dd") : <span>Select date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={field.value ? new Date(field.value) : undefined}
-                onSelect={(date) => {
-                  field.onChange(date ? format(date, "yyyy-MM-dd") : "")
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          ) : type === "file" ? (
-              <Input
-                type="file"
-                onChange={(e) => field.onChange(e.target.files?.[0])}
-                className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
-              />
-            ) : type === "textarea" ? (
-              <textarea
-                {...field}
-                rows={2}
-                className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
-              />
-        ) : (
-              <Input
-                {...field}
-                disabled={disabled}
-                type={type}
-                className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${disabled ? "bg-gray-100" : ""}`}
-              />
-            )}
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-    )
-  }
+                    >
+                      {field.value
+                        ? format(new Date(field.value), "yyyy-MM-dd")
+                        : "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={
+                        field.value ? new Date(field.value) : undefined
+                      }
+                      onSelect={(date) =>
+                        field.onChange(
+                          date ? format(date, "yyyy-MM-dd") : ""
+                        )
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              ) : type === "file" ? (
+                <Input
+                  type="file"
+                  onChange={(e) => field.onChange(e.target.files?.[0])}
+                  className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
+                />
+              ) : type === "textarea" ? (
+                <textarea
+                  {...field}
+                  rows={2}
+                  className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
+                />
+              ) : (
+                <Input
+                  {...field}
+                  disabled={disabled}
+                  type={type}
+                  className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
+                    disabled ? "bg-gray-100" : ""
+                  }`}
+                />
+              )}
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+};
 
   return (
     <>
@@ -217,21 +226,11 @@ export function ReusableForm({ sections = [] }) {
                     onSubmit={section.form.handleSubmit(section.onSubmit)}
                     className="space-y-4"
                   >
-                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-  {section.fields.map((fieldConfig) => {
-    const isTextarea = fieldConfig.type === "textarea";
-
-    return (
-      <div
-        key={fieldConfig.name}
-        className={isTextarea ? "md:col-span-2" : "md:col-span-1"}
-      >
-        {renderFieldWithModals(fieldConfig)}
-      </div>
-    );
-  })}
-</div>
-
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      {section.fields.map((fieldConfig) =>
+                        renderFieldWithModals(fieldConfig)
+                      )}
+                    </div>
                     {section.children}
                   </form>
                 </Form>
