@@ -166,7 +166,7 @@ export default function ReusableTable({
             Search
           </Button>
         </div>
-        <div className="flex items-center gap-3 pr-2">
+        <div className="flex items-center gap-6 pr-2">
           {showFirstIcon && <Search size={18} className="cursor-pointer text-gray-600" />}
           {showSecondIcon && (
             <DropdownMenu>
