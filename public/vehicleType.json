@@ -1,0 +1,31 @@
+{
+  "headers": [
+    { "accessorKey": "vechicletype", "header": "Vehicle Type" },
+    { "accessorKey": "description", "header": "Description" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "departmentCode", "header": "Department Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "attachment", "header": "Attachment" },
+    { "accessorKey": "status", "header": "Status" }
+  ],
+  "rows": [
+    {
+      "vechicletype": "Truck 22W",
+      "description": "Land",
+      "companyCode": "THKN",
+      "departmentCode": "Standard",
+      "branchCode": "THBKK",
+      "attachment": "truck-22w.jpg",
+        "status": "Active"
+    },
+    {
+      "vechicletype": "Cargo Van",
+      "description": "Air",
+      "companyCode": "AMZ01",
+      "departmentCode": "Premium",
+      "branchCode": "DEL001",
+      "attachment": "cargovan.png",
+        "status": "Inactive"
+    }
+  ]
+}
