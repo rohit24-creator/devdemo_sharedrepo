@@ -82,7 +82,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
   const currentSectionForm = sections.find((sec) => sec.type === "form")?.form
 
   const renderFieldWithModals = (fieldConfig) => {
-    const { name, label, type = "text", disabled = false, options = [], wide = false } = fieldConfig
+    const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
 
     return (
       <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
@@ -175,6 +175,27 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                     onChange={(e) => field.onChange(e.target.files?.[0])}
                     className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
                   />
+                  ) : unitOptions ? (
+                <div className="flex gap-2 items-center">
+                  <Input
+                    {...field}
+                    disabled={disabled}
+                    type={type}
+                    className="w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD]"
+                  />
+                  <Select>
+                    <SelectTrigger className="w-24 border-2 border-[#E7ECFD]">
+                      <SelectValue placeholder={unitOptions[0]} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {unitOptions.map((unit) => (
+                        <SelectItem key={unit} value={unit}>
+                          {unit}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 ) : type === "textarea" ? (
                   <textarea
                     {...field}
@@ -186,6 +207,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                     {...field}
                     disabled={disabled}
                     type={type}
+                    placeholder={placeholder || label}
                     className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
                       disabled ? "bg-gray-100" : ""
                     }`}
