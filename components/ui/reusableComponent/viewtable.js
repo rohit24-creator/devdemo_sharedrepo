@@ -160,7 +160,7 @@ export default function ReusableTable({
         <div className="flex flex-wrap gap-3">
           {filterFields.map(renderField)}
           <Button
-            className="bg-[#006397] text-white px-4 rounded-full"
+            className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
             onClick={() => onSearch(formValues)}
           >
             Search
@@ -208,7 +208,7 @@ export default function ReusableTable({
         <div className="flex justify-between items-center mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-[#006397] text-white px-3 py-1 rounded-sm text-sm">
+              <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
                 Toggle Columns
               </Button>
             </DropdownMenuTrigger>

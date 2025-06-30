@@ -157,5 +157,5 @@ export default function NotificationForm() {
     },
   ]
 
-  return <div className="p-6"><ReusableForm sections={sections} /></div>
+  return <div className="p-6"><ReusableForm sections={sections} tableAccordion={false} /></div>
 }

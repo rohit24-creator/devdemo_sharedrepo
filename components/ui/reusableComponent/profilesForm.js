@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   Accordion,
   AccordionItem,
@@ -41,10 +41,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { FileSearch, FileText, Search } from "lucide-react"
 import ReusableModal from "./bussinessParnterModal"
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { format } from "date-fns"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { Checkbox } from "@/components/ui/checkbox";
 
 const companyModalColumns = ["Company Name", "Company Code", "Description"]
 const branchModalColumns = ["Branch Name", "Branch Code", "companyCode", "Description"]
@@ -73,7 +74,7 @@ const branchListData = [
   { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
 ]
 
-export function ReusableForm({ sections = [] }) {
+export function ReusableForm({ sections = [], tableAccordion = true }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
   const [filteredBranchData, setFilteredBranchData] = useState([])
@@ -81,210 +82,200 @@ export function ReusableForm({ sections = [] }) {
   const currentSectionForm = sections.find((sec) => sec.type === "form")?.form
 
   const renderFieldWithModals = (fieldConfig) => {
-    const { name, label, type = "text", disabled = false, options = [], wide = false, } = fieldConfig
+    const { name, label, type = "text", disabled = false, options = [], wide = false } = fieldConfig
 
-  return (
-    <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
-      <FormField
-        control={currentSectionForm.control}
-        name={name}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>{label}</FormLabel>
-            <FormControl>
-              {["companyCode", "branchCode"].includes(name) ? (
-                <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
+    return (
+      <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
+        <FormField
+          control={currentSectionForm.control}
+          name={name}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{label}</FormLabel>
+              <FormControl>
+                {["companyCode", "branchCode"].includes(name) ? (
+                  <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
+                    <Input
+                      {...field}
+                      disabled
+                      className="w-full px-3 py-2 pr-24 bg-gray-100 rounded-md focus:outline-none focus:border-[#0088d2]"
+                    />
+                    <div className="absolute right-2 flex items-center space-x-2">
+                      {["find", "list", "search"].map((actionType) => (
+                        <button
+                          key={actionType}
+                          type="button"
+                          onClick={() => {
+                            setModalField(name)
+                            setModalType(actionType)
+                            if (name === "branchCode") {
+                              const selectedCompany = currentSectionForm.getValues("companyCode")
+                              const filtered = branchListData.filter(
+                                (b) => b.companyCode === selectedCompany
+                              )
+                              setFilteredBranchData(filtered)
+                            }
+                          }}
+                        >
+                          {actionType === "find" ? (
+                            <FileSearch size={18} className="text-[#0088d2]" />
+                          ) : actionType === "list" ? (
+                            <FileText size={18} className="text-[#0088d2]" />
+                          ) : (
+                            <Search size={18} className="text-[#0088d2]" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : type === "select" ? (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
+                      <SelectValue placeholder={`Select ${label}`} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {options.map((option) =>
+                        typeof option === "string" ? (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ) : (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                ) : type === "date" ? (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal border-2 border-[#E7ECFD] focus:border-[#0088d2]",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? format(new Date(field.value), "yyyy-MM-dd") : "Select date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={field.value ? new Date(field.value) : undefined}
+                        onSelect={(date) => field.onChange(date ? format(date, "yyyy-MM-dd") : "")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                ) : type === "file" ? (
+                  <Input
+                    type="file"
+                    onChange={(e) => field.onChange(e.target.files?.[0])}
+                    className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
+                  />
+                ) : type === "textarea" ? (
+                  <textarea
+                    {...field}
+                    rows={2}
+                    className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
+                  />
+                ) : (
                   <Input
                     {...field}
-                    disabled
-                    className="w-full px-3 py-2 pr-24 bg-gray-100 rounded-md focus:outline-none focus:border-[#0088d2]"
+                    disabled={disabled}
+                    type={type}
+                    className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
+                      disabled ? "bg-gray-100" : ""
+                    }`}
                   />
-                  <div className="absolute right-2 flex items-center space-x-2">
-                    {["find", "list", "search"].map((actionType) => (
-                      <button
-                        key={actionType}
-                        type="button"
-                        onClick={() => {
-                          setModalField(name);
-                          setModalType(actionType);
-                          if (name === "branchCode") {
-                            const selectedCompany =
-                              currentSectionForm.getValues("companyCode");
-                            const filtered = branchListData.filter(
-                              (b) => b.companyCode === selectedCompany
-                            );
-                            setFilteredBranchData(filtered);
-                          }
-                        }}
-                      >
-                        {actionType === "find" ? (
-                          <FileSearch size={18} className="text-[#0088d2]" />
-                        ) : actionType === "list" ? (
-                          <FileText size={18} className="text-[#0088d2]" />
-                        ) : (
-                          <Search size={18} className="text-[#0088d2]" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : type === "select" ? (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
-                    <SelectValue placeholder={`Select ${label}`} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {options.map((option) =>
-                      typeof option === "string" ? (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ) : (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-              ) : type === "date" ? (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal border-2 border-[#E7ECFD] focus:border-[#0088d2]",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value
-                        ? format(new Date(field.value), "yyyy-MM-dd")
-                        : "Select date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        field.value ? new Date(field.value) : undefined
-                      }
-                      onSelect={(date) =>
-                        field.onChange(
-                          date ? format(date, "yyyy-MM-dd") : ""
-                        )
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              ) : type === "file" ? (
-                <Input
-                  type="file"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
-                  className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
-                />
-              ) : type === "textarea" ? (
-                <textarea
-                  {...field}
-                  rows={2}
-                  className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
-                />
-              ) : (
-                <Input
-                  {...field}
-                  disabled={disabled}
-                  type={type}
-                  className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
-                    disabled ? "bg-gray-100" : ""
-                  }`}
-                />
-              )}
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    </div>
-  );
-};
+                )}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    )
+  }
 
   return (
     <>
-      <Accordion type="multiple">
-        {sections.map((section, index) => (
-          <AccordionItem
-            key={index}
-            value={section.title.toLowerCase().replace(/\s+/g, "-")}
-          >
-            <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
-              {section.title}
-            </AccordionTrigger>
-            <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-              {section.type === "form" && (
-                <Form {...section.form}>
-                  <form
-                    onSubmit={section.form.handleSubmit(section.onSubmit)}
-                    className="space-y-4"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      {section.fields.map((fieldConfig) =>
-                        renderFieldWithModals(fieldConfig)
-                      )}
-                    </div>
-                    {section.children}
-                  </form>
-                </Form>
-              )}
+<Accordion type="multiple">
+  {sections.map((section, index) => {
+    const accordionValue = section.title.toLowerCase().replace(/\s+/g, "-");
+    const shouldRenderAccordion = section.type === "form" || tableAccordion;
 
-              {section.type === "table" && (
-                <Card>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-12" />
-                          {section.columns.map((col) => (
-                            <TableHead key={col.accessorKey} className="text-[#006397] text-left text-sm font-semibold">
-                              {col.header}
-                            </TableHead>
-                          ))}
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {(section.rows.length > 0 ? section.rows : [{}]).map((row, rowIndex) => (
-                          <TableRow key={rowIndex}>
-                            <TableCell className="w-12 align-top pt-2">
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon" className="text-xl px-2 py-0">
-                                    ☰
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent side="right">
-                                  <DropdownMenuItem>
-                                    ➕ Add Profile
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </TableCell>
-                            {section.columns.map((col) => (
-                              <TableCell key={col.accessorKey} className="text-sm">
-                                {row[col.accessorKey] ?? ""}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                </Card>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+    return shouldRenderAccordion ? (
+      <AccordionItem key={index} value={accordionValue}>
+        <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
+          {section.title}
+        </AccordionTrigger>
+        <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+          
 
-      {/* Reusable Modal Logic */}
+          {/* FORM */}
+          {section.type === "form" && (
+            <div className="pt-6">
+            <Form {...section.form}>
+              <form
+                onSubmit={section.form.handleSubmit(section.onSubmit)}
+                className="space-y-4"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {section.fields.map((fieldConfig) =>
+                    renderFieldWithModals(fieldConfig)
+                  )}
+                </div>
+                {section.children}
+              </form>
+
+              {/* Custom table inside the form (if renderOutsideForm is false) */}
+              {section.customTable &&
+                !section.customTable.renderOutsideForm &&
+                section.customTable.entries.length > 0 &&
+                renderCustomTable(section.customTable)}
+            </Form>
+            </div>
+          )}
+
+          {/* non-form custom-tables */}
+          {section.type === "custom-table" && section.schema &&
+            renderCustomTable(section)}
+
+          {/* Standard table inside accordion */}
+          {section.type === "table" && renderTable(section)}
+        </AccordionContent>
+      </AccordionItem>
+    ) : (
+      // Table rendered outside accordion
+      section.type === "table" && (
+        <div key={index} className="mt-4">
+          {renderTable(section)}
+        </div>
+      )
+    );
+  })}
+</Accordion>
+
+{/* Custom tables rendered outside the accordion/form */}
+{sections
+  .filter(
+    (section) =>
+      section.type === "form" &&
+      section.customTable &&
+      section.customTable.renderOutsideForm &&
+      section.customTable.entries.length > 0
+  )
+  .map((section, index) => (
+    <div key={`custom-table-${index}`} className="mt-4">
+      {renderCustomTable(section.customTable)}
+    </div>
+  ))}
+
+
+      {/* Reusable Modal */}
       {modalField && (
         <ReusableModal
           open={modalField !== null}
@@ -327,4 +318,110 @@ export function ReusableForm({ sections = [] }) {
       )}
     </>
   )
+
+  function renderTable(section) {
+    return (
+      <Card>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12" />
+                {section.columns.map((col) => (
+                  <TableHead key={col.accessorKey} className="text-[#006397] text-left text-sm font-semibold">
+                    {col.header}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {(section.rows.length > 0 ? section.rows : [{}]).map((row, rowIndex) => (
+                <TableRow key={rowIndex}>
+                  <TableCell className="w-12 align-top pt-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="text-xl px-2 py-0">
+                          ☰
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent side="right">
+                        <DropdownMenuItem>
+                          ➕ Add Profile
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                  {section.columns.map((col) => (
+                    <TableCell key={col.accessorKey} className="text-sm">
+                      {row[col.accessorKey] ?? ""}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    )
+  }
+}
+function renderCustomTable(section) {
+  return (
+    <Card className="mt-6">
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12 text-[#162d56] text-sm font-semibold px-3 py-2">
+                <Checkbox />
+              </TableHead>
+              <TableHead className="w-16 px-3 py-2" />
+              {Object.keys(section.schema.shape).map((field) => (
+                <TableHead
+                  key={field}
+                  className="text-[#162d56] text-sm font-semibold px-3 py-2"
+                >
+                  {field}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {section.entries.map((entry, index) => (
+              <TableRow key={index}>
+                <TableCell className="px-3 py-2">
+                  <Checkbox />
+                </TableCell>
+                <TableCell className="px-3 py-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <span className="text-xl">☰</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => section.onEdit(entry, index)}>
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-red-600"
+                        onClick={() => section.onDelete(index)}
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+                {Object.keys(section.schema.shape).map((key) => (
+                  <TableCell key={key} className="text-sm px-3 py-2">
+                    {key === "xsdFile" ? entry[key]?.name || "" : entry[key]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
 }
