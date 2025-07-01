@@ -1,0 +1,31 @@
+{
+  "headers": [
+    { "accessorKey": "ruleName", "header": "Rule Name" },
+    { "accessorKey": "shipmentType", "header": "Shipment Type" },
+    { "accessorKey": "minWeight", "header": "Min. Weigh" },
+    { "accessorKey": "maxWeight", "header": "Max. Weight" },
+    { "accessorKey": "regions", "header": "Regions" },
+    { "accessorKey": "priorityType", "header": "Priority Type" },
+    { "accessorKey": "status", "header": "Status" }
+  ],
+  "rows": [
+    {
+      "ruleName": "Rule A",
+      "shipmentType": "Air",
+      "minWeight": "10",
+      "maxWeight": "50",
+      "regions": "Asia",
+      "priorityType": "High",
+      "status": "Active"
+    },
+    {
+      "ruleName": "Rule B",
+      "shipmentType": "Ocean",
+      "minWeight": "20",
+      "maxWeight": "80",
+      "regions": "Europe",
+      "priorityType": "Medium",
+      "status": "Inactive"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "headers": [
+    {
+      "accessorKey": "name",
+      "header": "Name"
+    },
+    {
+      "accessorKey": "locality",
+      "header": "Locality(City)"
+    },
+    {
+      "accessorKey": "province",
+      "header": "Province"
+    },
+    {
+      "accessorKey": "country",
+      "header": "Country"
+    },
+    {
+      "accessorKey": "branchCode",
+      "header": "Branch Code"
+    },
+    {
+      "accessorKey": "partyTypes",
+      "header": "Party Types"
+    },
+    {
+      "accessorKey": "zipCode",
+      "header": "Zip Code"
+    },
+    {
+      "accessorKey": "customerCode",
+      "header": "Customer Code"
+    },
+    {
+      "accessorKey": "cid",
+      "header": "CID"
+    },
+    {
+      "accessorKey": "debitorCode",
+      "header": "Acon Debitor Code"
+    },
+    {
+      "accessorKey": "shLogin",
+      "header": "Sh Login Account"
+    },
+    {
+      "accessorKey": "password",
+      "header": "Password"
+    },
+    {
+      "accessorKey": "offeringType",
+      "header": "Offering Type"
+    },
+    {
+      "accessorKey": "carrierGrade",
+      "header": "Carrier Grade"
+    }
+  ],
+  "rows": [
+    {
+      "name": "LogiTech Ltd",
+      "locality": "Hyderabad",
+      "province": "Telangana",
+      "country": "India",
+      "branchCode": "THKN",
+      "partyTypes": "Shipper",
+      "zipCode": "500032",
+      "customerCode": "CUST001",
+      "cid": "CID001",
+      "debitorCode": "D1234",
+      "shLogin": "logitech_admin",
+      "password": "secure123",
+      "offeringType": "Premium",
+      "carrierGrade": "A"
+    },
+    {
+      "name": "TransGo Pvt",
+      "locality": "Mumbai",
+      "province": "Maharashtra",
+      "country": "India",
+      "branchCode": "MBIN",
+      "partyTypes": "Consignee",
+      "zipCode": "400001",
+      "customerCode": "CUST002",
+      "cid": "CID002",
+      "debitorCode": "D5678",
+      "shLogin": "transgo_login",
+      "password": "pass456",
+      "offeringType": "Standard",
+      "carrierGrade": "B"
+    }
+  ]
+}

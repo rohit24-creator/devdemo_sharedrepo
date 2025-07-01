@@ -6,7 +6,6 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm";
 
-
 const driverFormSchema = z
     .object({
         name: z.string().min(1, "Name is required"),
