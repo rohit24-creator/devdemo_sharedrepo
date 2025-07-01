@@ -86,7 +86,7 @@ const sections = [
     fields: ediFields,
     onSubmit,
     children: (
-      <Button type="submit" className="bg-[#006397] text-white">
+      <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">
         Add EDI/API
       </Button>
     ),
