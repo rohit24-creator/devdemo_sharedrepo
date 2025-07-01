@@ -38,6 +38,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import { FileSearch, FileText, Search } from "lucide-react"
 import ReusableModal from "./bussinessParnterModal"
@@ -229,6 +233,32 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                         {placeholder || label}
                       </FormLabel>
                     </FormItem>
+                  </div>
+                ) : type === "radio" ? (
+                  <div className="mt-4 flex gap-6 items-center">
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex gap-6"
+                    >
+                      {options.map((option) =>
+                        typeof option === "string" ? (
+                          <div key={option} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option} id={`${name}-${option}`} />
+                            <label htmlFor={`${name}-${option}`} className="text-sm">
+                              {option}
+                            </label>
+                          </div>
+                        ) : (
+                          <div key={option.value} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option.value} id={`${name}-${option.value}`} />
+                            <label htmlFor={`${name}-${option.value}`} className="text-sm">
+                              {option.label}
+                            </label>
+                          </div>
+                        )
+                      )}
+                    </RadioGroup>
                   </div>
                 ) : (
                   <Input
