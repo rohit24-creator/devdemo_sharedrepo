@@ -180,19 +180,32 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                   <Input
                     {...field}
                     disabled={disabled}
+                    placeholder={placeholder || label}
                     type={type}
                     className="w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD]"
                   />
                   <Select>
-                    <SelectTrigger className="w-24 border-2 border-[#E7ECFD]">
-                      <SelectValue placeholder={unitOptions[0]} />
+                    <SelectTrigger className="w-36 border-2 border-[#E7ECFD]">
+                      <SelectValue
+                        placeholder={
+                          typeof unitOptions[0] === "string"
+                            ? unitOptions[0]
+                            : unitOptions[0]?.label || "Select Unit"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {unitOptions.map((unit) => (
-                        <SelectItem key={unit} value={unit}>
-                          {unit}
-                        </SelectItem>
-                      ))}
+                      {unitOptions.map((option) =>
+                        typeof option === "string" ? (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ) : (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        )
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
@@ -202,6 +215,21 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                     rows={2}
                     className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
                   />
+                ) : type === "checkbox" ? (
+                  <div className="flex items-end h-full pb-1">
+                    <FormItem className="flex items-center space-x-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={disabled}
+                        />
+                      </FormControl>
+                      <FormLabel className="text-sm font-semibold m-0">
+                        {placeholder || label}
+                      </FormLabel>
+                    </FormItem>
+                  </div>
                 ) : (
                   <Input
                     {...field}
@@ -251,7 +279,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                   )}
                 </div>
                 {section.children}
-              </form>
+              </form>                
 
               {/* Custom table inside the form (if renderOutsideForm is false) */}
               {section.customTable &&
