@@ -1,0 +1,26 @@
+{
+  "headers": [
+    { "accessorKey": "registerNumber", "header": "Vehicle No" },
+        { "accessorKey": "contactName", "header": "Contact Person" },
+            { "accessorKey": "contactNumber", "header": "Contact No" },
+    { "accessorKey": "weight", "header": "Weight" },
+    { "accessorKey": "volume", "header": "Volume" },
+    { "accessorKey": "insuranceEnd", "header": "Created on" },
+    { "accessorKey": "lastreceivedlocation", "header": "lastreceivedlocation" },
+    { "accessorKey": "Vendor", "header": "Vendor" }
+  
+  ],
+  "rows": [
+    {
+      "registerNumber": "TN01AB1234",
+      "weight": "8000",
+      "volume": "90",
+      "contactName": "Ravi Kumar",
+      "contactNumber": "9876543210",
+      "insuranceEnd": "2025-01-01",
+      "createdon":"C",
+      "lastreceivedlocation": "Chennai",
+        "Vendor": "ABC Logistics"
+    }
+  ]
+}

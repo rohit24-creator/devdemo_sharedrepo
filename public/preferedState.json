@@ -1,0 +1,36 @@
+{
+  "headers": [
+    { "accessorKey": "carrierid", "header": "Carrier ID" },
+    { "accessorKey": "city", "header": "City" },
+    { "accessorKey": "state", "header": "State" },
+    { "accessorKey": "zipcode", "header": "Zip Code" },
+    { "accessorKey": "createdon", "header": "Created On" },
+    { "accessorKey": "status", "header": "Status" }  
+  ],
+  "rows": [
+    {
+      "carrierid": "Air",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "zipcode": "600001",
+      "createdon": "2024-08-01",
+      "status": "Active"
+    },
+    {
+      "carrierid": "Land",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "zipcode": "500001",  
+      "createdon": "2024-08-02",
+      "status": "Inactive"
+    },
+    {
+      "carrierid": "Sea",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "zipcode": "400001",
+      "createdon": "2024-08-03",
+      "status": "Active"
+    }
+  ]
+}
