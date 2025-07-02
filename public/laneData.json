@@ -1,0 +1,40 @@
+{
+  "headers": [
+    { "accessorKey": "laneId", "header": "Lane ID" },
+    { "accessorKey": "laneName", "header": "Lane Name" },
+    { "accessorKey": "sourceGeo", "header": "Source Geo" },
+    { "accessorKey": "sourceCountry", "header": "Source Country" },
+    { "accessorKey": "source", "header": "Source" },
+    { "accessorKey": "destinationGeo", "header": "Destination Geo" },
+    { "accessorKey": "destinationCountry", "header": "Destination Country" },
+    { "accessorKey": "destination", "header": "Destination" },
+    { "accessorKey": "status", "header": "Status" },
+    { "accessorKey": "companyCode", "header": "Company Code" }
+  ],
+  "rows": [
+    {
+      "laneId": "LN001",
+      "laneName": "India to US",
+      "sourceGeo": "South Asia",
+      "sourceCountry": "India",
+      "source": "Chennai",
+      "destinationGeo": "North America",
+      "destinationCountry": "USA",
+      "destination": "New York",
+      "status": "Active",
+      "companyCode": "CMP01"
+    },
+    {
+      "laneId": "LN002",
+      "laneName": "Germany to India",
+      "sourceGeo": "Europe",
+      "sourceCountry": "Germany",
+      "source": "Berlin",
+      "destinationGeo": "South Asia",
+      "destinationCountry": "India",
+      "destination": "Mumbai",
+      "status": "Inactive",
+      "companyCode": "CMP02"
+    }
+  ]
+}

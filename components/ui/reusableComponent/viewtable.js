@@ -128,6 +128,81 @@ export default function ReusableTable({
     );
   };
 
+  const handleChange = (name, value) => {
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const renderField = (field) => {
+    const { name, label, type = "text", options = [] } = field;
+
+    if (type === "date") {
+      return (
+        <Popover key={name}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-[160px] justify-start text-left font-normal border border-gray-300",
+                !formValues[name] && "text-muted-foreground"
+              )}
+            >
+              {formValues[name]
+                ? format(new Date(formValues[name]), "yyyy-MM-dd")
+                : label}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={formValues[name] ? new Date(formValues[name]) : undefined}
+              onSelect={(date) =>
+                handleChange(name, date ? format(date, "yyyy-MM-dd") : "")
+              }
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      );
+    }
+
+    if (type === "select") {
+      return (
+        <Select
+          key={name}
+          onValueChange={(value) => handleChange(name, value)}
+          value={formValues[name]}
+        >
+          <SelectTrigger className="w-[160px] border border-gray-300">
+            <SelectValue placeholder={label} />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) =>
+              typeof option === "string" ? (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ) : (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              )
+            )}
+          </SelectContent>
+        </Select>
+      );
+    }
+
+    return (
+      <Input
+        key={name}
+        placeholder={label}
+        value={formValues[name] || ""}
+        onChange={(e) => handleChange(name, e.target.value)}
+        className="w-[160px] border border-gray-300"
+      />
+    );
+  };
+
   const sortedRows = useMemo(() => {
     if (!sortColumn) return rows;
     return [...rows].sort((a, b) => {
@@ -154,31 +229,7 @@ export default function ReusableTable({
     }
   };
 
-  const isAllSelected =
-    paginatedRows.length > 0 &&
-    paginatedRows.every((row) => selectedRows.includes(row));
-
-  const toggleSelectAll = () => {
-    if (isAllSelected) {
-      setSelectedRows((prev) =>
-        prev.filter((row) => !paginatedRows.includes(row))
-      );
-    } else {
-      setSelectedRows((prev) => [
-        ...prev,
-        ...paginatedRows.filter((row) => !prev.includes(row)),
-      ]);
-    }
-  };
-
-  const toggleRow = (row) => {
-    setSelectedRows((prev) =>
-      prev.includes(row)
-        ? prev.filter((r) => r !== row)
-        : [...prev, row]
-    );
-  };
-
+  // 🔹 1. Tab-like Filter Section
   const filterTab = (
     <Card>
       <CardContent className="p-4 flex justify-between items-center flex-wrap gap-4">
@@ -186,6 +237,7 @@ export default function ReusableTable({
           {filterFields.map(renderField)}
           <Button
             className="bg-[#006397] text-white px-4 rounded-full"
+            className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
             onClick={() => onSearch(formValues)}
           >
             Search
@@ -226,13 +278,14 @@ export default function ReusableTable({
     </Card>
   );
 
+  // 🔹 2. Table Section
   const tableContent = (
     <Card>
       <CardContent className="p-4">
         <div className="flex justify-between items-center mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-[#006397] text-white px-3 py-1 rounded-sm text-sm">
+              <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
                 Toggle Columns
               </Button>
             </DropdownMenuTrigger>
@@ -297,6 +350,7 @@ export default function ReusableTable({
                   className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
 
                 />
+                <Checkbox />
               </TableHead>
               {showActions && rows.length > 0 && (
                 <TableHead className="w-12 px-6 py-3" />
@@ -380,6 +434,7 @@ export default function ReusableTable({
     </Card>
   );
 
+  //  Final Render: Both sections separately
   return (
     <>
       {filterTab}
