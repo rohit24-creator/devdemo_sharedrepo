@@ -1,0 +1,22 @@
+{
+  "headers": [
+    { "accessorKey": "name", "header": "Type Name" },
+    { "accessorKey": "description", "header": "Description" },
+    { "accessorKey": "status", "header": "status" }
+
+  ],
+  "rows": [
+    {
+      "name": "North Zone",
+      "description": "Handles all northern states",
+      "status": "Active"
+     
+    },
+    {
+      "name": "South Zone",
+      "description": "Operations in southern region",
+      "status": "Inactive"
+    
+    }
+  ]
+}

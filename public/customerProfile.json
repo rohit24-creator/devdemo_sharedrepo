@@ -1,0 +1,28 @@
+{
+  "headers": [
+    { "accessorKey": "profileId", "header": "Profile ID" },
+    { "accessorKey": "name", "header": "Name" },
+    { "accessorKey": "description", "header": "Description" },
+    { "accessorKey": "status", "header": "Status" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" }
+  ],
+  "rows": [
+    {
+      "profileId": "P001",
+      "name": "Customer Profile A",
+      "description": "Preferred customer for region X",
+      "status": "Active",
+      "companyCode": "CMP01",
+      "branchCode": "BR001"
+    },
+    {
+      "profileId": "P002",
+      "name": "Vendor Profile B",
+      "description": "Global vendor profile",
+      "status": "Inactive",
+      "companyCode": "CMP02",
+      "branchCode": "BR002"
+    }
+  ]
+}

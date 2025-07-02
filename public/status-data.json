@@ -1,0 +1,31 @@
+{
+  "headers": [
+    { "accessorKey": "statusName", "header": "Status Name" },
+    { "accessorKey": "description", "header": "Description" },
+    { "accessorKey": "statusType", "header": "Status Type" },
+    { "accessorKey": "statusCode", "header": "Status Code" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "status", "header": "Status" }
+  ],
+  "rows": [
+    {
+      "statusName": "Active",
+      "description": "Currently in use",
+      "statusType": "Operational",
+      "statusCode": "S001",
+      "companyCode": "CMP01",
+      "branchCode": "B001",
+      "status": "Enabled"
+    },
+    {
+      "statusName": "Inactive",
+      "description": "Not in use",
+      "statusType": "Deprecated",
+      "statusCode": "S002",
+      "companyCode": "CMP01",
+      "branchCode": "B002",
+      "status": "Disabled"
+    }
+  ]
+}

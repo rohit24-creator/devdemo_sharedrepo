@@ -1,0 +1,44 @@
+{
+  "headers": [
+    { "accessorKey": "carrierid", "header": "Carrier ID" },
+    { "accessorKey": "sequenceno", "header": "Sequence No" },
+    { "accessorKey": "startdate", "header": "Start Date" },
+    { "accessorKey": "enddate", "header": "End Date" },
+    { "accessorKey": "ordertype", "header": "Order Type" },
+    { "accessorKey": "allocationpercentage", "header": "Allocation Percentage" },
+    { "accessorKey": "createdon", "header": "Created On" },
+    { "accessorKey": "status", "header": "Status" }
+  ],
+  "rows": [
+    {
+      "carrierid": "Air",
+      "sequenceno": "001",
+      "startdate": "2024-07-01",
+      "enddate": "2024-07-10",
+      "ordertype": "Air",
+      "allocationpercentage": "40%",
+        "createdon": "2024-07-01",
+        "status": "Active"
+    },
+    {
+      "carrierid": "Land",
+      "sequenceno": "002",
+      "startdate": "2024-07-05",
+      "enddate": "2024-07-15",
+      "ordertype": "Land",
+      "allocationpercentage": "30%",
+        "createdon": "2024-07-05",
+        "status": "Active"
+    },
+    {
+      "carrierid": "Sea",
+      "sequenceno": "003",
+      "startdate": "2024-07-10",
+      "enddate": "2024-07-20",
+      "ordertype": "Sea",
+      "allocationpercentage": "30%",    
+        "createdon": "2024-07-10",
+        "status": "Inactive"
+    }
+  ]
+}

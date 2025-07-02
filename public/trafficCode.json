@@ -1,0 +1,35 @@
+{
+  "headers": [
+    { "accessorKey": "trafficCode", "header": "Traffic Code" },
+    { "accessorKey": "service", "header": "Service" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "departmentCode", "header": "Department Code" },
+    { "accessorKey": "sourceCountry", "header": "Source Country" },
+    { "accessorKey": "destinationCountry", "header": "Destination Country" },
+    { "accessorKey": "status", "header": "Status" }
+
+  ],
+  "rows": [
+    {
+      "trafficCode": "TRF001",
+      "service": "Air",
+      "companyCode": "CMP01",
+      "branchCode": "BR01",
+      "sourceCountry": "India",
+      "destinationCountry": "USA",
+      "departmentCode": "OPS",
+      "status": "Active"
+    },
+    {
+      "trafficCode": "TRF002",
+      "service": "Sea",
+      "companyCode": "CMP02", 
+      "branchCode": "BR02",
+      "sourceCountry": "Germany",
+      "destinationCountry": "India",
+      "departmentCode": "HR",
+        "status": "Inactive"
+    }
+  ]
+}

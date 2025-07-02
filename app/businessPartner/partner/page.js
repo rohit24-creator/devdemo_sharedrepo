@@ -645,9 +645,9 @@ const shouldShowSendToShLogin =
 
       <div className="col-span-1 flex items-center gap-2">
         <Checkbox id="tariffValidation" />
-        <label htmlFor="tariffValidation" className="text-sm font-semibold">
+        <Label htmlFor="tariffValidation" className="text-sm font-semibold">
           Tariff Validation
-        </label>
+        </Label>
       </div>
     </div>
   </>

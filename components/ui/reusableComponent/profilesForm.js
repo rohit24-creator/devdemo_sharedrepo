@@ -38,6 +38,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import { FileSearch, FileText, Search } from "lucide-react"
 import ReusableModal from "./bussinessParnterModal"
@@ -175,40 +179,40 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                     onChange={(e) => field.onChange(e.target.files?.[0])}
                     className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
                   />
-                ) : unitOptions ? (
-                  <div className="flex gap-2 items-center">
-                    <Input
-                      {...field}
-                      disabled={disabled}
-                      placeholder={placeholder || label}
-                      type={type}
-                      className="w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD]"
-                    />
-                    <Select>
-                      <SelectTrigger className="w-36 border-2 border-[#E7ECFD]">
-                        <SelectValue
-                          placeholder={
-                            typeof unitOptions[0] === "string"
-                              ? unitOptions[0]
-                              : unitOptions[0]?.label || "Select Unit"
-                          }
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {unitOptions.map((option) =>
-                          typeof option === "string" ? (
-                            <SelectItem key={option} value={option}>
-                              {option}
-                            </SelectItem>
-                          ) : (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          )
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  ) : unitOptions ? (
+                <div className="flex gap-2 items-center">
+                  <Input
+                    {...field}
+                    disabled={disabled}
+                    placeholder={placeholder || label}
+                    type={type}
+                    className="w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD]"
+                  />
+                  <Select>
+                    <SelectTrigger className="w-36 border-2 border-[#E7ECFD]">
+                      <SelectValue
+                        placeholder={
+                          typeof unitOptions[0] === "string"
+                            ? unitOptions[0]
+                            : unitOptions[0]?.label || "Select Unit"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {unitOptions.map((option) =>
+                        typeof option === "string" ? (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ) : (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
                 ) : type === "textarea" ? (
                   <textarea
                     {...field}
@@ -230,14 +234,41 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                       </FormLabel>
                     </FormItem>
                   </div>
+                ) : type === "radio" ? (
+                  <div className="mt-4 flex gap-6 items-center">
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex gap-6"
+                    >
+                      {options.map((option) =>
+                        typeof option === "string" ? (
+                          <div key={option} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option} id={`${name}-${option}`} />
+                            <label htmlFor={`${name}-${option}`} className="text-sm">
+                              {option}
+                            </label>
+                          </div>
+                        ) : (
+                          <div key={option.value} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option.value} id={`${name}-${option.value}`} />
+                            <label htmlFor={`${name}-${option.value}`} className="text-sm">
+                              {option.label}
+                            </label>
+                          </div>
+                        )
+                      )}
+                    </RadioGroup>
+                  </div>
                 ) : (
                   <Input
                     {...field}
                     disabled={disabled}
                     type={type}
                     placeholder={placeholder || label}
-                    className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${disabled ? "bg-gray-100" : ""
-                      }`}
+                    className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
+                      disabled ? "bg-gray-100" : ""
+                    }`}
                   />
                 )}
               </FormControl>
@@ -251,77 +282,77 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
 
   return (
     <>
-      <Accordion type="multiple">
-        {sections.map((section, index) => {
-          const accordionValue = section.title.toLowerCase().replace(/\s+/g, "-");
-          const shouldRenderAccordion = section.type === "form" || tableAccordion;
+<Accordion type="multiple">
+  {sections.map((section, index) => {
+    const accordionValue = section.title.toLowerCase().replace(/\s+/g, "-");
+    const shouldRenderAccordion = section.type === "form" || tableAccordion;
 
-          return shouldRenderAccordion ? (
-            <AccordionItem key={index} value={accordionValue}>
-              <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
-                {section.title}
-              </AccordionTrigger>
-              <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+    return shouldRenderAccordion ? (
+      <AccordionItem key={index} value={accordionValue}>
+        <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
+          {section.title}
+        </AccordionTrigger>
+        <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+          
 
+          {/* FORM */}
+          {section.type === "form" && (
+            <div className="pt-6">
+            <Form {...section.form}>
+              <form
+                onSubmit={section.form.handleSubmit(section.onSubmit)}
+                className="space-y-4"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {section.fields.map((fieldConfig) =>
+                    renderFieldWithModals(fieldConfig)
+                  )}
+                </div>
+                {section.children}
+              </form>                
 
-                {/* FORM */}
-                {section.type === "form" && (
-                  <div className="pt-6">
-                    <Form {...section.form}>
-                      <form
-                        onSubmit={section.form.handleSubmit(section.onSubmit)}
-                        className="space-y-4"
-                      >
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                          {section.fields.map((fieldConfig) =>
-                            renderFieldWithModals(fieldConfig)
-                          )}
-                        </div>
-                        {section.children}
-                      </form>
+              {/* Custom table inside the form (if renderOutsideForm is false) */}
+              {section.customTable &&
+                !section.customTable.renderOutsideForm &&
+                section.customTable.entries.length > 0 &&
+                renderCustomTable(section.customTable)}
+            </Form>
+            </div>
+          )}
 
-                      {/* Custom table inside the form (if renderOutsideForm is false) */}
-                      {section.customTable &&
-                        !section.customTable.renderOutsideForm &&
-                        section.customTable.entries.length > 0 &&
-                        renderCustomTable(section.customTable)}
-                    </Form>
-                  </div>
-                )}
+          {/* non-form custom-tables */}
+          {section.type === "custom-table" && section.schema &&
+            renderCustomTable(section)}
 
-                {/* non-form custom-tables */}
-                {section.type === "custom-table" && section.schema &&
-                  renderCustomTable(section)}
+          {/* Standard table inside accordion */}
+          {section.type === "table" && renderTable(section)}
+        </AccordionContent>
+      </AccordionItem>
+    ) : (
+      // Table rendered outside accordion
+      section.type === "table" && (
+        <div key={index} className="mt-4">
+          {renderTable(section)}
+        </div>
+      )
+    );
+  })}
+</Accordion>
 
-                {/* Standard table inside accordion */}
-                {section.type === "table" && renderTable(section)}
-              </AccordionContent>
-            </AccordionItem>
-          ) : (
-            // Table rendered outside accordion
-            section.type === "table" && (
-              <div key={index} className="mt-4">
-                {renderTable(section)}
-              </div>
-            )
-          );
-        })}
-      </Accordion>
-
-      {/* Custom tables rendered outside the accordion/form */}
-      {sections
-        .filter(
-          (section) =>
-            section.type === "form" &&
-            section.customTable &&
-            section.customTable.renderOutsideForm &&
-            section.customTable.entries.length > 0
-        )
-        .map((section, index) => (
-          <div key={`custom-table-${index}`} className="mt-4">
-            {renderCustomTable(section.customTable)}
-          </div>
-        ))}
+{/* Custom tables rendered outside the accordion/form */}
+{sections
+  .filter(
+    (section) =>
+      section.type === "form" &&
+      section.customTable &&
+      section.customTable.renderOutsideForm &&
+      section.customTable.entries.length > 0
+  )
+  .map((section, index) => (
+    <div key={`custom-table-${index}`} className="mt-4">
+      {renderCustomTable(section.customTable)}
+    </div>
+  ))}
 
 
       {/* Reusable Modal */}
