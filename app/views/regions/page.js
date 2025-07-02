@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
-import { Edit, Eye, Trash2 } from "lucide-react";
 
 export default function RegionViewPage() {
   const [columns, setColumns] = useState([]);
@@ -14,8 +13,6 @@ export default function RegionViewPage() {
       try {
         const res = await fetch("/regionData.json");
         const data = await res.json();
-        
-    //   console.log("Fetched Data:", data);
 
         const formattedColumns = data.headers.map((header) => ({
           accessorKey: header.accessorKey,
@@ -32,28 +29,24 @@ export default function RegionViewPage() {
     fetchData();
   }, []);
 
-  const actions = [
-    {
-      label: "Edit",
-      icon: <Edit size={18} className="mr-2" />,
-      onClick: (row) => console.log("Edit", row),
-    },
-    {
-      label: "View",
-      icon: <Eye size={18} className="mr-2" />,
-      onClick: (row) => console.log("View", row),
-    },
-    {
-      label: "Delete",
-      icon: <Trash2 size={18} className="mr-2" />,
-      onClick: (row) => console.log("Delete", row),
-    },
-  ];
-
   const filterFields = [
     { name: "name", label: "Region Name" },
     { name: "departmentCode", label: "Department Code" },
   ];
+
+  // ✅ Action handler for actions like Edit, View, Delete
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      const updated = rows.filter((r) => r !== row);
+      setRows(updated);
+    } else if (action === "edit") {
+      console.log("Edit row", row);
+    } else if (action === "view") {
+      console.log("View row", row);
+    } else {
+      console.log("Unknown action", action, row);
+    }
+  };
 
   return (
     <div className="p-4">
@@ -61,7 +54,6 @@ export default function RegionViewPage() {
         title="Region List"
         columns={columns}
         rows={rows}
-        actions={actions}
         showActions={true}
         filterFields={filterFields}
         formValues={formValues}
@@ -70,7 +62,8 @@ export default function RegionViewPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-
+        enabledActions={["edit", "view", "delete"]} // 👈 show only needed actions
+        onActionClick={handleActionClick} // 👈 trigger delete/edit/view
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
           { label: "Table View", onClick: () => console.log("Table View") },

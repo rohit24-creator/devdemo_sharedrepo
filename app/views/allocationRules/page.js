@@ -2,12 +2,10 @@
 
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
-import { Edit, Eye, Trash2 } from "lucide-react";
 
 export default function RulesViewPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
-  const [formValues, setFormValues] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,31 +28,28 @@ export default function RulesViewPage() {
     fetchData();
   }, []);
 
-  const actions = [
-    {
-      label: "Edit",
-      icon: <Edit size={18} className="mr-2" />,
-      onClick: (row) => console.log("Edit", row),
-    },
-    {
-      label: "View",
-      icon: <Eye size={18} className="mr-2" />,
-      onClick: (row) => console.log("View", row),
-    },
-    {
-      label: "Delete",
-      icon: <Trash2 size={18} className="mr-2" />,
-      onClick: (row) => console.log("Delete", row),
-    },
-  ];
-
   const filterFields = [
     { name: "ruleName", label: "Rule Name" },
-    {
-      name: "shipmentType",
-      label: "Shipment Type",
-    }
+    { name: "shipmentType", label: "Shipment Type" },
   ];
+
+  // ✅ Central action handler
+  const handleActionClick = (action, row) => {
+    if (action === "edit") {
+      console.log("Edit clicked:", row);
+      // Add logic to navigate/edit modal
+    } else if (action === "view") {
+      console.log("View clicked:", row);
+    } else if (action === "delete") {
+      console.log("Delete clicked:", row);
+    } else if (action === "map") {
+      console.log("Map clicked:", row);
+    } else if (action === "track") {
+      console.log("Track clicked:", row);
+    } else {
+      console.log("Unknown action:", action, row);
+    }
+  };
 
   return (
     <div className="p-4">
@@ -62,15 +57,14 @@ export default function RulesViewPage() {
         title="Rules"
         columns={columns}
         rows={rows}
-        actions={actions}
         showActions={true}
         filterFields={filterFields}
-        formValues={formValues}
-        setFormValues={setFormValues}
         onSearch={(data) => console.log("Search:", data)}
-        showFirstIcon={false}
+        showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={false}
+        enabledActions={["edit", "view", "delete", "map", "track"]} // ✅ list of action keys
+        onActionClick={handleActionClick} // ✅ single function handles all
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
           { label: "Table View", onClick: () => console.log("Table View") },

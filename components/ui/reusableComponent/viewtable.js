@@ -31,6 +31,8 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Edit, Eye, Trash2, MapPin, Activity } from "lucide-react";
+
 
 export default function ReusableTable({
   title = "Table",
@@ -52,6 +54,48 @@ export default function ReusableTable({
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRows, setSelectedRows] = useState([]);
+
+  const enabledActions = ["edit", "view", "delete"]; // default actions
+  const onActionClick = () => {};
+
+  const allAvailableActions = {
+  edit: {
+    label: "Edit",
+    icon: <Edit size={18} className="mr-2" />,
+  },
+  view: {
+    label: "View",
+    icon: <Eye size={18} className="mr-2" />,
+  },
+  delete: {
+    label: "Delete",
+    icon: <Trash2 size={18} className="mr-2" />,
+  },
+  map: {
+    label: "Map",
+    icon: <MapPin size={18} className="mr-2" />,
+  },
+  track: {
+    label: "Track",
+    icon: <Activity size={18} className="mr-2" />,
+  },
+};
+
+const effectiveActions = enabledActions
+  .map((key) => {
+    const action = allAvailableActions[key];
+    return action
+      ? {
+          ...action,
+          key,
+          onClick: (row) => onActionClick(key, row),
+        }
+      : null;
+  })
+  .filter(Boolean);
+
+  
+
 
   const handleChange = (name, value) => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -342,16 +386,17 @@ export default function ReusableTable({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="right">
-                          {actions.map((action, idx) => (
-                            <DropdownMenuItem
-                              key={idx}
-                              onClick={() => action.onClick(row)}
-                              className="flex items-center gap-2"
-                            >
-                              {action.icon}
-                              {action.label}
-                            </DropdownMenuItem>
-                          ))}
+                          {effectiveActions.map((action, idx) => (
+  <DropdownMenuItem
+    key={idx}
+    onClick={() => action.onClick(row)}
+    className="flex items-center gap-2"
+  >
+    {action.icon}
+    {action.label}
+  </DropdownMenuItem>
+))}
+
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
