@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Eye, Edit, Trash2 } from "lucide-react";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function VehicleTypeViewPage() {
   const [columns, setColumns] = useState([]);
@@ -31,7 +32,7 @@ export default function VehicleTypeViewPage() {
         }));
 
         setColumns(formattedColumns);
-        setRows(data.rows);
+        setRows(formatRowsWithId(data.rows));
       } catch (err) {
         console.error("Failed to load vehicle type data:", err);
       }

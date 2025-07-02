@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Edit, Eye, Trash2 } from "lucide-react";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function NotificationViewPage() {
   const [columns, setColumns] = useState([]);
@@ -21,7 +22,7 @@ export default function NotificationViewPage() {
         }));
 
         setColumns(formattedColumns);
-        setRows(data.rows);
+        setRows(formatRowsWithId(data.rows));
       } catch (error) {
         console.error("Error fetching notification data:", error);
       }

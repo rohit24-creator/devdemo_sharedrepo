@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Edit, Eye, Trash2 } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function PartnerDetailsPage() {
   const [columns, setColumns] = useState([]);
@@ -61,28 +62,33 @@ export default function PartnerDetailsPage() {
     { label: "Export Excel", onClick: () => console.log("Excel Export") },
   ];
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await fetch("/partnerData.json");
-      const data = await res.json();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/partnerData.json");
+        const data = await res.json();
 
-      // ✅ Use correct keys from JSON
-      const formattedColumns = data.headers.map((header) => ({
-        accessorKey: header.accessorKey,
-        header: header.header,
-      }));
+        // Format columns
+        const formattedColumns = data.headers.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+        }));
 
-      setColumns(formattedColumns);
-      setRows(data.rows);
-    } catch (err) {
-      console.error("Error fetching partner data:", err);
-    }
-  };
+        // Add unique ID to each row 
+        const formattedRows = data.rows.map((row, index) => ({
+          ...row,
+          id: row.id || uuidv4() || `row-${idx}`,
+        }));
 
-  fetchData();
-}, []);
+        setColumns(formattedColumns);
+        setRows(formattedRows);
+      } catch (err) {
+        console.error("Error fetching partner data:", err);
+      }
+    };
 
+    fetchData();
+  }, []);
 
   return (
     <div className="p-4">
