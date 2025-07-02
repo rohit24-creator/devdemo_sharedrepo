@@ -157,25 +157,28 @@ export default function ReusableTable({
   // ✅ Checkbox logic
   const isAllSelected =
     paginatedRows.length > 0 &&
-    paginatedRows.every((row) => selectedRows.includes(row.id));
+    paginatedRows.every((row) => selectedRows.includes(row));
 
   const toggleSelectAll = () => {
-    const pageRowIds = paginatedRows.map((row) => row.id);
     if (isAllSelected) {
-      setSelectedRows((prev) => prev.filter((id) => !pageRowIds.includes(id)));
+      setSelectedRows((prev) =>
+        prev.filter((row) => !paginatedRows.includes(row))
+      );
     } else {
-      setSelectedRows((prev) => [...new Set([...prev, ...pageRowIds])]);
+      setSelectedRows((prev) => [
+        ...prev,
+        ...paginatedRows.filter((row) => !prev.includes(row)),
+      ]);
     }
   };
 
   const toggleRow = (row) => {
     setSelectedRows((prev) =>
-      prev.includes(row.id)
-        ? prev.filter((id) => id !== row.id)
-        : [...prev, row.id]
+      prev.includes(row)
+        ? prev.filter((r) => r !== row)
+        : [...prev, row]
     );
   };
-
 
   const filterTab = (
     <Card>
@@ -292,7 +295,7 @@ export default function ReusableTable({
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={toggleSelectAll}
-                  className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                  className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                 />
               </TableHead>
               {showActions && rows.length > 0 && (
@@ -324,9 +327,9 @@ export default function ReusableTable({
                 <TableRow key={rowIndex}>
                   <TableCell className="px-6 py-3">
                     <Checkbox
-                      checked={selectedRows.includes(row.id)}
+                      checked={selectedRows.includes(row)}
                       onCheckedChange={() => toggleRow(row)}
-                      className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                     />
                   </TableCell>
 
