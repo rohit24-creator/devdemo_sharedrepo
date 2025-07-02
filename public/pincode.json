@@ -1,0 +1,65 @@
+{
+  "headers": [
+    { "accessorKey": "origincity", "header": "Origin City" },
+    { "accessorKey": "originpin", "header": "Origin Pin" },
+    { "accessorKey": "destinationcity", "header": "Destination City" },
+    { "accessorKey": "destinationpin", "header": "Destination Pin" },
+    { "accessorKey": "customerid", "header": "Customer ID" },
+    { "accessorKey": "customerzone", "header": "Customer Zone" },
+    { "accessorKey": "customerregion", "header": "Customer Region" },
+    { "accessorKey": "customersurfacetat", "header": "Customer Surface TAT" },
+    { "accessorKey": "customerreturnsurfacetat", "header": "Customer Return Surface TAT" },
+    { "accessorKey": "destinationstate", "header": "Destination State" },
+    { "accessorKey": "carrierid", "header": "Carrier ID" },
+    { "accessorKey": "carrierzone", "header": "Carrier Zone" },
+    { "accessorKey": "carrierregion", "header": "Carrier Region" },
+    { "accessorKey": "carriersurfacetat", "header": "Carrier Surface TAT" },
+    { "accessorKey": "carrierreturnsurfacetat", "header": "Carrier Return Surface TAT" },
+    { "accessorKey": "reverseqc", "header": "Reverse QC" },
+    { "accessorKey": "createdon", "header": "Created On" },
+    { "accessorKey": "status", "header": "Status" }  
+  ],
+  "rows": [
+    {
+      "origincity": "Chennai",
+      "originpin": "600001",
+      "destinationcity": "Delhi",
+      "destinationpin": "110001",
+      "customerid": "CUST001",
+      "customerzone": "South",
+      "customerregion": "Standard",
+      "customersurfacetat": "2 Days",
+      "customerreturnsurfacetat": "3 Days",
+      "carrierid": "CARRIER01",
+      "carrierzone": "North",
+      "carrierregion": "Premium",
+      "carriersurfacetat": "1 Day",
+      "carrierreturnsurfacetat": "2 Days",
+      "destinationstate": "Delhi",
+      "reverseqc": "Enabled",
+      "createdon": "2024-08-01",
+      "status": "Active"
+    },
+    {
+      "origincity": "Mumbai",
+      "originpin": "400001",
+      "destinationcity": "Hyderabad",
+      "destinationpin": "500001",
+      "customerid": "CUST002",
+      "customerzone": "West",
+      "customerregion": "Premium",
+      "customersurfacetat": "1 Day",
+      "customerreturnsurfacetat": "2 Days",
+      "carrierid": "CARRIER02",
+      "carrierzone": "South",
+      "carrierregion": "Standard",
+      "carriersurfacetat": "2 Days",
+      "carrierreturnsurfacetat": "3 Days",
+      "destinationstate": "Telangana",
+      "reverseqc": "Disabled",
+        "createdon": "2024-08-02",
+        "status": "Inactive"
+    }
+  ]
+  
+}

@@ -1,0 +1,31 @@
+{
+  "headers": [
+    { "accessorKey": "costcenter", "header": "Cost Center" },
+    { "accessorKey": "description", "header": "Description" },
+    { "accessorKey": "customerName", "header": "Customer Name" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "departmentCode", "header": "Department Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "status", "header": "Status" }
+  ],
+  "rows": [
+    {
+      "costcenter": "CC001",
+      "description": "Air",
+      "customerName": "Flipkart",
+      "companyCode": "THAI001",
+      "departmentCode": "Standard",
+      "branchCode": "BANG001",  
+        "status": "Active"
+    },
+    {
+      "costcenter": "CC002",
+      "description": "Sea",
+      "customerName": "Amazon",
+      "companyCode": "THAI002",
+      "departmentCode": "Premium",
+      "branchCode": "DEL002",
+        "status": "Inactive"
+    }
+  ]
+}

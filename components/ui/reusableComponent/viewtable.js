@@ -51,6 +51,7 @@ export default function ReusableTable({
   const [currentPage, setCurrentPage] = useState(1);
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const handleChange = (name, value) => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -153,14 +154,39 @@ export default function ReusableTable({
     }
   };
 
-  // 🔹 1. Tab-like Filter Section
+  // ✅ Checkbox logic
+  const isAllSelected =
+    paginatedRows.length > 0 &&
+    paginatedRows.every((row) => selectedRows.includes(row));
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedRows((prev) =>
+        prev.filter((row) => !paginatedRows.includes(row))
+      );
+    } else {
+      setSelectedRows((prev) => [
+        ...prev,
+        ...paginatedRows.filter((row) => !prev.includes(row)),
+      ]);
+    }
+  };
+
+  const toggleRow = (row) => {
+    setSelectedRows((prev) =>
+      prev.includes(row)
+        ? prev.filter((r) => r !== row)
+        : [...prev, row]
+    );
+  };
+
   const filterTab = (
     <Card>
       <CardContent className="p-4 flex justify-between items-center flex-wrap gap-4">
         <div className="flex flex-wrap gap-3">
           {filterFields.map(renderField)}
           <Button
-            className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
+            className="bg-[#006397] text-white px-4 rounded-full"
             onClick={() => onSearch(formValues)}
           >
             Search
@@ -201,14 +227,13 @@ export default function ReusableTable({
     </Card>
   );
 
-  // 🔹 2. Table Section
   const tableContent = (
     <Card>
       <CardContent className="p-4">
         <div className="flex justify-between items-center mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
+              <Button className="bg-[#006397] text-white px-3 py-1 rounded-sm text-sm">
                 Toggle Columns
               </Button>
             </DropdownMenuTrigger>
@@ -267,7 +292,11 @@ export default function ReusableTable({
           <TableHeader>
             <TableRow className="border-b border-gray-200">
               <TableHead className="w-12 px-6 py-3">
-                <Checkbox />
+                <Checkbox
+                  checked={isAllSelected}
+                  onCheckedChange={toggleSelectAll}
+                  className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                />
               </TableHead>
               {showActions && rows.length > 0 && (
                 <TableHead className="w-12 px-6 py-3" />
@@ -297,7 +326,11 @@ export default function ReusableTable({
               paginatedRows.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
                   <TableCell className="px-6 py-3">
-                    <Checkbox />
+                    <Checkbox
+                      checked={selectedRows.includes(row)}
+                      onCheckedChange={() => toggleRow(row)}
+                      className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                    />
                   </TableCell>
 
                   {showActions && (
@@ -347,7 +380,6 @@ export default function ReusableTable({
     </Card>
   );
 
-  //  Final Render: Both sections separately
   return (
     <>
       {filterTab}
