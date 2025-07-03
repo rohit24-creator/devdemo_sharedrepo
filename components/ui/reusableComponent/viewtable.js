@@ -464,7 +464,6 @@ export default function ReusableTable({
               Cancel
             </Button>
             <Button 
-              variant="destructive" 
               onClick={handleDeleteConfirm}
               className="bg-red-600 hover:bg-red-700"
             >
