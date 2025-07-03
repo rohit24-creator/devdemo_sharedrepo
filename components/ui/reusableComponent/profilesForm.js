@@ -453,7 +453,7 @@ function renderCustomTable(section) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-12 text-[#162d56] text-sm font-semibold px-3 py-2">
-                <Checkbox />
+                <Checkbox className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]" />
               </TableHead>
               <TableHead className="w-16 px-3 py-2" />
               {Object.keys(section.schema.shape).map((field) => (
@@ -470,7 +470,7 @@ function renderCustomTable(section) {
             {section.entries.map((entry, index) => (
               <TableRow key={index}>
                 <TableCell className="px-3 py-2">
-                  <Checkbox />
+                  <Checkbox className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]" />
                 </TableCell>
                 <TableCell className="px-3 py-2">
                   <DropdownMenu>
