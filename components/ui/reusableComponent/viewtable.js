@@ -57,23 +57,28 @@ export default function ReusableTable({
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const renderField = (field) => {
-    const { name, label, type = "text", options = [] } = field;
+const renderField = (field) => {
+  const { name, label, type = "text", options = [] } = field;
 
-    if (type === "date") {
-      return (
-        <Popover key={name}>
+  return (
+    <div key={name} className="flex flex-col gap-1 w-40">
+      <label htmlFor={name} className="text-sm font-medium text-gray-700">
+        {label}
+      </label>
+
+      {type === "date" ? (
+        <Popover>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               className={cn(
-                "w-[160px] justify-start text-left font-normal border border-gray-300",
+                "w-full justify-start text-left font-normal border border-gray-300",
                 !formValues[name] && "text-muted-foreground"
               )}
             >
               {formValues[name]
                 ? format(new Date(formValues[name]), "yyyy-MM-dd")
-                : label}
+                : "Select date"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
@@ -87,18 +92,13 @@ export default function ReusableTable({
             />
           </PopoverContent>
         </Popover>
-      );
-    }
-
-    if (type === "select") {
-      return (
+      ) : type === "select" ? (
         <Select
-          key={name}
-          onValueChange={(value) => handleChange(name, value)}
           value={formValues[name]}
+          onValueChange={(value) => handleChange(name, value)}
         >
-          <SelectTrigger className="w-[160px] border border-gray-300">
-            <SelectValue placeholder={label} />
+          <SelectTrigger className="w-full border border-gray-300">
+            <SelectValue placeholder={`Select ${label}`} />
           </SelectTrigger>
           <SelectContent>
             {options.map((option) =>
@@ -114,19 +114,18 @@ export default function ReusableTable({
             )}
           </SelectContent>
         </Select>
-      );
-    }
-
-    return (
-      <Input
-        key={name}
-        placeholder={label}
-        value={formValues[name] || ""}
-        onChange={(e) => handleChange(name, e.target.value)}
-        className="w-[160px] border border-gray-300"
-      />
-    );
-  };
+      ) : (
+        <Input
+          type={type}
+          id={name}
+          value={formValues[name] || ""}
+          onChange={(e) => handleChange(name, e.target.value)}
+          className="w-full border border-gray-300"
+        />
+      )}
+    </div>
+  );
+};
 
   const sortedRows = useMemo(() => {
     if (!sortColumn) return rows;
@@ -179,53 +178,57 @@ export default function ReusableTable({
         : [...prev, row]
     );
   };
+const filterTab = (
+  <Card>
+    <CardContent className="p-4 flex justify-between flex-wrap gap-4">
 
-  const filterTab = (
-    <Card>
-      <CardContent className="p-4 flex justify-between items-center flex-wrap gap-4">
-        <div className="flex flex-wrap gap-3">
-          {filterFields.map(renderField)}
-          <Button
-            className="bg-[#006397] text-white px-4 rounded-full"
-            onClick={() => onSearch(formValues)}
-          >
-            Search
-          </Button>
-        </div>
-        <div className="flex items-center gap-6 pr-2">
-          {showFirstIcon && <Search size={18} className="cursor-pointer text-gray-600" />}
-          {showSecondIcon && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <LayoutGrid size={18} className="cursor-pointer text-gray-600" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {secondIconMenu.map((item, idx) => (
-                  <DropdownMenuItem key={idx} onClick={item.onClick}>
-                    {item.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          {showThirdIcon && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <FileText size={18} className="cursor-pointer text-gray-600" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {thirdIconMenu.map((item, idx) => (
-                  <DropdownMenuItem key={idx} onClick={item.onClick}>
-                    {item.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
+      <div className="flex flex-wrap items-end gap-3">
+        {filterFields.map(renderField)}
+        <Button
+          className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
+          onClick={() => onSearch(formValues)}
+        >
+          Search
+        </Button>
+      </div>
+
+      <div className="flex items-end gap-6 pr-2">
+        {showFirstIcon && (
+          <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+        )}
+        {showSecondIcon && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {secondIconMenu.map((item, idx) => (
+                <DropdownMenuItem key={idx} onClick={item.onClick}>
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+        {showThirdIcon && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {thirdIconMenu.map((item, idx) => (
+                <DropdownMenuItem key={idx} onClick={item.onClick}>
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+    </CardContent>
+  </Card>
+);
+
 
   const tableContent = (
     <Card>
@@ -233,7 +236,7 @@ export default function ReusableTable({
         <div className="flex justify-between items-center mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-[#006397] text-white px-3 py-1 rounded-sm text-sm">
+              <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
                 Toggle Columns
               </Button>
             </DropdownMenuTrigger>
@@ -245,7 +248,7 @@ export default function ReusableTable({
           </DropdownMenu>
 
           <div className="flex items-center space-x-2">
-            <label htmlFor="display" className="text-sm font-medium">
+            <label htmlFor="display" className="text-sm">
               Display
             </label>
             <Select
