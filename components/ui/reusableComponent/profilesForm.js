@@ -265,7 +265,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                     {...field}
                     disabled={disabled}
                     type={type}
-                    placeholder={placeholder || label}
+                    placeholder={placeholder}
                     className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
                       disabled ? "bg-gray-100" : ""
                     }`}
