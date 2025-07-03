@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import { Edit, Eye, Trash2 } from "lucide-react";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function RulesViewPage() {
   const [columns, setColumns] = useState([]);
@@ -19,7 +21,7 @@ export default function RulesViewPage() {
         }));
 
         setColumns(formattedColumns);
-        setRows(data.rows);
+        setRows(formatRowsWithId(data.rows));
       } catch (err) {
         console.error("Error fetching rules data:", err);
       }

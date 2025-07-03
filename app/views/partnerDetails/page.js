@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import { Edit, Eye, Trash2 } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function PartnerDetailsPage() {
   const [columns, setColumns] = useState([]);
@@ -47,25 +49,40 @@ export default function PartnerDetailsPage() {
     }
   };
 
+  const secondIconMenu = [
+    { label: "View as Grid", onClick: () => console.log("Grid View") },
+    { label: "View as Table", onClick: () => console.log("Table View") },
+  ];
+
+  const thirdIconMenu = [
+    { label: "Export PDF", onClick: () => console.log("PDF Export") },
+    { label: "Export Excel", onClick: () => console.log("Excel Export") },
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch("/partnerData.json");
         const data = await res.json();
 
-        // ✅ Use correct keys from JSON
+        // Format columns
         const formattedColumns = data.headers.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
         }));
 
+        // Add unique ID to each row 
+        const formattedRows = data.rows.map((row, index) => ({
+          ...row,
+          id: row.id || uuidv4() || `row-${index}`,
+        }));
+
         setColumns(formattedColumns);
-        setRows(data.rows);
+        setRows(formattedRows);
       } catch (err) {
         console.error("Error fetching partner data:", err);
       }
     };
-
     fetchData();
   }, []);
 
