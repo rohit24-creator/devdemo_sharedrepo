@@ -31,7 +31,15 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Edit, Eye, Trash2, MapPin, Activity } from "lucide-react";
+import { Edit, Eye, Trash2, History } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ReusableTable({
   title = "Table",
@@ -46,7 +54,7 @@ export default function ReusableTable({
   showThirdIcon = true,
   secondIconMenu = [],
   thirdIconMenu = [],
-  enabledActions = ["edit", "view", "delete"], // <-- use prop, not hardcoded
+  enabledActions = ["edit", "view", "delete", "tripHistory"], // <-- use prop, not hardcoded
   onActionClick = () => {},                   // <-- use prop, not hardcoded
 }) {
   const [formValues, setFormValues] = useState({});
@@ -55,6 +63,8 @@ export default function ReusableTable({
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRows, setSelectedRows] = useState([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
 
   const allAvailableActions = {
     edit: {
@@ -69,13 +79,9 @@ export default function ReusableTable({
       label: "Delete",
       icon: <Trash2 size={18} className="mr-2" />,
     },
-    map: {
-      label: "Map",
-      icon: <MapPin size={18} className="mr-2" />,
-    },
-    track: {
-      label: "Track",
-      icon: <Activity size={18} className="mr-2" />,
+    tripHistory: {
+      label: "Trip History",
+      icon: <History size={18} className="mr-2" />,
     },
   };
 
@@ -86,11 +92,31 @@ export default function ReusableTable({
         ? {
             ...action,
             key,
-            onClick: (row) => onActionClick(key, row),
+            onClick: (row) => {
+              if (key === "delete") {
+                setRowToDelete(row);
+                setDeleteDialogOpen(true);
+              } else {
+                onActionClick(key, row);
+              }
+            },
           }
         : null;
     })
     .filter(Boolean);
+
+  const handleDeleteConfirm = () => {
+    if (rowToDelete) {
+      onActionClick("delete", rowToDelete);
+    }
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
+  };
 
   const handleChange = (name, value) => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -420,6 +446,33 @@ export default function ReusableTable({
     <>
       {filterTab}
       <div className="mt-4">{tableContent}</div>
+      
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={() => {}}>
+        <DialogContent 
+          className="top-20 left-1/2 transform -translate-x-1/2 [&>button]:hidden" 
+          style={{ position: 'fixed', top: '20%' }}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">Confirm Delete</DialogTitle>
+            <DialogDescription className="text-lg">
+              Are you sure you want to delete this record?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="" onClick={handleDeleteCancel}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              OK
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
