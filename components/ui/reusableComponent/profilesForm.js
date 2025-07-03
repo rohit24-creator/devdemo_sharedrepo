@@ -83,21 +83,19 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
   const [modalType, setModalType] = useState(null)
   const [filteredBranchData, setFilteredBranchData] = useState([])
 
-  const currentSectionForm = sections.find((sec) => sec.type === "form")?.form
-
-  const renderFieldWithModals = (fieldConfig) => {
+  const renderFieldWithModals = (fieldConfig, form, sectionIndex) => {
     const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
 
     return (
       <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
         <FormField
-          control={currentSectionForm.control}
+          control={form.control}
           name={name}
           render={({ field }) => (
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>
-                {["companyCode", "branchCode"].includes(name) ? (
+                {(["companyCode", "branchCode"].includes(name)) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
                     <Input
                       {...field}
@@ -110,10 +108,10 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                           key={actionType}
                           type="button"
                           onClick={() => {
-                            setModalField(name)
+                            setModalField({ name, sectionIndex })
                             setModalType(actionType)
                             if (name === "branchCode") {
-                              const selectedCompany = currentSectionForm.getValues("companyCode")
+                              const selectedCompany = form.getValues("companyCode")
                               const filtered = branchListData.filter(
                                 (b) => b.companyCode === selectedCompany
                               )
@@ -305,7 +303,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
               >
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {section.fields.map((fieldConfig) =>
-                    renderFieldWithModals(fieldConfig)
+                    renderFieldWithModals(fieldConfig, section.form, index)
                   )}
                 </div>
                 {section.children}
@@ -364,7 +362,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
             setModalType(null)
           }}
           title={
-            modalField === "companyCode"
+            modalField.name === "companyCode"
               ? modalType === "list"
                 ? "List of Companies"
                 : modalType === "search"
@@ -374,9 +372,9 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
               ? "List of Branches"
               : "Search Branch Details"
           }
-          columns={modalField === "companyCode" ? companyModalColumns : branchModalColumns}
+          columns={modalField.name === "companyCode" ? companyModalColumns : branchModalColumns}
           data={
-            modalField === "companyCode"
+            modalField.name === "companyCode"
               ? modalType === "list"
                 ? companyListData
                 : modalType === "search"
@@ -385,14 +383,15 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
               : filteredBranchData
           }
           onSelect={(row) => {
-            if (modalField === "companyCode") {
-              currentSectionForm.setValue("companyCode", row["Company Code"])
-              currentSectionForm.setValue("branchCode", "")
-            } else if (modalField === "branchCode") {
-              currentSectionForm.setValue("branchCode", row["Branch Code"])
+            const section = sections[modalField.sectionIndex];
+            if (modalField.name === "companyCode") {
+              section.form.setValue("companyCode", row["Company Code"]);
+              section.form.setValue("branchCode", "");
+            } else if (modalField.name === "branchCode") {
+              section.form.setValue("branchCode", row["Branch Code"]);
             }
-            setModalField(null)
-            setModalType(null)
+            setModalField(null);
+            setModalType(null);
           }}
         />
       )}
