@@ -35,19 +35,15 @@ export default function RulesViewPage() {
 
   // ✅ Central action handler
   const handleActionClick = (action, row) => {
-    if (action === "edit") {
-      console.log("Edit clicked:", row);
-      // Add logic to navigate/edit modal
+    if (action === "delete") {
+      const updated = rows.filter((r) => r !== row);
+      setRows(updated);
+    } else if (action === "edit") {
+      console.log("Edit row", row);
     } else if (action === "view") {
-      console.log("View clicked:", row);
-    } else if (action === "delete") {
-      console.log("Delete clicked:", row);
-    } else if (action === "map") {
-      console.log("Map clicked:", row);
-    } else if (action === "track") {
-      console.log("Track clicked:", row);
+      console.log("View row", row);
     } else {
-      console.log("Unknown action:", action, row);
+      console.log("Unknown action", action, row);
     }
   };
 
@@ -63,7 +59,7 @@ export default function RulesViewPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={false}
-        enabledActions={["edit", "view", "delete", "map", "track"]} // ✅ list of action keys
+        enabledActions={["edit", "view", "delete"]} // ✅ list of action keys
         onActionClick={handleActionClick} // ✅ single function handles all
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },

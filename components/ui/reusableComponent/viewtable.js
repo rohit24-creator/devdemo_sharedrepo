@@ -33,7 +33,6 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Edit, Eye, Trash2, MapPin, Activity } from "lucide-react";
 
-
 export default function ReusableTable({
   title = "Table",
   columns = [],
@@ -47,6 +46,8 @@ export default function ReusableTable({
   showThirdIcon = true,
   secondIconMenu = [],
   thirdIconMenu = [],
+  enabledActions = ["edit", "view", "delete"], // <-- use prop, not hardcoded
+  onActionClick = () => {},                   // <-- use prop, not hardcoded
 }) {
   const [formValues, setFormValues] = useState({});
   const [displayCount, setDisplayCount] = useState(30);
@@ -55,47 +56,41 @@ export default function ReusableTable({
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const enabledActions = ["edit", "view", "delete"]; // default actions
-  const onActionClick = () => {};
-
   const allAvailableActions = {
-  edit: {
-    label: "Edit",
-    icon: <Edit size={18} className="mr-2" />,
-  },
-  view: {
-    label: "View",
-    icon: <Eye size={18} className="mr-2" />,
-  },
-  delete: {
-    label: "Delete",
-    icon: <Trash2 size={18} className="mr-2" />,
-  },
-  map: {
-    label: "Map",
-    icon: <MapPin size={18} className="mr-2" />,
-  },
-  track: {
-    label: "Track",
-    icon: <Activity size={18} className="mr-2" />,
-  },
-};
+    edit: {
+      label: "Edit",
+      icon: <Edit size={18} className="mr-2" />,
+    },
+    view: {
+      label: "View",
+      icon: <Eye size={18} className="mr-2" />,
+    },
+    delete: {
+      label: "Delete",
+      icon: <Trash2 size={18} className="mr-2" />,
+    },
+    map: {
+      label: "Map",
+      icon: <MapPin size={18} className="mr-2" />,
+    },
+    track: {
+      label: "Track",
+      icon: <Activity size={18} className="mr-2" />,
+    },
+  };
 
-const effectiveActions = enabledActions
-  .map((key) => {
-    const action = allAvailableActions[key];
-    return action
-      ? {
-          ...action,
-          key,
-          onClick: (row) => onActionClick(key, row),
-        }
-      : null;
-  })
-  .filter(Boolean);
-
-  
-
+  const effectiveActions = enabledActions
+    .map((key) => {
+      const action = allAvailableActions[key];
+      return action
+        ? {
+            ...action,
+            key,
+            onClick: (row) => onActionClick(key, row),
+          }
+        : null;
+    })
+    .filter(Boolean);
 
   const handleChange = (name, value) => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -387,16 +382,15 @@ const effectiveActions = enabledActions
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="right">
                           {effectiveActions.map((action, idx) => (
-  <DropdownMenuItem
-    key={idx}
-    onClick={() => action.onClick(row)}
-    className="flex items-center gap-2"
-  >
-    {action.icon}
-    {action.label}
-  </DropdownMenuItem>
-))}
-
+                            <DropdownMenuItem
+                              key={idx}
+                              onClick={() => action.onClick(row)}
+                              className="flex items-center gap-2"
+                            >
+                              {action.icon}
+                              {action.label}
+                            </DropdownMenuItem>
+                          ))}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

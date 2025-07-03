@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
-import { Edit, Eye, Trash2 } from "lucide-react";
 
 export default function LaneViewPage() {
   const [columns, setColumns] = useState([]);
@@ -30,24 +29,6 @@ export default function LaneViewPage() {
     fetchData();
   }, []);
 
-  const actions = [
-    {
-      label: "Edit",
-      icon: <Edit size={18} className="mr-2" />,
-      onClick: (row) => console.log("Edit", row),
-    },
-    {
-      label: "View",
-      icon: <Eye size={18} className="mr-2" />,
-      onClick: (row) => console.log("View", row),
-    },
-    {
-      label: "Delete",
-      icon: <Trash2 size={18} className="mr-2" />,
-      onClick: (row) => console.log("Delete", row),
-    },
-  ];
-
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
     { name: "toDate", label: "To Date", type: "date" },
@@ -55,13 +36,26 @@ export default function LaneViewPage() {
     { name: "laneId", label: "Lane ID" },
   ];
 
+  // Action handler for actions like Edit, View, Delete
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      const updated = rows.filter((r) => r !== row);
+      setRows(updated);
+    } else if (action === "edit") {
+      console.log("Edit row", row);
+    } else if (action === "view") {
+      console.log("View row", row);
+    } else {
+      console.log("Unknown action", action, row);
+    }
+  };
+
   return (
     <div className="p-4">
       <ReusableTable
         title="Lane List"
         columns={columns}
         rows={rows}
-        actions={actions}
         showActions={true}
         filterFields={filterFields}
         formValues={formValues}
@@ -70,6 +64,8 @@ export default function LaneViewPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
+        enabledActions={["edit", "view", "delete"]} // show only needed actions
+        onActionClick={handleActionClick} // trigger delete/edit/view
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
           { label: "Table View", onClick: () => console.log("Table View") },
