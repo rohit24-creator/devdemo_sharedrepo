@@ -8,24 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 export default function PartnerDetailsPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
-
-  const actions = [
-    {
-      label: "Edit",
-      icon: <Edit size={18} className="mr-2" />,
-      onClick: (row) => console.log("Edit", row),
-    },
-    {
-      label: "View",
-      icon: <Eye size={18} className="mr-2" />,
-      onClick: (row) => console.log("View", row),
-    },
-    {
-      label: "Delete",
-      icon: <Trash2 size={18} className="mr-2" />,
-      onClick: (row) => console.log("Delete", row),
-    },
-  ];
+  const [formValues, setFormValues] = useState({});
 
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
@@ -52,6 +35,20 @@ export default function PartnerDetailsPage() {
     },
   ];
 
+  // Action handler for actions like Edit, View, Delete
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      const updated = rows.filter((r) => r !== row);
+      setRows(updated);
+    } else if (action === "edit") {
+      console.log("Edit row", row);
+    } else if (action === "view") {
+      console.log("View row", row);
+    } else {
+      console.log("Unknown action", action, row);
+    }
+  };
+
   const secondIconMenu = [
     { label: "View as Grid", onClick: () => console.log("Grid View") },
     { label: "View as Table", onClick: () => console.log("Table View") },
@@ -77,7 +74,7 @@ export default function PartnerDetailsPage() {
         // Add unique ID to each row 
         const formattedRows = data.rows.map((row, index) => ({
           ...row,
-          id: row.id || uuidv4() || `row-${idx}`,
+          id: row.id || uuidv4() || `row-${index}`,
         }));
 
         setColumns(formattedColumns);
@@ -86,7 +83,6 @@ export default function PartnerDetailsPage() {
         console.error("Error fetching partner data:", err);
       }
     };
-
     fetchData();
   }, []);
 
@@ -96,17 +92,26 @@ export default function PartnerDetailsPage() {
         title="Partner Details"
         columns={columns}
         rows={rows}
-        actions={actions}
         showActions={true}
         filterFields={filterFields}
+        formValues={formValues}
+        setFormValues={setFormValues}
         onSearch={(data) => {
           console.log("Search Triggered with values:", data);
         }}
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={secondIconMenu}
-        thirdIconMenu={thirdIconMenu}
+        enabledActions={["edit", "view", "delete"]} // show only needed actions
+        onActionClick={handleActionClick} // trigger delete/edit/view
+        secondIconMenu={[
+          { label: "View as Grid", onClick: () => console.log("Grid View") },
+          { label: "View as Table", onClick: () => console.log("Table View") },
+        ]}
+        thirdIconMenu={[
+          { label: "Export PDF", onClick: () => console.log("PDF Export") },
+          { label: "Export Excel", onClick: () => console.log("Excel Export") },
+        ]}
       />
     </div>
   );

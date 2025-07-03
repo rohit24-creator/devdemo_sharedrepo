@@ -31,29 +31,25 @@ export default function PreferredViewPage() {
     fetchData();
   }, []);
 
-  const actions = [
-    {
-      label: "Edit",
-      icon: <Edit size={18} className="mr-2" />,
-      onClick: (row) => console.log("Edit", row),
-    },
-    {
-      label: "View",
-      icon: <Eye size={18} className="mr-2" />,
-      onClick: (row) => console.log("View", row),
-    },
-    {
-      label: "Delete",
-      icon: <Trash2 size={18} className="mr-2" />,
-      onClick: (row) => console.log("Delete", row),
-    },
-  ];
-
   const filterFields = [
     { name: "carrierid", label: "Carrier ID" },
     { name: "city", label: "City" },
     { name: "state", label: "State" }
   ];
+
+  // Action handler for actions like Edit, View, Delete
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      const updated = rows.filter((r) => r !== row);
+      setRows(updated);
+    } else if (action === "edit") {
+      console.log("Edit row", row);
+    } else if (action === "view") {
+      console.log("View row", row);
+    } else {
+      console.log("Unknown action", action, row);
+    }
+  };
 
   return (
     <div className="p-4">
@@ -61,7 +57,6 @@ export default function PreferredViewPage() {
         title="Preferred State List"
         columns={columns}
         rows={rows}
-        actions={actions}
         showActions={true}
         filterFields={filterFields}
         formValues={formValues}
@@ -70,6 +65,8 @@ export default function PreferredViewPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
+        enabledActions={["edit", "view", "delete"]} // show only needed actions
+        onActionClick={handleActionClick} // trigger delete/edit/view
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
           { label: "Table View", onClick: () => console.log("Table View") }
