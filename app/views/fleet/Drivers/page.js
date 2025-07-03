@@ -39,6 +39,7 @@ export default function DriverViewPage() {
 
   // Action handler for actions like Edit, View, Delete
   const handleActionClick = (action, row) => {
+    console.log("Action clicked:", action, "Row:", row);
     if (action === "delete") {
       const updated = rows.filter((r) => r !== row);
       setRows(updated);
@@ -46,6 +47,9 @@ export default function DriverViewPage() {
       console.log("Edit row", row);
     } else if (action === "view") {
       console.log("View row", row);
+    } else if (action === "tripHistory") {
+      console.log("Trip History row", row);
+      // alert(`Trip History for driver`);
     } else {
       console.log("Unknown action", action, row);
     }
@@ -65,7 +69,7 @@ export default function DriverViewPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        enabledActions={["edit", "view", "delete"]} // show only needed actions
+        enabledActions={["edit", "view", "delete", "tripHistory"]} // show only needed actions
         onActionClick={handleActionClick} // trigger delete/edit/view
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
