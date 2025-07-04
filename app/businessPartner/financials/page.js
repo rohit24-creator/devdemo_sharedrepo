@@ -32,7 +32,7 @@ const accountFields = [
   { name: "billable", label: "Billable", type: "radio", options: ["yes", "no"] },
   { name: "prePayment", label: "Pre Payment", type: "radio", options: ["yes", "no"] },
   { name: "multipleInvoices", label: "Multiple Invoices", type: "radio", options: ["yes", "no"] },
-];
+  ];
 
 const tariffFields = [
   { name: "companyCode", label: "Company Code", type: "company" },
@@ -87,8 +87,8 @@ export default function FinancialsForm() {
       onSubmit: onAccountSubmit,
       children: (
         <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">
-          Add Account
-        </Button>
+                  Add Account
+                </Button>
       ),
       customTable: {
         schema: accountSchema,
@@ -121,7 +121,7 @@ export default function FinancialsForm() {
       children: (
         <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">
           Add Tariff/Contract
-        </Button>
+                                </Button>
       ),
       customTable: {
         schema: tariffSchema,
@@ -136,7 +136,7 @@ export default function FinancialsForm() {
         },
         onDelete: (index) => {
           const updated = [...tariffEntries];
-          updated.splice(index, 1);
+                                      updated.splice(index, 1);
           setTariffEntries(updated);
         },
         renderOutsideForm: false,
