@@ -140,6 +140,14 @@ export default function PartnerDetailsForms() {
     },
   });
 
+  useEffect(() => {
+    const subscription = refForm.watch((value, { name, type }) => {
+      if (name === "referenceType" && value.referenceType) {
+        refForm.setValue("name", value.referenceType);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [refForm]);
 
   const form = useForm({
     resolver: zodResolver(addressSchema),
