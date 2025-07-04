@@ -298,7 +298,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
             <div className="pt-6">
             <Form {...section.form}>
               <form
-                onSubmit={section.form.handleSubmit(section.onSubmit)}
+                onSubmit={section.form.handleSubmit(section.onSubmit, section.onInvalid)}
                 className="space-y-4"
               >
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
