@@ -8,22 +8,22 @@ import { Button } from "@/components/ui/button"
 import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm"
 
 const schema = z.object({
-  notificationId: z.string(),
-  customer: z.string(),
-  fromCountry: z.string(),
-  companyCode: z.string(),
-  orderType: z.string(),
-  service: z.string(),
-  toCountry: z.string(),
-  branchCode: z.string(),
-  product: z.string(),
-  incoTerms: z.string(),
-  departmentCode: z.string(),
+  notificationId: z.string().min(1, { message: "Notification ID is required" }),
+  customerId: z.string().min(1, { message: "Customer ID is required" }),
+  fromCountry: z.string().min(1, { message: "From Country is required" }),
+  companyCode: z.string().min(1, { message: "Company Code is required" }),
+  orderType: z.string().min(1, { message: "Order Type is required" }),
+  service: z.string().min(1, { message: "Service is required" }),
+  toCountry: z.string().min(1, { message: "To Country is required" }),
+  branchCode: z.string().min(1, { message: "Branch Code is required" }),
+  product: z.string().min(1, { message: "Product is required" }),
+  incoTerms: z.string().min(1, { message: "Inco Terms is required" }),
+  departmentCode: z.string().min(1, { message: "Department Code is required" }),
 })
 
 const fieldConfig = [
   { name: "notificationId", label: "Notification ID", disabled: true },
-  { name: "customer", label: "Customer" },
+  { name: "customerId", label: "Customer" },
   {
     name: "fromCountry",
     label: "From Country",
@@ -119,7 +119,7 @@ export default function NotificationForm() {
     resolver: zodResolver(schema),
     defaultValues: {
       notificationId: "NTF-001",
-      customer: "",
+      customerId: "",
       fromCountry: "",
       companyCode: "THKN",
       orderType: "",

@@ -53,6 +53,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const companyModalColumns = ["Company Name", "Company Code", "Description"]
 const branchModalColumns = ["Branch Name", "Branch Code", "companyCode", "Description"]
+const customerIdModalColumns = [
+  "Customer ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+];
 
 const companyFindData = [
   { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
@@ -78,10 +81,34 @@ const branchListData = [
   { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
 ]
 
+const customerIdData = [
+  {
+    "Customer ID": "CUST001",
+    Name: "John Doe",
+    Street: "123 Main St",
+    City: "Bangkok",
+    Country: "Thailand",
+    Email: "john@example.com",
+    "Company Code": "THKN",
+    "Branch Code": "THBKK"
+  },
+  {
+    "Customer ID": "CUST002",
+    Name: "Jane Smith",
+    Street: "456 Second Ave",
+    City: "Chennai",
+    Country: "India",
+    Email: "jane@example.com",
+    "Company Code": "TCS01",
+    "Branch Code": "INCHN"
+  },
+];
+
 export function ReusableForm({ sections = [], tableAccordion = true }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
   const [filteredBranchData, setFilteredBranchData] = useState([])
+  const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([]);
 
   const renderFieldWithModals = (fieldConfig, form, sectionIndex) => {
     const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
@@ -95,7 +122,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>
-                {(["companyCode", "branchCode"].includes(name)) ? (
+                {["companyCode", "branchCode"].includes(name) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
                     <Input
                       {...field}
@@ -108,14 +135,12 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                           key={actionType}
                           type="button"
                           onClick={() => {
-                            setModalField({ name, sectionIndex })
-                            setModalType(actionType)
+                            setModalField({ name, sectionIndex });
+                            setModalType(actionType);
                             if (name === "branchCode") {
-                              const selectedCompany = form.getValues("companyCode")
-                              const filtered = branchListData.filter(
-                                (b) => b.companyCode === selectedCompany
-                              )
-                              setFilteredBranchData(filtered)
+                              const selectedCompany = form.getValues("companyCode");
+                              const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
+                              setFilteredBranchData(filtered);
                             }
                           }}
                         >
@@ -128,6 +153,39 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                           )}
                         </button>
                       ))}
+                    </div>
+                  </div>
+                ) : name === "customerId" ? (
+                  <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md overflow-hidden">
+                    <Input
+                      {...field}
+                      className="w-full px-3 py-2 bg-white rounded-md border-none focus:outline-none focus:ring-0 focus:border-none"
+                    />
+                    <div className="absolute right-0 h-full bg-gray-100 flex items-center px-2 space-x-2">
+                      <button
+                        title="Search"
+                        type="button"
+                        onClick={() => {
+                          setModalField({ name, sectionIndex });
+                          setModalType("search");
+                          const id = form.getValues("customerId");
+                          const match = customerIdData.filter((x) => x["Customer ID"] === id);
+                          setFilteredCustomerIdData(match.length > 0 ? match : []);
+                        }}
+                      >
+                        <Search size={18} className="text-[#0088d2]" />
+                      </button>
+                      <button
+                        title="List"
+                        type="button"
+                        onClick={() => {
+                          setModalField({ name, sectionIndex });
+                          setModalType("list");
+                          setFilteredCustomerIdData(customerIdData);
+                        }}
+                      >
+                        <FileText size={18} className="text-[#0088d2]" />
+                      </button>
                     </div>
                   </div>
                 ) : type === "select" ? (
@@ -368,11 +426,27 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                 : modalType === "search"
                 ? "Search Company Details"
                 : "Select Company"
-              : modalType === "list"
-              ? "List of Branches"
-              : "Search Branch Details"
+              : modalField.name === "branchCode"
+              ? modalType === "list"
+                ? "List of Branches"
+                : modalType === "search"
+                ? "Search Branch Details"
+                : "Select Branch"
+              : modalField.name === "customerId"
+              ? modalType === "list"
+                ? "List of Customers"
+                : modalType === "search"
+                ? "Search Customer Details"
+                : "Select Customer"
+              : ""
           }
-          columns={modalField.name === "companyCode" ? companyModalColumns : branchModalColumns}
+          columns={
+            modalField.name === "companyCode"
+              ? companyModalColumns
+              : modalField.name === "branchCode"
+              ? branchModalColumns
+              : customerIdModalColumns
+          }
           data={
             modalField.name === "companyCode"
               ? modalType === "list"
@@ -380,7 +454,9 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                 : modalType === "search"
                 ? companySearchData
                 : companyFindData
-              : filteredBranchData
+              : modalField.name === "branchCode"
+              ? filteredBranchData
+              : filteredCustomerIdData
           }
           onSelect={(row) => {
             const section = sections[modalField.sectionIndex];
@@ -389,6 +465,8 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
               section.form.setValue("branchCode", "");
             } else if (modalField.name === "branchCode") {
               section.form.setValue("branchCode", row["Branch Code"]);
+            } else if (modalField.name === "customerId") {
+              section.form.setValue("customerId", row["Customer ID"]);
             }
             setModalField(null);
             setModalType(null);
