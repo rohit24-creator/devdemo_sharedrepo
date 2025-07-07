@@ -1,35 +1,46 @@
 {
   "headers": [
-    { "accessorKey": "name", "header": "Driver Name" },
-    { "accessorKey": "carriername", "header": "Carrier Name" },
-        { "accessorKey": "age", "header": "Age" },
-    { "accessorKey": "contact", "header": "Mobile" },
-        { "accessorKey": "drivingSince", "header": "Experience" },
-    { "accessorKey": "tracktype", "header": "Track Type" },
-        { "accessorKey": "allocate", "header": "Allocate" }
-
-
+    { "accessorKey": "notificationId", "header": "Notification ID" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "departmentCode", "header": "Department Code" },
+    { "accessorKey": "customer", "header": "Customer" },
+    { "accessorKey": "orderType", "header": "Order Type" },
+    { "accessorKey": "service", "header": "Service" },
+    { "accessorKey": "product", "header": "Product" },
+    { "accessorKey": "incoTerms", "header": "Inco Terms" },
+    { "accessorKey": "fromCountry", "header": "From Country" },
+    { "accessorKey": "toCountry", "header": "To Country" },
+    { "accessorKey": "status", "header": "Status" }
   ],
   "rows": [
     {
-      "name": "John Doe",
-      "carriername": "swathi",
-      "contact": "9876543210",
-      "allocate": "THBKK",
-      "licenceNumber": "LIC001",
-      "tracktype": "Local Driver",
-      "age": "35",
-      "drivingSince": "2010"
+      "notificationId": "N001",
+      "companyCode": "CMP01",
+      "branchCode": "BR01",
+      "departmentCode": "D001",
+      "customer": "Customer A",
+      "orderType": "Standard",
+      "service": "Express",
+      "product": "Electronics",
+      "incoTerms": "FOB",
+      "fromCountry": "India",
+      "toCountry": "Germany",
+      "status": "Active"
     },
     {
-      "name": "Jane Smith",
-      "carriername": "Pattaya",
-      "contact": "9123456789",
-      "allocate": "THKN",
-      "licenceNumber": "LIC002",
-      "tracktype": "Global Driver",
-      "age": "42",
-      "drivingSince": "2008"
+      "notificationId": "N002",
+      "companyCode": "CMP02",
+      "branchCode": "BR02",
+      "departmentCode": "D002",
+      "customer": "Customer B",
+      "orderType": "Premium",
+      "service": "Regular",
+      "product": "Furniture",
+      "incoTerms": "CIF",
+      "fromCountry": "USA",
+      "toCountry": "India",
+      "status":"Active"
     }
   ]
 }
