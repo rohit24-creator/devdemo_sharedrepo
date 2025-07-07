@@ -219,7 +219,6 @@ export default function ReusableTable({
     }
   };
 
-  // ✅ Checkbox logic
   const isAllSelected =
     paginatedRows.length > 0 &&
     paginatedRows.every((row) => selectedRows.includes(row.id));

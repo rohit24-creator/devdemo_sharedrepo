@@ -1,0 +1,35 @@
+{
+  "headers": [
+    { "accessorKey": "name", "header": "Driver Name" },
+    { "accessorKey": "carriername", "header": "Carrier Name" },
+        { "accessorKey": "age", "header": "Age" },
+    { "accessorKey": "contact", "header": "Mobile" },
+        { "accessorKey": "drivingSince", "header": "Experience" },
+    { "accessorKey": "tracktype", "header": "Track Type" },
+        { "accessorKey": "allocate", "header": "Allocate" }
+
+
+  ],
+  "rows": [
+    {
+      "name": "John Doe",
+      "carriername": "swathi",
+      "contact": "9876543210",
+      "allocate": "THBKK",
+      "licenceNumber": "LIC001",
+      "tracktype": "Local Driver",
+      "age": "35",
+      "drivingSince": "2010"
+    },
+    {
+      "name": "Jane Smith",
+      "carriername": "Pattaya",
+      "contact": "9123456789",
+      "allocate": "THKN",
+      "licenceNumber": "LIC002",
+      "tracktype": "Global Driver",
+      "age": "42",
+      "drivingSince": "2008"
+    }
+  ]
+}
