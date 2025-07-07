@@ -53,6 +53,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 const companyModalColumns = ["Company Name", "Company Code", "Description"]
 const branchModalColumns = ["Branch Name", "Branch Code", "companyCode", "Description"]
+const customerIdModalColumns = [
+  "Customer ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+];
 
 const companyFindData = [
   { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
@@ -78,20 +81,42 @@ const branchListData = [
   { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
 ]
 
+const customerIdData = [
+  {
+    "Customer ID": "CUST001",
+    Name: "John Doe",
+    Street: "123 Main St",
+    City: "Bangkok",
+    Country: "Thailand",
+    Email: "john@example.com",
+    "Company Code": "THKN",
+    "Branch Code": "THBKK"
+  },
+  {
+    "Customer ID": "CUST002",
+    Name: "Jane Smith",
+    Street: "456 Second Ave",
+    City: "Chennai",
+    Country: "India",
+    Email: "jane@example.com",
+    "Company Code": "TCS01",
+    "Branch Code": "INCHN"
+  },
+];
+
 export function ReusableForm({ sections = [], tableAccordion = true }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
   const [filteredBranchData, setFilteredBranchData] = useState([])
+  const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([]);
 
-  const currentSectionForm = sections.find((sec) => sec.type === "form")?.form
-
-  const renderFieldWithModals = (fieldConfig) => {
+  const renderFieldWithModals = (fieldConfig, form, sectionIndex) => {
     const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
 
     return (
       <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
         <FormField
-          control={currentSectionForm.control}
+          control={form.control}
           name={name}
           render={({ field }) => (
             <FormItem>
@@ -110,14 +135,12 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                           key={actionType}
                           type="button"
                           onClick={() => {
-                            setModalField(name)
-                            setModalType(actionType)
+                            setModalField({ name, sectionIndex });
+                            setModalType(actionType);
                             if (name === "branchCode") {
-                              const selectedCompany = currentSectionForm.getValues("companyCode")
-                              const filtered = branchListData.filter(
-                                (b) => b.companyCode === selectedCompany
-                              )
-                              setFilteredBranchData(filtered)
+                              const selectedCompany = form.getValues("companyCode");
+                              const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
+                              setFilteredBranchData(filtered);
                             }
                           }}
                         >
@@ -130,6 +153,39 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                           )}
                         </button>
                       ))}
+                    </div>
+                  </div>
+                ) : name === "customerId" ? (
+                  <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md overflow-hidden">
+                    <Input
+                      {...field}
+                      className="w-full px-3 py-2 bg-white rounded-md border-none focus:outline-none focus:ring-0 focus:border-none"
+                    />
+                    <div className="absolute right-0 h-full bg-gray-100 flex items-center px-2 space-x-2">
+                      <button
+                        title="Search"
+                        type="button"
+                        onClick={() => {
+                          setModalField({ name, sectionIndex });
+                          setModalType("search");
+                          const id = form.getValues("customerId");
+                          const match = customerIdData.filter((x) => x["Customer ID"] === id);
+                          setFilteredCustomerIdData(match.length > 0 ? match : []);
+                        }}
+                      >
+                        <Search size={18} className="text-[#0088d2]" />
+                      </button>
+                      <button
+                        title="List"
+                        type="button"
+                        onClick={() => {
+                          setModalField({ name, sectionIndex });
+                          setModalType("list");
+                          setFilteredCustomerIdData(customerIdData);
+                        }}
+                      >
+                        <FileText size={18} className="text-[#0088d2]" />
+                      </button>
                     </div>
                   </div>
                 ) : type === "select" ? (
@@ -265,7 +321,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                     {...field}
                     disabled={disabled}
                     type={type}
-                    placeholder={placeholder || label}
+                    placeholder={placeholder}
                     className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
                       disabled ? "bg-gray-100" : ""
                     }`}
@@ -300,12 +356,12 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
             <div className="pt-6">
             <Form {...section.form}>
               <form
-                onSubmit={section.form.handleSubmit(section.onSubmit)}
+                onSubmit={section.form.handleSubmit(section.onSubmit, section.onInvalid)}
                 className="space-y-4"
               >
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   {section.fields.map((fieldConfig) =>
-                    renderFieldWithModals(fieldConfig)
+                    renderFieldWithModals(fieldConfig, section.form, index)
                   )}
                 </div>
                 {section.children}
@@ -364,35 +420,56 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
             setModalType(null)
           }}
           title={
-            modalField === "companyCode"
+            modalField.name === "companyCode"
               ? modalType === "list"
                 ? "List of Companies"
                 : modalType === "search"
                 ? "Search Company Details"
                 : "Select Company"
-              : modalType === "list"
-              ? "List of Branches"
-              : "Search Branch Details"
+              : modalField.name === "branchCode"
+              ? modalType === "list"
+                ? "List of Branches"
+                : modalType === "search"
+                ? "Search Branch Details"
+                : "Select Branch"
+              : modalField.name === "customerId"
+              ? modalType === "list"
+                ? "List of Customers"
+                : modalType === "search"
+                ? "Search Customer Details"
+                : "Select Customer"
+              : ""
           }
-          columns={modalField === "companyCode" ? companyModalColumns : branchModalColumns}
+          columns={
+            modalField.name === "companyCode"
+              ? companyModalColumns
+              : modalField.name === "branchCode"
+              ? branchModalColumns
+              : customerIdModalColumns
+          }
           data={
-            modalField === "companyCode"
+            modalField.name === "companyCode"
               ? modalType === "list"
                 ? companyListData
                 : modalType === "search"
                 ? companySearchData
                 : companyFindData
-              : filteredBranchData
+              : modalField.name === "branchCode"
+              ? filteredBranchData
+              : filteredCustomerIdData
           }
           onSelect={(row) => {
-            if (modalField === "companyCode") {
-              currentSectionForm.setValue("companyCode", row["Company Code"])
-              currentSectionForm.setValue("branchCode", "")
-            } else if (modalField === "branchCode") {
-              currentSectionForm.setValue("branchCode", row["Branch Code"])
+            const section = sections[modalField.sectionIndex];
+            if (modalField.name === "companyCode") {
+              section.form.setValue("companyCode", row["Company Code"]);
+              section.form.setValue("branchCode", "");
+            } else if (modalField.name === "branchCode") {
+              section.form.setValue("branchCode", row["Branch Code"]);
+            } else if (modalField.name === "customerId") {
+              section.form.setValue("customerId", row["Customer ID"]);
             }
-            setModalField(null)
-            setModalType(null)
+            setModalField(null);
+            setModalType(null);
           }}
         />
       )}
@@ -453,7 +530,7 @@ function renderCustomTable(section) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-12 text-[#162d56] text-sm font-semibold px-3 py-2">
-                <Checkbox />
+                <Checkbox className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]" />
               </TableHead>
               <TableHead className="w-16 px-3 py-2" />
               {Object.keys(section.schema.shape).map((field) => (
@@ -470,7 +547,7 @@ function renderCustomTable(section) {
             {section.entries.map((entry, index) => (
               <TableRow key={index}>
                 <TableCell className="px-3 py-2">
-                  <Checkbox />
+                  <Checkbox className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]" />
                 </TableCell>
                 <TableCell className="px-3 py-2">
                   <DropdownMenu>
