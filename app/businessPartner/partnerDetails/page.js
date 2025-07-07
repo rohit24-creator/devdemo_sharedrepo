@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm";
 import PartnerDetailsForm from "../partner/page";
 import { toast } from "sonner";
+import { formatRowsWithId } from "@/lib/utils";
 
 const addressSchema = z.object({
   name: z.string().min(1, "Name is required").regex(/^[a-zA-Z\s]+$/, "Only letters allowed"),
@@ -189,7 +190,7 @@ export default function PartnerDetailsForms() {
   };
 
   const handleReferenceSubmit = (data) => {
-    setReferenceRows((prev) => [...prev, data]);
+    setReferenceRows((prev) => formatRowsWithId([...prev, data]));
     toast.success("Reference added successfully");
     refForm.reset();
   };
@@ -198,6 +199,10 @@ export default function PartnerDetailsForms() {
     if (errors.referenceType) toast.error("Please fill in Reference Type");
     else if (errors.name) toast.error("Please fill in Name");
     else if (errors.value) toast.error("Please fill in Value");
+  };
+
+  const handleReferenceDelete = (row) => {
+    setReferenceRows((prev) => prev.filter((r) => r.id !== row.id));
   };
 
   const addressSection = {
@@ -232,11 +237,7 @@ export default function PartnerDetailsForms() {
       schema: referenceSchema,
       entries: referenceRows,
       onEdit: (entry, index) => refForm.reset(entry),
-      onDelete: (index) => {
-        const updated = [...referenceRows];
-        updated.splice(index, 1);
-        setReferenceRows(updated);
-      },
+      onDelete: handleReferenceDelete,
       renderOutsideForm: true,
     },
   };

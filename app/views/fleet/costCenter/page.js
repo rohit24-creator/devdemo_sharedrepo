@@ -40,7 +40,7 @@ export default function CostCenterViewPage() {
   // Action handler for actions like Edit, View, Delete
   const handleActionClick = (action, row) => {
     if (action === "delete") {
-      const updated = rows.filter((r) => r !== row);
+      const updated = rows.filter((r) => r.id !== row.id);
       setRows(updated);
     } else if (action === "edit") {
       console.log("Edit row", row);

@@ -41,7 +41,7 @@ export default function DriverViewPage() {
   const handleActionClick = (action, row) => {
     console.log("Action clicked:", action, "Row:", row);
     if (action === "delete") {
-      const updated = rows.filter((r) => r !== row);
+      const updated = rows.filter((r) => r.id !== row.id);
       setRows(updated);
     } else if (action === "edit") {
       console.log("Edit row", row);

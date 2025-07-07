@@ -562,7 +562,7 @@ function renderCustomTable(section) {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="text-red-600"
-                        onClick={() => section.onDelete(index)}
+                        onClick={() => section.onDelete(entry)}
                       >
                         Delete
                       </DropdownMenuItem>

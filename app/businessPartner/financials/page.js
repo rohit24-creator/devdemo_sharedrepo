@@ -6,6 +6,8 @@ import { z } from "zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm";
+import { v4 as uuidv4 } from "uuid";
+import { formatRowsWithId } from "@/lib/utils";
 
 const accountSchema = z.object({
   accountNumber: z.string().min(1, "Account Number is required"),
@@ -69,12 +71,12 @@ export default function FinancialsForm() {
   const [tariffEntries, setTariffEntries] = useState([]);
 
   const onAccountSubmit = (data) => {
-    setAccountEntries((prev) => [...prev, data]);
+    setAccountEntries((prev) => formatRowsWithId([...prev, data]));
     accountForm.reset();
   };
 
   const onTariffSubmit = (data) => {
-    setTariffEntries((prev) => [...prev, data]);
+    setTariffEntries((prev) => formatRowsWithId([...prev, data]));
     tariffForm.reset();
   };
 
@@ -104,9 +106,8 @@ export default function FinancialsForm() {
             multipleInvoices: entry.multipleInvoices ?? "yes",
           });
         },
-        onDelete: (index) => {
-          const updated = [...accountEntries];
-          updated.splice(index, 1);
+        onDelete: (row) => {
+          const updated = accountEntries.filter((r) => r.id !== row.id);
           setAccountEntries(updated);
         },
         renderOutsideForm: false,
@@ -134,9 +135,8 @@ export default function FinancialsForm() {
             rateDerivation: entry.rateDerivation ?? "generic",
           });
         },
-        onDelete: (index) => {
-          const updated = [...tariffEntries];
-                                      updated.splice(index, 1);
+        onDelete: (row) => {
+          const updated = tariffEntries.filter((r) => r.id !== row.id);
           setTariffEntries(updated);
         },
         renderOutsideForm: false,

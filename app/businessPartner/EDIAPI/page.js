@@ -6,6 +6,7 @@ import * as z from "zod"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm"
+import { formatRowsWithId } from "@/lib/utils"
 
 const ediFormSchema = z.object({
   transactionAction: z.string(),
@@ -54,7 +55,7 @@ export default function EdiFormComponent() {
   const [entries, setEntries] = useState([])
 
   const onSubmit = (data) => {
-    setEntries((prev) => [...prev, data])
+    setEntries((prev) => formatRowsWithId([...prev, data]))
     form.reset()
   }
 
@@ -94,10 +95,9 @@ const sections = [
       schema: ediFormSchema,
       entries,
       onEdit: (entry, index) => form.reset(entry),
-      onDelete: (index) => {
-        const updated = [...entries];
-        updated.splice(index, 1);
-        setEntries(updated);
+      onDelete: (row) => {
+        const updated = entries.filter((r) => r.id !== row.id)
+        setEntries(updated)
       },
       renderOutsideForm: true, 
     },
