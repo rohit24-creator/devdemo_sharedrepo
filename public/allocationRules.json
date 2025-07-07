@@ -19,13 +19,13 @@
       "status": "Active"
     },
     {
-      "ruleName": "Rule B",
-      "shipmentType": "Ocean",
-      "minWeight": "20",
-      "maxWeight": "80",
-      "regions": "Europe",
-      "priorityType": "Medium",
-      "status": "Inactive"
+      "ruleName": "Rule A",
+      "shipmentType": "Air",
+      "minWeight": "10",
+      "maxWeight": "50",
+      "regions": "Asia",
+      "priorityType": "High",
+      "status": "Active"
     }
   ]
 }

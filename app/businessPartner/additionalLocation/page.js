@@ -6,6 +6,7 @@ import * as z from "zod";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm";
+import { formatRowsWithId } from "@/lib/utils";
 
 const locationFields = [
   { name: "name", label: "Name", type: "text" },
@@ -50,7 +51,7 @@ export default function AdditionalLocationForm() {
   const [entries, setEntries] = useState([]);
 
   const onSubmit = (data) => {
-    setEntries((prev) => [...prev, data]);
+    setEntries((prev) => formatRowsWithId([...prev, data]));
     form.reset();
   };
 
@@ -70,9 +71,8 @@ export default function AdditionalLocationForm() {
         schema: locationFormSchema,
         entries,
         onEdit: (entry, index) => form.reset(entry),
-        onDelete: (index) => {
-          const updated = [...entries];
-          updated.splice(index, 1);
+        onDelete: (row) => {
+          const updated = entries.filter((r) => r.id !== row.id);
           setEntries(updated);
         },
         renderOutsideForm: true,
