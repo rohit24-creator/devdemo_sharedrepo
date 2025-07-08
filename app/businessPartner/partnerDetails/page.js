@@ -4,46 +4,13 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { FileSearch, FileText, Search } from "lucide-react";
-import { toast } from "sonner";
-
-import PartnerDetailsForm from "../partner/page";
+import { useEffect } from "react";
 import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm";
+import PartnerDetailsForm from "../partner/page";
+import { toast } from "sonner";
+import { formatRowsWithId } from "@/lib/utils";
+
 const addressSchema = z.object({
   name: z.string().min(1, "Name is required").regex(/^[a-zA-Z\s]+$/, "Only letters allowed"),
   email: z.string().min(1, "Email is required").email("Invalid email format"),
@@ -151,13 +118,19 @@ const addressFields = [
   }
 ]
 
-
+const referenceFields = [
+  { name: "referenceType", label: "Reference Type *", type: "select", options: referenceTypes.map(t => t.label) },
+  { name: "name", label: "Name *", type: "text" },
+  { name: "value", label: "Value *", type: "text" },
+  { name: "description", label: "Description", type: "text" },
+  { name: "gstin", label: "GSTIN", type: "text" },
+];
 
 export default function PartnerDetailsForms() {
-  const [rows, setRows] = useState([]);
-    const [date, setDate] = useState();
+  const [referenceRows, setReferenceRows] = useState([]);
+  const [addressRows, setAddressRows] = useState([]);
 
-   const refForm = useForm({
+  const refForm = useForm({
     resolver: zodResolver(referenceSchema),
     defaultValues: {
       referenceType: "",
@@ -168,6 +141,14 @@ export default function PartnerDetailsForms() {
     },
   });
 
+  useEffect(() => {
+    const subscription = refForm.watch((value, { name, type }) => {
+      if (name === "referenceType" && value.referenceType) {
+        refForm.setValue("name", value.referenceType);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [refForm]);
 
   const form = useForm({
     resolver: zodResolver(addressSchema),
@@ -203,147 +184,68 @@ export default function PartnerDetailsForms() {
     }
   })
 
-  const handleSubmit = (data) => {
-    console.log("Submitted Address:", data)
-  }
-const addressSection = {
-  type: "form",
-  title: "Address",
-  form,
-  fields: addressFields,
-  onSubmit: handleSubmit,
-  children: (
-    <Button
-      type="submit"
-      className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6"
-    >
-      Save Address
-    </Button>
-  ),
-};
-  
-  const onValid = (values) => {
-    setRows((prev) => [...prev, values]);
+  const handleAddressSubmit = (data) => {
+    setAddressRows((prev) => [...prev, data]);
+    form.reset();
+  };
+
+  const handleReferenceSubmit = (data) => {
+    setReferenceRows((prev) => formatRowsWithId([...prev, data]));
     toast.success("Reference added successfully");
     refForm.reset();
   };
 
-  const onInvalid = (errors) => {
+  const handleReferenceInvalid = (errors) => {
     if (errors.referenceType) toast.error("Please fill in Reference Type");
     else if (errors.name) toast.error("Please fill in Name");
     else if (errors.value) toast.error("Please fill in Value");
   };
 
-  const fields = [
-    { name: "referenceType", label: "Reference Type *", type: "select" },
-    { name: "name", label: "Name *", type: "text" },
-    { name: "value", label: "Value *", type: "text" },
-    { name: "description", label: "Description", type: "text" },
-    { name: "gstin", label: "GSTIN", type: "text" },
-  ];
+  const handleReferenceDelete = (row) => {
+    setReferenceRows((prev) => prev.filter((r) => r.id !== row.id));
+  };
+
+  const addressSection = {
+    type: "form",
+    title: "Address",
+    form,
+    fields: addressFields,
+    onSubmit: handleAddressSubmit,
+    children: (
+      <Button
+        type="submit"
+        className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6"
+      >
+        Save Address
+      </Button>
+    ),
+  };
+
+  const referenceSection = {
+    type: "form",
+    title: "Add Reference",
+    form: refForm,
+    fields: referenceFields,
+    onSubmit: handleReferenceSubmit,
+    onInvalid: handleReferenceInvalid,
+    children: (
+      <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">
+        Add Reference
+      </Button>
+    ),
+    customTable: {
+      schema: referenceSchema,
+      entries: referenceRows,
+      onEdit: (entry, index) => refForm.reset(entry),
+      onDelete: handleReferenceDelete,
+      renderOutsideForm: true,
+    },
+  };
 
   return (
-
     <div className="p-4 sm:p-6">
       <PartnerDetailsForm />
-          {/* Address Accordion */}
-
-<ReusableForm sections={[addressSection]} />
-
-
-      {/* Add Reference Accordion */}
-      <Accordion type="single" collapsible className="mt-2">
-        <AccordionItem value="addReference">
-          <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5]">
-            Add Reference
-          </AccordionTrigger>
-          <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-            <Form {...refForm}>
-              <form onSubmit={refForm.handleSubmit(onValid, onInvalid)} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {fields.map((fieldDef) => (
-                    <FormField
-                      key={fieldDef.name}
-                      control={refForm.control}
-                      name={fieldDef.name}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{fieldDef.label}</FormLabel>
-                          <FormControl>
-                            {fieldDef.type === "select" ? (
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {referenceTypes.map((type) => (
-                                    <SelectItem key={type.id} value={type.label}>
-                                      {type.label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            ) : (
-                              <Input className="border-2 border-[#E7ECFD]"
-                                {...field}
-                                placeholder={
-                                  fieldDef.name === "name"
-                                    ? refForm.watch("referenceType") || "Enter name"
-                                    : fieldDef.label.replace(" *", "")
-                                }
-                              />
-                            )}
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  ))}
-
-                  
-                </div>
-
-                <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">
-                  Add Reference
-                </Button>
-              </form>
-            </Form>
-                  {rows.length > 0 && (
-        <Card className="mt-6 border-[#E7ECFD] shadow-none">
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-12">
-                    <Checkbox />
-                  </TableHead>
-                  <TableHead className="w-16"></TableHead>
-                  {fields.map((field) => (
-                    <TableHead key={field.name}>{field.label.replace(" *", "")}</TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {rows.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell></TableCell>
-                    {fields.map((field) => (
-                      <TableCell key={field.name}>{row[field.name]}</TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-
+      <ReusableForm sections={[addressSection, referenceSection]} />
     </div>
   );
 }

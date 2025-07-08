@@ -31,6 +31,15 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Edit, Eye, Trash2, History } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function ReusableTable({
   title = "Table",
@@ -45,6 +54,8 @@ export default function ReusableTable({
   showThirdIcon = true,
   secondIconMenu = [],
   thirdIconMenu = [],
+  enabledActions = ["edit", "view", "delete", "tripHistory"], // <-- use prop, not hardcoded
+  onActionClick = () => {},                   // <-- use prop, not hardcoded
 }) {
   const [formValues, setFormValues] = useState({});
   const [displayCount, setDisplayCount] = useState(30);
@@ -52,28 +63,87 @@ export default function ReusableTable({
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRows, setSelectedRows] = useState([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
+
+  const allAvailableActions = {
+    edit: {
+      label: "Edit",
+      icon: <Edit size={18} className="mr-2" />,
+    },
+    view: {
+      label: "View",
+      icon: <Eye size={18} className="mr-2" />,
+    },
+    delete: {
+      label: "Delete",
+      icon: <Trash2 size={18} className="mr-2" />,
+    },
+    tripHistory: {
+      label: "Trip History",
+      icon: <History size={18} className="mr-2" />,
+    },
+  };
+
+  const effectiveActions = enabledActions
+    .map((key) => {
+      const action = allAvailableActions[key];
+      return action
+        ? {
+            ...action,
+            key,
+            onClick: (row) => {
+              if (key === "delete") {
+                setRowToDelete(row);
+                setDeleteDialogOpen(true);
+              } else {
+                onActionClick(key, row);
+              }
+            },
+          }
+        : null;
+    })
+    .filter(Boolean);
+
+  const handleDeleteConfirm = () => {
+    if (rowToDelete) {
+      onActionClick("delete", rowToDelete);
+    }
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
+  };
 
   const handleChange = (name, value) => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const renderField = (field) => {
-    const { name, label, type = "text", options = [] } = field;
+const renderField = (field) => {
+  const { name, label, type = "text", options = [] } = field;
 
-    if (type === "date") {
-      return (
-        <Popover key={name}>
+  return (
+    <div key={name} className="flex flex-col gap-1 w-40">
+      <label htmlFor={name} className="text-sm font-medium text-gray-700">
+        {label}
+      </label>
+
+      {type === "date" ? (
+        <Popover>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               className={cn(
-                "w-[160px] justify-start text-left font-normal border border-gray-300",
+                "w-full justify-start text-left font-normal border border-gray-300",
                 !formValues[name] && "text-muted-foreground"
               )}
             >
               {formValues[name]
                 ? format(new Date(formValues[name]), "yyyy-MM-dd")
-                : label}
+                : "Select date"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
@@ -87,18 +157,13 @@ export default function ReusableTable({
             />
           </PopoverContent>
         </Popover>
-      );
-    }
-
-    if (type === "select") {
-      return (
+      ) : type === "select" ? (
         <Select
-          key={name}
-          onValueChange={(value) => handleChange(name, value)}
           value={formValues[name]}
+          onValueChange={(value) => handleChange(name, value)}
         >
-          <SelectTrigger className="w-[160px] border border-gray-300">
-            <SelectValue placeholder={label} />
+          <SelectTrigger className="w-full border border-gray-300">
+            <SelectValue placeholder={`Select ${label}`} />
           </SelectTrigger>
           <SelectContent>
             {options.map((option) =>
@@ -114,19 +179,18 @@ export default function ReusableTable({
             )}
           </SelectContent>
         </Select>
-      );
-    }
-
-    return (
-      <Input
-        key={name}
-        placeholder={label}
-        value={formValues[name] || ""}
-        onChange={(e) => handleChange(name, e.target.value)}
-        className="w-[160px] border border-gray-300"
-      />
-    );
-  };
+      ) : (
+        <Input
+          type={type}
+          id={name}
+          value={formValues[name] || ""}
+          onChange={(e) => handleChange(name, e.target.value)}
+          className="w-full border border-gray-300"
+        />
+      )}
+    </div>
+  );
+};
 
   const sortedRows = useMemo(() => {
     if (!sortColumn) return rows;
@@ -179,53 +243,57 @@ export default function ReusableTable({
         : [...prev, row]
     );
   };
+const filterTab = (
+  <Card>
+    <CardContent className="p-4 flex justify-between flex-wrap gap-4">
 
-  const filterTab = (
-    <Card>
-      <CardContent className="p-4 flex justify-between items-center flex-wrap gap-4">
-        <div className="flex flex-wrap gap-3">
-          {filterFields.map(renderField)}
-          <Button
-            className="bg-[#006397] text-white px-4 rounded-full"
-            onClick={() => onSearch(formValues)}
-          >
-            Search
-          </Button>
-        </div>
-        <div className="flex items-center gap-6 pr-2">
-          {showFirstIcon && <Search size={18} className="cursor-pointer text-gray-600" />}
-          {showSecondIcon && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <LayoutGrid size={18} className="cursor-pointer text-gray-600" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {secondIconMenu.map((item, idx) => (
-                  <DropdownMenuItem key={idx} onClick={item.onClick}>
-                    {item.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          {showThirdIcon && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <FileText size={18} className="cursor-pointer text-gray-600" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {thirdIconMenu.map((item, idx) => (
-                  <DropdownMenuItem key={idx} onClick={item.onClick}>
-                    {item.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
+      <div className="flex flex-wrap items-end gap-3">
+        {filterFields.map(renderField)}
+        <Button
+          className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
+          onClick={() => onSearch(formValues)}
+        >
+          Search
+        </Button>
+      </div>
+
+      <div className="flex items-end gap-6 pr-2">
+        {showFirstIcon && (
+          <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+        )}
+        {showSecondIcon && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {secondIconMenu.map((item, idx) => (
+                <DropdownMenuItem key={idx} onClick={item.onClick}>
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+        {showThirdIcon && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {thirdIconMenu.map((item, idx) => (
+                <DropdownMenuItem key={idx} onClick={item.onClick}>
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
+    </CardContent>
+  </Card>
+);
+
 
   const tableContent = (
     <Card>
@@ -233,7 +301,7 @@ export default function ReusableTable({
         <div className="flex justify-between items-center mb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-[#006397] text-white px-3 py-1 rounded-sm text-sm">
+              <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
                 Toggle Columns
               </Button>
             </DropdownMenuTrigger>
@@ -245,7 +313,7 @@ export default function ReusableTable({
           </DropdownMenu>
 
           <div className="flex items-center space-x-2">
-            <label htmlFor="display" className="text-sm font-medium">
+            <label htmlFor="display" className="text-sm">
               Display
             </label>
             <Select
@@ -295,7 +363,7 @@ export default function ReusableTable({
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={toggleSelectAll}
-                  className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                  className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                 />
               </TableHead>
               {showActions && rows.length > 0 && (
@@ -329,7 +397,7 @@ export default function ReusableTable({
                     <Checkbox
                       checked={selectedRows.includes(row)}
                       onCheckedChange={() => toggleRow(row)}
-                      className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                     />
                   </TableCell>
 
@@ -342,7 +410,7 @@ export default function ReusableTable({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="right">
-                          {actions.map((action, idx) => (
+                          {effectiveActions.map((action, idx) => (
                             <DropdownMenuItem
                               key={idx}
                               onClick={() => action.onClick(row)}
@@ -384,6 +452,32 @@ export default function ReusableTable({
     <>
       {filterTab}
       <div className="mt-4">{tableContent}</div>
+      
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={() => {}}>
+        <DialogContent 
+          className="top-20 left-1/2 transform -translate-x-1/2 [&>button]:hidden" 
+          style={{ position: 'fixed', top: '20%' }}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">Confirm Delete</DialogTitle>
+            <DialogDescription className="text-lg">
+              Are you sure you want to delete this record?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="" onClick={handleDeleteCancel}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              OK
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
