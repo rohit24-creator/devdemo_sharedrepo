@@ -96,7 +96,7 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                     </TableHead>
                     {fields.map(field => {
                       if (!field.label) return null;
-                      const Icon = iconMap[field.key];
+                      const Icon = field.icon || iconMap[field.key];
                       return (
                         <TableHead key={field.key} className="text-center align-middle border-l border-[#e0e0e0]">
                           <span className="inline-flex items-center justify-center gap-1">
@@ -147,11 +147,14 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                                 >
                                   <Search size={16} />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="p-1 h-6 w-6" type="button"
-                                  onClick={() => setFormModalOpen(true)}
-                                >
-                                  <Plus size={16} />
-                                </Button>
+                                {/* Only show plus button if showPlus is not false */}
+                                {field.showPlus !== false && (
+                                  <Button variant="ghost" size="icon" className="p-1 h-6 w-6" type="button"
+                                    onClick={() => setFormModalOpen(true)}
+                                  >
+                                    <Plus size={16} />
+                                  </Button>
+                                )}
                               </div>
                             </div>
                           ) : field.type === 'number+unit' ? (
@@ -179,28 +182,34 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                               </div>
                             </div>
                           ) : field.type === 'text' ? (
-                            <Input
-                              value={row[field.key] || ''}
-                              onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
-                            />
+                            <div className="w-full">
+                              <Input
+                                value={row[field.key] || ''}
+                                onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
+                              />
+                            </div>
                           ) : field.type === 'number' ? (
-                            <Input
-                              type="number"
-                              value={row[field.key] || ''}
-                              onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
-                            />
+                            <div className="w-full">
+                              <Input
+                                type="number"
+                                value={row[field.key] || ''}
+                                onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
+                              />
+                            </div>
                           ) : field.type === 'select' ? (
-                            <Select
-                              value={row[field.key] || ''}
-                              onValueChange={val => handleCellChange(rowIdx, field.key, val)}
-                            >
-                              <SelectTrigger className="text-xs">{row[field.key] || "Select"}</SelectTrigger>
-                              <SelectContent>
-                                {field.options?.map(opt => (
-                                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                            <div className="w-full">
+                              <Select
+                                value={row[field.key] || ''}
+                                onValueChange={val => handleCellChange(rowIdx, field.key, val)}
+                              >
+                                <SelectTrigger className="w-full min-w-[200px] px-3 py-2 text-base h-11">{row[field.key] || "Select"}</SelectTrigger>
+                                <SelectContent className="w-full text-base">
+                                  {field.options?.map(opt => (
+                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
                           ) : field.type === 'checkbox' ? (
                             <div className="flex items-center space-x-2">
                               <Checkbox
@@ -218,7 +227,14 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                   ))}
                   <TableRow>
                     <TableCell colSpan={fields.length + 1}>
-                      <Button variant="default" size="sm" onClick={handleAddRow}>+ Add Row</Button>
+                      <Button
+                        type="button"
+                        className="bg-[#006397] text-white rounded-full px-6 py-2 text-base font-semibold "
+                        onClick={handleAddRow}
+                      >
+                        <Plus size={20} className="text-white mr-2" />
+                        Add Row
+                      </Button>
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -250,7 +266,7 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
             onChange([...data, item]);
             setFormModalOpen(false);
           }}
-          fields={formFields}
+          formFields={formFields}
         />
       )}
     </>
