@@ -1,16 +1,15 @@
 "use client";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { OrdersForm } from "@/components/ui/reusableComponent/orderFomrs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Truck, Home } from "lucide-react";
-import { Form } from "@/components/ui/form";
 
 // Zod schemas for validation
 const shipperSchema = z.object({
-  customerId: z.string().min(1, { message: "Shipper ID is required" }),
+  shipperId: z.string().min(1, { message: "Shipper ID is required" }),
   shipperName: z.string().min(1, { message: "Shipper Name is required" }),
   street: z.string().min(1, { message: "Street is required" }),
   estimatedEarlyPickup: z.string().min(1, { message: "Estimated Early Pickup is required" }),
@@ -25,7 +24,7 @@ const shipperSchema = z.object({
 });
 
 const consigneeSchema = z.object({
-  customerId: z.string().min(1, { message: "Consignee ID is required" }),
+  consigneeId: z.string().min(1, { message: "Consignee ID is required" }),
   consigneeName: z.string().min(1, { message: "Consignee Name is required" }),
   street: z.string().min(1, { message: "Street is required" }),
   estimatedEarlyDelivery: z.string().min(1, { message: "Estimated Early Delivery is required" }),
@@ -41,7 +40,7 @@ const consigneeSchema = z.object({
 
 // Shipper and Consignee field configs
 const shipperFields = [
-  { name: "customerId", label: "Shipper ID *" },
+  { name: "shipperId", label: "Shipper ID *" },
   { name: "shipperName", label: "Shipper Name *" },
   { name: "street", label: "Street *" },
   { name: "estimatedEarlyPickup", label: "Estimated Early Pickup *", type: "date" },
@@ -56,10 +55,10 @@ const shipperFields = [
 ];
 
 const consigneeFields = [
-  { name: "customerId", label: "Consignee ID *" },
+  { name: "consigneeId", label: "Consignee ID *" },
   { name: "consigneeName", label: "Consignee Name *" },
-  { name: "street", label: "Street *" },
   { name: "estimatedEarlyDelivery", label: "Estimated Early Delivery *", type: "date" },
+  { name: "street", label: "Street *" },
   { name: "city", label: "City *" },
   { name: "estimatedLateDelivery", label: "Estimated Late Delivery *", type: "date" },
   { name: "province", label: "Province *" },
@@ -71,96 +70,67 @@ const consigneeFields = [
 ];
 
 export default function NewOrderPage() {
-  const shipperForm = useForm({
-    resolver: zodResolver(shipperSchema),
-    defaultValues: {
-      customerId: "",
-      shipperName: "",
-      street: "",
-      estimatedEarlyPickup: "",
-      city: "",
-      estimatedLatePickup: "",
-      province: "",
-      country: "",
-      zipcode: "",
-      phone: "",
-      fax: "",
-      email: "",
-    },
-  });
-  const consigneeForm = useForm({
-    resolver: zodResolver(consigneeSchema),
-    defaultValues: {
-      customerId: "",
-      consigneeName: "",
-      street: "",
-      estimatedEarlyDelivery: "",
-      city: "",
-      estimatedLateDelivery: "",
-      province: "",
-      country: "",
-      zipcode: "",
-      phone: "",
-      fax: "",
-      email: "",
-    },
-  });
-
-  const handleSubmit = (data) => {
-    const shipperData = shipperForm.getValues();
-    const consigneeData = consigneeForm.getValues();
-    // ... your submit logic ...
-  };
+  // Use forms for shipper and consignee
+  const shipperForm = useForm();
+  const consigneeForm = useForm();
+  const dummyForm = useForm();
 
   const sections = [
     {
       title: "Routing Details",
-      form: {}, // dummy, not used since we use renderLayout
-      onSubmit: handleSubmit,
-      onInvalid: () => {},
+      type: "form",
+      form: dummyForm, // not used for fields, just for section
       fields: [],
       renderLayout: ({ renderField }) => (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Shipper Card */}
-          <Form {...shipperForm}>
-            <Card className="shadow-lg border-t-4 border-[#0088d2]">
-              <CardContent className="pt-8">
-                <div className="flex flex-col items-center mb-4">
-                  <div className="bg-[#0088d2] rounded-full p-4 mb-2">
-                    <Truck size={32} color="white" />
+          <Card className="shadow-lg border-t-4 border-[#0088d2]">
+            <CardContent className="pt-8">
+              <FormProvider {...shipperForm}>
+                <form>
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="bg-[#0088d2] rounded-full p-4 mb-2">
+                      <Truck size={32} color="white" />
+                    </div>
+                    <div className="text-[#0088d2] text-lg font-semibold">Shipper</div>
+                    <label className="flex items-center mt-2 text-sm">
+                      <input type="checkbox" className="mr-2" />
+                      Save to Party Master
+                    </label>
                   </div>
-                  <div className="text-[#0088d2] text-lg font-semibold">Shipper</div>
-                  <label className="flex items-center mt-2 text-sm">
-                    <input type="checkbox" className="mr-2" />
-                    Save to Party Master
-                  </label>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {shipperFields.map(field => renderField(field, shipperForm, 0))}
-                </div>
-              </CardContent>
-            </Card>
-          </Form>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {shipperFields.map(field =>
+                      renderField(field, shipperForm, 0)
+                    )}
+                  </div>
+                </form>
+              </FormProvider>
+            </CardContent>
+          </Card>
           {/* Consignee Card */}
-          <Form {...consigneeForm}>
-            <Card className="shadow-lg border-t-4 border-[#0088d2]">
-              <CardContent className="pt-8">
-                <div className="flex flex-col items-center mb-4">
-                  <div className="bg-[#0088d2] rounded-full p-4 mb-2">
-                    <Home size={32} color="white" />
+          <Card className="shadow-lg border-t-4 border-[#0088d2]">
+            <CardContent className="pt-8">
+              <FormProvider {...consigneeForm}>
+                <form>
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="bg-[#0088d2] rounded-full p-4 mb-2">
+                      <Home size={32} color="white" />
+                    </div>
+                    <div className="text-[#0088d2] text-lg font-semibold">Consignee</div>
+                    <label className="flex items-center mt-2 text-sm">
+                      <input type="checkbox" className="mr-2" />
+                      Save to Party Master
+                    </label>
                   </div>
-                  <div className="text-[#0088d2] text-lg font-semibold">Consignee</div>
-                  <label className="flex items-center mt-2 text-sm">
-                    <input type="checkbox" className="mr-2" />
-                    Save to Party Master
-                  </label>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {consigneeFields.map(field => renderField(field, consigneeForm, 1))}
-                </div>
-              </CardContent>
-            </Card>
-          </Form>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {consigneeFields.map(field =>
+                      renderField(field, consigneeForm, 1)
+                    )}
+                  </div>
+                </form>
+              </FormProvider>
+            </CardContent>
+          </Card>
         </div>
       )
     }
@@ -168,7 +138,10 @@ export default function NewOrderPage() {
 
   return (
     <div className="p-4">
-      <OrdersForm sections={sections} />
+      <OrdersForm
+        sections={sections}
+        useAccordion={false}
+      />
     </div>
   );
 }

@@ -1,7 +1,3 @@
-// OrdersForm: A reusable order form component supporting both accordion and non-accordion layouts.
-// Usage:
-// <OrdersForm sections={sections} useAccordion={true} /> // Accordion (default)
-// <OrdersForm sections={sections} useAccordion={false} /> // Vertical stack
 
 import React, { useState } from "react";
 import {
@@ -26,11 +22,38 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Search, FileText } from "lucide-react";
+import { Search, FileText, FileSearch } from "lucide-react";
 import ReusableModal from "./bussinessParnterModal";
 
+// Add modal columns and data for company and branch (copied from profilesForm.js)
+const companyModalColumns = ["Company Name", "Company Code", "Description"];
+const branchModalColumns = ["Branch Name", "Branch Code", "companyCode", "Description"];
 const customerIdModalColumns = [
   "Customer ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+];
+
+const companyFindData = [
+  { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
+  { "Company Name": "TCS", "Company Code": "TCS01", Description: "Tata Consultancy Services" },
+  { "Company Name": "Wipro", "Company Code": "WPR02", Description: "Wipro Ltd" },
+];
+
+const companyListData = [
+  { "Company Name": "Infosys", "Company Code": "INFY", Description: "Infosys Ltd" },
+  { "Company Name": "HCL", "Company Code": "HCL01", Description: "HCL Technologies" },
+  { "Company Name": "IBM", "Company Code": "IBM02", Description: "IBM India" },
+];
+
+const companySearchData = [
+  { "Company Name": "Capgemini", "Company Code": "CAP01", Description: "Capgemini India" },
+  { "Company Name": "Accenture", "Company Code": "ACC02", Description: "Accenture Solutions" },
+  { "Company Name": "Cognizant", "Company Code": "COG03", Description: "Cognizant Tech" },
+];
+
+const branchListData = [
+  { "Branch Name": "Bangkok", "Branch Code": "THBKK", Description: "Bangkok Branch", companyCode: "THKN" },
+  { "Branch Name": "Chennai", "Branch Code": "INCHN", Description: "Chennai Branch", companyCode: "TCS01" },
+  { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
 ];
 
 const customerIdData = [
@@ -56,6 +79,54 @@ const customerIdData = [
   },
 ];
 
+// Dummy data for shipperId
+const shipperIdData = [
+  {
+    "Shipper ID": "SHIP001",
+    Name: "Acme Shipping",
+    Street: "789 Ocean Ave",
+    City: "Mumbai",
+    Country: "India",
+    Email: "acme@ship.com",
+    "Company Code": "INFY",
+    "Branch Code": "INPUN"
+  },
+  {
+    "Shipper ID": "SHIP002",
+    Name: "Global Freight",
+    Street: "101 River Rd",
+    City: "Bangkok",
+    Country: "Thailand",
+    Email: "global@freight.com",
+    "Company Code": "THKN",
+    "Branch Code": "THBKK"
+  },
+];
+
+// Dummy data for consigneeId
+const consigneeIdData = [
+  {
+    "Consignee ID": "CON001",
+    Name: "Best Consignee",
+    Street: "202 Main Plaza",
+    City: "Chennai",
+    Country: "India",
+    Email: "best@consignee.com",
+    "Company Code": "TCS01",
+    "Branch Code": "INCHN"
+  },
+  {
+    "Consignee ID": "CON002",
+    Name: "Quick Delivery",
+    Street: "303 Fast Lane",
+    City: "Pune",
+    Country: "India",
+    Email: "quick@delivery.com",
+    "Company Code": "WPR02",
+    "Branch Code": "INPUN"
+  },
+];
+
 export function renderOrderFieldWithModals(
   fieldConfig,
   form,
@@ -65,10 +136,27 @@ export function renderOrderFieldWithModals(
   const {
     setModalField,
     setModalType,
+    setFilteredBranchData,
     setFilteredCustomerIdData,
+    branchListData,
     customerIdData
   } = param;
   const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig;
+
+  // Select correct data for each ID field
+  let idData = customerIdData;
+  let idColumns = customerIdModalColumns;
+  if (name === "shipperId") {
+    idData = shipperIdData;
+    idColumns = [
+      "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+    ];
+  } else if (name === "consigneeId") {
+    idData = consigneeIdData;
+    idColumns = [
+      "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+    ];
+  }
 
   return (
     <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
@@ -76,19 +164,51 @@ export function renderOrderFieldWithModals(
         control={form.control}
         name={name}
         render={({ field }) => {
-          console.log("FormField value for", name, ":", field.value);
           return (
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>
-                {name === "customerId" ? (
+                {["companyCode", "branchCode"].includes(name) ? (
+                  <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
+                    <Input
+                      {...field}
+                      value={field.value ?? ""}
+                      disabled
+                      className="w-full px-3 py-2 pr-24 bg-gray-100 rounded-md focus:outline-none focus:border-[#0088d2]"
+                    />
+                    <div className="absolute right-2 flex items-center space-x-2">
+                      {["find", "list", "search"].map((actionType) => (
+                        <button
+                          key={actionType}
+                          type="button"
+                          onClick={() => {
+                            setModalField && setModalField({ name, sectionIndex, form });
+                            setModalType && setModalType(actionType);
+                            if (name === "branchCode") {
+                              const selectedCompany = form.getValues("companyCode");
+                              const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
+                              setFilteredBranchData && setFilteredBranchData(filtered);
+                            }
+                          }}
+                        >
+                          {actionType === "find" ? (
+                            <FileSearch size={18} className="text-[#0088d2]" />
+                          ) : actionType === "list" ? (
+                            <FileText size={18} className="text-[#0088d2]" />
+                          ) : (
+                            <Search size={18} className="text-[#0088d2]" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : ["customerId", "shipperId", "consigneeId"].includes(name) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md overflow-hidden">
                     <Input
                       {...field}
                       value={field.value ?? ""}
                       onChange={e => {
                         field.onChange(e);
-                        console.log("Input changed to:", e.target.value);
                       }}
                       className="w-full px-3 py-2 bg-white rounded-md border-none focus:outline-none focus:ring-0 focus:border-none"
                     />
@@ -99,11 +219,8 @@ export function renderOrderFieldWithModals(
                         onClick={() => {
                           setModalField && setModalField({ name, sectionIndex, form });
                           setModalType && setModalType("search");
-                          const id = typeof form.getValues === "function" ? form.getValues("customerId") : "";
-                          console.log("Input value:", id);
-                          console.log("customerIdData:", customerIdData);
-                          const match = customerIdData.filter((x) => x["Customer ID"].trim().toLowerCase() === id.trim().toLowerCase());
-                          console.log("Match result:", match);
+                          const id = typeof form.getValues === "function" ? form.getValues(name) : "";
+                          const match = idData.filter((x) => x[idColumns[0]].trim().toLowerCase() === id.trim().toLowerCase());
                           setFilteredCustomerIdData && setFilteredCustomerIdData(match.length > 0 ? match : []);
                         }}
                       >
@@ -115,7 +232,7 @@ export function renderOrderFieldWithModals(
                         onClick={() => {
                           setModalField && setModalField({ name, sectionIndex, form });
                           setModalType && setModalType("list");
-                          setFilteredCustomerIdData && setFilteredCustomerIdData(customerIdData);
+                          setFilteredCustomerIdData && setFilteredCustomerIdData(idData);
                         }}
                       >
                         <FileText size={18} className="text-[#0088d2]" />
@@ -300,7 +417,7 @@ export function OrdersForm({ sections = [], tableAccordion = true }) {
           {/* FORM */}
           <div className="pt-6">
             {section.renderLayout
-              ? section.renderLayout({ renderField: (field, secIdx = index) => renderField(field, section.form, secIdx) })
+              ? section.renderLayout({ renderField })
               : (
                 <Form {...section.form}>
                   <form
@@ -323,7 +440,7 @@ export function OrdersForm({ sections = [], tableAccordion = true }) {
   })}
 </Accordion>
 
-      {/* Customer ID Modal */}
+      {/* Modal logic for companyCode, branchCode, customerId, shipperId, consigneeId */}
       {modalField && (
         <ReusableModal
           open={modalField !== null}
@@ -331,17 +448,91 @@ export function OrdersForm({ sections = [], tableAccordion = true }) {
             setModalField(null)
             setModalType(null)
           }}
-          title={modalType === "list"
-            ? "List of Customers"
-            : modalType === "search"
-            ? "Search Customer Details"
-            : "Select Customer"
+          title={
+            modalField.name === "companyCode"
+              ? modalType === "list"
+                ? "List of Companies"
+                : modalType === "search"
+                ? "Search Company Details"
+                : "Select Company"
+              : modalField.name === "branchCode"
+              ? modalType === "list"
+                ? "List of Branches"
+                : modalType === "search"
+                ? "Search Branch Details"
+                : "Select Branch"
+              : modalField.name === "customerId"
+              ? modalType === "list"
+                ? "List of Customers"
+                : modalType === "search"
+                ? "Search Customer Details"
+                : "Select Customer"
+              : modalField.name === "shipperId"
+              ? modalType === "list"
+                ? "List of Shippers"
+                : modalType === "search"
+                ? "Search Shipper Details"
+                : "Select Shipper"
+              : modalField.name === "consigneeId"
+              ? modalType === "list"
+                ? "List of Consignees"
+                : modalType === "search"
+                ? "Search Consignee Details"
+                : "Select Consignee"
+              : ""
           }
-          columns={customerIdModalColumns}
-          data={filteredCustomerIdData}
+          columns={
+            modalField.name === "companyCode"
+              ? companyModalColumns
+              : modalField.name === "branchCode"
+              ? branchModalColumns
+              : modalField.name === "customerId"
+              ? customerIdModalColumns
+              : modalField.name === "shipperId"
+              ? [
+                  "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+                ]
+              : modalField.name === "consigneeId"
+              ? [
+                  "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+                ]
+              : []
+          }
+          data={
+            modalField.name === "companyCode"
+              ? modalType === "list"
+                ? companyListData
+                : modalType === "search"
+                ? companySearchData
+                : companyFindData
+              : modalField.name === "branchCode"
+              ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
+              : modalField.name === "customerId"
+              ? filteredCustomerIdData
+              : modalField.name === "shipperId"
+              ? filteredCustomerIdData
+              : modalField.name === "consigneeId"
+              ? filteredCustomerIdData
+              : []
+          }
           onSelect={(row) => {
-            if (modalField.form) {
-              modalField.form.setValue("customerId", row["Customer ID"]);
+            if (modalField.name === "companyCode") {
+              modalField.form.setValue("companyCode", row["Company Code"]);
+              modalField.form.setValue("branchCode", "");
+            } else if (modalField.name === "branchCode") {
+              modalField.form.setValue("branchCode", row["Branch Code"]);
+            } else if (modalField.name === "customerId") {
+              if (modalField.form) {
+                modalField.form.setValue("customerId", row["Customer ID"]);
+              }
+            } else if (modalField.name === "shipperId") {
+              if (modalField.form) {
+                modalField.form.setValue("shipperId", row["Shipper ID"]);
+              }
+            } else if (modalField.name === "consigneeId") {
+              if (modalField.form) {
+                modalField.form.setValue("consigneeId", row["Consignee ID"]);
+              }
             }
             setModalField(null);
             setModalType(null);
