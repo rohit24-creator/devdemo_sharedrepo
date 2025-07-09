@@ -118,237 +118,237 @@ export function renderFieldWithModals(
     branchListData,
     customerIdData
   } = param;
-  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
+    const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
 
-  return (
-    <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
-      <FormField
-        control={form.control}
-        name={name}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>{label}</FormLabel>
-            <FormControl>
+    return (
+      <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
+        <FormField
+          control={form.control}
+          name={name}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{label}</FormLabel>
+              <FormControl>
               {[
                 "companyCode",
                 "branchCode"
               ].includes(name) ? (
-                <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
-                  <Input
-                    {...field}
+                  <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
+                    <Input
+                      {...field}
                     value={field.value ?? ""}
-                    disabled
-                    className="w-full px-3 py-2 pr-24 bg-gray-100 rounded-md focus:outline-none focus:border-[#0088d2]"
-                  />
-                  <div className="absolute right-2 flex items-center space-x-2">
-                    {["find", "list", "search"].map((actionType) => (
-                      <button
-                        key={actionType}
-                        type="button"
-                        onClick={() => {
+                      disabled
+                      className="w-full px-3 py-2 pr-24 bg-gray-100 rounded-md focus:outline-none focus:border-[#0088d2]"
+                    />
+                    <div className="absolute right-2 flex items-center space-x-2">
+                      {["find", "list", "search"].map((actionType) => (
+                        <button
+                          key={actionType}
+                          type="button"
+                          onClick={() => {
                           setModalField && setModalField({ name, sectionIndex, form });
                           setModalType && setModalType(actionType);
-                          if (name === "branchCode") {
-                            const selectedCompany = form.getValues("companyCode");
-                            const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
+                            if (name === "branchCode") {
+                              const selectedCompany = form.getValues("companyCode");
+                              const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
                             setFilteredBranchData && setFilteredBranchData(filtered);
-                          }
-                        }}
-                      >
-                        {actionType === "find" ? (
-                          <FileSearch size={18} className="text-[#0088d2]" />
-                        ) : actionType === "list" ? (
-                          <FileText size={18} className="text-[#0088d2]" />
-                        ) : (
-                          <Search size={18} className="text-[#0088d2]" />
-                        )}
-                      </button>
-                    ))}
+                            }
+                          }}
+                        >
+                          {actionType === "find" ? (
+                            <FileSearch size={18} className="text-[#0088d2]" />
+                          ) : actionType === "list" ? (
+                            <FileText size={18} className="text-[#0088d2]" />
+                          ) : (
+                            <Search size={18} className="text-[#0088d2]" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : name === "customerId" ? (
-                <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md overflow-hidden">
-                  <Input
-                    {...field}
+                ) : name === "customerId" ? (
+                  <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md overflow-hidden">
+                    <Input
+                      {...field}
                     value={field.value ?? ""}
-                    className="w-full px-3 py-2 bg-white rounded-md border-none focus:outline-none focus:ring-0 focus:border-none"
-                  />
-                  <div className="absolute right-0 h-full bg-gray-100 flex items-center px-2 space-x-2">
-                    <button
-                      title="Search"
-                      type="button"
-                      onClick={() => {
+                      className="w-full px-3 py-2 bg-white rounded-md border-none focus:outline-none focus:ring-0 focus:border-none"
+                    />
+                    <div className="absolute right-0 h-full bg-gray-100 flex items-center px-2 space-x-2">
+                      <button
+                        title="Search"
+                        type="button"
+                        onClick={() => {
                         setModalField && setModalField({ name, sectionIndex, form });
                         setModalType && setModalType("search");
-                        const id = form.getValues("customerId");
-                        const match = customerIdData.filter((x) => x["Customer ID"] === id);
+                          const id = form.getValues("customerId");
+                          const match = customerIdData.filter((x) => x["Customer ID"] === id);
                         setFilteredCustomerIdData && setFilteredCustomerIdData(match.length > 0 ? match : []);
-                      }}
-                    >
-                      <Search size={18} className="text-[#0088d2]" />
-                    </button>
-                    <button
-                      title="List"
-                      type="button"
-                      onClick={() => {
+                        }}
+                      >
+                        <Search size={18} className="text-[#0088d2]" />
+                      </button>
+                      <button
+                        title="List"
+                        type="button"
+                        onClick={() => {
                         setModalField && setModalField({ name, sectionIndex, form });
                         setModalType && setModalType("list");
                         setFilteredCustomerIdData && setFilteredCustomerIdData(customerIdData);
-                      }}
-                    >
-                      <FileText size={18} className="text-[#0088d2]" />
-                    </button>
+                        }}
+                      >
+                        <FileText size={18} className="text-[#0088d2]" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : type === "select" ? (
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
-                    <SelectValue placeholder={`Select ${label}`} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {options.map((option) =>
-                      typeof option === "string" ? (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ) : (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-              ) : type === "date" ? (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal border-2 border-[#E7ECFD] focus:border-[#0088d2]",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? format(new Date(field.value), "yyyy-MM-dd") : "Select date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date ? format(date, "yyyy-MM-dd") : "")}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              ) : type === "file" ? (
-                <Input
-                  type="file"
-                  onChange={(e) => field.onChange(e.target.files?.[0])}
-                  className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
-                />
-                ) : unitOptions ? (
-              <div className="flex gap-2 items-center">
-                <Input
-                  {...field}
-                  value={field.value ?? ""}
-                  disabled={disabled}
-                  placeholder={placeholder || label}
-                  type={type}
-                  className="w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD]"
-                />
-                <Select>
-                  <SelectTrigger className="w-36 border-2 border-[#E7ECFD]">
-                    <SelectValue
-                      placeholder={
-                        typeof unitOptions[0] === "string"
-                          ? unitOptions[0]
-                          : unitOptions[0]?.label || "Select Unit"
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {unitOptions.map((option) =>
-                      typeof option === "string" ? (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ) : (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-              ) : type === "textarea" ? (
-                <textarea
-                  {...field}
-                  rows={2}
-                  className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
-                />
-              ) : type === "checkbox" ? (
-                <div className="flex items-end h-full pb-1">
-                  <FormItem className="flex items-center space-x-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={disabled}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-sm font-semibold m-0">
-                      {placeholder || label}
-                    </FormLabel>
-                  </FormItem>
-                </div>
-              ) : type === "radio" ? (
-                <div className="mt-4 flex gap-6 items-center">
-                  <RadioGroup
-                    value={field.value}
-                    onValueChange={field.onChange}
-                    className="flex gap-6"
-                  >
-                    {options.map((option) =>
-                      typeof option === "string" ? (
-                        <div key={option} className="flex items-center space-x-2">
-                          <RadioGroupItem value={option} id={`${name}-${option}`} />
-                          <label htmlFor={`${name}-${option}`} className="text-sm">
+                ) : type === "select" ? (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
+                      <SelectValue placeholder={`Select ${label}`} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {options.map((option) =>
+                        typeof option === "string" ? (
+                          <SelectItem key={option} value={option}>
                             {option}
-                          </label>
-                        </div>
-                      ) : (
-                        <div key={option.value} className="flex items-center space-x-2">
-                          <RadioGroupItem value={option.value} id={`${name}-${option.value}`} />
-                          <label htmlFor={`${name}-${option.value}`} className="text-sm">
+                          </SelectItem>
+                        ) : (
+                          <SelectItem key={option.value} value={option.value}>
                             {option.label}
-                          </label>
-                        </div>
-                      )
-                    )}
-                  </RadioGroup>
-                </div>
-              ) : (
-                <Input
-                  {...field}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                ) : type === "date" ? (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal border-2 border-[#E7ECFD] focus:border-[#0088d2]",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? format(new Date(field.value), "yyyy-MM-dd") : "Select date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={field.value ? new Date(field.value) : undefined}
+                        onSelect={(date) => field.onChange(date ? format(date, "yyyy-MM-dd") : "")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                ) : type === "file" ? (
+                  <Input
+                    type="file"
+                    onChange={(e) => field.onChange(e.target.files?.[0])}
+                    className="border border-[#0088d2] px-2 py-1 rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:mr-2"
+                  />
+                  ) : unitOptions ? (
+                <div className="flex gap-2 items-center">
+                  <Input
+                    {...field}
                   value={field.value ?? ""}
-                  disabled={disabled}
-                  type={type}
-                  placeholder={placeholder}
-                  className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
-                    disabled ? "bg-gray-100" : ""
-                  }`}
-                />
-              )}
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    </div>
-  )
-}
+                    disabled={disabled}
+                    placeholder={placeholder || label}
+                    type={type}
+                    className="w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD]"
+                  />
+                  <Select>
+                    <SelectTrigger className="w-36 border-2 border-[#E7ECFD]">
+                      <SelectValue
+                        placeholder={
+                          typeof unitOptions[0] === "string"
+                            ? unitOptions[0]
+                            : unitOptions[0]?.label || "Select Unit"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {unitOptions.map((option) =>
+                        typeof option === "string" ? (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ) : (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+                ) : type === "textarea" ? (
+                  <textarea
+                    {...field}
+                    rows={2}
+                    className="w-full border-2 border-[#E7ECFD] rounded-md p-2"
+                  />
+                ) : type === "checkbox" ? (
+                  <div className="flex items-end h-full pb-1">
+                    <FormItem className="flex items-center space-x-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={disabled}
+                        />
+                      </FormControl>
+                      <FormLabel className="text-sm font-semibold m-0">
+                        {placeholder || label}
+                      </FormLabel>
+                    </FormItem>
+                  </div>
+                ) : type === "radio" ? (
+                  <div className="mt-4 flex gap-6 items-center">
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex gap-6"
+                    >
+                      {options.map((option) =>
+                        typeof option === "string" ? (
+                          <div key={option} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option} id={`${name}-${option}`} />
+                            <label htmlFor={`${name}-${option}`} className="text-sm">
+                              {option}
+                            </label>
+                          </div>
+                        ) : (
+                          <div key={option.value} className="flex items-center space-x-2">
+                            <RadioGroupItem value={option.value} id={`${name}-${option.value}`} />
+                            <label htmlFor={`${name}-${option.value}`} className="text-sm">
+                              {option.label}
+                            </label>
+                          </div>
+                        )
+                      )}
+                    </RadioGroup>
+                  </div>
+                ) : (
+                  <Input
+                    {...field}
+                  value={field.value ?? ""}
+                    disabled={disabled}
+                    type={type}
+                    placeholder={placeholder}
+                    className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
+                      disabled ? "bg-gray-100" : ""
+                    }`}
+                  />
+                )}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    )
+  }
 
 export function ReusableForm({ sections = [], tableAccordion = true }) {
   const [modalField, setModalField] = useState(null)
@@ -388,28 +388,28 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
           {/* FORM */}
           {section.type === "form" && (
             <div className="pt-6">
-              <Form {...section.form}>
-                <form
+            <Form {...section.form}>
+              <form
                   onSubmit={section.form.handleSubmit && section.form.handleSubmit(section.onSubmit, section.onInvalid)}
-                  className="space-y-4"
-                >
+                className="space-y-4"
+              >
                   {section.renderLayout
                     ? section.renderLayout({ renderField: (field, secIdx = index) => renderField(field, section.form, secIdx) })
                     : (
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        {section.fields.map((fieldConfig) =>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {section.fields.map((fieldConfig) =>
                           renderField(fieldConfig, section.form, index)
-                        )}
-                      </div>
+                  )}
+                </div>
                     )}
-                  {section.children}
-                </form>
-                {/* Custom table inside the form (if renderOutsideForm is false) */}
-                {section.customTable &&
-                  !section.customTable.renderOutsideForm &&
-                  section.customTable.entries.length > 0 &&
-                  renderCustomTable(section.customTable)}
-              </Form>
+                {section.children}
+              </form>                
+              {/* Custom table inside the form (if renderOutsideForm is false) */}
+              {section.customTable &&
+                !section.customTable.renderOutsideForm &&
+                section.customTable.entries.length > 0 &&
+                renderCustomTable(section.customTable)}
+            </Form>
             </div>
           )}
 
