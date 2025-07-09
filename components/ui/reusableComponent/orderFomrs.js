@@ -24,6 +24,8 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { Search, FileText, FileSearch } from "lucide-react";
 import ReusableModal from "./bussinessParnterModal";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Add modal columns and data for company and branch (copied from profilesForm.js)
 const companyModalColumns = ["Company Name", "Company Code", "Description"];

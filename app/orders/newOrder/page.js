@@ -69,17 +69,61 @@ const consigneeFields = [
   { name: "email", label: "Email" },
 ];
 
+// General Info fields (matching screenshot)
+const generalInfoFields = [
+  { name: "bookingId", label: "Booking ID", disabled: true },
+  { name: "product", label: "Product *", type: "select", options: ["Mobile", "Laptop", "Tablet"] },
+  { name: "orderStatus", label: "Order Status", type: "select", options: ["PENDING", "CONFIRMED", "CANCELLED"] },
+  { name: "companyCode", label: "Company Code *" },
+  { name: "externalOrderId", label: "External Order ID" },
+  { name: "deliveryTerms", label: "Delivery Terms", type: "select", options: ["FOB", "CIF", "EXW"] },
+  { name: "service", label: "Service *", type: "select", options: ["Air", "Sea", "Road"] },
+  { name: "branchCode", label: "Branch Code *" },
+  { name: "incoTerms", label: "Inco Terms", type: "select", options: ["FOB", "CIF", "EXW"] },
+  { name: "orderType", label: "Order Type *", type: "select", options: ["Bulk", "Single"] },
+  { name: "modeOfTransport", label: "Mode Of Transport *", type: "select", options: ["Truck", "Rail", "Ship"] },
+  { name: "departmentCode", label: "Department Code *", type: "select", options: ["Sales", "Logistics"] },
+  { name: "customerId", label: "Customer ID *" },
+  { name: "custDo", label: "# Cust-DO" },
+  { name: "custRefPo", label: "# Custref-PO" },
+  { name: "goodsValue", label: "Goods Value", unitOptions: ["USD"] },
+  { name: "originalDocumentSent", label: "Original Document Sent", type: "date" },
+  { name: "originalDocumentReceived", label: "Original Document Received", type: "date" },
+  { name: "shipmentType", label: "Shipment Type", type: "select", options: ["Type1", "Type2"] },
+  { name: "region", label: "Region", type: "select", options: ["North", "South", "East", "West"] },
+  { name: "driverPickupInstructions", label: "Driver Pickup Instructions", type: "textarea", wide: true },
+  { name: "driverDeliveryInstructions", label: "Driver Delivery Instructions", type: "textarea", wide: true },
+  { name: "loadBoard123", placeholder: "123 Load Board", type: "checkbox" },
+  { name: "truckStop", placeholder: "Truck Stop", type: "checkbox" },
+  { name: "dat", placeholder: "DAT", type: "checkbox" },
+];
+
 export default function NewOrderPage() {
-  // Use forms for shipper and consignee
+  // Move all useForm calls here
+  const generalInfoForm = useForm({
+    defaultValues: {
+      bookingId: "Auto-generated",
+      // ...other defaults as needed
+    }
+  });
+
   const shipperForm = useForm();
   const consigneeForm = useForm();
   const dummyForm = useForm();
 
   const sections = [
     {
+      title: "General Info",
+      type: "form",
+      form: generalInfoForm,
+      fields: generalInfoFields,
+    },
+    {
       title: "Routing Details",
       type: "form",
-      form: dummyForm, // not used for fields, just for section
+      form: dummyForm,
+      onSubmit: () => {},
+      onInvalid: () => {},
       fields: [],
       renderLayout: ({ renderField }) => (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -138,10 +182,7 @@ export default function NewOrderPage() {
 
   return (
     <div className="p-4">
-      <OrdersForm
-        sections={sections}
-        useAccordion={false}
-      />
+      <OrdersForm sections={sections} useAccordion={true} />
     </div>
   );
 }
