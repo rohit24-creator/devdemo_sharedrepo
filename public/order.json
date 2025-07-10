@@ -1,6 +1,5 @@
 {
   "headers": [
-    { "accessorKey": "action", "header": "Action" },
     { "accessorKey": "sNo", "header": "S.No" },
     { "accessorKey": "bookingId", "header": "Booking ID" },
     { "accessorKey": "deliveryNote", "header": "Delivery Note" },
@@ -36,7 +35,6 @@
   ],
   "rows": [
     {
-      "action": "",
       "sNo": "1",
       "bookingId": "125270004",
       "deliveryNote": "0482424672",
@@ -71,7 +69,6 @@
       "paymentRef": ""
     },
     {
-      "action": "",
       "sNo": "2",
       "bookingId": "125270003",
       "deliveryNote": "0482424672",

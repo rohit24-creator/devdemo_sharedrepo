@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, Search, LayoutGrid, FileText, DollarSign, Wallet, Copy, RotateCcw, FilePlus, Printer } from "lucide-react";
+import { ArrowUpDown, Search, LayoutGrid, FileText, DollarSign, Wallet, Copy, RotateCcw, FilePlus, Printer, Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -56,6 +56,8 @@ export default function ReusableTable({
   secondIconMenu = [],
   thirdIconMenu = [],
   fourthIconMenu = [],
+  showFifthIcon = false,
+  fifthIconMenu = [],
   enabledActions = ["edit", "view", "delete", "tripHistory"], // <-- use prop, not hardcoded
   onActionClick = () => {},                   // <-- use prop, not hardcoded
 }) {
@@ -269,12 +271,8 @@ export default function ReusableTable({
           </Button>
         </div>
         <div className="flex items-center gap-6 pr-2">
-          {showFirstIcon && <Search size={18} className="cursor-pointer text-gray-600" />}
-          {showSecondIcon && (
+          {showFirstIcon && (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <LayoutGrid size={18} className="cursor-pointer text-gray-600" />
-              </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {secondIconMenu.map((item, idx) => (
                   <DropdownMenuItem key={idx} onClick={item.onClick}>
@@ -284,6 +282,7 @@ export default function ReusableTable({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
+          {showSecondIcon && <Search size={18} className="cursor-pointer text-gray-600" />}
           {showThirdIcon && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -305,6 +304,20 @@ export default function ReusableTable({
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {fourthIconMenu.map((item, idx) => (
+                  <DropdownMenuItem key={idx} onClick={item.onClick}>
+                    {item.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          {showFifthIcon && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Bell size={18} className="cursor-pointer text-gray-600" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {fifthIconMenu.map((item, idx) => (
                   <DropdownMenuItem key={idx} onClick={item.onClick}>
                     {item.label}
                   </DropdownMenuItem>
@@ -385,8 +398,7 @@ export default function ReusableTable({
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={toggleSelectAll}
-                  className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
-                />
+                  className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"                />
               </TableHead>
               {showActions && rows.length > 0 && (
                 <TableHead className="w-12 px-6 py-3" />
@@ -419,8 +431,7 @@ export default function ReusableTable({
                     <Checkbox
                       checked={selectedRows.includes(row.id)}
                       onCheckedChange={() => toggleRow(row)}
-                      className="data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
-                    />
+                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"                    />
                   </TableCell>
 
                   {showActions && (
