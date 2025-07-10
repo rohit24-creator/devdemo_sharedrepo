@@ -33,43 +33,6 @@ const tableHeaders = [
   { key: "status", label: "status" },
 ];
 
-const customerModalData = [
-  {
-    Code: "CUST001",
-    Name: "John Doe",
-    Amount: "1000",
-    BU: "BU1",
-    "Flight Recorder": "Yes",
-    "Foreign Currency": "USD",
-    currency_exchange: "USD/EUR",
-    "Exchange Rate": "1.1",
-    "Invoice Number": "INV001",
-    id_card: "ID123",
-    "Credit Note Number": "CN001",
-    "Invoice Date": "2024-06-01",
-    "Invoice Creation Date": "2024-06-02",
-    "Invoice Received Date": "2024-06-03",
-    status: "Paid"
-  },
-  {
-    Code: "CUST002",
-    Name: "Jane Smith",
-    Amount: "2000",
-    BU: "BU2",
-    "Flight Recorder": "No",
-    "Foreign Currency": "EUR",
-    currency_exchange: "EUR/USD",
-    "Exchange Rate": "0.9",
-    "Invoice Number": "INV002",
-    id_card: "ID456",
-    "Credit Note Number": "CN002",
-    "Invoice Date": "2024-06-04",
-    "Invoice Creation Date": "2024-06-05",
-    "Invoice Received Date": "2024-06-06",
-    status: "Unpaid"
-  },
-];
-
 export default function OrderFinancialsPage() {
   return (
     <div className="px-4 md:px-8 py-6">
@@ -155,12 +118,12 @@ export default function OrderFinancialsPage() {
               <Button className="rounded-full px-6 bg-[#006397] text-white">Apply</Button>
             </div>
             {/* Table */}
-            <FinancialsTable headers={tableHeaders} modalData={customerModalData} />
+            <FinancialsTable headers={tableHeaders} />
           </div>
         </TabsContent>
         <TabsContent value="cost">
           <div className="bg-white rounded-lg shadow px-6 pb-6 mb-6 pt-6">
-            <FinancialsTable headers={tableHeaders} modalData={customerModalData} />
+            <FinancialsTable headers={tableHeaders} />
           </div>
         </TabsContent>
       </Tabs>

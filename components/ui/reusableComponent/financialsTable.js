@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,17 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import ReusableModal from "./bussinessParnterModal";
 import { Search } from "lucide-react";
 
-export function FinancialsTable({ headers, modalData, initialRows = [] }) {
+// Dummy data for customers and vendors (move here, not from parent)
+const customerData = [
+  { "Customer Code": "CUST001", Name: "John Doe", Address: "123 Main St", Email: "john@example.com" },
+  { "Customer Code": "CUST002", Name: "Jane Smith", Address: "456 Second Ave", Email: "jane@example.com" },
+];
+const vendorData = [
+  { "Vendor Code": "VEND001", Name: "Acme Supplies", Address: "789 Ocean Ave", Email: "acme@supplies.com" },
+  { "Vendor Code": "VEND002", Name: "Global Vendors", Address: "101 River Rd", Email: "global@vendors.com" },
+];
+
+export function FinancialsTable({ headers, initialRows = [] }) {
   const form = useForm({
     defaultValues: {
       rows: initialRows.length > 0 ? initialRows : [{ role: "", code: "", name: "", amount: "", bu: "", flightRecorder: "", foreignCurrency: "", currencyExchange: "", exchangeRate: "", invoiceNumber: "", idCard: "", creditNoteNumber: "", invoiceDate: "", invoiceCreationDate: "", invoiceReceivedDate: "", status: "" }],
@@ -22,38 +32,57 @@ export function FinancialsTable({ headers, modalData, initialRows = [] }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalRowIndex, setModalRowIndex] = useState(null);
   const [modalSearch, setModalSearch] = useState("");
-  const [filteredModalData, setFilteredModalData] = useState(modalData);
+  const [filteredModalData, setFilteredModalData] = useState([]);
+  const [modalRole, setModalRole] = useState("Customer");
 
-  // Open modal for a specific row
+  // Open modal for a specific row, using correct data for role
   const openModal = (rowIndex) => {
     setModalRowIndex(rowIndex);
     setModalOpen(true);
     setModalSearch("");
-    setFilteredModalData(modalData);
+    const role = form.getValues(`rows.${rowIndex}.role`);
+    setModalRole(role === "Vendor" ? "Vendor" : "Customer");
+    setFilteredModalData(role === "Vendor" ? vendorData : customerData);
   };
 
   // Handle modal search
   const handleModalSearch = (e) => {
     const value = e.target.value;
     setModalSearch(value);
+    const data = modalRole === "Vendor" ? vendorData : customerData;
+    const codeLabel = modalRole === "Vendor" ? "Vendor Code" : "Customer Code";
     setFilteredModalData(
-      modalData.filter((item) =>
-        item[headers.find(h => h.key === "code").label]?.toLowerCase().includes(value.toLowerCase())
+      data.filter((item) =>
+        item[codeLabel]?.toLowerCase().includes(value.toLowerCase())
       )
     );
   };
 
   // Handle modal select
   const handleModalSelect = (item) => {
-    // Map modal data to table columns by matching header label to modal data key
     const newRow = { ...fields[modalRowIndex] };
-    headers.forEach((header) => {
-      if (item[header.label] !== undefined) {
-        newRow[header.key] = item[header.label];
-      }
-    });
+    if (modalRole === "Vendor") {
+      newRow.code = item["Vendor Code"];
+      newRow.name = item["Name"];
+      // Add more vendor fields as needed
+    } else {
+      newRow.code = item["Customer Code"];
+      newRow.name = item["Name"];
+      // Add more customer fields as needed
+    }
     update(modalRowIndex, newRow);
     setModalOpen(false);
+  };
+
+  // When role changes, clear code/name fields and update modal data if open
+  const handleRoleChange = (rowIndex, newRole) => {
+    form.setValue(`rows.${rowIndex}.role`, newRole);
+    form.setValue(`rows.${rowIndex}.code`, "");
+    form.setValue(`rows.${rowIndex}.name`, "");
+    if (modalOpen && modalRowIndex === rowIndex) {
+      setModalRole(newRole === "Vendor" ? "Vendor" : "Customer");
+      setFilteredModalData(newRole === "Vendor" ? vendorData : customerData);
+    }
   };
 
   return (
@@ -94,15 +123,33 @@ export function FinancialsTable({ headers, modalData, initialRows = [] }) {
                   if (header.key === "role") {
                     return (
                       <TableCell key={header.key} className="min-w-[180px] w-full px-2">
-                        <Select value={row.role} onValueChange={val => form.setValue(`rows.${rowIndex}.role`, val)}>
-                          <SelectTrigger className="w-full min-w-[180px]">
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Customer">Customer</SelectItem>
-                            <SelectItem value="Vendor">Vendor</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <Controller
+                          control={form.control}
+                          name={`rows.${rowIndex}.role`}
+                          render={({ field }) => (
+                            <Select
+                              value={field.value}
+                              onValueChange={val => {
+                                field.onChange(val);
+                                // Clear code/name fields and update modal data if open
+                                form.setValue(`rows.${rowIndex}.code`, "");
+                                form.setValue(`rows.${rowIndex}.name`, "");
+                                if (modalOpen && modalRowIndex === rowIndex) {
+                                  setModalRole(val === "Vendor" ? "Vendor" : "Customer");
+                                  setFilteredModalData(val === "Vendor" ? vendorData : customerData);
+                                }
+                              }}
+                            >
+                              <SelectTrigger className="w-full min-w-[180px]">
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Customer">Customer</SelectItem>
+                                <SelectItem value="Vendor">Vendor</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
                       </TableCell>
                     );
                   }
@@ -164,13 +211,15 @@ export function FinancialsTable({ headers, modalData, initialRows = [] }) {
         <ReusableModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
-          title="Search Customer"
-          columns={headers.map(h => h.label)}
+          title={modalRole === "Vendor" ? "Search Vendor" : "Search Customer"}
+          columns={modalRole === "Vendor"
+            ? ["Vendor Code", "Name", "Address", "Email"]
+            : ["Customer Code", "Name", "Address", "Email"]}
           data={filteredModalData}
-          onSelect={(item) => handleModalSelect(item)}
+          onSelect={handleModalSelect}
         >
           <Input
-            placeholder="Search by code..."
+            placeholder={modalRole === "Vendor" ? "Search by vendor code..." : "Search by customer code..."}
             value={modalSearch}
             onChange={handleModalSearch}
             className="mb-2"
