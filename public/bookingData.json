@@ -1,0 +1,174 @@
+{
+  "1": {
+    "generalInfo": {
+      "General Info": {
+        "Booking ID": "BKG-001",
+        "Product *": "Mobile",
+        "Order Status": "PENDING",
+        "Company Code *": "THKN",
+        "External Order ID": "EXT-12345",
+        "Delivery Terms": "FOB",
+        "Service *": "Air",
+        "Branch Code *": "BCH-01",
+        "Inco Terms": "FOB",
+        "Order Type *": "Bulk",
+        "Mode Of Transport *": "Truck",
+        "Department Code *": "Sales",
+        "Customer ID *": "CUST001",
+        "# Cust-DO": "DO-789",
+        "# Custref-PO": "PO-456",
+        "Goods Value": "10000 USD",
+        "Original Document Sent": "2024-06-01",
+        "Original Document Received": "2024-06-02",
+        "Shipment Type": "Type1",
+        "Region": "North",
+        "Driver Pickup Instructions": "Call before pickup.",
+        "Driver Delivery Instructions": "Deliver to warehouse.",
+        "123 Load Board": "Yes",
+        "Truck Stop": "No",
+        "DAT": "Yes"
+      },
+      "Routing Details": {
+        "Shipper": {
+          "Shipper ID *": "SHIP001",
+          "Shipper Name *": "Acme Corp",
+          "Street *": "123 Shipper St",
+          "Estimated Early Pickup *": "2024-06-05",
+          "City *": "Bangkok",
+          "Estimated Late Pickup *": "2024-06-06",
+          "Province *": "Bangkok",
+          "Country *": "Thailand",
+          "Zipcode *": "10110",
+          "Phone": "021234567",
+          "Fax": "021234568",
+          "Email": "shipper@acme.com"
+        },
+        "Consignee": {
+          "Consignee ID *": "CON001",
+          "Consignee Name *": "Beta Ltd",
+          "Estimated Early Delivery *": "2024-06-07",
+          "Street *": "456 Consignee Ave",
+          "City *": "Chennai",
+          "Estimated Late Delivery *": "2024-06-08",
+          "Province *": "Tamil Nadu",
+          "Country *": "India",
+          "Zipcode *": "600001",
+          "Phone": "0441234567",
+          "Fax": "0441234568",
+          "Email": "consignee@beta.com"
+        }
+      },
+      "Shipping Info": {
+        "Shipping Method": "Air",
+        "Tracking Number": "TRACK123",
+        "Carrier": "DHL Express",
+        "Estimated Departure": "2024-06-05 09:00",
+        "Estimated Arrival": "2024-06-07 18:00",
+        "Port of Loading": "Bangkok Intl Airport",
+        "Port of Discharge": "Chennai Intl Airport",
+        "Container Number": "CONT-001",
+        "Seal Number": "SEAL-12345"
+      },
+      "Other": {
+        "Notes": "Urgent delivery",
+        "Special Instructions": "Handle with care. Fragile.",
+        "Insurance": "Yes",
+        "Insurance Value": "5000 USD",
+        "Customs Cleared": "Yes",
+        "Warehouse Location": "WH-12A",
+        "Last Updated": "2024-06-04 15:30"
+      }
+    },
+    "financials": {
+      "Amount": 1000,
+      "Currency": "USD",
+      "Status": "Paid"
+    }
+  },
+  "2": {
+    "generalInfo": {
+      "General Info": {
+        "Booking ID": "BKG-002",
+        "Product *": "Laptop",
+        "Order Status": "CONFIRMED",
+        "Company Code *": "TCS01",
+        "External Order ID": "EXT-67890",
+        "Delivery Terms": "CIF",
+        "Service *": "Sea",
+        "Branch Code *": "BCH-02",
+        "Inco Terms": "CIF",
+        "Order Type *": "Single",
+        "Mode Of Transport *": "Ship",
+        "Department Code *": "Logistics",
+        "Customer ID *": "CUST002",
+        "# Cust-DO": "DO-123",
+        "# Custref-PO": "PO-789",
+        "Goods Value": "20000 EUR",
+        "Original Document Sent": "2024-06-03",
+        "Original Document Received": "2024-06-04",
+        "Shipment Type": "Type2",
+        "Region": "South",
+        "Driver Pickup Instructions": "Arrive before 10am.",
+        "Driver Delivery Instructions": "Leave at reception.",
+        "123 Load Board": "No",
+        "Truck Stop": "Yes",
+        "DAT": "No"
+      },
+      "Routing Details": {
+        "Shipper": {
+          "Shipper ID *": "SHIP002",
+          "Shipper Name *": "Gamma Exports",
+          "Street *": "789 Shipper Lane",
+          "Estimated Early Pickup *": "2024-06-10",
+          "City *": "Pune",
+          "Estimated Late Pickup *": "2024-06-11",
+          "Province *": "Maharashtra",
+          "Country *": "India",
+          "Zipcode *": "411001",
+          "Phone": "0201234567",
+          "Fax": "0201234568",
+          "Email": "shipper@gamma.com"
+        },
+        "Consignee": {
+          "Consignee ID *": "CON002",
+          "Consignee Name *": "Delta Imports",
+          "Estimated Early Delivery *": "2024-06-12",
+          "Street *": "321 Consignee Blvd",
+          "City *": "Bangkok",
+          "Estimated Late Delivery *": "2024-06-13",
+          "Province *": "Bangkok",
+          "Country *": "Thailand",
+          "Zipcode *": "10200",
+          "Phone": "021234569",
+          "Fax": "021234570",
+          "Email": "consignee@delta.com"
+        }
+      },
+      "Shipping Info": {
+        "Shipping Method": "Sea",
+        "Tracking Number": "TRACK456",
+        "Carrier": "Maersk Line",
+        "Estimated Departure": "2024-06-15 14:00",
+        "Estimated Arrival": "2024-06-25 10:00",
+        "Port of Loading": "Mumbai Port",
+        "Port of Discharge": "Bangkok Port",
+        "Container Number": "CONT-002",
+        "Seal Number": "SEAL-67890"
+      },
+      "Other": {
+        "Notes": "Standard delivery",
+        "Special Instructions": "Stack upright. Do not drop.",
+        "Insurance": "No",
+        "Insurance Value": "0",
+        "Customs Cleared": "No",
+        "Warehouse Location": "WH-34B",
+        "Last Updated": "2024-06-14 11:20"
+      }
+    },
+    "financials": {
+      "Amount": 2000,
+      "Currency": "EUR",
+      "Status": "Unpaid"
+    }
+  }
+} 
