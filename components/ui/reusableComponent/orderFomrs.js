@@ -384,7 +384,7 @@ export function renderOrderFieldWithModals(
   )
 }
 
-export function OrdersForm({ sections = [], tableAccordion = true }) {
+export function OrdersForm({ sections = [], useAccordion = true }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
   const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([])
@@ -403,144 +403,272 @@ export function OrdersForm({ sections = [], tableAccordion = true }) {
       }
     );
 
-  return (
-    <>
-<Accordion type="multiple">
-  {sections.map((section, index) => {
-    const accordionValue = section.title.toLowerCase().replace(/\s+/g, "-");
-    const shouldRenderAccordion = section.type === "form" || tableAccordion;
-
-    return shouldRenderAccordion ? (
-      <AccordionItem key={index} value={accordionValue}>
-        <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
-          {section.title}
-        </AccordionTrigger>
-        <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-          {/* FORM */}
-          <div className="pt-6">
-            {section.renderLayout
-              ? section.renderLayout({ renderField })
-              : (
-                <Form {...section.form}>
-                  <form
-                    onSubmit={section.form.handleSubmit && section.form.handleSubmit(section.onSubmit, section.onInvalid)}
-                    className="space-y-4"
-                  >
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      {section.fields.map((fieldConfig) =>
-                        renderField(fieldConfig, section.form, index)
+  if (useAccordion) {
+    return (
+      <>
+        <Accordion type="multiple">
+          {sections.map((section, index) => {
+            const accordionValue = section.title.toLowerCase().replace(/\s+/g, "-");
+            return (
+              <AccordionItem key={index} value={accordionValue}>
+                <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
+                  {section.title}
+                </AccordionTrigger>
+                <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+                  {/* FORM */}
+                  <div className="pt-6">
+                    {section.renderLayout
+                      ? section.renderLayout({ renderField })
+                      : (
+                        <Form {...section.form}>
+                          <form
+                            onSubmit={section.form.handleSubmit && section.form.handleSubmit(section.onSubmit, section.onInvalid)}
+                            className="space-y-4"
+                          >
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                              {section.fields.map((fieldConfig) =>
+                                renderField(fieldConfig, section.form, index)
+                              )}
+                            </div>
+                            {section.children}
+                          </form>
+                        </Form>
                       )}
-                    </div>
-                    {section.children}
-                  </form>
-                </Form>
-              )}
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    ) : null;
-  })}
-</Accordion>
-
-      {/* Modal logic for companyCode, branchCode, customerId, shipperId, consigneeId */}
-      {modalField && (
-        <ReusableModal
-          open={modalField !== null}
-          onClose={() => {
-            setModalField(null)
-            setModalType(null)
-          }}
-          title={
-            modalField.name === "companyCode"
-              ? modalType === "list"
-                ? "List of Companies"
-                : modalType === "search"
-                ? "Search Company Details"
-                : "Select Company"
-              : modalField.name === "branchCode"
-              ? modalType === "list"
-                ? "List of Branches"
-                : modalType === "search"
-                ? "Search Branch Details"
-                : "Select Branch"
-              : modalField.name === "customerId"
-              ? modalType === "list"
-                ? "List of Customers"
-                : modalType === "search"
-                ? "Search Customer Details"
-                : "Select Customer"
-              : modalField.name === "shipperId"
-              ? modalType === "list"
-                ? "List of Shippers"
-                : modalType === "search"
-                ? "Search Shipper Details"
-                : "Select Shipper"
-              : modalField.name === "consigneeId"
-              ? modalType === "list"
-                ? "List of Consignees"
-                : modalType === "search"
-                ? "Search Consignee Details"
-                : "Select Consignee"
-              : ""
-          }
-          columns={
-            modalField.name === "companyCode"
-              ? companyModalColumns
-              : modalField.name === "branchCode"
-              ? branchModalColumns
-              : modalField.name === "customerId"
-              ? customerIdModalColumns
-              : modalField.name === "shipperId"
-              ? [
-                  "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-                ]
-              : modalField.name === "consigneeId"
-              ? [
-                  "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-                ]
-              : []
-          }
-          data={
-            modalField.name === "companyCode"
-              ? modalType === "list"
-                ? companyListData
-                : modalType === "search"
-                ? companySearchData
-                : companyFindData
-              : modalField.name === "branchCode"
-              ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
-              : modalField.name === "customerId"
-              ? filteredCustomerIdData
-              : modalField.name === "shipperId"
-              ? filteredCustomerIdData
-              : modalField.name === "consigneeId"
-              ? filteredCustomerIdData
-              : []
-          }
-          onSelect={(row) => {
-            if (modalField.name === "companyCode") {
-              modalField.form.setValue("companyCode", row["Company Code"]);
-              modalField.form.setValue("branchCode", "");
-            } else if (modalField.name === "branchCode") {
-              modalField.form.setValue("branchCode", row["Branch Code"]);
-            } else if (modalField.name === "customerId") {
-              if (modalField.form) {
-                modalField.form.setValue("customerId", row["Customer ID"]);
-              }
-            } else if (modalField.name === "shipperId") {
-              if (modalField.form) {
-                modalField.form.setValue("shipperId", row["Shipper ID"]);
-              }
-            } else if (modalField.name === "consigneeId") {
-              if (modalField.form) {
-                modalField.form.setValue("consigneeId", row["Consignee ID"]);
-              }
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+        {/* Modal logic for companyCode, branchCode, customerId, shipperId, consigneeId */}
+        {modalField && (
+          <ReusableModal
+            open={modalField !== null}
+            onClose={() => {
+              setModalField(null)
+              setModalType(null)
+            }}
+            title={
+              modalField.name === "companyCode"
+                ? modalType === "list"
+                  ? "List of Companies"
+                  : modalType === "search"
+                  ? "Search Company Details"
+                  : "Select Company"
+                : modalField.name === "branchCode"
+                ? modalType === "list"
+                  ? "List of Branches"
+                  : modalType === "search"
+                  ? "Search Branch Details"
+                  : "Select Branch"
+                : modalField.name === "customerId"
+                ? modalType === "list"
+                  ? "List of Customers"
+                  : modalType === "search"
+                  ? "Search Customer Details"
+                  : "Select Customer"
+                : modalField.name === "shipperId"
+                ? modalType === "list"
+                  ? "List of Shippers"
+                  : modalType === "search"
+                  ? "Search Shipper Details"
+                  : "Select Shipper"
+                : modalField.name === "consigneeId"
+                ? modalType === "list"
+                  ? "List of Consignees"
+                  : modalType === "search"
+                  ? "Search Consignee Details"
+                  : "Select Consignee"
+                : ""
             }
-            setModalField(null);
-            setModalType(null);
-          }}
-        />
-      )}
-    </>
-  )
+            columns={
+              modalField.name === "companyCode"
+                ? companyModalColumns
+                : modalField.name === "branchCode"
+                ? branchModalColumns
+                : modalField.name === "customerId"
+                ? customerIdModalColumns
+                : modalField.name === "shipperId"
+                ? [
+                    "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+                  ]
+                : modalField.name === "consigneeId"
+                ? [
+                    "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+                  ]
+                : []
+            }
+            data={
+              modalField.name === "companyCode"
+                ? modalType === "list"
+                  ? companyListData
+                  : modalType === "search"
+                  ? companySearchData
+                  : companyFindData
+                : modalField.name === "branchCode"
+                ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
+                : modalField.name === "customerId"
+                ? filteredCustomerIdData
+                : modalField.name === "shipperId"
+                ? filteredCustomerIdData
+                : modalField.name === "consigneeId"
+                ? filteredCustomerIdData
+                : []
+            }
+            onSelect={(row) => {
+              if (modalField.name === "companyCode") {
+                modalField.form.setValue("companyCode", row["Company Code"]);
+                modalField.form.setValue("branchCode", "");
+              } else if (modalField.name === "branchCode") {
+                modalField.form.setValue("branchCode", row["Branch Code"]);
+              } else if (modalField.name === "customerId") {
+                if (modalField.form) {
+                  modalField.form.setValue("customerId", row["Customer ID"]);
+                }
+              } else if (modalField.name === "shipperId") {
+                if (modalField.form) {
+                  modalField.form.setValue("shipperId", row["Shipper ID"]);
+                }
+              } else if (modalField.name === "consigneeId") {
+                if (modalField.form) {
+                  modalField.form.setValue("consigneeId", row["Consignee ID"]);
+                }
+              }
+              setModalField(null);
+              setModalType(null);
+            }}
+          />
+        )}
+      </>
+    );
+  } else {
+    // Render sections directly, no accordion
+    return (
+      <>
+        {sections.map((section, index) => (
+          <div key={index} className="mb-8">
+            <div className="text-xl font-semibold mb-4 text-[#006397]">{section.title}</div>
+            <div className="bg-[#ffffff] p-6 rounded-md shadow">
+              {section.renderLayout
+                ? section.renderLayout({ renderField })
+                : (
+                  <Form {...section.form}>
+                    <form
+                      onSubmit={section.form.handleSubmit && section.form.handleSubmit(section.onSubmit, section.onInvalid)}
+                      className="space-y-4"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        {section.fields.map((fieldConfig) =>
+                          renderField(fieldConfig, section.form, index)
+                        )}
+                      </div>
+                      {section.children}
+                    </form>
+                  </Form>
+                )}
+            </div>
+          </div>
+        ))}
+        {/* Modal logic for companyCode, branchCode, customerId, shipperId, consigneeId */}
+        {modalField && (
+          <ReusableModal
+            open={modalField !== null}
+            onClose={() => {
+              setModalField(null)
+              setModalType(null)
+            }}
+            title={
+              modalField.name === "companyCode"
+                ? modalType === "list"
+                  ? "List of Companies"
+                  : modalType === "search"
+                  ? "Search Company Details"
+                  : "Select Company"
+                : modalField.name === "branchCode"
+                ? modalType === "list"
+                  ? "List of Branches"
+                  : modalType === "search"
+                  ? "Search Branch Details"
+                  : "Select Branch"
+                : modalField.name === "customerId"
+                ? modalType === "list"
+                  ? "List of Customers"
+                  : modalType === "search"
+                  ? "Search Customer Details"
+                  : "Select Customer"
+                : modalField.name === "shipperId"
+                ? modalType === "list"
+                  ? "List of Shippers"
+                  : modalType === "search"
+                  ? "Search Shipper Details"
+                  : "Select Shipper"
+                : modalField.name === "consigneeId"
+                ? modalType === "list"
+                  ? "List of Consignees"
+                  : modalType === "search"
+                  ? "Search Consignee Details"
+                  : "Select Consignee"
+                : ""
+            }
+            columns={
+              modalField.name === "companyCode"
+                ? companyModalColumns
+                : modalField.name === "branchCode"
+                ? branchModalColumns
+                : modalField.name === "customerId"
+                ? customerIdModalColumns
+                : modalField.name === "shipperId"
+                ? [
+                    "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+                  ]
+                : modalField.name === "consigneeId"
+                ? [
+                    "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+                  ]
+                : []
+            }
+            data={
+              modalField.name === "companyCode"
+                ? modalType === "list"
+                  ? companyListData
+                  : modalType === "search"
+                  ? companySearchData
+                  : companyFindData
+                : modalField.name === "branchCode"
+                ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
+                : modalField.name === "customerId"
+                ? filteredCustomerIdData
+                : modalField.name === "shipperId"
+                ? filteredCustomerIdData
+                : modalField.name === "consigneeId"
+                ? filteredCustomerIdData
+                : []
+            }
+            onSelect={(row) => {
+              if (modalField.name === "companyCode") {
+                modalField.form.setValue("companyCode", row["Company Code"]);
+                modalField.form.setValue("branchCode", "");
+              } else if (modalField.name === "branchCode") {
+                modalField.form.setValue("branchCode", row["Branch Code"]);
+              } else if (modalField.name === "customerId") {
+                if (modalField.form) {
+                  modalField.form.setValue("customerId", row["Customer ID"]);
+                }
+              } else if (modalField.name === "shipperId") {
+                if (modalField.form) {
+                  modalField.form.setValue("shipperId", row["Shipper ID"]);
+                }
+              } else if (modalField.name === "consigneeId") {
+                if (modalField.form) {
+                  modalField.form.setValue("consigneeId", row["Consignee ID"]);
+                }
+              }
+              setModalField(null);
+              setModalType(null);
+            }}
+          />
+        )}
+      </>
+    );
+  }
 }

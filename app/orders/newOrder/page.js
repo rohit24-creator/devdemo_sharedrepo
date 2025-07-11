@@ -181,7 +181,7 @@ export default function NewOrderPage() {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-6">
       <OrdersForm sections={sections} useAccordion={true} />
     </div>
   );

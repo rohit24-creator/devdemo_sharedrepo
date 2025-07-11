@@ -82,7 +82,88 @@
     "financials": {
       "Amount": 1000,
       "Currency": "USD",
-      "Status": "Paid"
+      "Status": "Paid",
+      "summary": {
+        "Total revenue": 1000,
+        "Total cost": 500,
+        "Gross profit": 500
+      },
+      "revenue": [
+        {
+          "role": "Customer",
+          "code": "CUST001",
+          "name": "John Doe",
+          "amount": "1000",
+          "bu": "BU1",
+          "flightRecorder": "FR1",
+          "foreignCurrency": "USD",
+          "currencyExchange": "Yes",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-001",
+          "idCard": "ID-001",
+          "creditNoteNumber": "CN-001",
+          "invoiceDate": "2024-06-01",
+          "invoiceCreationDate": "2024-06-01",
+          "invoiceReceivedDate": "2024-06-02",
+          "status": "Paid"
+        },
+        {
+          "role": "Customer",
+          "code": "CUST002",
+          "name": "Jane Smith",
+          "amount": "700",
+          "bu": "BU2",
+          "flightRecorder": "FR2",
+          "foreignCurrency": "USD",
+          "currencyExchange": "No",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-002",
+          "idCard": "ID-002",
+          "creditNoteNumber": "CN-002",
+          "invoiceDate": "2024-06-03",
+          "invoiceCreationDate": "2024-06-03",
+          "invoiceReceivedDate": "2024-06-04",
+          "status": "Unpaid"
+        }
+      ],
+      "cost": [
+        {
+          "role": "Vendor",
+          "code": "VEND001",
+          "name": "Acme Supplies",
+          "amount": "500",
+          "bu": "BU3",
+          "flightRecorder": "FR3",
+          "foreignCurrency": "USD",
+          "currencyExchange": "No",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-003",
+          "idCard": "ID-003",
+          "creditNoteNumber": "CN-003",
+          "invoiceDate": "2024-06-05",
+          "invoiceCreationDate": "2024-06-05",
+          "invoiceReceivedDate": "2024-06-06",
+          "status": "Paid"
+        },
+        {
+          "role": "Vendor",
+          "code": "VEND002",
+          "name": "Beta Logistics",
+          "amount": "350",
+          "bu": "BU4",
+          "flightRecorder": "FR4",
+          "foreignCurrency": "USD",
+          "currencyExchange": "Yes",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-004",
+          "idCard": "ID-004",
+          "creditNoteNumber": "CN-004",
+          "invoiceDate": "2024-06-07",
+          "invoiceCreationDate": "2024-06-07",
+          "invoiceReceivedDate": "2024-06-08",
+          "status": "Unpaid"
+        }
+      ]
     }
   },
   "2": {
@@ -168,7 +249,88 @@
     "financials": {
       "Amount": 2000,
       "Currency": "EUR",
-      "Status": "Unpaid"
+      "Status": "Unpaid",
+      "summary": {
+        "Total revenue": 2000,
+        "Total cost": 1200,
+        "Gross profit": 800
+      },
+      "revenue": [
+        {
+          "role": "Customer",
+          "code": "CUST003",
+          "name": "Alice Brown",
+          "amount": "1200",
+          "bu": "BU5",
+          "flightRecorder": "FR5",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "Yes",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-005",
+          "idCard": "ID-005",
+          "creditNoteNumber": "CN-005",
+          "invoiceDate": "2024-06-10",
+          "invoiceCreationDate": "2024-06-10",
+          "invoiceReceivedDate": "2024-06-11",
+          "status": "Paid"
+        },
+        {
+          "role": "Customer",
+          "code": "CUST004",
+          "name": "Bob White",
+          "amount": "800",
+          "bu": "BU6",
+          "flightRecorder": "FR6",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "No",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-006",
+          "idCard": "ID-006",
+          "creditNoteNumber": "CN-006",
+          "invoiceDate": "2024-06-12",
+          "invoiceCreationDate": "2024-06-12",
+          "invoiceReceivedDate": "2024-06-13",
+          "status": "Unpaid"
+        }
+      ],
+      "cost": [
+        {
+          "role": "Vendor",
+          "code": "VEND003",
+          "name": "Gamma Exports",
+          "amount": "600",
+          "bu": "BU7",
+          "flightRecorder": "FR7",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "Yes",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-007",
+          "idCard": "ID-007",
+          "creditNoteNumber": "CN-007",
+          "invoiceDate": "2024-06-14",
+          "invoiceCreationDate": "2024-06-14",
+          "invoiceReceivedDate": "2024-06-15",
+          "status": "Paid"
+        },
+        {
+          "role": "Vendor",
+          "code": "VEND004",
+          "name": "Delta Imports",
+          "amount": "400",
+          "bu": "BU8",
+          "flightRecorder": "FR8",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "No",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-008",
+          "idCard": "ID-008",
+          "creditNoteNumber": "CN-008",
+          "invoiceDate": "2024-06-16",
+          "invoiceCreationDate": "2024-06-16",
+          "invoiceReceivedDate": "2024-06-17",
+          "status": "Unpaid"
+        }
+      ]
     }
   }
 } 
