@@ -60,6 +60,10 @@ export default function ReusableTable({
   fifthIconMenu = [],
   enabledActions = ["edit", "view", "delete", "tripHistory"], // <-- use prop, not hardcoded
   onActionClick = () => {},                   // <-- use prop, not hardcoded
+  claimStatusOptions = [], // <-- new prop
+  onStatusChange = () => {}, // <-- new prop
+  showResetButton = false, // <-- new prop
+  onReset = () => {},     // <-- new prop
 }) {
   const [formValues, setFormValues] = useState({});
   const [displayCount, setDisplayCount] = useState(30);
@@ -269,10 +273,24 @@ export default function ReusableTable({
           >
             Search
           </Button>
+          {showResetButton && (
+            <Button
+              className="bg-[#006397] text-white px-4 rounded-full ml-2"
+              onClick={onReset}
+              type="button"
+            >
+              Reset
+            </Button>
+          )}
         </div>
         <div className="flex items-center gap-6 pr-2">
           {showFirstIcon && (
             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <LayoutGrid size={18} className="cursor-pointer text-gray-600" />
+                </Button>
+              </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {secondIconMenu.map((item, idx) => (
                   <DropdownMenuItem key={idx} onClick={item.onClick}>
@@ -431,9 +449,9 @@ export default function ReusableTable({
                     <Checkbox
                       checked={selectedRows.includes(row.id)}
                       onCheckedChange={() => toggleRow(row)}
-                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"                    />
+                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                    />
                   </TableCell>
-
                   {showActions && (
                     <TableCell className="px-6 py-3">
                       <DropdownMenu>
@@ -457,10 +475,27 @@ export default function ReusableTable({
                       </DropdownMenu>
                     </TableCell>
                   )}
-
                   {columns.map((col) => (
                     <TableCell key={col.accessorKey} className="text-sm px-6 py-3">
-                      {row[col.accessorKey] ?? ""}
+                      {col.accessorKey === "claimStatus" && claimStatusOptions.length > 0 ? (
+                        <Select
+                          value={row.claimStatus}
+                          onValueChange={value => onStatusChange(row.id, value)}
+                        >
+                          <SelectTrigger className="w-[160px] border border-gray-300">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {claimStatusOptions.map(opt => (
+                              <SelectItem key={opt} value={opt}>
+                                {opt}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        row[col.accessorKey] ?? ""
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>

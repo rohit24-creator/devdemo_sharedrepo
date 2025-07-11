@@ -60,7 +60,7 @@ function buildZodSchema(fields = []) {
   return z.object(shape);
 }
 
-export default function FormModal({ open, onClose, title, formFields = [], onSubmit }) {
+export default function FormModal({ open, onClose, title, formFields = [], onSubmit, footerType = "default", dialogClassName, submitLabel = "Add", closeLabel = "Close" }) {
   const schema = useMemo(() => buildZodSchema(formFields), [formFields]);
 
   const form = useForm({
@@ -81,7 +81,7 @@ export default function FormModal({ open, onClose, title, formFields = [], onSub
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="lg:max-w-[60rem] p-0">
+      <DialogContent className={dialogClassName || "lg:max-w-[60rem] p-0"}>
         {/* Title Bar */}
         <div className="bg-blue-600 text-white px-6 py-4 flex justify-between items-center rounded-t-md">
           <DialogTitle className="text-lg font-semibold">{title || "Add Item"}</DialogTitle>
@@ -126,14 +126,22 @@ export default function FormModal({ open, onClose, title, formFields = [], onSub
             {Array.from({length: (3 - (formFields.length % 3)) % 3}).map((_, i) => <div key={"empty-"+i}></div>)}
           </form>
           {/* Footer row: Close/Add buttons */}
-          <div className="w-full flex justify-end gap-4 pt-6 bg-[#eaf3fc] px-8 py-6 rounded-b-md">
-            <Button type="button" variant="destructive" className="px-8 rounded-full" onClick={onClose}>
-              Close
-            </Button>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-full">
-              Add
-            </Button>
-          </div>
+          {footerType === "submitOnly" ? (
+            <div className="w-full flex justify-end pt-6 bg-[#eaf3fc] px-8 py-4 rounded-b-md">
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-full">
+                {submitLabel}
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full flex justify-end gap-4 pt-6 bg-[#eaf3fc] px-8 py-6 rounded-b-md">
+              <Button type="button" variant="destructive" className="px-8 rounded-full" onClick={onClose}>
+                {closeLabel}
+              </Button>
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-full">
+                {submitLabel}
+              </Button>
+            </div>
+          )}
         </Form>
       </DialogContent>
     </Dialog>
