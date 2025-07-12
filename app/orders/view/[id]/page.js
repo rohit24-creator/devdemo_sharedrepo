@@ -10,6 +10,7 @@ const tabs = [
   { label: "General Info", key: "general" },
   { label: "Order Financials", key: "financials" },
   { label: "Order Reference", key: "orderReference" },
+  { label: "Add Ons", key: "addOns" },
 ];
 
 function renderKeyValueGrid(fields, columns = 4) {
@@ -173,6 +174,7 @@ const FINANCIAL_CARDS = [
   { dataKey: 'cost', title: 'Cost Breakup', icon: DollarSign, labelWidth: 'w-24', maxFields: 2 }
 ];
 
+
 export default function BookingViewPage() {
   const params = useParams();
   const id = params.id;
@@ -202,9 +204,11 @@ export default function BookingViewPage() {
       case "general":
         return booking.generalInfo && Object.keys(booking.generalInfo).length > 0;
       case "financials":
-        return booking.financials && Object.keys(booking.financials).length > 0;
+        return booking.financials && (booking.financials.revenue?.length > 0 || booking.financials.cost?.length > 0);
       case "orderReference":
         return booking.orderReference && Object.keys(booking.orderReference).length > 0;
+      case "addOns":
+        return booking.addOns && Object.keys(booking.addOns).length > 0;
       default:
         return false;
     }
@@ -261,85 +265,180 @@ export default function BookingViewPage() {
       )}
       {activeTab === "financials" && (
         <div className="px-0 md:px-0 py-0">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-6">
-            {FINANCIAL_CARDS.map((cardConfig, index) => {
-              const { dataKey, title, icon: Icon, labelWidth, maxFields } = cardConfig;
-              
-              // Get data based on card type
-              let cardData;
-              if (dataKey === 'summary') {
-                cardData = booking.financials?.summary;
-              } else {
-                cardData = Array.isArray(booking.financials?.[dataKey]) && booking.financials[dataKey].length > 0 
-                  ? booking.financials[dataKey][0] 
-                  : null;
-              }
-              
-              const entries = cardData ? Object.entries(cardData) : [];
-              const displayEntries = maxFields ? entries.slice(0, maxFields) : entries;
-              
-              return (
-                <Card key={index} className={STYLES.card.container}>
-                  <CardContent className={STYLES.card.content}>
-                    <div className={STYLES.card.header}>
-                      <Icon className={STYLES.card.icon} size={24} />
-                      <span className={STYLES.card.title}>{title}</span>
-                    </div>
-                    <div className={STYLES.card.dataContainer}>
-                      {displayEntries.length > 0 ? (
-                        displayEntries.map(([key, value]) => (
-                          <div key={key} className={STYLES.card.fieldRow}>
-                            <span className={`${STYLES.card.fieldLabel} ${labelWidth}`}>{key}</span> 
-                            <span className={STYLES.card.fieldValue}>{value ?? '-'}</span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className={STYLES.card.noData}>No data available</div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-          <Accordion type="multiple" className="mb-6" defaultValue={["revenue", "cost"]}>
-            <AccordionItem value="revenue">
-              <AccordionTrigger className={STYLES.accordion.trigger}>
-                Revenue
-              </AccordionTrigger>
-              <AccordionContent className={STYLES.accordion.content}>
-                {Array.isArray(booking.financials?.revenue) && booking.financials.revenue.length > 0 ? (
-                  renderTableWithoutHeader(booking.financials.revenue)
-                ) : (
-                  <div className="text-gray-500">No data available</div>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="cost">
-              <AccordionTrigger className={STYLES.accordion.trigger}>
-                Cost
-              </AccordionTrigger>
-              <AccordionContent className={STYLES.accordion.content}>
-                {Array.isArray(booking.financials?.cost) && booking.financials.cost.length > 0 ? (
-                  renderTableWithoutHeader(booking.financials.cost)
-                ) : (
-                  <div className="text-gray-500">No data available</div>
-                )}
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {hasDataForCurrentTab() ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-6">
+                {FINANCIAL_CARDS.map((cardConfig, index) => {
+                  const { dataKey, title, icon: Icon, labelWidth, maxFields } = cardConfig;
+                  
+                  // Get data based on card type
+                  let cardData;
+                  if (dataKey === 'summary') {
+                    cardData = booking.financials?.summary;
+                  } else {
+                    cardData = Array.isArray(booking.financials?.[dataKey]) && booking.financials[dataKey].length > 0 
+                      ? booking.financials[dataKey][0] 
+                      : null;
+                  }
+                  
+                  const entries = cardData ? Object.entries(cardData) : [];
+                  const displayEntries = maxFields ? entries.slice(0, maxFields) : entries;
+                  
+                  return (
+                    <Card key={index} className={STYLES.card.container}>
+                      <CardContent className={STYLES.card.content}>
+                        <div className={STYLES.card.header}>
+                          <Icon className={STYLES.card.icon} size={24} />
+                          <span className={STYLES.card.title}>{title}</span>
+                        </div>
+                        <div className={STYLES.card.dataContainer}>
+                          {displayEntries.length > 0 ? (
+                            displayEntries.map(([key, value]) => (
+                              <div key={key} className={STYLES.card.fieldRow}>
+                                <span className={`${STYLES.card.fieldLabel} ${labelWidth}`}>{key}</span> 
+                                <span className={STYLES.card.fieldValue}>{value ?? '-'}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <div className={STYLES.card.noData}>No data available</div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+              <Accordion type="multiple" className="mb-6" defaultValue={["revenue", "cost"]}>
+                <AccordionItem value="revenue">
+                  <AccordionTrigger className={STYLES.accordion.trigger}>
+                    Revenue
+                  </AccordionTrigger>
+                  <AccordionContent className={STYLES.accordion.content}>
+                    {Array.isArray(booking.financials?.revenue) && booking.financials.revenue.length > 0 ? (
+                      renderTable(booking.financials.revenue, "Revenue")
+                    ) : (
+                      <div className="text-gray-500">No data available</div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="cost">
+                  <AccordionTrigger className={STYLES.accordion.trigger}>
+                    Cost
+                  </AccordionTrigger>
+                  <AccordionContent className={STYLES.accordion.content}>
+                    {Array.isArray(booking.financials?.cost) && booking.financials.cost.length > 0 ? (
+                      renderTable(booking.financials.cost, "Cost")
+                    ) : (
+                      <div className="text-gray-500">No data available</div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="text-center">
+                <div className="text-6xl text-gray-300 mb-4">💰</div>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No Order Financials Data</h3>
+                <p className="text-gray-500 mb-4">This section will contain financial information.</p>
+                <p className="text-sm text-gray-400">Click the "Add" button above to start adding financial data.</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
       {activeTab === "orderReference" && (
         <div className="px-0 md:px-0 py-0">
-          <div className="flex flex-col items-center justify-center py-16">
-            <div className="text-center">
-              <div className="text-6xl text-gray-300 mb-4">📋</div>
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No Order Reference Data</h3>
-              <p className="text-gray-500 mb-4">This section will contain order reference information.</p>
-              <p className="text-sm text-gray-400">Click the "Add" button above to start adding order reference data.</p>
+          {hasDataForCurrentTab() ? (
+            <Accordion type="multiple" className="mb-6" defaultValue={["reference", "statusList", "documentsList", "quotesList"]}>
+              <AccordionItem value="reference">
+                <AccordionTrigger className={STYLES.accordion.trigger}>
+                  Reference
+                </AccordionTrigger>
+                <AccordionContent className={STYLES.accordion.content}>
+                  {Array.isArray(booking.orderReference?.reference) && booking.orderReference.reference.length > 0 ? (
+                    renderTable(booking.orderReference.reference, "Reference")
+                  ) : (
+                    <div className="text-gray-500">No data available</div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="statusList">
+                <AccordionTrigger className={STYLES.accordion.trigger}>
+                  Status List
+                </AccordionTrigger>
+                <AccordionContent className={STYLES.accordion.content}>
+                  {Array.isArray(booking.orderReference?.statusList) && booking.orderReference.statusList.length > 0 ? (
+                    renderTable(booking.orderReference.statusList, "Status List")
+                  ) : (
+                    <div className="text-gray-500">No data available</div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="documentsList">
+                <AccordionTrigger className={STYLES.accordion.trigger}>
+                  Documents List
+                </AccordionTrigger>
+                <AccordionContent className={STYLES.accordion.content}>
+                  {Array.isArray(booking.orderReference?.documentsList) && booking.orderReference.documentsList.length > 0 ? (
+                    renderTable(booking.orderReference.documentsList, "Documents List")
+                  ) : (
+                    <div className="text-gray-500">No data available</div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="quotesList">
+                <AccordionTrigger className={STYLES.accordion.trigger}>
+                  Quotes List
+                </AccordionTrigger>
+                <AccordionContent className={STYLES.accordion.content}>
+                  {Array.isArray(booking.orderReference?.quotesList) && booking.orderReference.quotesList.length > 0 ? (
+                    renderTable(booking.orderReference.quotesList, "Quotes List")
+                  ) : (
+                    <div className="text-gray-500">No data available</div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="text-center">
+                <div className="text-6xl text-gray-300 mb-4">📋</div>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No Order Reference Data</h3>
+                <p className="text-gray-500 mb-4">This section will contain order reference information.</p>
+                <p className="text-sm text-gray-400">Click the "Add" button above to start adding order reference data.</p>
+              </div>
             </div>
-          </div>
+          )}
+        </div>
+      )}
+      {activeTab === "addOns" && (
+        <div className="px-0 md:px-0 py-0">
+          {hasDataForCurrentTab() ? (
+            <Accordion type="multiple" className="mb-6" defaultValue={["valueAddedService"]}>
+              <AccordionItem value="valueAddedService">
+                <AccordionTrigger className={STYLES.accordion.trigger}>
+                  Value Added Service
+                </AccordionTrigger>
+                <AccordionContent className={STYLES.accordion.content}>
+                  {Array.isArray(booking.addOns?.valueAddedService) && booking.addOns.valueAddedService.length > 0 ? (
+                    renderTable(booking.addOns.valueAddedService, "Value Added Service")
+                  ) : (
+                    <div className="text-gray-500">No data available</div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="text-center">
+                <div className="text-6xl text-gray-300 mb-4">🔧</div>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No Add Ons Data</h3>
+                <p className="text-gray-500 mb-4">This section will contain add-on services information.</p>
+                <p className="text-sm text-gray-400">Click the "Add" button above to start adding add-on services.</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
