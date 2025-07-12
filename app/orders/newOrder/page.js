@@ -7,7 +7,35 @@ import { OrdersForm } from "@/components/ui/reusableComponent/orderFomrs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Truck, Home } from "lucide-react";
 
-// Zod schemas for validation
+
+const generalInfoSchema = z.object({
+  bookingId: z.string(),
+  product: z.string().min(1, { message: "Product is required" }),
+  orderStatus: z.string().optional(),
+  companyCode: z.string().min(1, { message: "Company Code is required" }),
+  externalOrderId: z.string().optional(),
+  deliveryTerms: z.string().optional(),
+  service: z.string().min(1, { message: "Service is required" }),
+  branchCode: z.string().min(1, { message: "Branch Code is required" }),
+  incoTerms: z.string().optional(),
+  orderType: z.string().min(1, { message: "Order Type is required" }),
+  modeOfTransport: z.string().min(1, { message: "Mode Of Transport is required" }),
+  departmentCode: z.string().min(1, { message: "Department Code is required" }),
+  customerId: z.string().min(1, { message: "Customer ID is required" }),
+  custDo: z.string().optional(),
+  custRefPo: z.string().optional(),
+  goodsValue: z.string().optional(),
+  originalDocumentSent: z.string().optional(),
+  originalDocumentReceived: z.string().optional(),
+  shipmentType: z.string().optional(),
+  region: z.string().optional(),
+  driverPickupInstructions: z.string().optional(),
+  driverDeliveryInstructions: z.string().optional(),
+  loadBoard123: z.boolean().default(false),
+  truckStop: z.boolean().default(false),
+  dat: z.boolean().default(false),
+});
+
 const shipperSchema = z.object({
   shipperId: z.string().min(1, { message: "Shipper ID is required" }),
   shipperName: z.string().min(1, { message: "Shipper Name is required" }),
@@ -38,7 +66,7 @@ const consigneeSchema = z.object({
   email: z.string().optional(),
 });
 
-// Shipper and Consignee field configs
+
 const shipperFields = [
   { name: "shipperId", label: "Shipper ID *" },
   { name: "shipperName", label: "Shipper Name *" },
@@ -69,7 +97,7 @@ const consigneeFields = [
   { name: "email", label: "Email" },
 ];
 
-// General Info fields (matching screenshot)
+
 const generalInfoFields = [
   { name: "bookingId", label: "Booking ID", disabled: true },
   { name: "product", label: "Product *", type: "select", options: ["Mobile", "Laptop", "Tablet"] },
@@ -99,16 +127,73 @@ const generalInfoFields = [
 ];
 
 export default function NewOrderPage() {
-  // Move all useForm calls here
   const generalInfoForm = useForm({
+    resolver: zodResolver(generalInfoSchema),
     defaultValues: {
       bookingId: "Auto-generated",
-      // ...other defaults as needed
-    }
+      product: "",
+      orderStatus: "",
+      companyCode: "",
+      externalOrderId: "",
+      deliveryTerms: "",
+      service: "",
+      branchCode: "",
+      incoTerms: "",
+      orderType: "",
+      modeOfTransport: "",
+      departmentCode: "",
+      customerId: "",
+      custDo: "",
+      custRefPo: "",
+      goodsValue: "",
+      originalDocumentSent: "",
+      originalDocumentReceived: "",
+      shipmentType: "",
+      region: "",
+      driverPickupInstructions: "",
+      driverDeliveryInstructions: "",
+      loadBoard123: false,
+      truckStop: false,
+      dat: false,
+    },
   });
 
-  const shipperForm = useForm();
-  const consigneeForm = useForm();
+  const shipperForm = useForm({
+    resolver: zodResolver(shipperSchema),
+    defaultValues: {
+      shipperId: "",
+      shipperName: "",
+      street: "",
+      estimatedEarlyPickup: "",
+      city: "",
+      estimatedLatePickup: "",
+      province: "",
+      country: "",
+      zipcode: "",
+      phone: "",
+      fax: "",
+      email: "",
+    },
+  });
+
+  const consigneeForm = useForm({
+    resolver: zodResolver(consigneeSchema),
+    defaultValues: {
+      consigneeId: "",
+      consigneeName: "",
+      estimatedEarlyDelivery: "",
+      street: "",
+      city: "",
+      estimatedLateDelivery: "",
+      province: "",
+      country: "",
+      zipcode: "",
+      phone: "",
+      fax: "",
+      email: "",
+    },
+  });
+
   const dummyForm = useForm();
 
   const sections = [
