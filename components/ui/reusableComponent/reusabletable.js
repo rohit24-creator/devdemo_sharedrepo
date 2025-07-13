@@ -229,7 +229,7 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                     <TableCell colSpan={fields.length + 1}>
                       <Button
                         type="button"
-                        className="bg-[#006397] text-white rounded-full px-6 py-2 text-base font-semibold "
+                        className="bg-[#006397] text-white rounded-full px-6 py-2 text-base font-semibold hover:bg-[#02abf5] focus:bg-[#02abf5] active:bg-[#02abf5]"
                         onClick={handleAddRow}
                       >
                         <Plus size={20} className="text-white mr-2" />

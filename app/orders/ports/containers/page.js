@@ -96,7 +96,7 @@ export default function ContainerFormPage() {
         {
           name: "cargoDescription",
           label: "Cargo description",
-          type: "text"
+          type: "textarea"
         }
       ]
     }
