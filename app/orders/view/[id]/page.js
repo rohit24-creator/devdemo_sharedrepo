@@ -4,7 +4,10 @@ import { useEffect, useState, useMemo } from "react";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Hourglass, Handshake, DollarSign } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Hourglass, Handshake, DollarSign, Search } from "lucide-react";
 
 const tabs = [
   { label: "General Info", key: "general" },
@@ -26,36 +29,147 @@ function renderKeyValueGrid(fields, columns = 4) {
   );
 }
 
-function renderTable(data, title) {
+// Table component with filters
+function FilteredTable({ data, title }) {
+  const [displayCount, setDisplayCount] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  
   const rows = Array.isArray(data) ? data : [data];
   const headers = rows.length > 0 ? Object.keys(rows[0]) : [];
+  
+  // Filter rows based on search term
+  const filteredRows = useMemo(() => {
+    if (!searchTerm) return rows;
+    return rows.filter(row => 
+      Object.values(row).some(value => 
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [rows, searchTerm]);
+  
+  // Pagination
+  const totalPages = Math.ceil(filteredRows.length / displayCount);
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * displayCount,
+    currentPage * displayCount
+  );
+  
   return (
     <Card className="bg-white rounded-xl shadow border p-6">
-      <CardHeader className="p-0 border-b">
-        <CardTitle className="text-lg font-semibold text-[#0088d2]">{title}</CardTitle>
+      <CardHeader className="p-0 border-b pb-4">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-lg font-semibold text-[#0088d2]">{title}</CardTitle>
+          
+          {/* Filter Controls */}
+          <div className="flex items-center space-x-4">
+            {/* Search Input */}
+            <div className="flex items-center space-x-2">
+              <label className="text-sm text-gray-600">Search</label>
+              <div className="relative">
+                <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // Reset to first page when searching
+                  }}
+                  className="pl-10 w-48 border border-gray-300 rounded-md h-8 text-sm"
+                />
+              </div>
+            </div>
+            
+            {/* Display Count */}
+            <div className="flex items-center space-x-2">
+              <label className="text-sm text-gray-600">Display</label>
+              <Select
+                value={displayCount.toString()}
+                onValueChange={(value) => {
+                  setDisplayCount(Number(value));
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-20 h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[5, 10, 20, 50].map((count) => (
+                    <SelectItem key={count} value={count.toString()}>
+                      {count}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-sm text-gray-600">records</span>
+            </div>
+            
+            {/* Pagination Controls */}
+            <div className="flex items-center space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="h-8 w-8 p-0"
+              >
+                {"<"}
+              </Button>
+              <span className="text-sm text-gray-600">
+                {currentPage} of {totalPages}
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                className="h-8 w-8 p-0"
+              >
+                {">"}
+              </Button>
+            </div>
+          </div>
+        </div>
       </CardHeader>
+      
       <CardContent className="p-0">
         <Table>
           <TableHeader>
             <TableRow>
               {headers.map((header, idx) => (
-                <TableHead key={header} className={`text-[#006397] text-left text-sm font-semibold px-6 py-3 ${idx !== 0 ? 'border-l border-gray-300' : ''}`}>{header}</TableHead>
+                <TableHead key={header} className={`text-[#006397] text-left text-sm font-semibold px-6 py-3 ${idx !== 0 ? 'border-l border-gray-300' : ''}`}>
+                  {header}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.map((row, rowIdx) => (
-              <TableRow key={rowIdx}>
-                {headers.map((header, idx) => (
-                  <TableCell key={idx} className="px-6 py-3">{row[header]}</TableCell>
-                ))}
+            {paginatedRows.length > 0 ? (
+              paginatedRows.map((row, rowIdx) => (
+                <TableRow key={rowIdx}>
+                  {headers.map((header, idx) => (
+                    <TableCell key={idx} className="px-6 py-3">
+                      {row[header] ?? ""}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={headers.length} className="text-center py-6 text-gray-500">
+                  {searchTerm ? "No results found for your search." : "No data available."}
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </CardContent>
     </Card>
   );
+}
+
+// Keep original renderTable for backward compatibility
+function renderTable(data, title) {
+  return <FilteredTable data={data} title={title} />;
 }
 
 function renderTableWithoutHeader(data) {

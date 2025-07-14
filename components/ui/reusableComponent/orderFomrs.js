@@ -404,7 +404,6 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
     );
 
   if (useAccordion) {
-    // Get all section values for default open state
     const allSectionValues = sections.map(section => 
       section.title.toLowerCase().replace(/\s+/g, "-")
     );
