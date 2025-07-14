@@ -53,7 +53,10 @@ export default function CO2Form() {
         <div className="p-7 space-y-2">
             <Accordion type="single" collapsible className="w-full" defaultValue="add-co2form">
                 <AccordionItem value="add-co2form">
-                    <AccordionTrigger className="data-[state=open]:bg-[#02abf5] data-[state=closed]:bg-[#006397] text-white px-4 py-2 rounded-md">
+                    <AccordionTrigger 
+                        className="bg-[#02abf5] cursor-default [&>svg]:hidden text-white px-4 py-2 rounded-md"
+                        onClick={(e) => e.preventDefault()}
+                    >
                         CO2
                     </AccordionTrigger>
                     <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">

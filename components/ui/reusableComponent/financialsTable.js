@@ -64,11 +64,9 @@ export function FinancialsTable({ headers, initialRows = [] }) {
     if (modalRole === "Vendor") {
       newRow.code = item["Vendor Code"];
       newRow.name = item["Name"];
-      // Add more vendor fields as needed
     } else {
       newRow.code = item["Customer Code"];
       newRow.name = item["Name"];
-      // Add more customer fields as needed
     }
     update(modalRowIndex, newRow);
     setModalOpen(false);
@@ -207,7 +205,7 @@ export function FinancialsTable({ headers, initialRows = [] }) {
             Add Row
           </Button>
         </div>
-        {/* Modal for code search using ReusableModal from profilesForm */}
+
         <ReusableModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}

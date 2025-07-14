@@ -53,6 +53,7 @@ export default function VehicleProfileForm() {
       title: "General Info",
       form,
       fields: fieldConfig,
+      disableAccordionToggle: true,
       onSubmit: handleSubmit,
       children: (
         <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">
