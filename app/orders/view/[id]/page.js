@@ -267,7 +267,7 @@ export default function BookingViewPage() {
         <div className="px-0 md:px-0 py-0">
           {hasDataForCurrentTab() ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-6">
                 {FINANCIAL_CARDS.map((cardConfig, index) => {
                   const { dataKey, title, icon: Icon, labelWidth, maxFields } = cardConfig;
                   
@@ -290,41 +290,41 @@ export default function BookingViewPage() {
                         <div className={STYLES.card.header}>
                           <Icon className={STYLES.card.icon} size={24} />
                           <span className={STYLES.card.title}>{title}</span>
-                        </div>
+                </div>
                         <div className={STYLES.card.dataContainer}>
                           {displayEntries.length > 0 ? (
                             displayEntries.map(([key, value]) => (
                               <div key={key} className={STYLES.card.fieldRow}>
                                 <span className={`${STYLES.card.fieldLabel} ${labelWidth}`}>{key}</span> 
                                 <span className={STYLES.card.fieldValue}>{value ?? '-'}</span>
-                              </div>
+                </div>
                             ))
                           ) : (
                             <div className={STYLES.card.noData}>No data available</div>
                           )}
-                        </div>
-                      </CardContent>
-                    </Card>
+                </div>
+              </CardContent>
+            </Card>
                   );
                 })}
-              </div>
-              <Accordion type="multiple" className="mb-6" defaultValue={["revenue", "cost"]}>
-                <AccordionItem value="revenue">
+          </div>
+          <Accordion type="multiple" className="mb-6" defaultValue={["revenue", "cost"]}>
+            <AccordionItem value="revenue">
                   <AccordionTrigger className={STYLES.accordion.trigger}>
-                    Revenue
-                  </AccordionTrigger>
+                Revenue
+              </AccordionTrigger>
                   <AccordionContent className={STYLES.accordion.content}>
                     {Array.isArray(booking.financials?.revenue) && booking.financials.revenue.length > 0 ? (
                       renderTable(booking.financials.revenue, "Revenue")
                     ) : (
                       <div className="text-gray-500">No data available</div>
                     )}
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="cost">
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="cost">
                   <AccordionTrigger className={STYLES.accordion.trigger}>
-                    Cost
-                  </AccordionTrigger>
+                Cost
+              </AccordionTrigger>
                   <AccordionContent className={STYLES.accordion.content}>
                     {Array.isArray(booking.financials?.cost) && booking.financials.cost.length > 0 ? (
                       renderTable(booking.financials.cost, "Cost")
@@ -426,9 +426,9 @@ export default function BookingViewPage() {
                   ) : (
                     <div className="text-gray-500">No data available</div>
                   )}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
           ) : (
             <div className="flex flex-col items-center justify-center py-16">
               <div className="text-center">

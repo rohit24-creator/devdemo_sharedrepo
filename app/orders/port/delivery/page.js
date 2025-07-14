@@ -256,18 +256,21 @@ export default function DeliveryPage() {
       type: "form",
       form: carrierDetailsForm,
       fields: carrierDetailsFields,
+      disableAccordionToggle: true,
     },
     {
       title: "Port Details",
       type: "form",
       form: portDetailsForm,
       fields: portDetailsFields,
+      disableAccordionToggle: true,
     },
     {
       title: "Delivery Containers",
       type: "form",
       form: deliveryContainersForm,
       fields: deliveryContainersFields,
+      disableAccordionToggle: true,
     },
   ];
 

@@ -404,14 +404,28 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
     );
 
   if (useAccordion) {
+    // Get all section values for default open state
+    const allSectionValues = sections.map(section => 
+      section.title.toLowerCase().replace(/\s+/g, "-")
+    );
+
     return (
       <>
-        <Accordion type="multiple">
+        <Accordion type="multiple" defaultValue={allSectionValues}>
           {sections.map((section, index) => {
             const accordionValue = section.title.toLowerCase().replace(/\s+/g, "-");
+            const isDisabled = section.disableAccordionToggle;
+            
             return (
               <AccordionItem key={index} value={accordionValue}>
-                <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
+                <AccordionTrigger 
+                  className={`text-white px-4 py-2 rounded-md mt-2 ${
+                    isDisabled 
+                      ? "bg-[#02abf5] cursor-default [&>svg]:hidden" 
+                      : "bg-[#006397] data-[state=open]:bg-[#02abf5]"
+                  }`}
+                  onClick={isDisabled ? (e) => e.preventDefault() : undefined}
+                >
                   {section.title}
                 </AccordionTrigger>
                 <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
