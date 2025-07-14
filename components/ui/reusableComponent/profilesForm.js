@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { useForm, useFieldArray } from "react-hook-form"
 import {
   Accordion,
   AccordionItem,
@@ -101,6 +102,59 @@ const customerIdData = [
     Email: "jane@example.com",
     "Company Code": "TCS01",
     "Branch Code": "INCHN"
+  },
+];
+
+const customer = [
+  {
+    customerId: "CUST101",
+    name: "Alice Brown",
+    email: "alice@example.com",
+    mobile: "+91-111-222-333",
+    street: "111 Oak Street",
+    pincode: "110001",
+    company: "TCS01",
+    status: "Active"
+  },
+  {
+    customerId: "CUST102",
+    name: "Bob Wilson",
+    email: "bob@example.com",
+    mobile: "+91-444-555-666",
+    street: "222 Pine Avenue",
+    pincode: "560001",
+    company: "INFY",
+    status: "Active"
+  },
+  {
+    customerId: "CUST103",
+    name: "Carol Davis",
+    email: "carol@example.com",
+    mobile: "+91-777-888-999",
+    street: "333 Maple Road",
+    pincode: "500001",
+    company: "WPR02",
+    status: "Active"
+  },
+  {
+    customerId: "CUST104",
+    name: "David Miller",
+    email: "david@example.com",
+    mobile: "+91-000-111-222",
+    street: "444 Cedar Lane",
+    pincode: "700001",
+    company: "HCL01",
+    status: "Active"
+  },
+  {
+    customerId: "CUST105",
+    name: "Emma Taylor",
+    email: "emma@example.com",
+    mobile: "+91-333-444-555",
+    street: "555 Elm Court",
+    pincode: "380001",
+    company: "IBM02",
+    status: "Active"
   },
 ];
 
@@ -528,6 +582,12 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
   )
 
   function renderTable(section) {
+    // Check if this is a dynamic table (has dynamicRows property)
+    if (section.dynamicRows) {
+      return <DynamicTable section={section} />;
+    }
+    
+    // Original static table rendering
     return (
       <Card>
         <CardContent>
@@ -571,6 +631,192 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
         </CardContent>
       </Card>
     )
+  }
+
+  // Dynamic table component for customer profiles
+  function DynamicTable({ section }) {
+    const form = useForm({
+      defaultValues: {
+        rows: section.initialRows?.length > 0 ? section.initialRows : [{
+          name: "",
+          email: "",
+          mobile: "",
+          street: "",
+          pincode: ""
+        }],
+      },
+    });
+    
+    const { fields, append, remove } = useFieldArray({
+      control: form.control,
+      name: "rows",
+    });
+
+    // Modal state for customer selection
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalRowIndex, setModalRowIndex] = useState(null);
+    const [modalSearch, setModalSearch] = useState("");
+    const [filteredModalData, setFilteredModalData] = useState(customer);
+
+    // Open modal for customer selection
+    const openModal = (rowIndex) => {
+      setModalRowIndex(rowIndex);
+      setModalOpen(true);
+      setModalSearch("");
+      setFilteredModalData(customer);
+    };
+
+    // Handle modal search
+    const handleModalSearch = (e) => {
+      const value = e.target.value;
+      setModalSearch(value);
+      setFilteredModalData(
+        customer.filter((item) =>
+          item.name?.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+    };
+
+    // Handle modal select
+    const handleModalSelect = (item) => {
+      const newRow = { ...fields[modalRowIndex] };
+      newRow.name = item.name;
+      newRow.email = item.email;
+      newRow.mobile = item.mobile;
+      newRow.street = item.street;
+      newRow.pincode = item.pincode;
+      
+      form.setValue(`rows.${modalRowIndex}`, newRow);
+      setModalOpen(false);
+    };
+
+    return (
+      <div className="bg-white shadow rounded-lg border border-[#E7ECFD]">
+        <form onSubmit={form.handleSubmit(() => {})}>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-20 min-w-[100px] text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">Action</TableHead>
+                {section.columns.map((col, idx) => (
+                  <TableHead
+                    key={col.accessorKey}
+                    className={
+                      `text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]` +
+                      (idx === 0 || idx > 0 ? " border-l border-[#E7ECFD]" : "")
+                    }
+                  >
+                    {col.header}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {fields.map((row, rowIndex) => (
+                <TableRow key={row.id}>
+                  {/* Action cell */}
+                  <TableCell className="w-20 min-w-[100px]">
+                    <div className="flex gap-2 items-center">
+                      <Button type="button" size="sm" variant="outline" className="px-3 py-1 rounded-full text-[#006397] border-[#006397] hover:bg-[#e7ecfd]" tabIndex={-1}>
+                        Save
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="text-xl px-2 py-0">
+                            ☰
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right">
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => remove(rowIndex)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </TableCell>
+                  {section.columns.map((col) => {
+                    if (col.accessorKey === "name") {
+                      return (
+                        <TableCell key={col.accessorKey} className="relative min-w-[180px] w-full px-2">
+                          <div className="flex items-center">
+                            <Input
+                              value={row.name || ""}
+                              onChange={e => form.setValue(`rows.${rowIndex}.name`, e.target.value)}
+                              className="pr-10 w-full min-w-[180px]"
+                              placeholder="Search customer..."
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-4 top-1/2 -translate-y-1/2 w-8 flex items-center justify-center"
+                              onClick={() => openModal(rowIndex)}
+                              tabIndex={-1}
+                            >
+                              <Search size={18} className="text-[#0088d2]" />
+                            </button>
+                          </div>
+                        </TableCell>
+                      );
+                    }
+                    // For auto-filled columns, disable if name is present
+                    if (["email", "mobile", "street", "pincode"].includes(col.accessorKey)) {
+                      return (
+                        <TableCell key={col.accessorKey} className="min-w-[180px] w-full px-2">
+                          <Input
+                            value={row[col.accessorKey] || ""}
+                            onChange={e => form.setValue(`rows.${rowIndex}.${col.accessorKey}`, e.target.value)}
+                            disabled={!!row.name}
+                            className="w-full min-w-[180px]"
+                          />
+                        </TableCell>
+                      );
+                    }
+                    // Default editable cell
+                    return (
+                      <TableCell key={col.accessorKey} className="min-w-[180px] w-full px-2">
+                        <Input
+                          value={row[col.accessorKey] || ""}
+                          onChange={e => form.setValue(`rows.${rowIndex}.${col.accessorKey}`, e.target.value)}
+                          className="w-full min-w-[180px]"
+                        />
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <div className="pl-[10px] mt-4 mb-6">
+            <Button type="button" onClick={() => append({
+              name: "",
+              email: "",
+              mobile: "",
+              street: "",
+              pincode: ""
+            })} className="rounded-full px-6 bg-[#006397] text-white">
+              Add Profile
+            </Button>
+          </div>
+
+          <ReusableModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            title="Search Customer"
+            columns={["name", "email", "mobile", "street", "pincode"]}
+            data={filteredModalData}
+            onSelect={handleModalSelect}
+          >
+            <Input
+              placeholder="Search by customer name..."
+              value={modalSearch}
+              onChange={handleModalSearch}
+              className="mb-2 w-full"
+            />
+          </ReusableModal>
+        </form>
+      </div>
+    );
   }
 }
 function renderCustomTable(section) {

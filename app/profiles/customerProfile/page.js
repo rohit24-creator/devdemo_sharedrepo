@@ -32,7 +32,7 @@ const tableColumns = [
 ]
 
 export default function CustomerProfileForm() {
-  const [rows, setRows] = useState([])
+  // const [rows, setRows] = useState([]) // Remove this line
 
   const form = useForm({
     resolver: zodResolver(generalInfoSchema),
@@ -66,8 +66,9 @@ export default function CustomerProfileForm() {
     {
       type: "table",
       title: "Customer List",
+      dynamicRows: true, // Enable dynamic table logic
       columns: tableColumns,
-      rows,
+      initialRows: [], // Start with no rows
     },
   ]
 
