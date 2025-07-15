@@ -30,8 +30,6 @@ const tableColumns = [
 ]
 
 export default function VehicleProfileForm() {
-  const [rows, setRows] = useState([])
-
   const form = useForm({
     resolver: zodResolver(vehicleSchema),
     defaultValues: {
@@ -64,8 +62,9 @@ export default function VehicleProfileForm() {
     {
       type: "table",
       title: "Vehicle List",
+      dynamicRows: true, 
       columns: tableColumns,
-      rows,
+      initialRows: [], 
     },
   ]
 

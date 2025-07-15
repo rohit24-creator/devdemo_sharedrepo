@@ -59,7 +59,7 @@ function FilteredTable({ data, title }) {
     <Card className="bg-white rounded-xl shadow border p-6">
       <CardHeader className="p-0 border-b pb-4">
         <div className="flex justify-between items-center">
-          <CardTitle className="text-lg font-semibold text-[#0088d2]">{title}</CardTitle>
+        <CardTitle className="text-lg font-semibold text-[#0088d2]">{title}</CardTitle>
           
           {/* Filter Controls */}
           <div className="flex items-center space-x-4">
@@ -145,12 +145,12 @@ function FilteredTable({ data, title }) {
           <TableBody>
             {paginatedRows.length > 0 ? (
               paginatedRows.map((row, rowIdx) => (
-                <TableRow key={rowIdx}>
-                  {headers.map((header, idx) => (
+              <TableRow key={rowIdx}>
+                {headers.map((header, idx) => (
                     <TableCell key={idx} className="px-6 py-3">
                       {row[header] ?? ""}
                     </TableCell>
-                  ))}
+                ))}
                 </TableRow>
               ))
             ) : (

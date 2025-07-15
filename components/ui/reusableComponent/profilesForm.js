@@ -105,58 +105,105 @@ const customerIdData = [
   },
 ];
 
-const customer = [
-  {
-    customerId: "CUST101",
-    name: "Alice Brown",
-    email: "alice@example.com",
-    mobile: "+91-111-222-333",
-    street: "111 Oak Street",
-    pincode: "110001",
-    company: "TCS01",
-    status: "Active"
-  },
-  {
-    customerId: "CUST102",
-    name: "Bob Wilson",
-    email: "bob@example.com",
-    mobile: "+91-444-555-666",
-    street: "222 Pine Avenue",
-    pincode: "560001",
-    company: "INFY",
-    status: "Active"
-  },
-  {
-    customerId: "CUST103",
-    name: "Carol Davis",
-    email: "carol@example.com",
-    mobile: "+91-777-888-999",
-    street: "333 Maple Road",
-    pincode: "500001",
-    company: "WPR02",
-    status: "Active"
-  },
-  {
-    customerId: "CUST104",
-    name: "David Miller",
-    email: "david@example.com",
-    mobile: "+91-000-111-222",
-    street: "444 Cedar Lane",
-    pincode: "700001",
-    company: "HCL01",
-    status: "Active"
-  },
-  {
-    customerId: "CUST105",
-    name: "Emma Taylor",
-    email: "emma@example.com",
-    mobile: "+91-333-444-555",
-    street: "555 Elm Court",
-    pincode: "380001",
-    company: "IBM02",
-    status: "Active"
-  },
-];
+// Data for different profile types
+const profileData = {
+  customer: [
+    {
+      name: "Alice Brown",
+      email: "alice@example.com",
+      mobile: "+91-111-222-333",
+      street: "111 Oak Street",
+      pincode: "110001"
+    },
+    {
+      name: "Bob Wilson",
+      email: "bob@example.com",
+      mobile: "+91-444-555-666",
+      street: "222 Pine Avenue",
+      pincode: "560001"
+    },
+    {
+      name: "Carol Davis",
+      email: "carol@example.com",
+      mobile: "+91-777-888-999",
+      street: "333 Maple Road",
+      pincode: "500001"
+    },
+    {
+      name: "David Miller",
+      email: "david@example.com",
+      mobile: "+91-000-111-222",
+      street: "444 Cedar Lane",
+      pincode: "700001"
+    },
+    {
+      name: "Emma Taylor",
+      email: "emma@example.com",
+      mobile: "+91-333-444-555",
+      street: "555 Elm Court",
+      pincode: "380001"
+    },
+  ],
+  vendor: [
+    {
+      name: "Acme Supplies",
+      mobile: "+91-111-222-333",
+      address: "123 Business Park",
+      pincode: "110001"
+    },
+    {
+      name: "Global Vendors",
+      mobile: "+91-444-555-666",
+      address: "456 Industrial Area",
+      pincode: "560001"
+    },
+    {
+      name: "Premium Suppliers",
+      mobile: "+91-777-888-999",
+      address: "789 Commercial Street",
+      pincode: "500001"
+    },
+    {
+      name: "Elite Partners",
+      mobile: "+91-000-111-222",
+      address: "101 Corporate Plaza",
+      pincode: "700001"
+    },
+    {
+      name: "Top Tier Services",
+      mobile: "+91-333-444-555",
+      address: "555 Enterprise Road",
+      pincode: "380001"
+    },
+  ],
+  vehicle: [
+    {
+      vehicleType: "Truck",
+      description: "Heavy duty transport truck",
+      icon: "truck.png"
+    },
+    {
+      vehicleType: "Van",
+      description: "Delivery van for small packages",
+      icon: "van.png"
+    },
+    {
+      vehicleType: "Car",
+      description: "Passenger car for light transport",
+      icon: "car.png"
+    },
+    {
+      vehicleType: "Motorcycle",
+      description: "Two-wheeler for quick delivery",
+      icon: "motorcycle.png"
+    },
+    {
+      vehicleType: "Bicycle",
+      description: "Eco-friendly delivery option",
+      icon: "bicycle.png"
+    },
+  ]
+};
 
 export function renderFieldWithModals(
   fieldConfig,
@@ -452,7 +499,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
           {section.title}
         </AccordionTrigger>
         <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-          {/* FORM */}
+
           {section.type === "form" && (
             <div className="pt-6">
             <Form {...section.form}>
@@ -633,37 +680,89 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
     )
   }
 
-  // Dynamic table component for customer profiles
+  // Dynamic table component for different profile types
   function DynamicTable({ section }) {
+    // Determine profile type from section title or configuration
+    const getProfileType = () => {
+      const title = section.title?.toLowerCase() || "";
+      if (title.includes("customer")) return "customer";
+      if (title.includes("vendor")) return "vendor";
+      if (title.includes("vehicle")) return "vehicle";
+      return "customer"; // default
+    };
+
+    const profileType = getProfileType();
+    const profileConfig = {
+      customer: {
+        searchField: "name",
+        searchPlaceholder: "name",
+        modalTitle: "Search Customer",
+        modalSearchPlaceholder: "Search by customer name...",
+        modalColumns: ["name", "email", "mobile", "street", "pincode"],
+        defaultRow: { name: "", email: "", mobile: "", street: "", pincode: "" },
+        mapFields: (item) => ({
+          name: item.name,
+          email: item.email,
+          mobile: item.mobile,
+          street: item.street,
+          pincode: item.pincode
+        })
+      },
+      vendor: {
+        searchField: "name",
+        searchPlaceholder: "name",
+        modalTitle: "Search Vendor",
+        modalSearchPlaceholder: "Search by vendor name...",
+        modalColumns: ["name", "mobile", "address", "pincode"],
+        defaultRow: { name: "", mobile: "", address: "", pincode: "" },
+        mapFields: (item) => ({
+          name: item.name,
+          mobile: item.mobile,
+          address: item.address,
+          pincode: item.pincode
+        })
+      },
+      vehicle: {
+        searchField: "vehicleType",
+        searchPlaceholder: "vehicle type",
+        modalTitle: "Search Vehicle",
+        modalSearchPlaceholder: "Search by vehicle type...",
+        modalColumns: ["vehicleType", "description", "icon"],
+        defaultRow: { vehicleType: "", description: "", icon: "" },
+        mapFields: (item) => ({
+          vehicleType: item.vehicleType,
+          description: item.description,
+          icon: item.icon
+        })
+      }
+    };
+
+    const config = profileConfig[profileType];
+    const modalData = profileData[profileType];
+
     const form = useForm({
       defaultValues: {
-        rows: section.initialRows?.length > 0 ? section.initialRows : [{
-          name: "",
-          email: "",
-          mobile: "",
-          street: "",
-          pincode: ""
-        }],
+        rows: section.initialRows?.length > 0 ? section.initialRows : [config.defaultRow],
       },
     });
     
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove, update } = useFieldArray({
       control: form.control,
       name: "rows",
     });
 
-    // Modal state for customer selection
+    // Modal state for profile selection
     const [modalOpen, setModalOpen] = useState(false);
     const [modalRowIndex, setModalRowIndex] = useState(null);
     const [modalSearch, setModalSearch] = useState("");
-    const [filteredModalData, setFilteredModalData] = useState(customer);
+    const [filteredModalData, setFilteredModalData] = useState(modalData);
 
-    // Open modal for customer selection
+    // Open modal for profile selection
     const openModal = (rowIndex) => {
       setModalRowIndex(rowIndex);
       setModalOpen(true);
       setModalSearch("");
-      setFilteredModalData(customer);
+      setFilteredModalData(modalData);
     };
 
     // Handle modal search
@@ -671,8 +770,8 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
       const value = e.target.value;
       setModalSearch(value);
       setFilteredModalData(
-        customer.filter((item) =>
-          item.name?.toLowerCase().includes(value.toLowerCase())
+        modalData.filter((item) =>
+          item[config.searchField]?.toLowerCase().includes(value.toLowerCase())
         )
       );
     };
@@ -680,28 +779,25 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
     // Handle modal select
     const handleModalSelect = (item) => {
       const newRow = { ...fields[modalRowIndex] };
-      newRow.name = item.name;
-      newRow.email = item.email;
-      newRow.mobile = item.mobile;
-      newRow.street = item.street;
-      newRow.pincode = item.pincode;
+      const mappedFields = config.mapFields(item);
+      Object.assign(newRow, mappedFields);
       
-      form.setValue(`rows.${modalRowIndex}`, newRow);
+      update(modalRowIndex, newRow);
       setModalOpen(false);
     };
 
     return (
       <div className="bg-white shadow rounded-lg border border-[#E7ECFD]">
         <form onSubmit={form.handleSubmit(() => {})}>
-          <Table>
+          <Table className="w-full">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-20 min-w-[100px] text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">Action</TableHead>
+                <TableHead className="w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">Action</TableHead>
                 {section.columns.map((col, idx) => (
                   <TableHead
                     key={col.accessorKey}
                     className={
-                      `text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]` +
+                      `w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]` +
                       (idx === 0 || idx > 0 ? " border-l border-[#E7ECFD]" : "")
                     }
                   >
@@ -713,39 +809,34 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
             <TableBody>
               {fields.map((row, rowIndex) => (
                 <TableRow key={row.id}>
-                  {/* Action cell */}
-                  <TableCell className="w-20 min-w-[100px]">
+                  <TableCell className="w-1/6 px-2">
                     <div className="flex gap-2 items-center">
                       <Button type="button" size="sm" variant="outline" className="px-3 py-1 rounded-full text-[#006397] border-[#006397] hover:bg-[#e7ecfd]" tabIndex={-1}>
                         Save
                       </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="text-xl px-2 py-0">
-                            ☰
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="right">
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={() => remove(rowIndex)}
-                          >
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        variant="destructive" 
+                        className="px-3 py-1 rounded-full" 
+                        onClick={() => remove(rowIndex)} 
+                        tabIndex={-1}
+                      >
+                        Delete
+                      </Button>
                     </div>
                   </TableCell>
                   {section.columns.map((col) => {
-                    if (col.accessorKey === "name") {
+                    // Check if this is the search field for the current profile type
+                    if (col.accessorKey === config.searchField) {
                       return (
-                        <TableCell key={col.accessorKey} className="relative min-w-[180px] w-full px-2">
+                        <TableCell key={col.accessorKey} className="relative w-1/6 px-2">
                           <div className="flex items-center">
                             <Input
-                              value={row.name || ""}
-                              onChange={e => form.setValue(`rows.${rowIndex}.name`, e.target.value)}
-                              className="pr-10 w-full min-w-[180px]"
-                              placeholder="Search customer..."
+                              value={row[col.accessorKey] || ""}
+                              onChange={e => form.setValue(`rows.${rowIndex}.${col.accessorKey}`, e.target.value)}
+                              className="pr-10 w-full"
+                              placeholder={config.searchPlaceholder}
                             />
                             <button
                               type="button"
@@ -753,32 +844,33 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
                               onClick={() => openModal(rowIndex)}
                               tabIndex={-1}
                             >
-                              <Search size={18} className="text-[#0088d2]" />
+                              <FileText size={18} className="text-[#0088d2]" />
                             </button>
                           </div>
                         </TableCell>
                       );
                     }
-                    // For auto-filled columns, disable if name is present
-                    if (["email", "mobile", "street", "pincode"].includes(col.accessorKey)) {
+                    // For auto-filled columns, disable if search field is present
+                    const autoFillFields = config.modalColumns.filter(field => field !== config.searchField);
+                    if (autoFillFields.includes(col.accessorKey)) {
                       return (
-                        <TableCell key={col.accessorKey} className="min-w-[180px] w-full px-2">
+                        <TableCell key={col.accessorKey} className="w-1/6 px-2">
                           <Input
                             value={row[col.accessorKey] || ""}
                             onChange={e => form.setValue(`rows.${rowIndex}.${col.accessorKey}`, e.target.value)}
-                            disabled={!!row.name}
-                            className="w-full min-w-[180px]"
+                            disabled={!!row[config.searchField]}
+                            className="w-full"
                           />
                         </TableCell>
                       );
                     }
                     // Default editable cell
                     return (
-                      <TableCell key={col.accessorKey} className="min-w-[180px] w-full px-2">
+                      <TableCell key={col.accessorKey} className="w-1/6 px-2">
                         <Input
                           value={row[col.accessorKey] || ""}
                           onChange={e => form.setValue(`rows.${rowIndex}.${col.accessorKey}`, e.target.value)}
-                          className="w-full min-w-[180px]"
+                          className="w-full"
                         />
                       </TableCell>
                     );
@@ -787,14 +879,8 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
               ))}
             </TableBody>
           </Table>
-          <div className="pl-[10px] mt-4 mb-6">
-            <Button type="button" onClick={() => append({
-              name: "",
-              email: "",
-              mobile: "",
-              street: "",
-              pincode: ""
-            })} className="rounded-full px-6 bg-[#006397] text-white">
+          <div className="pl-3 mt-4 mb-6">
+            <Button type="button" onClick={() => append(config.defaultRow)} className="rounded-full px-6 bg-[#006397] text-white">
               Add Profile
             </Button>
           </div>
@@ -802,13 +888,13 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
           <ReusableModal
             open={modalOpen}
             onClose={() => setModalOpen(false)}
-            title="Search Customer"
-            columns={["name", "email", "mobile", "street", "pincode"]}
+            title={config.modalTitle}
+            columns={config.modalColumns}
             data={filteredModalData}
             onSelect={handleModalSelect}
           >
             <Input
-              placeholder="Search by customer name..."
+              placeholder={config.modalSearchPlaceholder}
               value={modalSearch}
               onChange={handleModalSearch}
               className="mb-2 w-full"
