@@ -1,0 +1,804 @@
+{
+  "shipments": [
+    {
+      "id": "TUSA2725270004",
+      "source": "TAMPA",
+      "destination": "CURTIS BAY",
+      "startDT": "06 Jan, 03:03 AM",
+      "endDT": "08 Jan, 01:50 AM",
+      "customer": "TAMPA",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Jermaine",
+      "vehicle": "BHC 246",
+      "status": "In-Transit",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "TAMPA",
+            "status": "COMPLETED",
+            "label": "P1",
+            "distance": "937.2 mi",
+            "duration": "13 hours 49 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "CURTIS BAY",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "125270004",
+          "requestId": "0482424672",
+          "location": "TAMPA",
+          "address": "TAMPA, FL,",
+          "type": "P",
+          "startDT": "06 Jan, 03:03 AM",
+          "endDT": "06 Jan, 03:03 AM",
+          "weight": "0 lb",
+          "volume": "88.29 cu ft",
+          "status": "In-Transit",
+          "totalUnits": "2",
+          "updatedUnits": "2.00",
+          "material": "DEFAULT",
+          "source": "TAMPA, FL,",
+          "destination": "CURTIS BAY"
+        },
+        {
+          "orderId": "125270004",
+          "requestId": "0482424672",
+          "location": "CURTIS BAY",
+          "address": "CURTIS BAY",
+          "type": "D",
+          "startDT": "08 Jan, 01:50 AM",
+          "endDT": "08 Jan, 01:50 AM",
+          "weight": "0 lb",
+          "volume": "88.29 cu ft",
+          "status": "New",
+          "totalUnits": "2",
+          "updatedUnits": "2.00",
+          "material": "DEFAULT",
+          "source": "TAMPA, FL,",
+          "destination": "CURTIS BAY"
+        }
+      ]
+    },
+    {
+      "id": "TSX2125210012",
+      "source": "Fremont",
+      "destination": "Fremont",
+      "startDT": "16 Dec, 01:59 PM",
+      "endDT": "16 Dec, 01:59 PM",
+      "customer": "Fremont",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "John Doe",
+      "vehicle": "BHC 247",
+      "status": "New",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "Fremont",
+            "status": "NOT STARTED",
+            "label": "P2",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Fremont",
+            "status": "NOT STARTED",
+            "label": "D2",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "125210012,125210013",
+          "requestId": "6100000809 / 6100000804",
+          "location": "Fremont",
+          "address": "3300 Capit",
+          "type": "P",
+          "startDT": "16 Dec, 01:59 PM",
+          "endDT": "16 Dec, 01:59 PM",
+          "weight": "0 lb",
+          "volume": "353.15 cu ft",
+          "status": "New",
+          "totalUnits": "20",
+          "updatedUnits": "10",
+          "material": "DEFAULT",
+          "source": "3300 Capit",
+          "destination": "40055 Miss"
+        },
+        {
+          "orderId": "125210012",
+          "requestId": "6100000809",
+          "location": "Fremont",
+          "address": "3300 Capit",
+          "type": "P",
+          "startDT": "16 Dec, 01:59 PM",
+          "endDT": "16 Dec, 01:59 PM",
+          "weight": "0 lb",
+          "volume": "353.15 cu ft",
+          "status": "New",
+          "totalUnits": "10",
+          "updatedUnits": "10",
+          "material": "DEFAULT",
+          "source": "3300 Capit",
+          "destination": "40055 Miss"
+        },
+        {
+          "orderId": "125210013",
+          "requestId": "6100000804",
+          "location": "Fremont",
+          "address": "3300 Capit",
+          "type": "P",
+          "startDT": "16 Dec, 01:59 PM",
+          "endDT": "16 Dec, 01:59 PM",
+          "weight": "0 lb",
+          "volume": "706.29 cu ft",
+          "status": "New",
+          "totalUnits": "10",
+          "updatedUnits": "10",
+          "material": "DEFAULT",
+          "source": "3300 Capit",
+          "destination": "40055 Miss"
+        },
+        {
+          "orderId": "125210012,125210013",
+          "requestId": "6100000809 / 6100000804",
+          "location": "Fremont",
+          "address": "40055 Miss",
+          "type": "D",
+          "startDT": "16 Dec, 01:59 PM",
+          "endDT": "16 Dec, 01:59 PM",
+          "weight": "0 lb",
+          "volume": "353.15 cu ft",
+          "status": "New",
+          "totalUnits": "20",
+          "updatedUnits": "10",
+          "material": "DEFAULT",
+          "source": "3300 Capit",
+          "destination": "40055 Miss"
+        }
+      ]
+    },
+    {
+      "id": "TSX5124510013",
+      "source": "LAS VEGAS",
+      "destination": "HOUGHTON",
+      "startDT": "16 Dec, 12:59 PM",
+      "endDT": "16 Dec, 12:59 PM",
+      "customer": "COLE",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Mike Johnson",
+      "vehicle": "BHC 248",
+      "status": "In-Transit",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "LAS VEGAS",
+            "status": "COMPLETED",
+            "label": "P2",
+            "distance": "2013.8 mi",
+            "duration": "1 day 5 hours"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "HOUGHTON",
+            "status": "NOT STARTED",
+            "label": "D2",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "124510013,124510014",
+          "requestId": "SX1734436834 / SX1734436852",
+          "location": "LAS VEGAS",
+          "address": "MAIN STREE",
+          "type": "P",
+          "startDT": "16 Dec, 12:59 PM",
+          "endDT": "16 Dec, 12:59 PM",
+          "weight": "0 lb",
+          "volume": "353.15 cu ft",
+          "status": "Picked up",
+          "totalUnits": "2",
+          "updatedUnits": "1",
+          "material": "DEFAULT",
+          "source": "MAIN STREE",
+          "destination": "LAKE VIEW"
+        },
+        {
+          "orderId": "124510013,124510014",
+          "requestId": "SX1734436834 / SX1734436852",
+          "location": "HOUGHTON",
+          "address": "LAKE VIEW,",
+          "type": "D",
+          "startDT": "16 Dec, 12:59 PM",
+          "endDT": "16 Dec, 12:59 PM",
+          "weight": "0 lb",
+          "volume": "353.15 cu ft",
+          "status": "New",
+          "totalUnits": "2",
+          "updatedUnits": "1",
+          "material": "DEFAULT",
+          "source": "MAIN STREE",
+          "destination": "LAKE VIEW"
+        },
+        {
+          "orderId": "124510013",
+          "requestId": "SX1734436834",
+          "location": "LAS VEGAS",
+          "address": "MAIN STREE",
+          "type": "D",
+          "startDT": "16 Dec, 12:59 PM",
+          "endDT": "16 Dec, 12:59 PM",
+          "weight": "0 lb",
+          "volume": "353.15 cu ft",
+          "status": "New",
+          "totalUnits": "1",
+          "updatedUnits": "1",
+          "material": "DEFAULT",
+          "source": "MAIN STREE",
+          "destination": "LAKE VIEW"
+        },
+        {
+          "orderId": "124510014",
+          "requestId": "SX1734436852",
+          "location": "LAS VEGAS",
+          "address": "MAIN STREE",
+          "type": "D",
+          "startDT": "16 Dec, 12:59 PM",
+          "endDT": "16 Dec, 12:59 PM",
+          "weight": "0 lb",
+          "volume": "706.29 cu ft",
+          "status": "New",
+          "totalUnits": "1",
+          "updatedUnits": "1",
+          "material": "DEFAULT",
+          "source": "MAIN STREE",
+          "destination": "LAKE VIEW"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050004",
+      "source": "New York",
+      "destination": "New York",
+      "startDT": "17 Jan, 10:00 PM",
+      "endDT": "19 Jan, 08:00 AM",
+      "customer": "New York",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "John Doe",
+      "vehicle": "BHC 249",
+      "status": "New",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "New York",
+            "status": "NOT STARTED",
+            "label": "P1",
+            "distance": "0 km",
+            "duration": "Not Found"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "New York",
+            "status": "NOT STARTED",
+            "label": "D4",
+            "distance": "0 km",
+            "duration": "Not Found"
+          },
+          {
+            "id": 3,
+            "type": "pickup",
+            "location": "New York",
+            "status": "NOT STARTED",
+            "label": "P1",
+            "distance": "2796 mi",
+            "duration": "1 day 17 hours"
+          },
+          {
+            "id": 4,
+            "type": "drop",
+            "location": "New York",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "1 min"
+          },
+          {
+            "id": 5,
+            "type": "pickup",
+            "location": "New York",
+            "status": "NOT STARTED",
+            "label": "P1",
+            "distance": "2796.7 mi",
+            "duration": "1 day 17 hours"
+          },
+          {
+            "id": 6,
+            "type": "drop",
+            "location": "New York",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505004",
+          "requestId": "SX1734436835",
+          "location": "New York",
+          "address": "New York, NY",
+          "type": "P",
+          "startDT": "17 Jan, 10:00 PM",
+          "endDT": "17 Jan, 10:00 PM",
+          "weight": "0 lb",
+          "volume": "150.25 cu ft",
+          "status": "New",
+          "totalUnits": "5",
+          "updatedUnits": "5",
+          "material": "DEFAULT",
+          "source": "New York, NY",
+          "destination": "New York, NY"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050005",
+      "source": "Chicago",
+      "destination": "Detroit",
+      "startDT": "18 Jan, 02:00 PM",
+      "endDT": "20 Jan, 10:00 AM",
+      "customer": "Chicago",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Sarah Wilson",
+      "vehicle": "BHC 250",
+      "status": "New",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "Chicago",
+            "status": "NOT STARTED",
+            "label": "P1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Detroit",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505005",
+          "requestId": "SX1734436836",
+          "location": "Chicago",
+          "address": "Chicago, IL",
+          "type": "P",
+          "startDT": "18 Jan, 02:00 PM",
+          "endDT": "18 Jan, 02:00 PM",
+          "weight": "0 lb",
+          "volume": "200.50 cu ft",
+          "status": "New",
+          "totalUnits": "8",
+          "updatedUnits": "8",
+          "material": "DEFAULT",
+          "source": "Chicago, IL",
+          "destination": "Detroit, MI"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050006",
+      "source": "Miami",
+      "destination": "Orlando",
+      "startDT": "19 Jan, 09:00 AM",
+      "endDT": "21 Jan, 03:00 PM",
+      "customer": "Miami",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Carlos Rodriguez",
+      "vehicle": "BHC 251",
+      "status": "In-Transit",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "Miami",
+            "status": "COMPLETED",
+            "label": "P1",
+            "distance": "250.5 mi",
+            "duration": "4 hours 30 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Orlando",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505006",
+          "requestId": "SX1734436837",
+          "location": "Miami",
+          "address": "Miami, FL",
+          "type": "P",
+          "startDT": "19 Jan, 09:00 AM",
+          "endDT": "19 Jan, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "175.75 cu ft",
+          "status": "Picked up",
+          "totalUnits": "6",
+          "updatedUnits": "6",
+          "material": "DEFAULT",
+          "source": "Miami, FL",
+          "destination": "Orlando, FL"
+        },
+        {
+          "orderId": "142505006",
+          "requestId": "SX1734436837",
+          "location": "Orlando",
+          "address": "Orlando, FL",
+          "type": "D",
+          "startDT": "21 Jan, 03:00 PM",
+          "endDT": "21 Jan, 03:00 PM",
+          "weight": "0 lb",
+          "volume": "175.75 cu ft",
+          "status": "New",
+          "totalUnits": "6",
+          "updatedUnits": "6",
+          "material": "DEFAULT",
+          "source": "Miami, FL",
+          "destination": "Orlando, FL"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050007",
+      "source": "Seattle",
+      "destination": "Portland",
+      "startDT": "20 Jan, 11:00 AM",
+      "endDT": "22 Jan, 02:00 PM",
+      "customer": "Seattle",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Emily Chen",
+      "vehicle": "BHC 252",
+      "status": "New",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "Seattle",
+            "status": "NOT STARTED",
+            "label": "P1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Portland",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505007",
+          "requestId": "SX1734436838",
+          "location": "Seattle",
+          "address": "Seattle, WA",
+          "type": "P",
+          "startDT": "20 Jan, 11:00 AM",
+          "endDT": "20 Jan, 11:00 AM",
+          "weight": "0 lb",
+          "volume": "300.25 cu ft",
+          "status": "New",
+          "totalUnits": "12",
+          "updatedUnits": "12",
+          "material": "DEFAULT",
+          "source": "Seattle, WA",
+          "destination": "Portland, OR"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050008",
+      "source": "Denver",
+      "destination": "Salt Lake City",
+      "startDT": "21 Jan, 08:00 AM",
+      "endDT": "23 Jan, 04:00 PM",
+      "customer": "Denver",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Michael Thompson",
+      "vehicle": "BHC 253",
+      "status": "In-Transit",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "Denver",
+            "status": "COMPLETED",
+            "label": "P1",
+            "distance": "520.8 mi",
+            "duration": "8 hours 45 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Salt Lake City",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505008",
+          "requestId": "SX1734436839",
+          "location": "Denver",
+          "address": "Denver, CO",
+          "type": "P",
+          "startDT": "21 Jan, 08:00 AM",
+          "endDT": "21 Jan, 08:00 AM",
+          "weight": "0 lb",
+          "volume": "450.50 cu ft",
+          "status": "Picked up",
+          "totalUnits": "15",
+          "updatedUnits": "15",
+          "material": "DEFAULT",
+          "source": "Denver, CO",
+          "destination": "Salt Lake City, UT"
+        },
+        {
+          "orderId": "142505008",
+          "requestId": "SX1734436839",
+          "location": "Salt Lake City",
+          "address": "Salt Lake City, UT",
+          "type": "D",
+          "startDT": "23 Jan, 04:00 PM",
+          "endDT": "23 Jan, 04:00 PM",
+          "weight": "0 lb",
+          "volume": "450.50 cu ft",
+          "status": "New",
+          "totalUnits": "15",
+          "updatedUnits": "15",
+          "material": "DEFAULT",
+          "source": "Denver, CO",
+          "destination": "Salt Lake City, UT"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050009",
+      "source": "Austin",
+      "destination": "Houston",
+      "startDT": "22 Jan, 07:00 AM",
+      "endDT": "24 Jan, 05:00 PM",
+      "customer": "Austin",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Lisa Anderson",
+      "vehicle": "BHC 254",
+      "status": "New",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "Austin",
+            "status": "NOT STARTED",
+            "label": "P1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Houston",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505009",
+          "requestId": "SX1734436840",
+          "location": "Austin",
+          "address": "Austin, TX",
+          "type": "P",
+          "startDT": "22 Jan, 07:00 AM",
+          "endDT": "22 Jan, 07:00 AM",
+          "weight": "0 lb",
+          "volume": "125.75 cu ft",
+          "status": "New",
+          "totalUnits": "4",
+          "updatedUnits": "4",
+          "material": "DEFAULT",
+          "source": "Austin, TX",
+          "destination": "Houston, TX"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050010",
+      "source": "Phoenix",
+      "destination": "Tucson",
+      "startDT": "23 Jan, 09:00 AM",
+      "endDT": "25 Jan, 02:00 PM",
+      "customer": "Phoenix",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "David Martinez",
+      "vehicle": "BHC 255",
+      "status": "In-Transit",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "Phoenix",
+            "status": "COMPLETED",
+            "label": "P1",
+            "distance": "120.3 mi",
+            "duration": "2 hours 15 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Tucson",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505010",
+          "requestId": "SX1734436841",
+          "location": "Phoenix",
+          "address": "Phoenix, AZ",
+          "type": "P",
+          "startDT": "23 Jan, 09:00 AM",
+          "endDT": "23 Jan, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "275.50 cu ft",
+          "status": "Picked up",
+          "totalUnits": "9",
+          "updatedUnits": "9",
+          "material": "DEFAULT",
+          "source": "Phoenix, AZ",
+          "destination": "Tucson, AZ"
+        },
+        {
+          "orderId": "142505010",
+          "requestId": "SX1734436841",
+          "location": "Tucson",
+          "address": "Tucson, AZ",
+          "type": "D",
+          "startDT": "25 Jan, 02:00 PM",
+          "endDT": "25 Jan, 02:00 PM",
+          "weight": "0 lb",
+          "volume": "275.50 cu ft",
+          "status": "New",
+          "totalUnits": "9",
+          "updatedUnits": "9",
+          "material": "DEFAULT",
+          "source": "Phoenix, AZ",
+          "destination": "Tucson, AZ"
+        }
+      ]
+    },
+    {
+      "id": "TSX1425050011",
+      "source": "San Diego",
+      "destination": "Los Angeles",
+      "startDT": "24 Jan, 10:00 AM",
+      "endDT": "26 Jan, 03:00 PM",
+      "customer": "San Diego",
+      "carrier": "ESTES",
+      "scac": "ESTE",
+      "driver": "Jennifer Lee",
+      "vehicle": "BHC 256",
+      "status": "New",
+      "route": {
+        "segments": [
+          {
+            "id": 1,
+            "type": "pickup",
+            "location": "San Diego",
+            "status": "NOT STARTED",
+            "label": "P1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 2,
+            "type": "drop",
+            "location": "Los Angeles",
+            "status": "NOT STARTED",
+            "label": "D1",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          }
+        ]
+      },
+      "orders": [
+        {
+          "orderId": "142505011",
+          "requestId": "SX1734436842",
+          "location": "San Diego",
+          "address": "San Diego, CA",
+          "type": "P",
+          "startDT": "24 Jan, 10:00 AM",
+          "endDT": "24 Jan, 10:00 AM",
+          "weight": "0 lb",
+          "volume": "350.25 cu ft",
+          "status": "New",
+          "totalUnits": "11",
+          "updatedUnits": "11",
+          "material": "DEFAULT",
+          "source": "San Diego, CA",
+          "destination": "Los Angeles, CA"
+        }
+      ]
+    }
+  ]
+} 
