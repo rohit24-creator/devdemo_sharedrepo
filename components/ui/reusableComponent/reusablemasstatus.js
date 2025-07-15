@@ -197,6 +197,7 @@ export default function ReusableMassStatus({
   const [selectedRows, setSelectedRows] = useState([]);
   const [docModalOpen, setDocModalOpen] = useState(false);
   const [docModalRow, setDocModalRow] = useState(null);
+  const [popoverOpen, setPopoverOpen] = useState({});
 
   // Checkbox logic
   const isAllSelected =
@@ -228,23 +229,25 @@ export default function ReusableMassStatus({
     // Main columns: always read-only (from JSON)
     if (!isDateTimeField(col.accessorKey) && col.readOnly !== false) {
       // If you want to make some columns editable, set readOnly: false in column config
-      return <span>{row[col.accessorKey]}</span>;
+      return <span>{row[col.accessorKey] || ""}</span>;
     }
     // Date/time fields: use date-time picker
     if (isDateTimeField(col.accessorKey)) {
       const value = row[col.accessorKey] || "";
       let dateValue = value ? new Date(value) : undefined;
+      const popoverKey = `${rowIdx}-${col.accessorKey}`;
+      
       return (
-        <Popover>
+        <Popover open={popoverOpen[popoverKey]} onOpenChange={(open) => setPopoverOpen(prev => ({ ...prev, [popoverKey]: open }))}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               className={cn(
-                "w-full justify-start text-left font-normal border border-gray-300 px-2 py-1 text-base h-9", // Increased height and font size for table fields
+                "w-full justify-start text-left font-normal border border-gray-300 px-2 py-1 text-base h-9 min-h-[36px]", // Increased height and font size for table fields with minimum height
                 !value && "text-muted-foreground"
               )}
             >
-              {value ? value : <span className="text-gray-400">Select date & time</span>}
+              {value ? value : <span className="text-white">Select date & time</span>}
               <CalendarIcon size={18} className="ml-2 text-gray-400" />
             </Button>
           </PopoverTrigger>
@@ -258,7 +261,7 @@ export default function ReusableMassStatus({
                   const now = new Date();
                   date.setHours(now.getHours(), now.getMinutes());
                   handleInputChange(rowIdx, col.accessorKey, format(date, "dd-MM-yyyy HH:mm:ss"));
-                  setPopoverOpen(false);
+                  setPopoverOpen(prev => ({ ...prev, [popoverKey]: false }));
                 }
               }}
               initialFocus
@@ -325,9 +328,12 @@ export default function ReusableMassStatus({
               {/* First row: blue tab group headers, only for Origin and Destination */}
               <TableRow>
                 <TableHead className="bg-transparent border-b-0 align-middle text-center">
+                  <span>&nbsp;</span>
                 </TableHead>
                 {beforeOrigin.map((col) => (
-                  <TableHead key={col.accessorKey} className="bg-transparent border-b-0" />
+                  <TableHead key={col.accessorKey} className="bg-transparent border-b-0">
+                    <span>&nbsp;</span>
+                  </TableHead>
                 ))}
                 {originCols.length > 0 && (
                   <TableHead
@@ -338,7 +344,9 @@ export default function ReusableMassStatus({
                   </TableHead>
                 )}
                 {betweenOriginDest.map((col) => (
-                  <TableHead key={col.accessorKey} className="bg-transparent border-b-0" />
+                  <TableHead key={col.accessorKey} className="bg-transparent border-b-0">
+                    <span>&nbsp;</span>
+                  </TableHead>
                 ))}
                 {destinationCols.length > 0 && (
                   <TableHead
@@ -349,7 +357,9 @@ export default function ReusableMassStatus({
                   </TableHead>
                 )}
                 {afterDest.map((col) => (
-                  <TableHead key={col.accessorKey} className="bg-transparent border-b-0" />
+                  <TableHead key={col.accessorKey} className="bg-transparent border-b-0">
+                    <span>&nbsp;</span>
+                  </TableHead>
                 ))}
               </TableRow>
               {/* Second row: normal column headers */}
@@ -430,9 +440,11 @@ export default function ReusableMassStatus({
                       <div className="flex items-center w-full">
                         {renderCell(row, rowIdx, col)}
                         {col.accessorKey === "delivery" && (
-                          <button
+                          <Button
                             type="button"
-                            className="ml-2"
+                            variant="ghost"
+                            size="sm"
+                            className="p-1 h-auto"
                             title="Manage Documents"
                             onClick={() => {
                               setDocModalRow(row);
@@ -440,7 +452,7 @@ export default function ReusableMassStatus({
                             }}
                           >
                             <FileText size={20} className="text-[#006397] hover:text-blue-700" />
-                          </button>
+                          </Button>
                         )}
                       </div>
                     </TableCell>
@@ -548,32 +560,32 @@ function DocumentModal({ open, onClose, columns = [], data = [], row }) {
             <FileText className="text-[#006397]" /> Attached Documents
           </Label>
           <div className="rounded-lg border overflow-x-auto bg-white">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="bg-gray-50">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50">
                   {columns.map(col => (
-                    <th key={col} className="px-3 py-2 font-semibold text-left">{col}</th>
+                    <TableHead key={col} className="px-3 py-2 font-semibold text-left">{col}</TableHead>
                   ))}
-                </tr>
-              </thead>
-              <tbody>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {docs && docs.length > 0 ? (
                   docs.map((doc, idx) => (
-                    <tr key={idx}>
+                    <TableRow key={idx}>
                       {columns.map(col => (
-                        <td key={col} className="px-3 py-2">{doc[col]}</td>
+                        <TableCell key={col} className="px-3 py-2">{doc[col] || ""}</TableCell>
                       ))}
-                    </tr>
+                    </TableRow>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan={columns.length} className="text-center text-gray-500 py-6">
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="text-center text-gray-500 py-6">
                       No documents found
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
           {/* Upload form */}
           {showUpload && (
@@ -660,7 +672,6 @@ function DocumentModal({ open, onClose, columns = [], data = [], row }) {
 }
 
 // Usage in your main component
-// <DocumentModal
 //   open={docModalOpen}
 //   onClose={() => setDocModalOpen(false)}
 //   columns={documentColumns}
