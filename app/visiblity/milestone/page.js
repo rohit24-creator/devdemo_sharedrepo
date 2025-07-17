@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { ChevronDown, ChevronUp, Truck, Search, RefreshCw, Plus, MoreVertical, CheckCircle, Clock, MapPin, Package, Calendar, User, Building, Car } from 'lucide-react'
+import { ChevronDown, ChevronUp, Truck, Ship, Search, RefreshCw, Plus, MoreVertical, CheckCircle, Clock, MapPin, Package, Calendar, User, Building, Car } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,13 +21,14 @@ import {
 
 export default function ShipmentVisibility() {
   const [shipments, setShipments] = useState([])
-  const [expandedRows, setExpandedRows] = useState(new Set())
+  const [expandedRow, setExpandedRow] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [selectedShipment, setSelectedShipment] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [selectedStates, setSelectedStates] = useState({}) // Track selected state for each shipment
+  const [selectedRoutes, setSelectedRoutes] = useState({}) // Track selected route for each shipment
 
   // Fetch data from JSON file (simulating API call)
   useEffect(() => {
@@ -46,15 +47,15 @@ export default function ShipmentVisibility() {
     fetchShipments()
   }, [])
 
-  // Toggle row expansion
+  // Toggle row expansion - only one row can be expanded at a time
   const toggleRow = (shipmentId) => {
-    const newExpanded = new Set(expandedRows)
-    if (newExpanded.has(shipmentId)) {
-      newExpanded.delete(shipmentId)
+    if (expandedRow === shipmentId) {
+      // If clicking the same row, close it
+      setExpandedRow(null)
     } else {
-      newExpanded.add(shipmentId)
+      // If clicking a different row, close the current one and open the new one
+      setExpandedRow(shipmentId)
     }
-    setExpandedRows(newExpanded)
   }
 
   // Filter shipments based on search term
@@ -91,17 +92,53 @@ export default function ShipmentVisibility() {
     }))
   }
 
-  // Get orders filtered by current state
-  const getFilteredOrders = (shipment, state) => {
-    if (state === 'pickup') {
-      return shipment.orders.filter(order => order.type === 'P')
-    } else if (state === 'drop') {
-      return shipment.orders.filter(order => order.type === 'D')
-    }
-    return shipment.orders
+  // Get current route for a shipment (default to first route if not selected)
+  const getCurrentRoute = (shipmentId) => {
+    return selectedRoutes[shipmentId] || 0
   }
 
-  // Get individual orders filtered by current state
+  // Handle route switching
+  const switchRoute = (shipmentId, routeIndex) => {
+    setSelectedRoutes(prev => ({
+      ...prev,
+      [shipmentId]: routeIndex
+    }))
+  }
+
+  // Get orders filtered by current state and route
+  const getFilteredOrders = (shipment, state) => {
+    const currentRoute = getCurrentRoute(shipment.id)
+    const routeSegments = shipment.route.segments
+    
+    // For multiple routes, filter by current route
+    if (routeSegments.length > 2) {
+      const routeStart = currentRoute * 2
+      const routeEnd = routeStart + 2
+      const currentRouteSegments = routeSegments.slice(routeStart, routeEnd)
+      
+      // Get locations for current route
+      const routeLocations = currentRouteSegments.map(segment => segment.location)
+      
+      return shipment.orders.filter(order => {
+        if (state === 'pickup') {
+          return order.type === 'P' && routeLocations.includes(order.location)
+        } else if (state === 'drop') {
+          return order.type === 'D' && routeLocations.includes(order.location)
+        }
+        return routeLocations.includes(order.location)
+      })
+    } else {
+      // Single route - use existing logic
+      if (state === 'pickup') {
+        return shipment.orders.filter(order => order.type === 'P')
+      } else if (state === 'drop') {
+        return shipment.orders.filter(order => order.type === 'D')
+      }
+      return shipment.orders
+    }
+  }
+
+  // Get individual orders filtered by current state and route
   const getFilteredIndividualOrders = (shipment, state) => {
     const filteredOrders = getFilteredOrders(shipment, state)
     return filteredOrders.filter(order => !order.orderId.includes(','))
@@ -112,6 +149,8 @@ export default function ShipmentVisibility() {
     switch (status) {
       case 'COMPLETED':
         return 'bg-green-500'
+      case 'In-Progress':
+        return 'bg-orange-500'
       case 'In-Transit':
       case 'Picked up':
       case 'Started':
@@ -124,42 +163,16 @@ export default function ShipmentVisibility() {
     }
   }
 
-  // Get dynamic status based on current state and order status
-  const getDynamicStatus = (order, currentState) => {
-    // Normalize status for easier comparison
-    const status = (order.status || '').toUpperCase();
-    // For pickup orders
-    if (currentState === 'pickup' && order.type === 'P') {
-      if (status === 'PICKED UP' || status === 'COMPLETED') {
-        return 'Picked up';
-      } else if (status === 'IN-TRANSIT' || status === 'STARTED') {
-        return 'In-Transit';
-      } else if (status === 'NOT STARTED' || status === 'NEW') {
-        return 'NOT STARTED';
-      } else {
-        return order.status;
-      }
-    }
-    // For drop orders
-    if (currentState === 'drop' && order.type === 'D') {
-      if (status === 'DELIVERED' || status === 'COMPLETED') {
-        return 'Delivered';
-      } else if (status === 'IN-TRANSIT' || status === 'STARTED') {
-        return 'In-Transit';
-      } else if (status === 'NOT STARTED' || status === 'NEW') {
-        return 'NOT STARTED';
-      } else {
-        return order.status;
-      }
-    }
-    return order.status;
-  }
+
 
   // Get status text color
   const getStatusTextColor = (status) => {
     switch (status) {
       case 'COMPLETED':
+      case 'Delivered':
         return 'bg-green-100 text-green-800 border-green-200'
+      case 'In-Progress':
+        return 'bg-orange-100 text-orange-800 border-orange-200'
       case 'In-Transit':
       case 'Picked up':
         return 'bg-blue-100 text-blue-800 border-blue-200'
@@ -171,27 +184,177 @@ export default function ShipmentVisibility() {
     }
   }
 
+  // Get vehicle icon based on vehicle type
+  const getVehicleIcon = (vehicleType) => {
+    switch (vehicleType?.toLowerCase()) {
+      case 'ship':
+        return <Ship className="w-4 h-4 text-blue-600" />
+      case 'truck':
+      default:
+        return <Truck className="w-4 h-4 text-blue-600" />
+    }
+  }
+
+  // Calculate route status based on individual order statuses with flow safety
+  const calculateRouteStatus = (shipment, segmentType, segmentLocation = null, segmentIndex = null) => {
+    // Get orders for this segment type (pickup or drop)
+    let segmentOrders = shipment.orders.filter(order => {
+      if (segmentType === 'pickup') {
+        return order.type === 'P'
+      } else if (segmentType === 'drop') {
+        return order.type === 'D'
+      }
+      return false
+    })
+
+    // For multiple routing orders, filter by location if provided
+    if (segmentLocation) {
+      segmentOrders = segmentOrders.filter(order => order.location === segmentLocation)
+    }
+
+    if (segmentOrders.length === 0) {
+      return 'NOT STARTED'
+    }
+
+    // STATE-BASED FLOW SAFETY: Check if pickup is completed before allowing drop to start (for both single and multiple routes)
+    if (segmentType === 'drop') {
+      const pickupCompleted = checkPickupCompletion(shipment, segmentLocation)
+      if (!pickupCompleted) {
+        return 'NOT STARTED' // Block drop until pickup is completed
+      }
+    }
+
+    // LOCATION-BASED FLOW SAFETY: Check if previous routes are completed before allowing this route to start (for multiple routes only)
+    if (segmentIndex !== null && segmentIndex > 0) {
+      const previousRouteCompleted = checkPreviousRouteCompletion(shipment, segmentIndex)
+      if (!previousRouteCompleted) {
+        return 'NOT STARTED' // Block this route until previous route is completed
+      }
+    }
+
+    // Get unique order IDs to handle combined orders
+    const uniqueOrderIds = [...new Set(segmentOrders.map(order => order.orderId.split(',')[0]))]
+    
+    // For each unique order, get the status
+    const orderStatuses = uniqueOrderIds.map(orderId => {
+      const order = segmentOrders.find(o => o.orderId.startsWith(orderId))
+      return order ? order.status : 'NOT STARTED'
+    })
+
+    // Calculate overall status based on all order statuses
+    const hasNotStarted = orderStatuses.some(status => 
+      status === 'NOT STARTED' || status === 'New'
+    )
+    const hasInTransit = orderStatuses.some(status => 
+      status === 'In-Transit' || status === 'Started'
+    )
+    const allCompleted = orderStatuses.every(status => {
+      if (segmentType === 'pickup') {
+        return status === 'Picked up' || status === 'COMPLETED'
+      } else if (segmentType === 'drop') {
+        return status === 'Delivered' || status === 'COMPLETED'
+      }
+      return false
+    })
+
+    // Determine route status
+    if (allCompleted) {
+      return 'COMPLETED'
+    } else if (hasInTransit) {
+      return 'In-Progress'
+    } else if (hasNotStarted) {
+      return 'NOT STARTED'
+    } else {
+      return 'In-Progress' // Default fallback
+    }
+  }
+
+  // Check if pickup is completed before allowing drop to start (for both single and multiple routes)
+  const checkPickupCompletion = (shipment, dropLocation) => {
+    // Find the corresponding pickup location for this drop
+    const routeSegments = shipment.route.segments
+    const dropSegment = routeSegments.find(segment => 
+      segment.type === 'drop' && segment.location === dropLocation
+    )
+    
+    if (!dropSegment) {
+      return true // If no matching drop segment found, allow it
+    }
+    
+    // Find the pickup segment that corresponds to this drop
+    const pickupSegment = routeSegments.find(segment => 
+      segment.type === 'pickup' && segment.id === dropSegment.id - 1
+    )
+    
+    if (!pickupSegment) {
+      return true // If no matching pickup segment found, allow it
+    }
+    
+    // Check if pickup orders for this location are completed
+    const pickupOrders = shipment.orders.filter(order => 
+      order.type === 'P' && order.location === pickupSegment.location
+    )
+    
+    if (pickupOrders.length === 0) {
+      return true // If no pickup orders found, allow drop
+    }
+    
+    // Check if all pickup orders are completed
+    const pickupStatuses = pickupOrders.map(order => order.status)
+    const allPickupsCompleted = pickupStatuses.every(status => 
+      status === 'Picked up' || status === 'COMPLETED'
+    )
+    
+    return allPickupsCompleted
+  }
+
+  // Check if previous route is completed before allowing current route to start (for multiple routes only)
+  const checkPreviousRouteCompletion = (shipment, currentSegmentIndex) => {
+    const routeSegments = shipment.route.segments
+    
+    // For each previous route (pair of pickup and drop)
+    for (let routeIndex = 0; routeIndex < Math.floor(currentSegmentIndex / 2); routeIndex++) {
+      const pickupSegmentIndex = routeIndex * 2
+      const dropSegmentIndex = pickupSegmentIndex + 1
+      
+      // Check if both pickup and drop of previous route are completed
+      const pickupStatus = calculateRouteStatus(shipment, 'pickup', routeSegments[pickupSegmentIndex].location, pickupSegmentIndex)
+      const dropStatus = calculateRouteStatus(shipment, 'drop', routeSegments[dropSegmentIndex].location, dropSegmentIndex)
+      
+      // If any previous route is not completed, block current route
+      if (pickupStatus !== 'COMPLETED' || dropStatus !== 'COMPLETED') {
+        return false
+      }
+    }
+    
+    return true // All previous routes are completed
+  }
+
   // Route visualization component
   const RouteVisualizer = ({ route, shipmentId, onStateClick, currentState }) => {
+    // Find the shipment data
+    const shipment = shipments.find(s => s.id === shipmentId)
+    
     return (
       <div className="mt-4 p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center space-x-4 overflow-x-auto">
           {route.segments.map((segment, index) => {
-            // Use the actual segment status from JSON data
-            let dynamicStatus = segment.status
+            // Calculate dynamic status based on individual order statuses
+            const calculatedStatus = calculateRouteStatus(shipment, segment.type, segment.location, index)
 
             return (
               <div key={segment.id} className="flex items-center">
                 <div className="flex flex-col items-center">
                   <button
                     onClick={() => onStateClick(shipmentId, segment.type)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${getStatusColor(dynamicStatus)} hover:scale-110 transition-transform cursor-pointer`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${getStatusColor(calculatedStatus)} hover:scale-110 transition-transform cursor-pointer`}
                     title={`Click to view ${segment.type} details`}
                   >
                     #{segment.id}
                   </button>
                   <div className="text-xs text-gray-600 mt-1">{segment.label}</div>
-                  <div className="text-xs text-gray-500 mt-1">{dynamicStatus}</div>
+                  <div className="text-xs text-gray-500 mt-1">{segment.location}</div>
+                  <div className="text-xs text-gray-400 mt-1">{calculatedStatus}</div>
                 </div>
                 
                 {index < route.segments.length - 1 && (
@@ -255,8 +418,8 @@ export default function ShipmentVisibility() {
                     <TableCell>{order.weight}</TableCell>
                     <TableCell>{order.volume}</TableCell>
                     <TableCell>
-                      <Badge className={getStatusTextColor(currentState ? getDynamicStatus(order, currentState) : order.status)}>
-                        {currentState ? getDynamicStatus(order, currentState) : order.status}
+                      <Badge className={getStatusTextColor(order.status)}>
+                        {order.status}
                       </Badge>
                     </TableCell>
                     <TableCell>{order.totalUnits}</TableCell>
@@ -282,6 +445,43 @@ export default function ShipmentVisibility() {
             ))}
           </TableBody>
         </Table>
+      </div>
+    )
+  }
+
+  // Route switcher component
+  const RouteSwitcher = ({ shipment }) => {
+    const currentRoute = getCurrentRoute(shipment.id)
+    const routeSegments = shipment.route.segments
+    const hasMultipleRoutes = routeSegments.length > 2
+
+    if (!hasMultipleRoutes) {
+      return null // Don't show route switcher for single route shipments
+    }
+
+    const routeCount = Math.floor(routeSegments.length / 2)
+
+    return (
+      <div className="flex items-center space-x-2 mb-4">
+        <span className="text-sm font-medium text-gray-700">Current Route:</span>
+        {Array.from({ length: routeCount }, (_, index) => {
+          const routeStart = index * 2
+          const pickupSegment = routeSegments[routeStart]
+          const dropSegment = routeSegments[routeStart + 1]
+          const routeLabel = `${pickupSegment.location} → ${dropSegment.location}`
+
+          return (
+            <Button
+              key={index}
+              variant={currentRoute === index ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => switchRoute(shipment.id, index)}
+              className={currentRoute === index ? 'bg-[#006397] hover:bg-[#006397]' : ''}
+            >
+              {routeLabel}
+            </Button>
+          )
+        })}
       </div>
     )
   }
@@ -474,7 +674,7 @@ export default function ShipmentVisibility() {
                           size="sm"
                           onClick={() => toggleRow(shipment.id)}
                         >
-                          {expandedRows.has(shipment.id) ? (
+                          {expandedRow === shipment.id ? (
                             <ChevronUp className="w-4 h-4" />
                           ) : (
                             <ChevronDown className="w-4 h-4" />
@@ -487,8 +687,9 @@ export default function ShipmentVisibility() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <Truck className="w-4 h-4 text-blue-600" />
+                        {getVehicleIcon(shipment.vehicleType)}
                         <span className="font-medium">{shipment.id}</span>
+                        <span className="text-xs text-gray-500 capitalize">({shipment.vehicleType || 'truck'})</span>
                       </div>
                     </TableCell>
                     <TableCell>{shipment.source}</TableCell>
@@ -520,14 +721,21 @@ export default function ShipmentVisibility() {
                   </TableRow>
 
                   {/* Expanded Details */}
-                  {expandedRows.has(shipment.id) && (
+                  {expandedRow === shipment.id && (
                     <TableRow className="hover:bg-transparent border-b-2 border-gray-300">
                       <TableCell colSpan={11} className="p-0">
                                                 <div className="p-6 bg-gray-50 border-l-4 border-[#006397]">
                           <div className="mb-4 pb-3 border-b border-gray-200">
-                            <h2 className="text-xl font-bold text-[#006397]">Shipment: {shipment.id}</h2>
+                            <div className="flex items-center space-x-2 mb-2">
+                              <h2 className="text-xl font-bold text-[#006397]">Shipment: {shipment.id}</h2>
+                              <span className="text-xl font-bold text-[#006397]">/</span>
+                              <span className="text-lg font-bold text-[#006397]">Vehicle Type: <span className="capitalize">{shipment.vehicleType || 'truck'}</span></span>
+                            </div>
                             <p className="text-sm text-gray-600">{shipment.source} → {shipment.destination}</p>
                           </div>
+                          
+                          {/* Route Switcher */}
+                          <RouteSwitcher shipment={shipment} />
                           
                           {/* State Switcher */}
                           <StateSwitcher shipment={shipment} />
@@ -539,15 +747,17 @@ export default function ShipmentVisibility() {
                             </TabsList>
                             
                             <TabsContent value="orders" className="space-y-6">
-                              {/* Order Summary Table - Always shows pickup data */}
-                              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                                <h3 className="text-lg font-semibold mb-3 text-[#006397]">Order Summary</h3>
-                                <OrderDetailsTable 
-                                  orders={shipment.orders.filter(order => order.type === 'P' && (order.orderId.includes(',') || !shipment.orders.some(o => o.type === 'P' && o.orderId.includes(','))))} 
-                                  type="mixed" 
-                                  currentState={getCurrentState(shipment.id)}
-                                />
-                              </div>
+                              {/* Show Order Summary only for Pickup state */}
+                              {getCurrentState(shipment.id) === 'pickup' && (
+                                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                                  <h3 className="text-lg font-semibold mb-3 text-[#006397]">Order Summary</h3>
+                                  <OrderDetailsTable 
+                                    orders={getFilteredOrders(shipment, 'pickup').filter(order => order.orderId.includes(',') || !getFilteredOrders(shipment, 'pickup').some(o => o.type === 'P' && o.orderId.includes(',')))} 
+                                    type="mixed" 
+                                    currentState={getCurrentState(shipment.id)}
+                                  />
+                                </div>
+                              )}
 
                               {/* Individual Orders Table - Shows data based on current state */}
                               <div className="bg-white rounded-lg border border-gray-200 p-4">
@@ -561,12 +771,12 @@ export default function ShipmentVisibility() {
                                 />
                               </div>
 
-                              {/* Drop Details Table - Always shows drop data */}
-                              {shipment.orders.some(order => order.type === 'D') && (
+                              {/* Show Drop Details only for Drop state */}
+                              {getCurrentState(shipment.id) === 'drop' && shipment.orders.some(order => order.type === 'D') && (
                                 <div className="bg-white rounded-lg border border-gray-200 p-4">
                                   <h3 className="text-lg font-semibold mb-3 text-[#006397]">Drop Details</h3>
                                   <OrderDetailsTable 
-                                    orders={shipment.orders.filter(order => order.type === 'D')} 
+                                    orders={getFilteredOrders(shipment, 'drop')} 
                                     type="mixed" 
                                     currentState={getCurrentState(shipment.id)}
                                   />
