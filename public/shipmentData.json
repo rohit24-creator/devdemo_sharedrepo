@@ -1,0 +1,431 @@
+{
+  "orders": [
+    {
+      "id": "125220002",
+      "source": "Walldorf",
+      "destination": "BROOMFIELD",
+      "pickup": "2025-05-26 12:46:00",
+      "weight": "8.00KGS",
+      "volume": "8.00CUFT",
+      "quantity": "1.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125220001",
+      "source": "Walldorf",
+      "destination": "BROOMFIELD",
+      "pickup": "2025-05-26 12:44:12",
+      "weight": "200.00KGS",
+      "volume": "0.00CUFT",
+      "quantity": "1.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125040001",
+      "source": "FISKDALE",
+      "destination": "FISKDALE",
+      "pickup": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125210014",
+      "source": "Fremont",
+      "destination": "Fremont",
+      "pickup": "2024-12-16 13:59:00",
+      "weight": "100.00KGS",
+      "volume": "10.00CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125060005",
+      "source": "Los Angeles",
+      "destination": "New York",
+      "pickup": "2025-01-15 09:30:00",
+      "weight": "500.00KGS",
+      "volume": "50.00CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125060006",
+      "source": "Chicago",
+      "destination": "Miami",
+      "pickup": "2025-01-20 14:15:00",
+      "weight": "300.00KGS",
+      "volume": "30.00CUFT",
+      "quantity": "5.00",
+      "mode": "LTL",
+      "status": "null"
+    },
+    {
+      "id": "125060007",
+      "source": "Seattle",
+      "destination": "Denver",
+      "pickup": "2025-01-25 11:45:00",
+      "weight": "400.00KGS",
+      "volume": "40.00CUFT",
+      "quantity": "8.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125060008",
+      "source": "Phoenix",
+      "destination": "Portland",
+      "pickup": "2025-01-30 08:00:00",
+      "weight": "250.00KGS",
+      "volume": "25.00CUFT",
+      "quantity": "6.00",
+      "mode": "LTL",
+      "status": "null"
+    },
+    {
+      "id": "125060009",
+      "source": "Boston",
+      "destination": "Atlanta",
+      "pickup": "2025-02-05 16:20:00",
+      "weight": "350.00KGS",
+      "volume": "35.00CUFT",
+      "quantity": "7.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125060010",
+      "source": "Detroit",
+      "destination": "Cleveland",
+      "pickup": "2025-02-10 13:30:00",
+      "weight": "180.00KGS",
+      "volume": "18.00CUFT",
+      "quantity": "4.00",
+      "mode": "LTL",
+      "status": "null"
+    }
+  ],
+  "trips": [
+    {
+      "id": "TRIP001",
+      "startDate": "2025-01-15",
+      "endDate": "2025-01-18",
+      "source": "Los Angeles",
+      "destination": "New York",
+      "vehicle": "VH001",
+      "driver": "John Doe",
+      "vehicleType": "20FT Container",
+      "mode": "FTL",
+      "weight": "500.00KGS",
+      "volume": "50.00CUFT",
+      "unit": "10"
+    },
+    {
+      "id": "TRIP002",
+      "startDate": "2025-01-20",
+      "endDate": "2025-01-23",
+      "source": "Chicago",
+      "destination": "Miami",
+      "vehicle": "VH002",
+      "driver": "Jane Smith",
+      "vehicleType": "Flat Track",
+      "mode": "LTL",
+      "weight": "300.00KGS",
+      "volume": "30.00CUFT",
+      "unit": "5"
+    },
+    {
+      "id": "TRIP003",
+      "startDate": "2025-01-25",
+      "endDate": "2025-01-28",
+      "source": "Seattle",
+      "destination": "Denver",
+      "vehicle": "VH003",
+      "driver": "Mike Johnson",
+      "vehicleType": "Flat Track",
+      "mode": "FTL",
+      "weight": "400.00KGS",
+      "volume": "40.00CUFT",
+      "unit": "8"
+    },
+    {
+      "id": "TRIP004",
+      "startDate": "2025-01-30",
+      "endDate": "2025-02-02",
+      "source": "Phoenix",
+      "destination": "Portland",
+      "vehicle": "VH004",
+      "driver": "Sarah Wilson",
+      "vehicleType": "20FT Container",
+      "mode": "FTL",
+      "weight": "600.00KGS",
+      "volume": "60.00CUFT",
+      "unit": "12"
+    },
+    {
+      "id": "TRIP005",
+      "startDate": "2025-02-05",
+      "endDate": "2025-02-08",
+      "source": "Dallas",
+      "destination": "Houston",
+      "vehicle": "VH005",
+      "driver": "Tom Brown",
+      "vehicleType": "Flat Track",
+      "mode": "LTL",
+      "weight": "250.00KGS",
+      "volume": "25.00CUFT",
+      "unit": "6"
+    },
+    {
+      "id": "TRIP006",
+      "startDate": "2025-02-10",
+      "endDate": "2025-02-13",
+      "source": "Boston",
+      "destination": "Atlanta",
+      "vehicle": "VH006",
+      "driver": "Lisa Davis",
+      "vehicleType": "20FT Container",
+      "mode": "FTL",
+      "weight": "350.00KGS",
+      "volume": "35.00CUFT",
+      "unit": "7"
+    },
+    {
+      "id": "TRIP007",
+      "startDate": "2025-02-15",
+      "endDate": "2025-02-18",
+      "source": "Richmond",
+      "destination": "Richfield",
+      "vehicle": "VH007",
+      "driver": "Alex Turner",
+      "vehicleType": "Flat Track",
+      "mode": "LTL",
+      "weight": "200.00KGS",
+      "volume": "20.00CUFT",
+      "unit": "4"
+    },
+    {
+      "id": "TRIP008",
+      "startDate": "2025-02-20",
+      "endDate": "2025-02-23",
+      "source": "Detroit",
+      "destination": "Cleveland",
+      "vehicle": "VH008",
+      "driver": "Emma White",
+      "vehicleType": "20FT Container",
+      "mode": "FTL",
+      "weight": "450.00KGS",
+      "volume": "45.00CUFT",
+      "unit": "9"
+    },
+    {
+      "id": "TRIP009",
+      "startDate": "2025-02-25",
+      "endDate": "2025-02-28",
+      "source": "Minneapolis",
+      "destination": "St. Paul",
+      "vehicle": "VH009",
+      "driver": "David Miller",
+      "vehicleType": "Flat Track",
+      "mode": "LTL",
+      "weight": "180.00KGS",
+      "volume": "18.00CUFT",
+      "unit": "3"
+    },
+    {
+      "id": "TRIP010",
+      "startDate": "2025-03-01",
+      "endDate": "2025-03-04",
+      "source": "Kansas City",
+      "destination": "Omaha",
+      "vehicle": "VH010",
+      "driver": "Rachel Green",
+      "vehicleType": "20FT Container",
+      "mode": "FTL",
+      "weight": "320.00KGS",
+      "volume": "32.00CUFT",
+      "unit": "6"
+    }
+  ],
+  "customerData": {
+    "customer1": [
+      {
+        "id": "CUST001-001",
+        "source": "New York",
+        "destination": "Los Angeles",
+        "pickup": "2025-01-15 09:30:00",
+        "weight": "150.00KGS",
+        "volume": "25.00CUFT",
+        "quantity": "5.00",
+        "mode": "FTL",
+        "status": "In Transit"
+      },
+      {
+        "id": "CUST001-002",
+        "source": "Chicago",
+        "destination": "Miami",
+        "pickup": "2025-01-20 14:15:00",
+        "weight": "75.00KGS",
+        "volume": "12.50CUFT",
+        "quantity": "3.00",
+        "mode": "LTL",
+        "status": "Delivered"
+      }
+    ],
+    "customer2": [
+      {
+        "id": "CUST002-001",
+        "source": "Seattle",
+        "destination": "Denver",
+        "pickup": "2025-01-18 11:45:00",
+        "weight": "300.00KGS",
+        "volume": "45.00CUFT",
+        "quantity": "8.00",
+        "mode": "FTL",
+        "status": "Pending"
+      },
+      {
+        "id": "CUST002-002",
+        "source": "Boston",
+        "destination": "Atlanta",
+        "pickup": "2025-01-22 16:20:00",
+        "weight": "120.00KGS",
+        "volume": "18.00CUFT",
+        "quantity": "4.00",
+        "mode": "LTL",
+        "status": "In Transit"
+      }
+    ],
+    "customer3": [
+      {
+        "id": "CUST003-001",
+        "source": "Phoenix",
+        "destination": "Portland",
+        "pickup": "2025-01-25 08:00:00",
+        "weight": "200.00KGS",
+        "volume": "30.00CUFT",
+        "quantity": "6.00",
+        "mode": "FTL",
+        "status": "Scheduled"
+      },
+      {
+        "id": "CUST003-002",
+        "source": "Dallas",
+        "destination": "Houston",
+        "pickup": "2025-01-28 13:30:00",
+        "weight": "90.00KGS",
+        "volume": "15.00CUFT",
+        "quantity": "2.00",
+        "mode": "LTL",
+        "status": "Pending"
+      }
+    ]
+  },
+  "plannedOrders": [
+    {
+      "id": "PLANNED-125040001",
+      "source": "FISKDALE",
+      "destination": "FISKDALE",
+      "pickup": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "125220001",
+      "source": "Walldorf",
+      "destination": "BROOMFIELD",
+      "pickup": "2025-05-26 12:44:12",
+      "weight": "200.00KGS",
+      "volume": "0.00CUFT",
+      "quantity": "1.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "PLANNED-125060006",
+      "source": "New York",
+      "destination": "Los Angeles",
+      "pickup": "2025-01-17 22:00:00",
+      "weight": "25.00KGS",
+      "volume": "15.00CUFT",
+      "quantity": "2.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "PLANNED-125060007",
+      "source": "Chicago",
+      "destination": "Miami",
+      "pickup": "2025-01-20 14:15:00",
+      "weight": "300.00KGS",
+      "volume": "30.00CUFT",
+      "quantity": "5.00",
+      "mode": "LTL",
+      "status": "null"
+    },
+    {
+      "id": "PLANNED-125060008",
+      "source": "Seattle",
+      "destination": "Denver",
+      "pickup": "2025-01-25 11:45:00",
+      "weight": "400.00KGS",
+      "volume": "40.00CUFT",
+      "quantity": "8.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "PLANNED-125060009",
+      "source": "Phoenix",
+      "destination": "Portland",
+      "pickup": "2025-01-30 08:00:00",
+      "weight": "250.00KGS",
+      "volume": "25.00CUFT",
+      "quantity": "6.00",
+      "mode": "LTL",
+      "status": "null"
+    },
+    {
+      "id": "PLANNED-125060010",
+      "source": "Boston",
+      "destination": "Atlanta",
+      "pickup": "2025-02-05 16:20:00",
+      "weight": "350.00KGS",
+      "volume": "35.00CUFT",
+      "quantity": "7.00",
+      "mode": "FTL",
+      "status": "null"
+    },
+    {
+      "id": "PLANNED-125060011",
+      "source": "Detroit",
+      "destination": "Cleveland",
+      "pickup": "2025-02-10 13:30:00",
+      "weight": "180.00KGS",
+      "volume": "18.00CUFT",
+      "quantity": "4.00",
+      "mode": "LTL",
+      "status": "null"
+    },
+    {
+      "id": "PLANNED-125060012",
+      "source": "Richmond",
+      "destination": "Richfield",
+      "pickup": "2025-02-15 09:45:00",
+      "weight": "220.00KGS",
+      "volume": "22.00CUFT",
+      "quantity": "3.00",
+      "mode": "FTL",
+      "status": "null"
+    }
+  ]
+} 
