@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast, Toaster } from "sonner";
 
 export default function OrderPage() {
   const [columns, setColumns] = useState([]);
@@ -55,50 +56,45 @@ export default function OrderPage() {
       { name: "templateId", label: "Template ID", type: "select", options: [ { value: "template1", label: "Template 1" }, { value: "template2", label: "Template 2" }, { value: "template3", label: "Template 3" } ] },
       { name: "", label: "", type: "empty" }
     ],
-    // Row 2: Carrier Name + Arrow + Carrier ID
+    // Row 2: Carrier Name and Carrier ID
     [
       { name: "carrierName", label: "Carrier Name *", type: "select", required: true, options: [ { value: "carrier1", label: "Carrier 1" }, { value: "carrier2", label: "Carrier 2" }, { value: "carrier3", label: "Carrier 3" } ] },
-      { name: "carrierArrow", type: "arrow" },
-      { name: "carrierId", label: "Carrier ID", type: "input", readOnly: true, className: "bg-gray-100" }
+      { name: "carrierId", label: "Carrier ID", type: "input", readOnly: true, className: "bg-gray-100" },
+      { name: "", label: "", type: "empty" }
     ],
-    // Row 3: Vehicle Type + Arrow + Vehicle Type Name
+    // Row 3: Vehicle Type and Vehicle Type Name
     [
       { name: "vehicleType", label: "Vehicle Type", type: "select", options: [ { value: "truck", label: "Truck" }, { value: "trailer", label: "Trailer" }, { value: "container", label: "Container" } ] },
-      { name: "vehicleTypeArrow", type: "arrow" },
-      { name: "vehicleTypeName", label: "Vehicle Type Name", type: "input", readOnly: true, className: "bg-gray-100" }
+      { name: "vehicleTypeName", label: "Vehicle Type Name", type: "input", readOnly: true, className: "bg-gray-100" },
+      { name: "", label: "", type: "empty" }
     ],
-    // Row 4: Vehicle No + Arrow + Vehicle ID
+    // Row 4: Vehicle No and Vehicle ID
     [
       { name: "vehicleNo", label: "Vehicle No", type: "select", options: [ { value: "vehicle1", label: "Vehicle 1" }, { value: "vehicle2", label: "Vehicle 2" }, { value: "vehicle3", label: "Vehicle 3" } ] },
-      { name: "vehicleArrow", type: "arrow" },
-      { name: "vehicleId", label: "Vehicle ID", type: "input", readOnly: true, className: "bg-gray-100" }
+      { name: "vehicleId", label: "Vehicle ID", type: "input", readOnly: true, className: "bg-gray-100" },
+      { name: "", label: "", type: "empty" }
     ],
-    // Row 5: Driver Name + Arrow + Driver ID
+    // Row 5: Driver Name and Driver ID
     [
       { name: "driverName", label: "Driver Name", type: "select", options: [ { value: "driver1", label: "Driver 1" }, { value: "driver2", label: "Driver 2" }, { value: "driver3", label: "Driver 3" } ] },
-      { name: "driverArrow", type: "arrow" },
-      { name: "driverId", label: "Driver ID", type: "input", readOnly: true, className: "bg-gray-100" }
+      { name: "driverId", label: "Driver ID", type: "input", readOnly: true, className: "bg-gray-100" },
+      { name: "", label: "", type: "empty" }
     ],
     // Row 6: Volume Capacity, Weight Capacity, Temperature Regime
     [
-      { name: "volumeCapacity", label: "Volume Capacity", type: "textarea", rows: 3 },
-      { name: "weightCapacity", label: "Weight Capacity", type: "textarea", rows: 3 },
-      { name: "temperatureRegime", label: "Temperature Regime", type: "textarea", rows: 3 }
+      { name: "volumeCapacity", label: "Volume Capacity", type: "textarea", rows: 2 },
+      { name: "weightCapacity", label: "Weight Capacity", type: "textarea", rows: 2 },
+      { name: "temperatureRegime", label: "Temperature Regime", type: "textarea", rows: 2 }
     ],
     // Row 7: Remaining fields
     [
-      { name: "carrierInstructions", label: "Carrier Instructions", type: "textarea", rows: 3 },
-      { name: "additionalConditions", label: "Additional Conditions", type: "textarea", rows: 3 },
-      { name: "loadingTimePenalty", label: "Time for loading and penalty rate", type: "textarea", rows: 3 }
+      { name: "carrierInstructions", label: "Carrier Instructions", type: "textarea", rows: 2 },
+      { name: "additionalConditions", label: "Additional Conditions", type: "textarea", rows: 2 },
+      { name: "loadingTimePenalty", label: "Time for loading and penalty rate", type: "textarea", rows: 2 }
     ]
   ];
 
-  // Helper to render an arrow between linked fields
-  const renderArrow = (key = 'arrow') => (
-    <div key={key} className="flex items-center justify-center h-full">
-      <span className="text-2xl text-gray-400">→</span>
-    </div>
-  );
+
 
   // Auto-fill mapping
   const autoFillMapping = {
@@ -201,20 +197,19 @@ export default function OrderPage() {
       additionalConditions: "",
       loadingTimePenalty: "",
     });
-    alert("Trip created successfully!");
+    toast.success("Trip created successfully!", {
+      description: "Your trip has been created and is ready for processing.",
+      duration: 4000,
+    });
   };
 
-  // Update renderField to handle type 'arrow' and add smaller input sizes
+  // Update renderField to handle smaller input sizes
   const renderField = (field) => {
     const { name, label, type, options, readOnly, className, rows, required } = field;
     
     // Handle empty fields
     if (type === 'empty') {
       return <div key={`empty-${Math.random()}`}></div>;
-    }
-    // Handle arrow fields
-    if (type === 'arrow') {
-      return renderArrow(name);
     }
     
     switch (type) {
@@ -303,7 +298,7 @@ export default function OrderPage() {
 
       {/* Trip Management Dialog */}
       <Dialog open={tripCreateDialogOpen} onOpenChange={setTripCreateDialogOpen}>
-        <DialogContent className="lg:max-w-[60rem] h-[40rem] p-0">
+        <DialogContent className="lg:max-w-[50rem] h-[35rem] p-0">
           {/* Title */}
           <div className="bg-[#006397] text-white px-6 py-4 flex justify-between items-center rounded-md">
             <DialogTitle className="text-lg font-semibold">Trip Management</DialogTitle>
@@ -312,9 +307,9 @@ export default function OrderPage() {
           {/* Form Content */}
           <div className="px-6 py-4 max-h-[500px] overflow-auto">
             {/* 3-Column Row-based Layout */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {formRows.map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-3 gap-6">
+                <div key={rowIndex} className="grid grid-cols-3 gap-12">
                   {row.map((field) => renderField(field))}
                 </div>
               ))}
@@ -338,6 +333,9 @@ export default function OrderPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Toast Container */}
+      <Toaster position="top-right" richColors />
     </div>
   );
 }
