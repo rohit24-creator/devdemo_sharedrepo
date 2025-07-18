@@ -51,7 +51,77 @@
           "updatedUnits": "2.00",
           "material": "DEFAULT",
           "source": "TAMPA, FL,",
-          "destination": "CURTIS BAY"
+          "destination": "CURTIS BAY",
+          "distance": "937.2 miles",
+          "duration": "13 hours 49 mins",
+          "statusHistory": [
+            {
+              "orderId": "125270004",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Tampa,FL,33610",
+              "stopId": "0",
+              "stopType": "",
+              "time": "06 Jan,25 03:03 AM"
+            },
+            {
+              "orderId": "125270004",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "6362 E Hanna Ave, Tampa, FL 33610, USA",
+              "stopId": "487994",
+              "stopType": "P",
+              "time": "05 Jan,25 06:06 PM"
+            },
+            {
+              "orderId": "125270004",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Greensboro,NC,27405",
+              "stopId": "487995",
+              "stopType": "D",
+              "time": "08 Jul,25 12:16 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "125270004",
+              "location": "Tampa, FL",
+              "docType": "Invoice",
+              "document": "invoice_125270004.pdf",
+              "stopId": "487994",
+              "stopType": "P",
+              "createdBy": "John Doe",
+              "time": "05 Jan,25 06:06 PM"
+            },
+            {
+              "orderId": "125270004",
+              "location": "Greensboro, NC",
+              "docType": "POD",
+              "document": "pod_125270004.pdf",
+              "stopId": "487995",
+              "stopType": "D",
+              "createdBy": "Jane Smith",
+              "time": "08 Jul,25 12:16 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Jermaine",
+              "mobile": "7612139081",
+              "time": "08 Jan,25 05:53 PM",
+              "isPrimary": true
+            },
+            {
+              "name": "LUCAS",
+              "mobile": "+14844760008",
+              "time": "15 Oct,24 08:12 PM",
+              "isPrimary": false
+            }
+          ]
         },
         {
           "orderId": "125270004",
@@ -68,7 +138,107 @@
           "updatedUnits": "2.00",
           "material": "DEFAULT",
           "source": "TAMPA, FL,",
-          "destination": "CURTIS BAY"
+          "destination": "CURTIS BAY",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "125270004",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Tampa,FL,33610",
+              "stopId": "0",
+              "stopType": "",
+              "time": "06 Jan,25 03:03 AM"
+            },
+            {
+              "orderId": "125270004",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "6362 E Hanna Ave, Tampa, FL 33610, USA",
+              "stopId": "487994",
+              "stopType": "P",
+              "time": "05 Jan,25 06:06 PM"
+            },
+            {
+              "orderId": "125270004",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Greensboro,NC,27405",
+              "stopId": "487995",
+              "stopType": "D",
+              "time": "08 Jul,25 12:16 PM"
+            },
+            {
+              "orderId": "125270004",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "Curtis Bay, MD 21226, USA",
+              "stopId": "487996",
+              "stopType": "D",
+              "time": "08 Jan,25 08:30 AM"
+            },
+            {
+              "orderId": "125270004",
+              "code": "0400",
+              "status": "Delivered",
+              "comments": "Package successfully delivered",
+              "location": "Curtis Bay, MD 21226, USA",
+              "stopId": "487996",
+              "stopType": "D",
+              "time": "08 Jan,25 01:50 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "125270004",
+              "location": "Tampa, FL",
+              "docType": "Invoice",
+              "document": "invoice_125270004.pdf",
+              "stopId": "487994",
+              "stopType": "P",
+              "createdBy": "John Doe",
+              "time": "05 Jan,25 06:06 PM"
+            },
+            {
+              "orderId": "125270004",
+              "location": "Greensboro, NC",
+              "docType": "POD",
+              "document": "pod_125270004.pdf",
+              "stopId": "487995",
+              "stopType": "D",
+              "createdBy": "Jane Smith",
+              "time": "08 Jul,25 12:16 PM"
+            },
+            {
+              "orderId": "125270004",
+              "location": "Curtis Bay, MD",
+              "docType": "POD",
+              "document": "pod_delivery_125270004.pdf",
+              "stopId": "487996",
+              "stopType": "D",
+              "createdBy": "Delivery Driver",
+              "time": "08 Jan,25 01:50 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Jermaine",
+              "mobile": "7612139081",
+              "time": "08 Jan,25 05:53 PM",
+              "isPrimary": true
+            },
+            {
+              "name": "LUCAS",
+              "mobile": "+14844760008",
+              "time": "15 Oct,24 08:12 PM",
+              "isPrimary": false
+            }
+          ]
         }
       ]
     },
@@ -107,24 +277,6 @@
       },
       "orders": [
         {
-          "orderId": "125210012,125210013",
-          "requestId": "6100000809 / 6100000804",
-          "location": "Fremont",
-          "address": "3300 Capit",
-          "type": "P",
-          "startDT": "16 Dec, 01:59 PM",
-          "endDT": "16 Dec, 01:59 PM",
-          "weight": "0 lb",
-          "volume": "353.15 cu ft",
-          "status": "In-Transit",
-          "totalUnits": "20",
-          "updatedUnits": "10",
-          "material": "DEFAULT",
-          "source": "3300 Capit",
-          "destination": "40055 Miss"
-        },
-
-        {
           "orderId": "125210012",
           "requestId": "6100000809",
           "location": "Fremont",
@@ -139,7 +291,71 @@
           "updatedUnits": "10",
           "material": "DEFAULT",
           "source": "3300 Capit",
-          "destination": "40055 Miss"
+          "destination": "40055 Miss",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "125210012",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Fremont, CA 94539",
+              "stopId": "0",
+              "stopType": "",
+              "time": "16 Dec,24 01:59 PM"
+            },
+            {
+              "orderId": "125210012",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "3300 Capitol Ave, Fremont, CA 94539, USA",
+              "stopId": "487997",
+              "stopType": "P",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210012",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "40055 Mission Blvd, Fremont, CA 94539, USA",
+              "stopId": "487998",
+              "stopType": "D",
+              "time": "16 Dec,24 03:45 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "125210012",
+              "location": "Fremont, CA",
+              "docType": "Invoice",
+              "document": "invoice_125210012.pdf",
+              "stopId": "487997",
+              "stopType": "P",
+              "createdBy": "John Doe",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210012",
+              "location": "Fremont, CA",
+              "docType": "POD",
+              "document": "pod_125210012.pdf",
+              "stopId": "487998",
+              "stopType": "D",
+              "createdBy": "Jane Smith",
+              "time": "16 Dec,24 03:45 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "John Doe",
+              "mobile": "5551234567",
+              "time": "16 Dec,24 02:30 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "125210013",
@@ -156,7 +372,71 @@
           "updatedUnits": "10",
           "material": "DEFAULT",
           "source": "3300 Capit",
-          "destination": "40055 Miss"
+          "destination": "40055 Miss",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "125210013",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Fremont, CA 94539",
+              "stopId": "0",
+              "stopType": "",
+              "time": "16 Dec,24 01:59 PM"
+            },
+            {
+              "orderId": "125210013",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "3300 Capitol Ave, Fremont, CA 94539, USA",
+              "stopId": "487999",
+              "stopType": "P",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210013",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "40055 Mission Blvd, Fremont, CA 94539, USA",
+              "stopId": "488000",
+              "stopType": "D",
+              "time": "16 Dec,24 03:45 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "125210013",
+              "location": "Fremont, CA",
+              "docType": "Invoice",
+              "document": "invoice_125210013.pdf",
+              "stopId": "487999",
+              "stopType": "P",
+              "createdBy": "John Doe",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210013",
+              "location": "Fremont, CA",
+              "docType": "POD",
+              "document": "pod_125210013.pdf",
+              "stopId": "488000",
+              "stopType": "D",
+              "createdBy": "Jane Smith",
+              "time": "16 Dec,24 03:45 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "John Doe",
+              "mobile": "5551234567",
+              "time": "16 Dec,24 02:30 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "125210012",
@@ -173,7 +453,91 @@
           "updatedUnits": "10",
           "material": "DEFAULT",
           "source": "3300 Capit",
-          "destination": "40055 Miss"
+          "destination": "40055 Miss",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "125210012",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Fremont, CA 94539",
+              "stopId": "0",
+              "stopType": "",
+              "time": "16 Dec,24 01:59 PM"
+            },
+            {
+              "orderId": "125210012",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "3300 Capitol Ave, Fremont, CA 94539, USA",
+              "stopId": "487997",
+              "stopType": "P",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210012",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "40055 Mission Blvd, Fremont, CA 94539, USA",
+              "stopId": "487998",
+              "stopType": "D",
+              "time": "16 Dec,24 03:45 PM"
+            },
+            {
+              "orderId": "125210012",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "40055 Mission Blvd, Fremont, CA 94539, USA",
+              "stopId": "487998",
+              "stopType": "D",
+              "time": "16 Dec,24 04:00 PM"
+            },
+            {
+              "orderId": "125210012",
+              "code": "0400",
+              "status": "Delivered",
+              "comments": "Package successfully delivered",
+              "location": "40055 Mission Blvd, Fremont, CA 94539, USA",
+              "stopId": "487998",
+              "stopType": "D",
+              "time": "16 Dec,24 04:30 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "125210012",
+              "location": "Fremont, CA",
+              "docType": "Invoice",
+              "document": "invoice_125210012.pdf",
+              "stopId": "487997",
+              "stopType": "P",
+              "createdBy": "John Doe",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210012",
+              "location": "Fremont, CA",
+              "docType": "POD",
+              "document": "pod_125210012.pdf",
+              "stopId": "487998",
+              "stopType": "D",
+              "createdBy": "Jane Smith",
+              "time": "16 Dec,24 04:30 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "John Doe",
+              "mobile": "5551234567",
+              "time": "16 Dec,24 02:30 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "125210013",
@@ -190,7 +554,81 @@
           "updatedUnits": "10",
           "material": "DEFAULT",
           "source": "3300 Capit",
-          "destination": "40055 Miss"
+          "destination": "40055 Miss",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "125210013",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Fremont, CA 94539",
+              "stopId": "0",
+              "stopType": "",
+              "time": "16 Dec,24 01:59 PM"
+            },
+            {
+              "orderId": "125210013",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "3300 Capitol Ave, Fremont, CA 94539, USA",
+              "stopId": "487999",
+              "stopType": "P",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210013",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "40055 Mission Blvd, Fremont, CA 94539, USA",
+              "stopId": "488000",
+              "stopType": "D",
+              "time": "16 Dec,24 03:45 PM"
+            },
+            {
+              "orderId": "125210013",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "40055 Mission Blvd, Fremont, CA 94539, USA",
+              "stopId": "488000",
+              "stopType": "D",
+              "time": "16 Dec,24 04:00 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "125210013",
+              "location": "Fremont, CA",
+              "docType": "Invoice",
+              "document": "invoice_125210013.pdf",
+              "stopId": "487999",
+              "stopType": "P",
+              "createdBy": "John Doe",
+              "time": "16 Dec,24 02:30 PM"
+            },
+            {
+              "orderId": "125210013",
+              "location": "Fremont, CA",
+              "docType": "POD",
+              "document": "pod_125210013.pdf",
+              "stopId": "488000",
+              "stopType": "D",
+              "createdBy": "Jane Smith",
+              "time": "16 Dec,24 04:00 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "John Doe",
+              "mobile": "5551234567",
+              "time": "16 Dec,24 02:30 PM",
+              "isPrimary": true
+            }
+          ]
         }
       ]
     },
@@ -230,24 +668,6 @@
         ]
       },
       "orders": [
-        {
-          "orderId": "124510013,124510014",
-          "requestId": "SX1734436834 / SX1734436852",
-          "location": "LAS VEGAS",
-          "address": "MAIN STREE",
-          "type": "P",
-          "startDT": "16 Dec, 12:59 PM",
-          "endDT": "16 Dec, 12:59 PM",
-          "weight": "0 lb",
-          "volume": "353.15 cu ft",
-          "status": "Picked up",
-          "totalUnits": "2",
-          "updatedUnits": "1",
-          "material": "DEFAULT",
-          "source": "MAIN STREE",
-          "destination": "LAKE VIEW"
-        },
-
         {
           "orderId": "124510013",
           "requestId": "SX1734436834",
@@ -384,23 +804,7 @@
         ]
       },
       "orders": [
-        {
-          "orderId": "142505003,142505004",
-          "requestId": "SX1734436834 / SX1734436835",
-          "location": "Miami",
-          "address": "Miami, FL",
-          "type": "P",
-          "startDT": "17 Jan, 09:00 AM",
-          "endDT": "17 Jan, 09:00 AM",
-          "weight": "0 lb",
-          "volume": "175.75 cu ft",
-          "status": "Picked up",
-          "totalUnits": "12",
-          "updatedUnits": "12",
-          "material": "DEFAULT",
-          "source": "Miami, FL",
-          "destination": "Orlando, FL"
-        },
+
         {
           "orderId": "142505003",
           "requestId": "SX1734436834",
@@ -416,7 +820,71 @@
           "updatedUnits": "6",
           "material": "DEFAULT",
           "source": "Miami, FL",
-          "destination": "Orlando, FL"
+          "destination": "Orlando, FL",
+          "distance": "235.8 miles",
+          "duration": "3 hours 45 minutes",
+          "statusHistory": [
+            {
+              "orderId": "142505003",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Miami, FL 33101",
+              "stopId": "0",
+              "stopType": "",
+              "time": "17 Jan,24 09:00 AM"
+            },
+            {
+              "orderId": "142505003",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "Miami, FL 33101, USA",
+              "stopId": "488005",
+              "stopType": "P",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505003",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488006",
+              "stopType": "D",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505003",
+              "location": "Miami, FL",
+              "docType": "Invoice",
+              "document": "invoice_142505003.pdf",
+              "stopId": "488005",
+              "stopType": "P",
+              "createdBy": "Sarah Wilson",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505003",
+              "location": "Orlando, FL",
+              "docType": "POD",
+              "document": "pod_142505003.pdf",
+              "stopId": "488006",
+              "stopType": "D",
+              "createdBy": "Sarah Wilson",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Sarah Wilson",
+              "mobile": "5551234567",
+              "time": "17 Jan,24 09:15 AM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505004",
@@ -433,7 +901,71 @@
           "updatedUnits": "6",
           "material": "DEFAULT",
           "source": "Miami, FL",
-          "destination": "Orlando, FL"
+          "destination": "Orlando, FL",
+          "distance": "235.8 miles",
+          "duration": "3 hours 45 minutes",
+          "statusHistory": [
+            {
+              "orderId": "142505004",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Miami, FL 33101",
+              "stopId": "0",
+              "stopType": "",
+              "time": "17 Jan,24 09:00 AM"
+            },
+            {
+              "orderId": "142505004",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "Miami, FL 33101, USA",
+              "stopId": "488007",
+              "stopType": "P",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505004",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488008",
+              "stopType": "D",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505004",
+              "location": "Miami, FL",
+              "docType": "Invoice",
+              "document": "invoice_142505004.pdf",
+              "stopId": "488007",
+              "stopType": "P",
+              "createdBy": "Sarah Wilson",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505004",
+              "location": "Orlando, FL",
+              "docType": "POD",
+              "document": "pod_142505004.pdf",
+              "stopId": "488008",
+              "stopType": "D",
+              "createdBy": "Sarah Wilson",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Sarah Wilson",
+              "mobile": "5551234567",
+              "time": "17 Jan,24 09:15 AM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505003",
@@ -450,7 +982,91 @@
           "updatedUnits": "6",
           "material": "DEFAULT",
           "source": "Miami, FL",
-          "destination": "Orlando, FL"
+          "destination": "Orlando, FL",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "142505003",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Miami, FL 33101",
+              "stopId": "0",
+              "stopType": "",
+              "time": "17 Jan,24 09:00 AM"
+            },
+            {
+              "orderId": "142505003",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "Miami, FL 33101, USA",
+              "stopId": "488005",
+              "stopType": "P",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505003",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488006",
+              "stopType": "D",
+              "time": "19 Jan,24 03:00 PM"
+            },
+            {
+              "orderId": "142505003",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488006",
+              "stopType": "D",
+              "time": "19 Jan,24 02:30 PM"
+            },
+            {
+              "orderId": "142505003",
+              "code": "0400",
+              "status": "Delivered",
+              "comments": "Package successfully delivered",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488006",
+              "stopType": "D",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505003",
+              "location": "Miami, FL",
+              "docType": "Invoice",
+              "document": "invoice_142505003.pdf",
+              "stopId": "488005",
+              "stopType": "P",
+              "createdBy": "Sarah Wilson",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505003",
+              "location": "Orlando, FL",
+              "docType": "POD",
+              "document": "pod_142505003.pdf",
+              "stopId": "488006",
+              "stopType": "D",
+              "createdBy": "Sarah Wilson",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Sarah Wilson",
+              "mobile": "5551234567",
+              "time": "17 Jan,24 09:15 AM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505004",
@@ -467,25 +1083,93 @@
           "updatedUnits": "6",
           "material": "DEFAULT",
           "source": "Miami, FL",
-          "destination": "Orlando, FL"
+          "destination": "Orlando, FL",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "142505004",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Miami, FL 33101",
+              "stopId": "0",
+              "stopType": "",
+              "time": "17 Jan,24 09:00 AM"
+            },
+            {
+              "orderId": "142505004",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "Miami, FL 33101, USA",
+              "stopId": "488007",
+              "stopType": "P",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505004",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488008",
+              "stopType": "D",
+              "time": "19 Jan,24 03:00 PM"
+            },
+            {
+              "orderId": "142505004",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488008",
+              "stopType": "D",
+              "time": "19 Jan,24 02:30 PM"
+            },
+            {
+              "orderId": "142505004",
+              "code": "0400",
+              "status": "Delivered",
+              "comments": "Package successfully delivered",
+              "location": "Orlando, FL 32801, USA",
+              "stopId": "488008",
+              "stopType": "D",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505004",
+              "location": "Miami, FL",
+              "docType": "Invoice",
+              "document": "invoice_142505004.pdf",
+              "stopId": "488007",
+              "stopType": "P",
+              "createdBy": "Sarah Wilson",
+              "time": "17 Jan,24 09:15 AM"
+            },
+            {
+              "orderId": "142505004",
+              "location": "Orlando, FL",
+              "docType": "POD",
+              "document": "pod_142505004.pdf",
+              "stopId": "488008",
+              "stopType": "D",
+              "createdBy": "Sarah Wilson",
+              "time": "19 Jan,24 03:00 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Sarah Wilson",
+              "mobile": "5551234567",
+              "time": "17 Jan,24 09:15 AM",
+              "isPrimary": true
+            }
+          ]
         },
-        {
-          "orderId": "142505005,142505006",
-          "requestId": "SX1734436836 / SX1734436837",
-          "location": "New York",
-          "address": "New York, NY",
-          "type": "P",
-          "startDT": "21 Jan, 10:00 PM",
-          "endDT": "21 Jan, 10:00 PM",
-          "weight": "0 lb",
-          "volume": "350.75 cu ft",
-          "status": "In-Transit",
-          "totalUnits": "13",
-          "updatedUnits": "13",
-          "material": "DEFAULT",
-          "source": "New York, NY",
-          "destination": "Boston, MA"
-        },
+
         {
           "orderId": "142505005",
           "requestId": "SX1734436836",
@@ -501,7 +1185,71 @@
           "updatedUnits": "5",
           "material": "DEFAULT",
           "source": "New York, NY",
-          "destination": "Boston, MA"
+          "destination": "Boston, MA",
+          "distance": "215.8 miles",
+          "duration": "3 hours 30 minutes",
+          "statusHistory": [
+            {
+              "orderId": "142505005",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "New York, NY 10001",
+              "stopId": "0",
+              "stopType": "",
+              "time": "21 Jan,24 10:00 PM"
+            },
+            {
+              "orderId": "142505005",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "New York, NY 10001, USA",
+              "stopId": "488009",
+              "stopType": "P",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505005",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488010",
+              "stopType": "D",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505005",
+              "location": "New York, NY",
+              "docType": "Invoice",
+              "document": "invoice_142505005.pdf",
+              "stopId": "488009",
+              "stopType": "P",
+              "createdBy": "David Brown",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505005",
+              "location": "Boston, MA",
+              "docType": "POD",
+              "document": "pod_142505005.pdf",
+              "stopId": "488010",
+              "stopType": "D",
+              "createdBy": "David Brown",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "David Brown",
+              "mobile": "5552345678",
+              "time": "21 Jan,24 10:15 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505006",
@@ -518,7 +1266,71 @@
           "updatedUnits": "8",
           "material": "DEFAULT",
           "source": "New York, NY",
-          "destination": "Boston, MA"
+          "destination": "Boston, MA",
+          "distance": "215.8 miles",
+          "duration": "3 hours 30 minutes",
+          "statusHistory": [
+            {
+              "orderId": "142505006",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "New York, NY 10001",
+              "stopId": "0",
+              "stopType": "",
+              "time": "21 Jan,24 10:00 PM"
+            },
+            {
+              "orderId": "142505006",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "New York, NY 10001, USA",
+              "stopId": "488011",
+              "stopType": "P",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505006",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488012",
+              "stopType": "D",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505006",
+              "location": "New York, NY",
+              "docType": "Invoice",
+              "document": "invoice_142505006.pdf",
+              "stopId": "488011",
+              "stopType": "P",
+              "createdBy": "David Brown",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505006",
+              "location": "Boston, MA",
+              "docType": "POD",
+              "document": "pod_142505006.pdf",
+              "stopId": "488012",
+              "stopType": "D",
+              "createdBy": "David Brown",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "David Brown",
+              "mobile": "5552345678",
+              "time": "21 Jan,24 10:15 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505005",
@@ -535,7 +1347,91 @@
           "updatedUnits": "5",
           "material": "DEFAULT",
           "source": "New York, NY",
-          "destination": "Boston, MA"
+          "destination": "Boston, MA",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "142505005",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "New York, NY 10001",
+              "stopId": "0",
+              "stopType": "",
+              "time": "21 Jan,24 10:00 PM"
+            },
+            {
+              "orderId": "142505005",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "New York, NY 10001, USA",
+              "stopId": "488009",
+              "stopType": "P",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505005",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488010",
+              "stopType": "D",
+              "time": "23 Jan,24 08:00 AM"
+            },
+            {
+              "orderId": "142505005",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488010",
+              "stopType": "D",
+              "time": "23 Jan,24 07:30 AM"
+            },
+            {
+              "orderId": "142505005",
+              "code": "0400",
+              "status": "Delivered",
+              "comments": "Package successfully delivered",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488010",
+              "stopType": "D",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505005",
+              "location": "New York, NY",
+              "docType": "Invoice",
+              "document": "invoice_142505005.pdf",
+              "stopId": "488009",
+              "stopType": "P",
+              "createdBy": "David Brown",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505005",
+              "location": "Boston, MA",
+              "docType": "POD",
+              "document": "pod_142505005.pdf",
+              "stopId": "488010",
+              "stopType": "D",
+              "createdBy": "David Brown",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "David Brown",
+              "mobile": "5552345678",
+              "time": "21 Jan,24 10:15 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505006",
@@ -552,7 +1448,91 @@
           "updatedUnits": "8",
           "material": "DEFAULT",
           "source": "New York, NY",
-          "destination": "Boston, MA"
+          "destination": "Boston, MA",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "142505006",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "New York, NY 10001",
+              "stopId": "0",
+              "stopType": "",
+              "time": "21 Jan,24 10:00 PM"
+            },
+            {
+              "orderId": "142505006",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "New York, NY 10001, USA",
+              "stopId": "488011",
+              "stopType": "P",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505006",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488012",
+              "stopType": "D",
+              "time": "23 Jan,24 08:00 AM"
+            },
+            {
+              "orderId": "142505006",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488012",
+              "stopType": "D",
+              "time": "23 Jan,24 07:30 AM"
+            },
+            {
+              "orderId": "142505006",
+              "code": "0400",
+              "status": "Delivered",
+              "comments": "Package successfully delivered",
+              "location": "Boston, MA 02101, USA",
+              "stopId": "488012",
+              "stopType": "D",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505006",
+              "location": "New York, NY",
+              "docType": "Invoice",
+              "document": "invoice_142505006.pdf",
+              "stopId": "488011",
+              "stopType": "P",
+              "createdBy": "David Brown",
+              "time": "21 Jan,24 10:15 PM"
+            },
+            {
+              "orderId": "142505006",
+              "location": "Boston, MA",
+              "docType": "POD",
+              "document": "pod_142505006.pdf",
+              "stopId": "488012",
+              "stopType": "D",
+              "createdBy": "David Brown",
+              "time": "23 Jan,24 08:00 AM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "David Brown",
+              "mobile": "5552345678",
+              "time": "21 Jan,24 10:15 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505007",
@@ -569,7 +1549,71 @@
           "updatedUnits": "8",
           "material": "DEFAULT",
           "source": "Chicago, IL",
-          "destination": "Detroit, MI"
+          "destination": "Detroit, MI",
+          "distance": "285.6 miles",
+          "duration": "4 hours 30 minutes",
+          "statusHistory": [
+            {
+              "orderId": "142505007",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Chicago, IL 60601",
+              "stopId": "0",
+              "stopType": "",
+              "time": "25 Jan,24 02:00 PM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "Chicago, IL 60601, USA",
+              "stopId": "488013",
+              "stopType": "P",
+              "time": "25 Jan,24 02:15 PM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Detroit, MI 48201, USA",
+              "stopId": "488014",
+              "stopType": "D",
+              "time": "27 Jan,24 10:00 AM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505007",
+              "location": "Chicago, IL",
+              "docType": "Invoice",
+              "document": "invoice_142505007.pdf",
+              "stopId": "488013",
+              "stopType": "P",
+              "createdBy": "Emily Davis",
+              "time": "25 Jan,24 02:15 PM"
+            },
+            {
+              "orderId": "142505007",
+              "location": "Detroit, MI",
+              "docType": "POD",
+              "document": "pod_142505007.pdf",
+              "stopId": "488014",
+              "stopType": "D",
+              "createdBy": "Emily Davis",
+              "time": "27 Jan,24 10:00 AM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Emily Davis",
+              "mobile": "5553456789",
+              "time": "25 Jan,24 02:15 PM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505007",
@@ -586,7 +1630,91 @@
           "updatedUnits": "8",
           "material": "DEFAULT",
           "source": "Chicago, IL",
-          "destination": "Detroit, MI"
+          "destination": "Detroit, MI",
+          "distance": "0 miles",
+          "duration": "0 hours",
+          "statusHistory": [
+            {
+              "orderId": "142505007",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Chicago, IL 60601",
+              "stopId": "0",
+              "stopType": "",
+              "time": "25 Jan,24 02:00 PM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "Chicago, IL 60601, USA",
+              "stopId": "488013",
+              "stopType": "P",
+              "time": "25 Jan,24 02:15 PM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Detroit, MI 48201, USA",
+              "stopId": "488014",
+              "stopType": "D",
+              "time": "27 Jan,24 10:00 AM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0300",
+              "status": "Out for Delivery",
+              "comments": "Package out for final delivery",
+              "location": "Detroit, MI 48201, USA",
+              "stopId": "488014",
+              "stopType": "D",
+              "time": "27 Jan,24 09:30 AM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0400",
+              "status": "Delivered",
+              "comments": "Package successfully delivered",
+              "location": "Detroit, MI 48201, USA",
+              "stopId": "488014",
+              "stopType": "D",
+              "time": "27 Jan,24 10:00 AM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505007",
+              "location": "Chicago, IL",
+              "docType": "Invoice",
+              "document": "invoice_142505007.pdf",
+              "stopId": "488013",
+              "stopType": "P",
+              "createdBy": "Emily Davis",
+              "time": "25 Jan,24 02:15 PM"
+            },
+            {
+              "orderId": "142505007",
+              "location": "Detroit, MI",
+              "docType": "POD",
+              "document": "pod_142505007.pdf",
+              "stopId": "488014",
+              "stopType": "D",
+              "createdBy": "Emily Davis",
+              "time": "27 Jan,24 10:00 AM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Emily Davis",
+              "mobile": "5553456789",
+              "time": "25 Jan,24 02:15 PM",
+              "isPrimary": true
+            }
+          ]
         }
       ]
     },
@@ -764,6 +1892,60 @@
             "label": "D1",
             "distance": "0 mi",
             "duration": "0 mins"
+          },
+          {
+            "id": 3,
+            "type": "pickup",
+            "location": "Miami",
+            "status": "NOT STARTED",
+            "label": "P2",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 4,
+            "type": "drop",
+            "location": "Orlando",
+            "status": "NOT STARTED",
+            "label": "D2",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 5,
+            "type": "pickup",
+            "location": "Chicago",
+            "status": "NOT STARTED",
+            "label": "P3",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 6,
+            "type": "drop",
+            "location": "Detroit",
+            "status": "NOT STARTED",
+            "label": "D3",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 7,
+            "type": "pickup",
+            "location": "Atlanta",
+            "status": "NOT STARTED",
+            "label": "P4",
+            "distance": "0 mi",
+            "duration": "0 mins"
+          },
+          {
+            "id": 8,
+            "type": "drop",
+            "location": "Nashville",
+            "status": "NOT STARTED",
+            "label": "D4",
+            "distance": "0 mi",
+            "duration": "0 mins"
           }
         ]
       },
@@ -783,7 +1965,71 @@
           "updatedUnits": "12",
           "material": "DEFAULT",
           "source": "Seattle, WA",
-          "destination": "Portland, OR"
+          "destination": "Portland, OR",
+          "distance": "173.2 miles",
+          "duration": "3 hours 15 minutes",
+          "statusHistory": [
+            {
+              "orderId": "142505007",
+              "code": "0100",
+              "status": "Booked by Supplier",
+              "comments": "Order confirmed by supplier",
+              "location": "Seattle, WA 98101",
+              "stopId": "0",
+              "stopType": "",
+              "time": "20 Jan,24 11:00 AM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0420",
+              "status": "Gate In",
+              "comments": "Vehicle entered facility",
+              "location": "Seattle, WA 98101, USA",
+              "stopId": "488019",
+              "stopType": "P",
+              "time": "20 Jan,24 11:15 AM"
+            },
+            {
+              "orderId": "142505007",
+              "code": "0212",
+              "status": "Accepted by Driver",
+              "comments": "Driver accepted the order",
+              "location": "Portland, OR 97201, USA",
+              "stopId": "488020",
+              "stopType": "D",
+              "time": "22 Jan,24 02:00 PM"
+            }
+          ],
+          "attachedDocuments": [
+            {
+              "orderId": "142505007",
+              "location": "Seattle, WA",
+              "docType": "Invoice",
+              "document": "invoice_142505007.pdf",
+              "stopId": "488019",
+              "stopType": "P",
+              "createdBy": "Emily Chen",
+              "time": "20 Jan,24 11:15 AM"
+            },
+            {
+              "orderId": "142505007",
+              "location": "Portland, OR",
+              "docType": "POD",
+              "document": "pod_142505007.pdf",
+              "stopId": "488020",
+              "stopType": "D",
+              "createdBy": "Emily Chen",
+              "time": "22 Jan,24 02:00 PM"
+            }
+          ],
+          "drivers": [
+            {
+              "name": "Emily Chen",
+              "mobile": "5555678901",
+              "time": "20 Jan,24 11:15 AM",
+              "isPrimary": true
+            }
+          ]
         },
         {
           "orderId": "142505007",
@@ -801,6 +2047,312 @@
           "material": "DEFAULT",
           "source": "Seattle, WA",
           "destination": "Portland, OR"
+        },
+        {
+          "orderId": "142505008",
+          "requestId": "SX1734436839",
+          "location": "Miami",
+          "address": "Miami, FL",
+          "type": "P",
+          "startDT": "24 Jan, 09:00 AM",
+          "endDT": "24 Jan, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "200.50 cu ft",
+          "status": "New",
+          "totalUnits": "8",
+          "updatedUnits": "8",
+          "material": "DEFAULT",
+          "source": "Miami, FL",
+          "destination": "Orlando, FL"
+        },
+        {
+          "orderId": "142505009",
+          "requestId": "SX1734436840",
+          "location": "Miami",
+          "address": "Miami, FL",
+          "type": "P",
+          "startDT": "24 Jan, 09:00 AM",
+          "endDT": "24 Jan, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "175.75 cu ft",
+          "status": "New",
+          "totalUnits": "6",
+          "updatedUnits": "6",
+          "material": "DEFAULT",
+          "source": "Miami, FL",
+          "destination": "Orlando, FL"
+        },
+        {
+          "orderId": "142505008",
+          "requestId": "SX1734436839",
+          "location": "Orlando",
+          "address": "Orlando, FL",
+          "type": "D",
+          "startDT": "26 Jan, 03:00 PM",
+          "endDT": "26 Jan, 03:00 PM",
+          "weight": "0 lb",
+          "volume": "200.50 cu ft",
+          "status": "New",
+          "totalUnits": "8",
+          "updatedUnits": "8",
+          "material": "DEFAULT",
+          "source": "Miami, FL",
+          "destination": "Orlando, FL"
+        },
+        {
+          "orderId": "142505009",
+          "requestId": "SX1734436840",
+          "location": "Orlando",
+          "address": "Orlando, FL",
+          "type": "D",
+          "startDT": "26 Jan, 03:00 PM",
+          "endDT": "26 Jan, 03:00 PM",
+          "weight": "0 lb",
+          "volume": "175.75 cu ft",
+          "status": "New",
+          "totalUnits": "6",
+          "updatedUnits": "6",
+          "material": "DEFAULT",
+          "source": "Miami, FL",
+          "destination": "Orlando, FL"
+        },
+        {
+          "orderId": "142505010",
+          "requestId": "SX1734436841",
+          "location": "Chicago",
+          "address": "Chicago, IL",
+          "type": "P",
+          "startDT": "28 Jan, 02:00 PM",
+          "endDT": "28 Jan, 02:00 PM",
+          "weight": "0 lb",
+          "volume": "250.25 cu ft",
+          "status": "New",
+          "totalUnits": "10",
+          "updatedUnits": "10",
+          "material": "DEFAULT",
+          "source": "Chicago, IL",
+          "destination": "Detroit, MI"
+        },
+        {
+          "orderId": "142505011",
+          "requestId": "SX1734436842",
+          "location": "Chicago",
+          "address": "Chicago, IL",
+          "type": "P",
+          "startDT": "28 Jan, 02:00 PM",
+          "endDT": "28 Jan, 02:00 PM",
+          "weight": "0 lb",
+          "volume": "225.50 cu ft",
+          "status": "New",
+          "totalUnits": "9",
+          "updatedUnits": "9",
+          "material": "DEFAULT",
+          "source": "Chicago, IL",
+          "destination": "Detroit, MI"
+        },
+        {
+          "orderId": "142505012",
+          "requestId": "SX1734436843",
+          "location": "Chicago",
+          "address": "Chicago, IL",
+          "type": "P",
+          "startDT": "28 Jan, 02:00 PM",
+          "endDT": "28 Jan, 02:00 PM",
+          "weight": "0 lb",
+          "volume": "200.75 cu ft",
+          "status": "New",
+          "totalUnits": "7",
+          "updatedUnits": "7",
+          "material": "DEFAULT",
+          "source": "Chicago, IL",
+          "destination": "Detroit, MI"
+        },
+        {
+          "orderId": "142505010",
+          "requestId": "SX1734436841",
+          "location": "Detroit",
+          "address": "Detroit, MI",
+          "type": "D",
+          "startDT": "30 Jan, 10:00 AM",
+          "endDT": "30 Jan, 10:00 AM",
+          "weight": "0 lb",
+          "volume": "250.25 cu ft",
+          "status": "New",
+          "totalUnits": "10",
+          "updatedUnits": "10",
+          "material": "DEFAULT",
+          "source": "Chicago, IL",
+          "destination": "Detroit, MI"
+        },
+        {
+          "orderId": "142505011",
+          "requestId": "SX1734436842",
+          "location": "Detroit",
+          "address": "Detroit, MI",
+          "type": "D",
+          "startDT": "30 Jan, 10:00 AM",
+          "endDT": "30 Jan, 10:00 AM",
+          "weight": "0 lb",
+          "volume": "225.50 cu ft",
+          "status": "New",
+          "totalUnits": "9",
+          "updatedUnits": "9",
+          "material": "DEFAULT",
+          "source": "Chicago, IL",
+          "destination": "Detroit, MI"
+        },
+        {
+          "orderId": "142505012",
+          "requestId": "SX1734436843",
+          "location": "Detroit",
+          "address": "Detroit, MI",
+          "type": "D",
+          "startDT": "30 Jan, 10:00 AM",
+          "endDT": "30 Jan, 10:00 AM",
+          "weight": "0 lb",
+          "volume": "200.75 cu ft",
+          "status": "New",
+          "totalUnits": "7",
+          "updatedUnits": "7",
+          "material": "DEFAULT",
+          "source": "Chicago, IL",
+          "destination": "Detroit, MI"
+        },
+        {
+          "orderId": "142505013",
+          "requestId": "SX1734436844",
+          "location": "Atlanta",
+          "address": "Atlanta, GA",
+          "type": "P",
+          "startDT": "01 Feb, 11:00 AM",
+          "endDT": "01 Feb, 11:00 AM",
+          "weight": "0 lb",
+          "volume": "150.75 cu ft",
+          "status": "New",
+          "totalUnits": "5",
+          "updatedUnits": "5",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
+        },
+        {
+          "orderId": "142505014",
+          "requestId": "SX1734436845",
+          "location": "Atlanta",
+          "address": "Atlanta, GA",
+          "type": "P",
+          "startDT": "01 Feb, 11:00 AM",
+          "endDT": "01 Feb, 11:00 AM",
+          "weight": "0 lb",
+          "volume": "125.50 cu ft",
+          "status": "New",
+          "totalUnits": "4",
+          "updatedUnits": "4",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
+        },
+        {
+          "orderId": "142505015",
+          "requestId": "SX1734436846",
+          "location": "Atlanta",
+          "address": "Atlanta, GA",
+          "type": "P",
+          "startDT": "01 Feb, 11:00 AM",
+          "endDT": "01 Feb, 11:00 AM",
+          "weight": "0 lb",
+          "volume": "100.25 cu ft",
+          "status": "New",
+          "totalUnits": "3",
+          "updatedUnits": "3",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
+        },
+        {
+          "orderId": "142505016",
+          "requestId": "SX1734436847",
+          "location": "Atlanta",
+          "address": "Atlanta, GA",
+          "type": "P",
+          "startDT": "01 Feb, 11:00 AM",
+          "endDT": "01 Feb, 11:00 AM",
+          "weight": "0 lb",
+          "volume": "75.50 cu ft",
+          "status": "New",
+          "totalUnits": "2",
+          "updatedUnits": "2",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
+        },
+        {
+          "orderId": "142505013",
+          "requestId": "SX1734436844",
+          "location": "Nashville",
+          "address": "Nashville, TN",
+          "type": "D",
+          "startDT": "03 Feb, 09:00 AM",
+          "endDT": "03 Feb, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "150.75 cu ft",
+          "status": "New",
+          "totalUnits": "5",
+          "updatedUnits": "5",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
+        },
+        {
+          "orderId": "142505014",
+          "requestId": "SX1734436845",
+          "location": "Nashville",
+          "address": "Nashville, TN",
+          "type": "D",
+          "startDT": "03 Feb, 09:00 AM",
+          "endDT": "03 Feb, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "125.50 cu ft",
+          "status": "New",
+          "totalUnits": "4",
+          "updatedUnits": "4",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
+        },
+        {
+          "orderId": "142505015",
+          "requestId": "SX1734436846",
+          "location": "Nashville",
+          "address": "Nashville, TN",
+          "type": "D",
+          "startDT": "03 Feb, 09:00 AM",
+          "endDT": "03 Feb, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "100.25 cu ft",
+          "status": "New",
+          "totalUnits": "3",
+          "updatedUnits": "3",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
+        },
+        {
+          "orderId": "142505016",
+          "requestId": "SX1734436847",
+          "location": "Nashville",
+          "address": "Nashville, TN",
+          "type": "D",
+          "startDT": "03 Feb, 09:00 AM",
+          "endDT": "03 Feb, 09:00 AM",
+          "weight": "0 lb",
+          "volume": "75.50 cu ft",
+          "status": "New",
+          "totalUnits": "2",
+          "updatedUnits": "2",
+          "material": "DEFAULT",
+          "source": "Atlanta, GA",
+          "destination": "Nashville, TN"
         }
       ]
     },

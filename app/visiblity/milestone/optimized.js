@@ -18,7 +18,6 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from '@/components/ui/pagination'
-import StatusHistoryModal from '@/components/ui/reusableComponent/statusHistoryModal'
 
 // Constants for better maintainability
 const CONSTANTS = {
@@ -358,7 +357,7 @@ const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentSt
 })
 
 // Order details table component
-const OrderDetailsTable = React.memo(({ orders, type = 'mixed', currentState = null, onStatusHistoryClick }) => {
+const OrderDetailsTable = React.memo(({ orders, type = 'mixed', currentState = null }) => {
   const headers = useMemo(() => 
     type === 'mixed' 
       ? ['Actions', 'S.No', 'Order ID', 'Request ID / Job ID', 'Location', 'Address', 'Type', 'Start DT', 'End DT', 'Weight', 'Volume', 'Status', 'Total Units', 'Updated Units']
@@ -382,16 +381,9 @@ const OrderDetailsTable = React.memo(({ orders, type = 'mixed', currentState = n
           {orders.map((order, index) => (
             <TableRow key={index} className="hover:bg-gray-50 border-b border-gray-100">
               <TableCell>
-                <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="text-xs"
-                    onClick={() => onStatusHistoryClick && onStatusHistoryClick(order)}
-                  >
-                    Status History
-                  </Button>
-                </div>
+                <Button variant="outline" size="sm" className="text-xs">
+                  Status History
+                </Button>
               </TableCell>
               <TableCell>{index + 1}</TableCell>
               <TableCell className="font-medium">{order.orderId}</TableCell>
@@ -606,48 +598,6 @@ export default function ShipmentVisibility() {
   const { calculateRouteStatus } = useRouteStatusCalculation()
 
   const [expandedRow, setExpandedRow] = useState(null)
-  const [statusHistoryModalOpen, setStatusHistoryModalOpen] = useState(false)
-  const [selectedOrderForHistory, setSelectedOrderForHistory] = useState(null)
-  const [currentStatusHistory, setCurrentStatusHistory] = useState([])
-  const [currentAttachedDocuments, setCurrentAttachedDocuments] = useState([])
-  const [currentDrivers, setCurrentDrivers] = useState([])
-
-  // Get status history data for selected order
-  const getStatusHistoryData = useCallback((order) => {
-    if (!order) return { statusHistory: [], attachedDocuments: [], drivers: [] }
-    
-    // Find the shipment that contains this order
-    const shipment = shipments.find(s => 
-      s.orders.some(o => o.orderId === order.orderId)
-    )
-    
-    if (!shipment) return { statusHistory: [], attachedDocuments: [], drivers: [] }
-    
-    // Find the specific order
-    const targetOrder = shipment.orders.find(o => o.orderId === order.orderId)
-    
-    if (!targetOrder) return { statusHistory: [], attachedDocuments: [], drivers: [] }
-    
-    // Return the status history data from the order
-    return {
-      statusHistory: targetOrder.statusHistory || [],
-      attachedDocuments: targetOrder.attachedDocuments || [],
-      drivers: targetOrder.drivers || []
-    }
-  }, [shipments])
-
-  // Handle status history modal
-  const handleStatusHistoryClick = useCallback((order) => {
-    setSelectedOrderForHistory(order)
-    
-    // Get the status history data for this order
-    const { statusHistory, attachedDocuments, drivers } = getStatusHistoryData(order)
-    setCurrentStatusHistory(statusHistory)
-    setCurrentAttachedDocuments(attachedDocuments)
-    setCurrentDrivers(drivers)
-    
-    setStatusHistoryModalOpen(true)
-  }, [getStatusHistoryData])
 
   // Reset to first page when search term changes
   useEffect(() => {
@@ -872,7 +822,6 @@ export default function ShipmentVisibility() {
                                     orders={getFilteredOrders(shipment, 'pickup').filter(order => order.orderId.includes(',') || !getFilteredOrders(shipment, 'pickup').some(o => o.type === 'P' && o.orderId.includes(',')))} 
                                     type="mixed" 
                                     currentState={getCurrentState(shipment.id)}
-                                    onStatusHistoryClick={handleStatusHistoryClick}
                                   />
                                 </div>
                               )}
@@ -886,7 +835,6 @@ export default function ShipmentVisibility() {
                                   orders={getFilteredIndividualOrders(shipment, getCurrentState(shipment.id))} 
                                   type="individual" 
                                   currentState={getCurrentState(shipment.id)}
-                                  onStatusHistoryClick={handleStatusHistoryClick}
                                 />
                               </div>
 
@@ -898,7 +846,6 @@ export default function ShipmentVisibility() {
                                     orders={getFilteredOrders(shipment, 'drop')} 
                                     type="mixed" 
                                     currentState={getCurrentState(shipment.id)}
-                                    onStatusHistoryClick={handleStatusHistoryClick}
                                   />
                                 </div>
                               )}
@@ -968,17 +915,6 @@ export default function ShipmentVisibility() {
           </Pagination>
         </div>
       )}
-
-      {/* Status History Modal */}
-      <StatusHistoryModal
-        open={statusHistoryModalOpen}
-        onClose={() => setStatusHistoryModalOpen(false)}
-        statusHistory={currentStatusHistory}
-        attachedDocuments={currentAttachedDocuments}
-        drivers={currentDrivers}
-        distance={selectedOrderForHistory?.distance || "0 miles"}
-        duration={selectedOrderForHistory?.duration || "0 hours"}
-      />
     </div>
   )
 }
