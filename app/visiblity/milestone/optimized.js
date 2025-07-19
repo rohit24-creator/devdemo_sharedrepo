@@ -1,18 +1,16 @@
 "use client"
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { ChevronDown, ChevronUp, Truck, Ship, Search, RefreshCw, Plus, MoreVertical, CheckCircle, Clock, MapPin, Package, Calendar, User, Building, Car } from 'lucide-react'
+import { ChevronDown, ChevronUp, Truck, Ship, Search, RefreshCw, Plus, MoreVertical } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   Pagination, 
   PaginationContent, 
-  PaginationEllipsis, 
   PaginationItem, 
   PaginationLink, 
   PaginationNext, 
@@ -63,9 +61,9 @@ const useShipments = () => {
         const response = await fetch('/shipmentVisibility.json')
         const data = await response.json()
         setShipments(data.shipments)
-        setLoading(false)
       } catch (error) {
         console.error('Error fetching shipments:', error)
+      } finally {
         setLoading(false)
       }
     }
@@ -167,51 +165,35 @@ const getVehicleIcon = (vehicleType) => {
 // Route status calculation with memoization
 const useRouteStatusCalculation = () => {
   const calculateRouteStatus = useCallback((shipment, segmentType, segmentLocation = null, segmentIndex = null) => {
-    // Get orders for this segment type (pickup or drop)
     let segmentOrders = shipment.orders.filter(order => {
-      if (segmentType === 'pickup') {
-        return order.type === 'P'
-      } else if (segmentType === 'drop') {
-        return order.type === 'D'
-      }
+      if (segmentType === 'pickup') return order.type === 'P'
+      if (segmentType === 'drop') return order.type === 'D'
       return false
     })
 
-    // For multiple routing orders, filter by location if provided
     if (segmentLocation) {
       segmentOrders = segmentOrders.filter(order => order.location === segmentLocation)
     }
 
-    if (segmentOrders.length === 0) {
-      return 'NOT STARTED'
-    }
+    if (segmentOrders.length === 0) return 'NOT STARTED'
 
-    // STATE-BASED FLOW SAFETY: Check if pickup is completed before allowing drop to start (for both single and multiple routes)
+    // Flow safety checks
     if (segmentType === 'drop') {
       const pickupCompleted = checkPickupCompletion(shipment, segmentLocation)
-      if (!pickupCompleted) {
-        return 'NOT STARTED' // Block drop until pickup is completed
-      }
+      if (!pickupCompleted) return 'NOT STARTED'
     }
 
-    // LOCATION-BASED FLOW SAFETY: Check if previous routes are completed before allowing this route to start (for multiple routes only)
     if (segmentIndex !== null && segmentIndex > 0) {
       const previousRouteCompleted = checkPreviousRouteCompletion(shipment, segmentIndex)
-      if (!previousRouteCompleted) {
-        return 'NOT STARTED' // Block this route until previous route is completed
-      }
+      if (!previousRouteCompleted) return 'NOT STARTED'
     }
 
-    // Get unique order IDs to handle combined orders
     const uniqueOrderIds = [...new Set(segmentOrders.map(order => order.orderId.split(',')[0]))]
-    
-    // For each unique order, get the status
     const orderStatuses = uniqueOrderIds.map(orderId => {
       const order = segmentOrders.find(o => o.orderId.startsWith(orderId))
       return order ? order.status : 'NOT STARTED'
     })
 
-    // Calculate overall status based on all order statuses
     const hasNotStarted = orderStatuses.some(status => 
       status === 'NOT STARTED' || status === 'New'
     )
@@ -227,95 +209,75 @@ const useRouteStatusCalculation = () => {
       return false
     })
 
-    // Determine route status
-    if (allCompleted) {
-      return 'COMPLETED'
-    } else if (hasInTransit) {
-      return 'In-Progress'
-    } else if (hasNotStarted) {
-      return 'NOT STARTED'
-    } else {
-      return 'In-Progress' // Default fallback
-    }
+    if (allCompleted) return 'COMPLETED'
+    if (hasInTransit) return 'In-Progress'
+    if (hasNotStarted) return 'NOT STARTED'
+    return 'In-Progress'
   }, [])
 
-  // Check if pickup is completed before allowing drop to start (for both single and multiple routes)
   const checkPickupCompletion = useCallback((shipment, dropLocation) => {
-    // Find the corresponding pickup location for this drop
     const routeSegments = shipment.route.segments
     const dropSegment = routeSegments.find(segment => 
       segment.type === 'drop' && segment.location === dropLocation
     )
     
-    if (!dropSegment) {
-      return true // If no matching drop segment found, allow it
-    }
+    if (!dropSegment) return true
     
-    // Find the pickup segment that corresponds to this drop
     const pickupSegment = routeSegments.find(segment => 
       segment.type === 'pickup' && segment.id === dropSegment.id - 1
     )
     
-    if (!pickupSegment) {
-      return true // If no matching pickup segment found, allow it
-    }
+    if (!pickupSegment) return true
     
-    // Check if pickup orders for this location are completed
     const pickupOrders = shipment.orders.filter(order => 
       order.type === 'P' && order.location === pickupSegment.location
     )
     
-    if (pickupOrders.length === 0) {
-      return true // If no pickup orders found, allow drop
-    }
+    if (pickupOrders.length === 0) return true
     
-    // Check if all pickup orders are completed
     const pickupStatuses = pickupOrders.map(order => order.status)
-    const allPickupsCompleted = pickupStatuses.every(status => 
+    return pickupStatuses.every(status => 
       status === 'Picked up' || status === 'COMPLETED'
     )
-    
-    return allPickupsCompleted
   }, [])
 
-  // Check if previous route is completed before allowing current route to start (for multiple routes only)
   const checkPreviousRouteCompletion = useCallback((shipment, currentSegmentIndex) => {
     const routeSegments = shipment.route.segments
     
-    // For each previous route (pair of pickup and drop)
     for (let routeIndex = 0; routeIndex < Math.floor(currentSegmentIndex / 2); routeIndex++) {
       const pickupSegmentIndex = routeIndex * 2
       const dropSegmentIndex = pickupSegmentIndex + 1
       
-      // Check if both pickup and drop of previous route are completed
       const pickupStatus = calculateRouteStatus(shipment, 'pickup', routeSegments[pickupSegmentIndex].location, pickupSegmentIndex)
       const dropStatus = calculateRouteStatus(shipment, 'drop', routeSegments[dropSegmentIndex].location, dropSegmentIndex)
       
-      // If any previous route is not completed, block current route
       if (pickupStatus !== 'COMPLETED' || dropStatus !== 'COMPLETED') {
         return false
       }
     }
     
-    return true // All previous routes are completed
+    return true
   }, [calculateRouteStatus])
 
   return { calculateRouteStatus, checkPickupCompletion, checkPreviousRouteCompletion }
 }
 
 // Memoized components for better performance
-const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentState, calculateRouteStatus, shipments }) => {
-  // Find the shipment data
-  const shipment = shipments.find(s => s.id === shipmentId)
-  
+const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, calculateRouteStatus }) => {
+  const shipment = useMemo(() => 
+    // This would come from context or props in a real app
+    window.shipmentsData?.find(s => s.id === shipmentId), 
+    [shipmentId]
+  )
+
+  if (!shipment) return null
+
   return (
     <div className="mt-4 p-4 bg-gray-50 rounded-lg">
       <div className="flex items-center space-x-4 overflow-x-auto">
         {route.segments.map((segment, index) => {
-          // Calculate dynamic status based on individual order statuses
           const calculatedStatus = calculateRouteStatus(shipment, segment.type, segment.location, index)
           
-          // Generate P/D label based on actual orders for this location
           const segmentOrders = shipment.orders.filter(order => 
             order.type === (segment.type === 'pickup' ? 'P' : 'D') && 
             order.location === segment.location
@@ -356,8 +318,7 @@ const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentSt
   )
 })
 
-// Order details table component
-const OrderDetailsTable = React.memo(({ orders, type = 'mixed', currentState = null }) => {
+const OrderDetailsTable = React.memo(({ orders, type = 'mixed' }) => {
   const headers = useMemo(() => 
     type === 'mixed' 
       ? ['Actions', 'S.No', 'Order ID', 'Request ID / Job ID', 'Location', 'Address', 'Type', 'Start DT', 'End DT', 'Weight', 'Volume', 'Status', 'Total Units', 'Updated Units']
@@ -433,155 +394,8 @@ const OrderDetailsTable = React.memo(({ orders, type = 'mixed', currentState = n
   )
 })
 
-// Route switcher component
-const RouteSwitcher = React.memo(({ shipment, getCurrentRoute, switchRoute }) => {
-  const currentRoute = getCurrentRoute(shipment.id)
-  const routeSegments = shipment.route.segments
-  const hasMultipleRoutes = routeSegments.length > 2
-
-  if (!hasMultipleRoutes) {
-    return null // Don't show route switcher for single route shipments
-  }
-
-  const routeCount = Math.floor(routeSegments.length / 2)
-
-  return (
-    <div className="flex items-center space-x-2 mb-4">
-      <span className="text-sm font-medium text-gray-700">Current Route:</span>
-      {Array.from({ length: routeCount }, (_, index) => {
-        const routeStart = index * 2
-        const pickupSegment = routeSegments[routeStart]
-        const dropSegment = routeSegments[routeStart + 1]
-        const routeLabel = `${pickupSegment.location} → ${dropSegment.location}`
-
-        return (
-          <Button
-            key={index}
-            variant={currentRoute === index ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => switchRoute(shipment.id, index)}
-            className={currentRoute === index ? 'bg-[#006397] hover:bg-[#006397]' : ''}
-          >
-            {routeLabel}
-          </Button>
-        )
-      })}
-    </div>
-  )
-})
-
-// State switcher component
-const StateSwitcher = React.memo(({ shipment, getCurrentState, switchState }) => {
-  const currentState = getCurrentState(shipment.id)
-  const hasPickup = shipment.orders.some(order => order.type === 'P')
-  const hasDrop = shipment.orders.some(order => order.type === 'D')
-
-  return (
-    <div className="flex items-center space-x-2 mb-4">
-      <span className="text-sm font-medium text-gray-700">Current State:</span>
-      {hasPickup && (
-        <Button
-          variant={currentState === 'pickup' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => switchState(shipment.id, 'pickup')}
-          className={currentState === 'pickup' ? 'bg-[#006397] hover:bg-[#006397]' : ''}
-        >
-          Pickup
-        </Button>
-      )}
-      {hasDrop && (
-        <Button
-          variant={currentState === 'drop' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => switchState(shipment.id, 'drop')}
-          className={currentState === 'drop' ? 'bg-[#006397] hover:bg-[#006397]' : ''}
-        >
-          Drop
-        </Button>
-      )}
-    </div>
-  )
-})
-
-// Route optimization component
-const RouteOptimization = React.memo(({ shipment }) => {
-  return (
-    <Card className="mt-6 border-0 shadow-sm">
-      <CardHeader className="bg-blue-600 text-white">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-white">Route Optimization</CardTitle>
-          <div className="flex space-x-2">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-blue-600">
-              <ChevronUp className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="sm" className="text-white hover:bg-blue-600">
-              ×
-            </Button>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="p-6">
-        {/* Route Progress */}
-        <div className="mb-6">
-          <div className="flex items-center space-x-4 mb-4">
-            {shipment.route.segments.map((segment, index) => (
-              <div key={segment.id} className="flex items-center">
-                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold">
-                  {segment.id}
-                </div>
-                <span className="ml-2 text-sm text-gray-600">
-                  {segment.location} - {segment.type === 'pickup' ? 'P' : 'D'};
-                </span>
-                {index < shipment.route.segments.length - 1 && (
-                  <div className="h-0.5 w-8 bg-gray-300 mx-2"></div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Map Placeholder */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Current Route</h3>
-            <div className="bg-gray-100 h-48 rounded flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <MapPin className="w-8 h-8 mx-auto mb-2" />
-                <p>Map View - Current Route</p>
-                <p className="text-sm">
-                  {shipment.route.segments.reduce((total, segment) => {
-                    const distance = parseFloat(segment.distance.replace(/[^\d.]/g, '')) || 0
-                    return total + distance
-                  }, 0).toFixed(1)} mi total distance
-                </p>
-                <p className="text-sm">
-                  {shipment.route.segments.reduce((total, segment) => {
-                    const duration = segment.duration || '0 mins'
-                    const hours = duration.match(/(\d+)\s*hours?/)?.[1] || 0
-                    const mins = duration.match(/(\d+)\s*mins?/)?.[1] || 0
-                    return total + parseInt(hours) * 60 + parseInt(mins)
-                  }, 0)} mins total duration
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="border rounded-lg p-4">
-            <h3 className="font-semibold mb-2">Optimized Route</h3>
-            <div className="bg-gray-100 h-48 rounded flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <MapPin className="w-8 h-8 mx-auto mb-2" />
-                <p>Map View - Optimized Route</p>
-                <p className="text-sm">Use ctrl + scroll to zoom the map</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-})
-
-export default function ShipmentVisibility() {
+// Main component with optimized structure
+export default function ShipmentVisibilityOptimized() {
   const { shipments, loading } = useShipments()
   const { searchTerm, setSearchTerm, filteredItems } = useSearch(shipments)
   const { 
@@ -599,34 +413,30 @@ export default function ShipmentVisibility() {
 
   const [expandedRow, setExpandedRow] = useState(null)
 
-  // Reset to first page when search term changes
+  // Reset pagination when search changes
   useEffect(() => {
     resetToFirstPage()
   }, [searchTerm, resetToFirstPage])
 
-  // Toggle row expansion - only one row can be expanded at a time
+  // Memoized handlers
   const toggleRow = useCallback((shipmentId) => {
-    if (expandedRow === shipmentId) {
-      // If clicking the same row, close it
-      setExpandedRow(null)
-    } else {
-      // If clicking a different row, close the current one and open the new one
-      setExpandedRow(shipmentId)
-    }
-  }, [expandedRow])
+    setExpandedRow(prev => prev === shipmentId ? null : shipmentId)
+  }, [])
 
-  // Get orders filtered by current state and route
+  const handleStateClick = useCallback((shipmentId, stateType) => {
+    const newState = stateType === 'pickup' ? 'pickup' : 'drop'
+    switchState(shipmentId, newState)
+  }, [switchState])
+
+  // Memoized filtered orders function
   const getFilteredOrders = useCallback((shipment, state) => {
     const currentRoute = getCurrentRoute(shipment.id)
     const routeSegments = shipment.route.segments
     
-    // For multiple routes, filter by current route
     if (routeSegments.length > 2) {
       const routeStart = currentRoute * 2
       const routeEnd = routeStart + 2
       const currentRouteSegments = routeSegments.slice(routeStart, routeEnd)
-      
-      // Get locations for current route
       const routeLocations = currentRouteSegments.map(segment => segment.location)
       
       return shipment.orders.filter(order => {
@@ -638,7 +448,6 @@ export default function ShipmentVisibility() {
         return routeLocations.includes(order.location)
       })
     } else {
-      // Single route - use existing logic
       if (state === 'pickup') {
         return shipment.orders.filter(order => order.type === 'P')
       } else if (state === 'drop') {
@@ -648,7 +457,6 @@ export default function ShipmentVisibility() {
     }
   }, [getCurrentRoute])
 
-  // Get individual orders filtered by current state and route
   const getFilteredIndividualOrders = useCallback((shipment, state) => {
     const filteredOrders = getFilteredOrders(shipment, state)
     return filteredOrders.filter(order => !order.orderId.includes(','))
@@ -767,13 +575,8 @@ export default function ShipmentVisibility() {
                         <RouteVisualizer 
                           route={shipment.route} 
                           shipmentId={shipment.id}
-                          currentState={getCurrentState(shipment.id)}
-                          onStateClick={(shipmentId, stateType) => {
-                            const newState = stateType === 'pickup' ? 'pickup' : 'drop'
-                            switchState(shipmentId, newState)
-                          }}
+                          onStateClick={handleStateClick}
                           calculateRouteStatus={calculateRouteStatus}
-                          shipments={shipments}
                         />
                       </div>
                     </TableCell>
@@ -793,20 +596,6 @@ export default function ShipmentVisibility() {
                             <p className="text-sm text-gray-600">{shipment.source} → {shipment.destination}</p>
                           </div>
                           
-                          {/* Route Switcher */}
-                          <RouteSwitcher 
-                            shipment={shipment} 
-                            getCurrentRoute={getCurrentRoute}
-                            switchRoute={switchRoute}
-                          />
-                          
-                          {/* State Switcher */}
-                          <StateSwitcher 
-                            shipment={shipment} 
-                            getCurrentState={getCurrentState}
-                            switchState={switchState}
-                          />
-                          
                           <Tabs defaultValue="orders" className="w-full">
                             <TabsList className="grid w-full grid-cols-2">
                               <TabsTrigger value="orders">Order Details</TabsTrigger>
@@ -814,19 +603,7 @@ export default function ShipmentVisibility() {
                             </TabsList>
                             
                             <TabsContent value="orders" className="space-y-6">
-                              {/* Show Pickup Summary only for Pickup state */}
-                              {getCurrentState(shipment.id) === 'pickup' && (
-                                <div className="bg-white rounded-lg border border-gray-200 p-4">
-                                  <h3 className="text-lg font-semibold mb-3 text-[#006397]">Pickup Summary</h3>
-                                  <OrderDetailsTable 
-                                    orders={getFilteredOrders(shipment, 'pickup').filter(order => order.orderId.includes(',') || !getFilteredOrders(shipment, 'pickup').some(o => o.type === 'P' && o.orderId.includes(',')))} 
-                                    type="mixed" 
-                                    currentState={getCurrentState(shipment.id)}
-                                  />
-                                </div>
-                              )}
-
-                              {/* Individual Orders Table - Shows data based on current state */}
+                              {/* Individual Orders Table */}
                               <div className="bg-white rounded-lg border border-gray-200 p-4">
                                 <h3 className="text-lg font-semibold mb-3 text-[#006397]">
                                   Individual {getCurrentState(shipment.id) === 'pickup' ? 'Pickup' : 'Drop'} Details
@@ -834,25 +611,15 @@ export default function ShipmentVisibility() {
                                 <OrderDetailsTable 
                                   orders={getFilteredIndividualOrders(shipment, getCurrentState(shipment.id))} 
                                   type="individual" 
-                                  currentState={getCurrentState(shipment.id)}
                                 />
                               </div>
-
-                              {/* Show Drop Details Summary only for Drop state */}
-                              {getCurrentState(shipment.id) === 'drop' && shipment.orders.some(order => order.type === 'D') && (
-                                <div className="bg-white rounded-lg border border-gray-200 p-4">
-                                  <h3 className="text-lg font-semibold mb-3 text-[#006397]">Drop Details Summary</h3>
-                                  <OrderDetailsTable 
-                                    orders={getFilteredOrders(shipment, 'drop')} 
-                                    type="mixed" 
-                                    currentState={getCurrentState(shipment.id)}
-                                  />
-                                </div>
-                              )}
                             </TabsContent>
 
                             <TabsContent value="optimization">
-                              <RouteOptimization shipment={shipment} />
+                              <div className="bg-white rounded-lg border border-gray-200 p-4">
+                                <h3 className="text-lg font-semibold mb-3 text-[#006397]">Route Optimization</h3>
+                                <p className="text-gray-600">Route optimization features coming soon...</p>
+                              </div>
                             </TabsContent>
                           </Tabs>
                         </div>
@@ -917,4 +684,4 @@ export default function ShipmentVisibility() {
       )}
     </div>
   )
-}
+} 

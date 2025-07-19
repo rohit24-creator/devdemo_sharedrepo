@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { ChevronDown, ChevronUp, Truck, Ship, Search, RefreshCw, Plus, MoreVertical, CheckCircle, Clock, MapPin, Package, Calendar, User, Building, Car } from 'lucide-react'
+import { ChevronDown, ChevronUp, Truck, Ship, Search, RefreshCw, Plus, MoreVertical, CheckCircle, Clock, MapPin, Package, Calendar, User, Building, Car, Trash2, FileEdit, Leaf, FilePlus2, Link2, Copy, BookOpen, List, CarTaxiFront, LocateFixed, ReceiptText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,6 +19,12 @@ import {
   PaginationPrevious 
 } from '@/components/ui/pagination'
 import StatusHistoryModal from '@/components/ui/reusableComponent/statusHistoryModal'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
 
 // Constants for better maintainability
 const CONSTANTS = {
@@ -74,7 +80,7 @@ const useShipments = () => {
     fetchShipments()
   }, [])
 
-  return { shipments, loading }
+  return { shipments, setShipments, loading }
 }
 
 const usePagination = (filteredItems, itemsPerPage = CONSTANTS.DEFAULT_ITEMS_PER_PAGE) => {
@@ -163,6 +169,22 @@ const getStatusTextColor = (status) => {
 const getVehicleIcon = (vehicleType) => {
   const IconComponent = CONSTANTS.VEHICLE_ICONS[vehicleType?.toLowerCase()] || CONSTANTS.VEHICLE_ICONS.DEFAULT
   return <IconComponent className="w-4 h-4 text-blue-600" />
+}
+
+const getActionsForShipment = (shipment, handleDeleteShipment) => {
+  return [
+    { label: 'Edit', icon: FileEdit, onClick: () => alert('Edit ' + shipment.id) },
+    { label: 'Delete', icon: Trash2, onClick: () => handleDeleteShipment(shipment.id) },
+    { label: 'CO2 Emission', icon: Leaf, onClick: () => alert('CO2 Emission ' + shipment.id) },
+    { label: 'Generate TWB', icon: FilePlus2, onClick: () => alert('Generate TWB ' + shipment.id) },
+    { label: 'Share Secure Link', icon: Link2, onClick: () => alert('Share Secure Link ' + shipment.id) },
+    { label: 'Copy link for share', icon: Copy, onClick: () => alert('Copy link for share ' + shipment.id) },
+    { label: 'Trip Details', icon: BookOpen, onClick: () => alert('Trip Details ' + shipment.id) },
+    { label: 'Status', icon: List, onClick: () => alert('Status ' + shipment.id) },
+    { label: 'Assign Vehicle', icon: CarTaxiFront, onClick: () => alert('Assign Vehicle ' + shipment.id) },
+    { label: 'Near by Vehicles', icon: LocateFixed, onClick: () => alert('Near by Vehicles ' + shipment.id) },
+    { label: 'Billing Details', icon: ReceiptText, onClick: () => alert('Billing Details ' + shipment.id) },
+  ]
 }
 
 // Route status calculation with memoization
@@ -306,52 +328,54 @@ const useRouteStatusCalculation = () => {
 
 // Memoized components for better performance
 const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentState, calculateRouteStatus, shipments }) => {
-  // Find the shipment data
   const shipment = shipments.find(s => s.id === shipmentId)
-  
+  const needsScrollPadding = route.segments.length > 6
+
   return (
     <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-      <div className="flex items-center space-x-4 overflow-x-auto">
-        {route.segments.map((segment, index) => {
-          // Calculate dynamic status based on individual order statuses
-          const calculatedStatus = calculateRouteStatus(shipment, segment.type, segment.location, index)
-          
-          // Generate P/D label based on actual orders for this location
-          const segmentOrders = shipment.orders.filter(order => 
-            order.type === (segment.type === 'pickup' ? 'P' : 'D') && 
-            order.location === segment.location
-          )
-          const orderCount = segmentOrders.length
-          const dynamicLabel = segment.type === 'pickup' ? `P${orderCount}` : `D${orderCount}`
+      <div className={`w-full max-w-full sm:max-w-[600px] md:max-w-[900px] lg:max-w-[1200px] xl:max-w-[1550px] overflow-x-auto custom-scrollbar ${needsScrollPadding ? 'pb-4' : ''}`}>
+        <div className="flex items-center space-x-4 whitespace-nowrap">
+          {route.segments.map((segment, index) => {
+            // Calculate dynamic status based on individual order statuses
+            const calculatedStatus = calculateRouteStatus(shipment, segment.type, segment.location, index)
+            
+            // Generate P/D label based on actual orders for this location
+            const segmentOrders = shipment.orders.filter(order => 
+              order.type === (segment.type === 'pickup' ? 'P' : 'D') && 
+              order.location === segment.location
+            )
+            const orderCount = segmentOrders.length
+            const dynamicLabel = segment.type === 'pickup' ? `P${orderCount}` : `D${orderCount}`
 
-          return (
-            <div key={segment.id} className="flex items-center">
-              <div className="flex flex-col items-center">
-                <button
-                  onClick={() => onStateClick(shipmentId, segment.type)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${getStatusColor(calculatedStatus)} hover:scale-110 transition-transform cursor-pointer`}
-                  title={`Click to view ${segment.type} details`}
-                >
-                  #{segment.id}
-                </button>
-                <div className="text-xs text-gray-600 mt-1">{dynamicLabel}</div>
-                <div className="text-xs text-gray-500 mt-1">{segment.location}</div>
-                <div className="text-xs text-gray-400 mt-1">{calculatedStatus}</div>
-              </div>
-              
-              {index < route.segments.length - 1 && (
-                <div className="flex items-center mx-2">
-                  <div className="h-0.5 w-16 bg-gray-300"></div>
-                  <div className="text-xs text-gray-500 mx-2">
-                    {route.segments[index].distance}
-                    <br />
-                    {route.segments[index].duration}
-                  </div>
+            return (
+              <div key={segment.id} className="flex items-center">
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={() => onStateClick(shipmentId, segment.type)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${getStatusColor(calculatedStatus)} hover:scale-110 transition-transform cursor-pointer`}
+                    title={`Click to view ${segment.type} details`}
+                  >
+                    #{segment.id}
+                  </button>
+                  <div className="text-xs text-gray-600 mt-1">{dynamicLabel}</div>
+                  <div className="text-xs text-gray-500 mt-1">{segment.location}</div>
+                  <div className="text-xs text-gray-400 mt-1">{calculatedStatus}</div>
                 </div>
-              )}
-            </div>
-          )
-        })}
+                
+                {index < route.segments.length - 1 && (
+                  <div className="flex items-center mx-2">
+                    <div className="h-0.5 w-16 bg-gray-300"></div>
+                    <div className="text-xs text-gray-500 mx-2">
+                      {route.segments[index].distance}
+                      <br />
+                      {route.segments[index].duration}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
@@ -590,7 +614,7 @@ const RouteOptimization = React.memo(({ shipment }) => {
 })
 
 export default function ShipmentVisibility() {
-  const { shipments, loading } = useShipments()
+  const { shipments, setShipments, loading } = useShipments()
   const { searchTerm, setSearchTerm, filteredItems } = useSearch(shipments)
   const { 
     currentPage, 
@@ -704,6 +728,13 @@ export default function ShipmentVisibility() {
     return filteredOrders.filter(order => !order.orderId.includes(','))
   }, [getFilteredOrders])
 
+  // Delete handler with confirmation
+  const handleDeleteShipment = useCallback((shipmentId) => {
+    if (window.confirm('Are you sure you want to delete this shipment?')) {
+      setShipments(prev => prev.filter(s => s.id !== shipmentId))
+    }
+  }, [setShipments])
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -787,9 +818,21 @@ export default function ShipmentVisibility() {
                             <ChevronDown className="w-4 h-4" />
                           )}
                         </Button>
-                        <Button variant="ghost" size="sm">
-                          <MoreVertical className="w-4 h-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            {getActionsForShipment(shipment, handleDeleteShipment).map((action, idx) => (
+                              <DropdownMenuItem key={idx} onClick={action.onClick}>
+                                <action.icon className="w-4 h-4 mr-2" />
+                                {action.label}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </TableCell>
                     <TableCell>
