@@ -18,7 +18,7 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from '@/components/ui/pagination'
-import StatusHistoryModal, { ShareSecureLinkModal, useStatusHistoryModal, useShareSecureLinkModal } from '@/components/ui/reusableComponent/statusHistoryModal'
+import StatusHistoryModal, { ShareSecureLinkModal, useStatusHistoryModal, useShareSecureLinkModal, AssignVehicleModal, useAssignVehicleModal, NearbyVehicleModal, useNearbyVehicleModal } from '@/components/ui/reusableComponent/statusHistoryModal'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -171,7 +171,7 @@ const getVehicleIcon = (vehicleType) => {
   return <IconComponent className="w-4 h-4 text-blue-600" />
 }
 
-const getActionsForShipment = (shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink) => {
+const getActionsForShipment = (shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal) => {
   return [
     { label: 'Edit', icon: FileEdit, onClick: () => alert('Edit ' + shipment.id) },
     { label: 'Delete', icon: Trash2, onClick: () => handleDeleteShipment(shipment.id) },
@@ -185,8 +185,8 @@ const getActionsForShipment = (shipment, handleDeleteShipment, handleStatusHisto
         handleStatusHistoryClick(shipment.orders[0])
       }
     } },
-    { label: 'Assign Vehicle', icon: CarTaxiFront, onClick: () => alert('Assign Vehicle ' + shipment.id) },
-    { label: 'Near by Vehicles', icon: LocateFixed, onClick: () => alert('Near by Vehicles ' + shipment.id) },
+    { label: 'Assign Vehicle', icon: CarTaxiFront, onClick: () => assignVehicleModal.openModal() },
+    { label: 'Near by Vehicles', icon: LocateFixed, onClick: () => nearbyVehicleModal.openModal() },
     { label: 'Billing Details', icon: ReceiptText, onClick: () => alert('Billing Details ' + shipment.id) },
   ]
 }
@@ -355,7 +355,7 @@ const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentSt
               <div key={segment.id} className="flex items-center">
                 <div className="flex flex-col items-center">
                   <button
-                    onClick={() => onStateClick(shipmentId, segment.type)}
+                    onClick={() => onStateClick(shipmentId, segment.type, index)}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${getStatusColor(calculatedStatus)} hover:scale-110 transition-transform cursor-pointer`}
                     title={`Click to view ${segment.type} details`}
                   >
@@ -636,30 +636,10 @@ export default function ShipmentVisibility() {
 
   const statusHistoryModal = useStatusHistoryModal()
   const shareSecureLinkModal = useShareSecureLinkModal()
+  const assignVehicleModal = useAssignVehicleModal()
+  const nearbyVehicleModal = useNearbyVehicleModal()
 
-  // Get status history data for selected order
-  const getStatusHistoryData = useCallback((order) => {
-    if (!order) return { statusHistory: [], attachedDocuments: [], drivers: [] }
-    
-    // Find the shipment that contains this order
-    const shipment = shipments.find(s => 
-      s.orders.some(o => o.orderId === order.orderId)
-    )
-    
-    if (!shipment) return { statusHistory: [], attachedDocuments: [], drivers: [] }
-    
-    // Find the specific order
-    const targetOrder = shipment.orders.find(o => o.orderId === order.orderId)
-    
-    if (!targetOrder) return { statusHistory: [], attachedDocuments: [], drivers: [] }
-    
-    // Return the status history data from the order
-    return {
-      statusHistory: targetOrder.statusHistory || [],
-      attachedDocuments: targetOrder.attachedDocuments || [],
-      drivers: targetOrder.drivers || []
-    }
-  }, [shipments])
+
 
   // Handle status history modal
   const handleStatusHistoryClick = useCallback((order) => {
@@ -733,10 +713,7 @@ export default function ShipmentVisibility() {
     // TODO: Replace with real link logic
     shareSecureLinkModal.openModal(shipment)
   }, [shareSecureLinkModal])
-  const handleCopyLink = (link) => { navigator.clipboard.writeText(link) }
-  const handleSendSMS = (link, phone) => { alert(`Send SMS to ${phone}: ${link}`) }
-  const handleSendWhatsapp = (link, phone) => { alert(`Send WhatsApp to ${phone}: ${link}`) }
-  const handleSendEmail = (link, email) => { alert(`Send Email to ${email}: ${link}`) }
+
 
   if (loading) {
     return (
@@ -828,7 +805,7 @@ export default function ShipmentVisibility() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent side="right" align="start" className="min-w-[200px] px-4">
-                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink).map((action, idx) => (
+                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal).map((action, idx) => (
                               <DropdownMenuItem key={idx} onClick={action.onClick}>
                                 <action.icon className="w-4 h-4 mr-2" />
                                 {action.label}
@@ -864,8 +841,13 @@ export default function ShipmentVisibility() {
                           route={shipment.route} 
                           shipmentId={shipment.id}
                           currentState={getCurrentState(shipment.id)}
-                          onStateClick={(shipmentId, stateType) => {
+                          onStateClick={(shipmentId, stateType, segmentIndex) => {
                             const newState = stateType === 'pickup' ? 'pickup' : 'drop'
+                            const routeSegments = shipment.route.segments
+                            if (routeSegments.length > 2) {
+                              const routeIndex = Math.floor(segmentIndex / 2)
+                              switchRoute(shipmentId, routeIndex)
+                            }
                             switchState(shipmentId, newState)
                           }}
                           calculateRouteStatus={calculateRouteStatus}
@@ -1036,6 +1018,19 @@ export default function ShipmentVisibility() {
         onSendSMS={shareSecureLinkModal.handleSendSMS}
         onSendWhatsapp={shareSecureLinkModal.handleSendWhatsapp}
         onSendEmail={shareSecureLinkModal.handleSendEmail}
+      />
+      <AssignVehicleModal
+        open={assignVehicleModal.open}
+        onClose={assignVehicleModal.closeModal}
+        form={assignVehicleModal.form}
+        handleChange={assignVehicleModal.handleChange}
+        handleUpdate={assignVehicleModal.handleUpdate}
+      />
+      <NearbyVehicleModal
+        open={nearbyVehicleModal.open}
+        onClose={nearbyVehicleModal.closeModal}
+        radius={nearbyVehicleModal.radius}
+        setRadius={nearbyVehicleModal.setRadius}
       />
     </div>
   )

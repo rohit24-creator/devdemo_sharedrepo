@@ -66,3 +66,46 @@
 ## Traffic Code
 - /trafficCode
 - /lists/trafficCode
+
+
+
+
+## bookings
+
+## Orders
+- /orders/newOrder
+- /lists/newOrders
+- /orders/view/id
+
+## ports
+- /port/delivery
+- /ports/workOrders
+- /ports/containers
+-/lists/delivery
+-/lists/workOrders
+-/lists/containers
+
+## claims
+- /claims/claim
+- /lists/claims
+
+## document control 
+- /lists/documentcontrol
+
+## mass status
+-/lists/massStatus
+
+## xbrd borders
+- /lists/xbrdBorders
+
+
+
+
+
+
+
+## visiblity
+- /visiblity/milestone
+
+
+
