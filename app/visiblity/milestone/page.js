@@ -171,7 +171,7 @@ const getVehicleIcon = (vehicleType) => {
   return <IconComponent className="w-4 h-4 text-blue-600" />
 }
 
-const getActionsForShipment = (shipment, handleDeleteShipment) => {
+const getActionsForShipment = (shipment, handleDeleteShipment, handleStatusHistoryClick) => {
   return [
     { label: 'Edit', icon: FileEdit, onClick: () => alert('Edit ' + shipment.id) },
     { label: 'Delete', icon: Trash2, onClick: () => handleDeleteShipment(shipment.id) },
@@ -180,7 +180,11 @@ const getActionsForShipment = (shipment, handleDeleteShipment) => {
     { label: 'Share Secure Link', icon: Link2, onClick: () => alert('Share Secure Link ' + shipment.id) },
     { label: 'Copy link for share', icon: Copy, onClick: () => alert('Copy link for share ' + shipment.id) },
     { label: 'Trip Details', icon: BookOpen, onClick: () => alert('Trip Details ' + shipment.id) },
-    { label: 'Status', icon: List, onClick: () => alert('Status ' + shipment.id) },
+    { label: 'Status', icon: List, onClick: () => {
+      if (shipment.orders && shipment.orders.length > 0) {
+        handleStatusHistoryClick(shipment.orders[0])
+      }
+    } },
     { label: 'Assign Vehicle', icon: CarTaxiFront, onClick: () => alert('Assign Vehicle ' + shipment.id) },
     { label: 'Near by Vehicles', icon: LocateFixed, onClick: () => alert('Near by Vehicles ' + shipment.id) },
     { label: 'Billing Details', icon: ReceiptText, onClick: () => alert('Billing Details ' + shipment.id) },
@@ -824,8 +828,8 @@ export default function ShipmentVisibility() {
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            {getActionsForShipment(shipment, handleDeleteShipment).map((action, idx) => (
+                          <DropdownMenuContent side="right" align="start" className="min-w-[200px] px-4">
+                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick).map((action, idx) => (
                               <DropdownMenuItem key={idx} onClick={action.onClick}>
                                 <action.icon className="w-4 h-4 mr-2" />
                                 {action.label}
