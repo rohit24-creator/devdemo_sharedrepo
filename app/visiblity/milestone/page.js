@@ -18,7 +18,7 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from '@/components/ui/pagination'
-import StatusHistoryModal from '@/components/ui/reusableComponent/statusHistoryModal'
+import StatusHistoryModal, { ShareSecureLinkModal, useStatusHistoryModal, useShareSecureLinkModal } from '@/components/ui/reusableComponent/statusHistoryModal'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -171,13 +171,13 @@ const getVehicleIcon = (vehicleType) => {
   return <IconComponent className="w-4 h-4 text-blue-600" />
 }
 
-const getActionsForShipment = (shipment, handleDeleteShipment, handleStatusHistoryClick) => {
+const getActionsForShipment = (shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink) => {
   return [
     { label: 'Edit', icon: FileEdit, onClick: () => alert('Edit ' + shipment.id) },
     { label: 'Delete', icon: Trash2, onClick: () => handleDeleteShipment(shipment.id) },
     { label: 'CO2 Emission', icon: Leaf, onClick: () => alert('CO2 Emission ' + shipment.id) },
     { label: 'Generate TWB', icon: FilePlus2, onClick: () => alert('Generate TWB ' + shipment.id) },
-    { label: 'Share Secure Link', icon: Link2, onClick: () => alert('Share Secure Link ' + shipment.id) },
+    { label: 'Share Secure Link', icon: Link2, onClick: () => handleShareSecureLink(shipment) },
     { label: 'Copy link for share', icon: Copy, onClick: () => alert('Copy link for share ' + shipment.id) },
     { label: 'Trip Details', icon: BookOpen, onClick: () => alert('Trip Details ' + shipment.id) },
     { label: 'Status', icon: List, onClick: () => {
@@ -632,13 +632,10 @@ export default function ShipmentVisibility() {
   } = usePagination(filteredItems)
   const { getCurrentState, getCurrentRoute, switchState, switchRoute } = useShipmentState()
   const { calculateRouteStatus } = useRouteStatusCalculation()
-
   const [expandedRow, setExpandedRow] = useState(null)
-  const [statusHistoryModalOpen, setStatusHistoryModalOpen] = useState(false)
-  const [selectedOrderForHistory, setSelectedOrderForHistory] = useState(null)
-  const [currentStatusHistory, setCurrentStatusHistory] = useState([])
-  const [currentAttachedDocuments, setCurrentAttachedDocuments] = useState([])
-  const [currentDrivers, setCurrentDrivers] = useState([])
+
+  const statusHistoryModal = useStatusHistoryModal()
+  const shareSecureLinkModal = useShareSecureLinkModal()
 
   // Get status history data for selected order
   const getStatusHistoryData = useCallback((order) => {
@@ -666,16 +663,8 @@ export default function ShipmentVisibility() {
 
   // Handle status history modal
   const handleStatusHistoryClick = useCallback((order) => {
-    setSelectedOrderForHistory(order)
-    
-    // Get the status history data for this order
-    const { statusHistory, attachedDocuments, drivers } = getStatusHistoryData(order)
-    setCurrentStatusHistory(statusHistory)
-    setCurrentAttachedDocuments(attachedDocuments)
-    setCurrentDrivers(drivers)
-    
-    setStatusHistoryModalOpen(true)
-  }, [getStatusHistoryData])
+    statusHistoryModal.openModal(order, shipments)
+  }, [statusHistoryModal, shipments])
 
   // Reset to first page when search term changes
   useEffect(() => {
@@ -738,6 +727,16 @@ export default function ShipmentVisibility() {
       setShipments(prev => prev.filter(s => s.id !== shipmentId))
     }
   }, [setShipments])
+
+  // Share Secure Link handlers
+  const handleShareSecureLink = useCallback((shipment) => {
+    // TODO: Replace with real link logic
+    shareSecureLinkModal.openModal(shipment)
+  }, [shareSecureLinkModal])
+  const handleCopyLink = (link) => { navigator.clipboard.writeText(link) }
+  const handleSendSMS = (link, phone) => { alert(`Send SMS to ${phone}: ${link}`) }
+  const handleSendWhatsapp = (link, phone) => { alert(`Send WhatsApp to ${phone}: ${link}`) }
+  const handleSendEmail = (link, email) => { alert(`Send Email to ${email}: ${link}`) }
 
   if (loading) {
     return (
@@ -829,7 +828,7 @@ export default function ShipmentVisibility() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent side="right" align="start" className="min-w-[200px] px-4">
-                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick).map((action, idx) => (
+                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink).map((action, idx) => (
                               <DropdownMenuItem key={idx} onClick={action.onClick}>
                                 <action.icon className="w-4 h-4 mr-2" />
                                 {action.label}
@@ -919,7 +918,7 @@ export default function ShipmentVisibility() {
                                     orders={getFilteredOrders(shipment, 'pickup').filter(order => order.orderId.includes(',') || !getFilteredOrders(shipment, 'pickup').some(o => o.type === 'P' && o.orderId.includes(',')))} 
                                     type="mixed" 
                                     currentState={getCurrentState(shipment.id)}
-                                    onStatusHistoryClick={handleStatusHistoryClick}
+                                    onStatusHistoryClick={(order) => statusHistoryModal.openModal(order, shipments)}
                                   />
                                 </div>
                               )}
@@ -933,7 +932,7 @@ export default function ShipmentVisibility() {
                                   orders={getFilteredIndividualOrders(shipment, getCurrentState(shipment.id))} 
                                   type="individual" 
                                   currentState={getCurrentState(shipment.id)}
-                                  onStatusHistoryClick={handleStatusHistoryClick}
+                                  onStatusHistoryClick={(order) => statusHistoryModal.openModal(order, shipments)}
                                 />
                               </div>
 
@@ -945,7 +944,7 @@ export default function ShipmentVisibility() {
                                     orders={getFilteredOrders(shipment, 'drop')} 
                                     type="mixed" 
                                     currentState={getCurrentState(shipment.id)}
-                                    onStatusHistoryClick={handleStatusHistoryClick}
+                                    onStatusHistoryClick={(order) => statusHistoryModal.openModal(order, shipments)}
                                   />
                                 </div>
                               )}
@@ -1018,13 +1017,25 @@ export default function ShipmentVisibility() {
 
       {/* Status History Modal */}
       <StatusHistoryModal
-        open={statusHistoryModalOpen}
-        onClose={() => setStatusHistoryModalOpen(false)}
-        statusHistory={currentStatusHistory}
-        attachedDocuments={currentAttachedDocuments}
-        drivers={currentDrivers}
-        distance={selectedOrderForHistory?.distance || "0 miles"}
-        duration={selectedOrderForHistory?.duration || "0 hours"}
+        open={statusHistoryModal.open}
+        onClose={statusHistoryModal.closeModal}
+        statusHistory={statusHistoryModal.data.statusHistory}
+        attachedDocuments={statusHistoryModal.data.attachedDocuments}
+        drivers={statusHistoryModal.data.drivers}
+        distance={statusHistoryModal.order?.distance || "0 miles"}
+        duration={statusHistoryModal.order?.duration || "0 hours"}
+      />
+
+      {/* Share Secure Link Modal */}
+      <ShareSecureLinkModal
+        open={shareSecureLinkModal.open}
+        onClose={shareSecureLinkModal.closeModal}
+        driverLink={shareSecureLinkModal.driverLink}
+        carrierLink={shareSecureLinkModal.carrierLink}
+        onCopy={shareSecureLinkModal.handleCopyLink}
+        onSendSMS={shareSecureLinkModal.handleSendSMS}
+        onSendWhatsapp={shareSecureLinkModal.handleSendWhatsapp}
+        onSendEmail={shareSecureLinkModal.handleSendEmail}
       />
     </div>
   )

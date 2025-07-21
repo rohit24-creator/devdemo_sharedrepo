@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -32,8 +32,75 @@ import {
   Phone, 
   Calendar,
   Download,
-  Eye
+  Eye,
+  Copy as CopyIcon, 
+  Mail, 
+  Smartphone, 
+  MessageCircle, 
+  Link2
 } from "lucide-react";
+
+// --- Custom Hook for Status History Modal ---
+export function useStatusHistoryModal() {
+  const [open, setOpen] = useState(false);
+  const [order, setOrder] = useState(null);
+  const [data, setData] = useState({ statusHistory: [], attachedDocuments: [], drivers: [] });
+
+  const openModal = useCallback((order, shipments) => {
+    setOrder(order);
+    
+    const shipment = shipments.find(s => s.orders.some(o => o.orderId === order.orderId));
+    const targetOrder = shipment?.orders.find(o => o.orderId === order.orderId);
+    setData({
+      statusHistory: targetOrder?.statusHistory || [],
+      attachedDocuments: targetOrder?.attachedDocuments || [],
+      drivers: targetOrder?.drivers || [],
+    });
+    setOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => setOpen(false), []);
+
+  return { open, order, data, openModal, closeModal };
+}
+
+// --- Custom Hook for Share Secure Link Modal ---
+export function useShareSecureLinkModal() {
+  const [open, setOpen] = useState(false);
+  const [driverLink, setDriverLink] = useState('');
+  const [carrierLink, setCarrierLink] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+
+  const openModal = useCallback((shipment) => {
+    setDriverLink(`https://devdemov1.shipmentx.com/driverappv3/${shipment.id}`);
+    setCarrierLink(`https://devdemov1.shipmentx.com/carrierappv3/${shipment.id}`);
+    setOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => setOpen(false), []);
+
+  const handleCopyLink = (link) => { navigator.clipboard.writeText(link); };
+  const handleSendSMS = (link, phone) => { alert(`Send SMS to ${phone}: ${link}`); };
+  const handleSendWhatsapp = (link, phone) => { alert(`Send WhatsApp to ${phone}: ${link}`); };
+  const handleSendEmail = (link, email) => { alert(`Send Email to ${email}: ${link}`); };
+
+  return {
+    open,
+    driverLink,
+    carrierLink,
+    phone,
+    setPhone,
+    email,
+    setEmail,
+    openModal,
+    closeModal,
+    handleCopyLink,
+    handleSendSMS,
+    handleSendWhatsapp,
+    handleSendEmail,
+  };
+}
 
 export default function StatusHistoryModal({
   open,
@@ -70,7 +137,7 @@ export default function StatusHistoryModal({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="lg:max-w-[80rem] p-0 max-h-[90vh]">
         {/* Header */}
-        <div className="bg-blue-600 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
+        <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
           <DialogTitle className="text-lg font-semibold flex items-center gap-2">
             <Clock className="w-5 h-5" />
             Status History
@@ -272,6 +339,87 @@ export default function StatusHistoryModal({
           </div>
         </Tabs>
 
+        {/* Footer */}
+        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2 rounded-b-lg">
+          <DialogClose asChild>
+            <Button variant="outline" className="px-6 rounded-full">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+} 
+
+// --- Share Secure Link Modal ---
+export function ShareSecureLinkModal({
+  open,
+  onClose,
+  driverLink = '',
+  carrierLink = '',
+  onCopy,
+  onSendSMS,
+  onSendWhatsapp,
+  onSendEmail,
+}) {
+  const [activeTab, setActiveTab] = React.useState('driver');
+  const [phone, setPhone] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const link = activeTab === 'driver' ? driverLink : carrierLink;
+
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-lg p-0">
+        {/* Header */}
+        <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
+          <DialogTitle className="text-lg font-semibold flex items-center gap-2">
+            <Link2 className="w-5 h-5" />
+            Secure link to share
+          </DialogTitle>
+        </div>
+        {/* Tabs */}
+        <div className="px-6 pt-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-1/2 grid-cols-2 mb-2">
+              <TabsTrigger value="driver">Driver Link</TabsTrigger>
+              <TabsTrigger value="carrier">Carrier Link</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+        {/* Link Sharing */}
+        <div className="px-6 pb-2">
+          <div className="text-sm font-semibold mb-1">Link Sharing On</div>
+          <div className="flex items-center gap-2 mb-3">
+            <Input readOnly value={link} className="flex-1 text-xs" />
+            <Button onClick={() => onCopy?.(link)} variant="default" className="ml-2">
+              <CopyIcon className="w-4 h-4 mr-1" /> Copy Link
+            </Button>
+          </div>
+          <Input
+            placeholder="Enter phone numbers"
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+            className="mb-3"
+          />
+          <div className="flex gap-2 mb-3">
+            <Button onClick={() => onSendSMS?.(link, phone)} variant="default" className="flex-1">
+              <Smartphone className="w-4 h-4 mr-1" /> Via SMS
+            </Button>
+            <Button onClick={() => onSendWhatsapp?.(link, phone)} variant="default" className="flex-1">
+              <MessageCircle className="w-4 h-4 mr-1" /> Via Whatsapp
+            </Button>
+          </div>
+          <Input
+            placeholder="Enter email addresses"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className="mb-3"
+          />
+          <Button onClick={() => onSendEmail?.(link, email)} variant="default" className="w-full">
+            <Mail className="w-4 h-4 mr-1" /> Via Email
+          </Button>
+        </div>
         {/* Footer */}
         <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2 rounded-b-lg">
           <DialogClose asChild>
