@@ -552,3 +552,128 @@ export function ShareSecureLinkModal({
     </Dialog>
   );
 } 
+
+
+export function useBillingDetailsModal() {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState([]); // dummy data for now
+  const openModal = useCallback((billingData = []) => {
+    setData(billingData);
+    setOpen(true);
+  }, []);
+  const closeModal = useCallback(() => setOpen(false), []);
+  return { open, data, openModal, closeModal };
+}
+
+export function BillingDetailsModal({ open, onClose, data = [] }) {
+  // Dummy data if none provided
+  const rows = data.length ? data : [
+    {
+      partyName: "BHARAT CARRIER",
+      recipientType: "Carrier",
+      invoiceNumber: "INV-12345",
+      invoiceDate: "2024-06-01",
+      code: "BILL-001",
+      billGroup: "Group A",
+      billStatus: "Pending",
+      document: "invoice.pdf",
+    },
+  ];
+  const columns = [
+    { key: "partyName", label: "Party Name" },
+    { key: "recipientType", label: "Recipient Type" },
+    { key: "invoiceNumber", label: "Invoice Number" },
+    { key: "invoiceDate", label: "Invoice Date" },
+    { key: "code", label: "Code" },
+    { key: "billGroup", label: "Bill Group" },
+    { key: "billStatus", label: "Bill Status" },
+    { key: "document", label: "Document" },
+  ];
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="lg:max-w-[60rem] p-0 max-h-[95vh]">
+        <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
+          <DialogTitle className="text-lg font-semibold">Billing Details</DialogTitle>
+        </div>
+        <div className="p-8">
+          <div className="bg-white rounded-lg border border-gray-200 p-0 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="bg-[#02abf5] text-white hover:bg-[#02abf5]">
+                    {columns.map(col => (
+                      <th key={col.key} className="text-white font-medium p-3 whitespace-nowrap text-left">{col.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50 border-b border-gray-100">
+                      {columns.map(col => (
+                        <td key={col.key} className="p-3 whitespace-nowrap">{row[col.key]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="p-4 mt-0 pt-6 border-t border-gray-200">
+              <div className="font-semibold mb-2">Carrier uploaded files</div>
+              <div className="flex items-center gap-2 mb-2">
+                <input type="file" className="border rounded px-2 py-1 text-sm" />
+                <Button className="bg-blue-600 text-white px-4 py-1 rounded">Upload</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2 rounded-b-lg">
+          <DialogClose asChild>
+            <Button variant="outline" className="px-6 rounded-full">Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// --- CO2 Emission Modal ---
+export function useCO2EmissionModal() {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState(null); 
+  const openModal = useCallback((co2Data = null) => {
+    setData(co2Data);
+    setOpen(true);
+  }, []);
+  const closeModal = useCallback(() => setOpen(false), []);
+  return { open, data, openModal, closeModal };
+}
+
+export function CO2EmissionModal({ open, onClose, data }) {
+  // Dummy data if none provided
+  const co2 = data || {
+    weight: "1 kg",
+    distance: "539 km",
+    emission: "87210.2 g",
+  };
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-md p-0">
+        <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
+          <DialogTitle className="text-lg font-semibold">CO2 Emission</DialogTitle>
+        </div>
+        <div className="p-6">
+          <ul className="space-y-2 text-base">
+            <li><span className="font-bold">Weight:</span> {co2.weight}</li>
+            <li><span className="font-bold">Distance:</span> {co2.distance}</li>
+            <li><span className="font-bold">CO2 Emission:</span> {co2.emission}</li>
+          </ul>
+        </div>
+        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2 rounded-b-lg">
+          <DialogClose asChild>
+            <Button className="bg-blue-700 text-white px-6 rounded">Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+} 

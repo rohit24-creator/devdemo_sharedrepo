@@ -7,18 +7,17 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   Pagination, 
   PaginationContent, 
-  PaginationEllipsis, 
   PaginationItem, 
   PaginationLink, 
   PaginationNext, 
   PaginationPrevious 
 } from '@/components/ui/pagination'
-import StatusHistoryModal, { ShareSecureLinkModal, useStatusHistoryModal, useShareSecureLinkModal, AssignVehicleModal, useAssignVehicleModal, NearbyVehicleModal, useNearbyVehicleModal } from '@/components/ui/reusableComponent/statusHistoryModal'
+import StatusHistoryModal, { ShareSecureLinkModal, useStatusHistoryModal, useShareSecureLinkModal, AssignVehicleModal, useAssignVehicleModal, NearbyVehicleModal, useNearbyVehicleModal, BillingDetailsModal, useBillingDetailsModal, CO2EmissionModal, useCO2EmissionModal } from '@/components/ui/reusableComponent/statusHistoryModal'
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -27,7 +26,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import TripDetailsModal from '@/components/ui/reusableComponent/TripDetailsModal'
 
-// Constants for better maintainability
+
 const CONSTANTS = {
   DEFAULT_ITEMS_PER_PAGE: 10,
   DEFAULT_STATE: 'pickup',
@@ -180,26 +179,28 @@ const getActionsForShipment = (
   handleShareSecureLink,
   assignVehicleModal,
   nearbyVehicleModal,
-  handleTripDetails
+  handleTripDetails,
+  handleBillingDetails,
+  handleCO2Emission
 ) => [
     { label: 'Edit', icon: FileEdit, onClick: () => alert('Edit ' + shipment.id) },
     { label: 'Delete', icon: Trash2, onClick: () => handleDeleteShipment(shipment.id) },
-    { label: 'CO2 Emission', icon: Leaf, onClick: () => alert('CO2 Emission ' + shipment.id) },
+    { label: 'CO2 Emission', icon: Leaf, onClick: handleCO2Emission },
     { label: 'Generate TWB', icon: FilePlus2, onClick: () => alert('Generate TWB ' + shipment.id) },
     { label: 'Share Secure Link', icon: Link2, onClick: () => handleShareSecureLink(shipment) },
     { label: 'Copy link for share', icon: Copy, onClick: () => alert('Copy link for share ' + shipment.id) },
-  { label: 'Trip Details', icon: BookOpen, onClick: () => handleTripDetails(shipment) },
+    { label: 'Trip Details', icon: BookOpen, onClick: () => handleTripDetails(shipment) },
     { label: 'Status', icon: List, onClick: () => {
       if (shipment.orders && shipment.orders.length > 0) {
-      handleStatusHistoryClick(shipment.orders[0]);
+        handleStatusHistoryClick(shipment.orders[0]);
       }
     } },
     { label: 'Assign Vehicle', icon: CarTaxiFront, onClick: () => assignVehicleModal.openModal() },
     { label: 'Near by Vehicles', icon: LocateFixed, onClick: () => nearbyVehicleModal.openModal() },
-    { label: 'Billing Details', icon: ReceiptText, onClick: () => alert('Billing Details ' + shipment.id) },
+    { label: 'Billing Details', icon: ReceiptText, onClick: handleBillingDetails },
 ];
 
-// Route status calculation with memoization
+// Route status calculation
 const useRouteStatusCalculation = () => {
   const calculateRouteStatus = useCallback((shipment, segmentType, segmentLocation = null, segmentIndex = null) => {
     // Get orders for this segment type (pickup or drop)
@@ -225,7 +226,7 @@ const useRouteStatusCalculation = () => {
     if (segmentType === 'drop') {
       const pickupCompleted = checkPickupCompletion(shipment, segmentLocation)
       if (!pickupCompleted) {
-        return 'NOT STARTED' // Block drop until pickup is completed
+        return 'NOT STARTED' 
       }
     }
 
@@ -233,7 +234,7 @@ const useRouteStatusCalculation = () => {
     if (segmentIndex !== null && segmentIndex > 0) {
       const previousRouteCompleted = checkPreviousRouteCompletion(shipment, segmentIndex)
       if (!previousRouteCompleted) {
-        return 'NOT STARTED' // Block this route until previous route is completed
+        return 'NOT STARTED' 
       }
     }
 
@@ -270,7 +271,7 @@ const useRouteStatusCalculation = () => {
     } else if (hasNotStarted) {
       return 'NOT STARTED'
     } else {
-      return 'In-Progress' // Default fallback
+      return 'In-Progress'
     }
   }, [])
 
@@ -332,13 +333,13 @@ const useRouteStatusCalculation = () => {
       }
     }
     
-    return true // All previous routes are completed
+    return true 
   }, [calculateRouteStatus])
 
   return { calculateRouteStatus, checkPickupCompletion, checkPreviousRouteCompletion }
 }
 
-// Memoized components for better performance
+// route visualizer
 const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentState, calculateRouteStatus, shipments }) => {
   const shipment = shipments.find(s => s.id === shipmentId)
   const needsScrollPadding = route.segments.length > 6
@@ -484,7 +485,7 @@ const RouteSwitcher = React.memo(({ shipment, getCurrentRoute, switchRoute }) =>
   const hasMultipleRoutes = routeSegments.length > 2
 
   if (!hasMultipleRoutes) {
-    return null // Don't show route switcher for single route shipments
+    return null
   }
 
   const routeCount = Math.floor(routeSegments.length / 2)
@@ -643,15 +644,24 @@ export default function ShipmentVisibility() {
   const [expandedRow, setExpandedRow] = useState(null)
   const [tripDetailsModalOpen, setTripDetailsModalOpen] = useState(false);
   const [selectedTripShipment, setSelectedTripShipment] = useState(null);
+  const billingDetailsModal = useBillingDetailsModal();
+  const co2EmissionModal = useCO2EmissionModal();
 
   const statusHistoryModal = useStatusHistoryModal()
   const shareSecureLinkModal = useShareSecureLinkModal()
   const assignVehicleModal = useAssignVehicleModal()
   const nearbyVehicleModal = useNearbyVehicleModal()
 
+  // Handler functions for new modals
+  const handleBillingDetails = useCallback(() => {
+    billingDetailsModal.openModal();
+  }, [billingDetailsModal]);
+
+  const handleCO2Emission = useCallback(() => {
+    co2EmissionModal.openModal();
+  }, [co2EmissionModal]);
 
 
-  // Handle status history modal
   const handleStatusHistoryClick = useCallback((order) => {
     statusHistoryModal.openModal(order, shipments)
   }, [statusHistoryModal, shipments])
@@ -667,13 +677,11 @@ export default function ShipmentVisibility() {
     resetToFirstPage()
   }, [searchTerm, resetToFirstPage])
 
-  // Toggle row expansion - only one row can be expanded at a time
+  // Toggle row expansion 
   const toggleRow = useCallback((shipmentId) => {
     if (expandedRow === shipmentId) {
-      // If clicking the same row, close it
       setExpandedRow(null)
     } else {
-      // If clicking a different row, close the current one and open the new one
       setExpandedRow(shipmentId)
     }
   }, [expandedRow])
@@ -821,7 +829,7 @@ export default function ShipmentVisibility() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent side="right" align="start" className="min-w-[200px] px-4">
-                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal, handleTripDetails).map((action, idx) => (
+                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal, handleTripDetails, handleBillingDetails, handleCO2Emission).map((action, idx) => (
                               <DropdownMenuItem key={idx} onClick={action.onClick}>
                                 <action.icon className="w-4 h-4 mr-2" />
                                 {action.label}
@@ -1013,7 +1021,7 @@ export default function ShipmentVisibility() {
         </div>
       )}
 
-      {/* Status History Modal */}
+      {/* Modals */}
       <StatusHistoryModal
         open={statusHistoryModal.open}
         onClose={statusHistoryModal.closeModal}
@@ -1024,7 +1032,6 @@ export default function ShipmentVisibility() {
         duration={statusHistoryModal.order?.duration || "0 hours"}
       />
 
-      {/* Share Secure Link Modal */}
       <ShareSecureLinkModal
         open={shareSecureLinkModal.open}
         onClose={shareSecureLinkModal.closeModal}
@@ -1048,11 +1055,23 @@ export default function ShipmentVisibility() {
         radius={nearbyVehicleModal.radius}
         setRadius={nearbyVehicleModal.setRadius}
       />
-      {/* Trip Details Modal */}
+
       <TripDetailsModal
         open={tripDetailsModalOpen}
         onClose={() => setTripDetailsModalOpen(false)}
         shipment={selectedTripShipment}
+      />
+
+      <BillingDetailsModal
+        open={billingDetailsModal.open}
+        onClose={billingDetailsModal.closeModal}
+        data={billingDetailsModal.data}
+      />
+
+      <CO2EmissionModal
+        open={co2EmissionModal.open}
+        onClose={co2EmissionModal.closeModal}
+        data={co2EmissionModal.data}
       />
     </div>
   )
