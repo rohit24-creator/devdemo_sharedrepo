@@ -25,6 +25,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
+import TripDetailsModal from '@/components/ui/reusableComponent/TripDetailsModal'
 
 // Constants for better maintainability
 const CONSTANTS = {
@@ -171,25 +172,32 @@ const getVehicleIcon = (vehicleType) => {
   return <IconComponent className="w-4 h-4 text-blue-600" />
 }
 
-const getActionsForShipment = (shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal) => {
-  return [
+// Define getActionsForShipment as a regular function (not useCallback, no dependency array)
+const getActionsForShipment = (
+  shipment,
+  handleDeleteShipment,
+  handleStatusHistoryClick,
+  handleShareSecureLink,
+  assignVehicleModal,
+  nearbyVehicleModal,
+  handleTripDetails
+) => [
     { label: 'Edit', icon: FileEdit, onClick: () => alert('Edit ' + shipment.id) },
     { label: 'Delete', icon: Trash2, onClick: () => handleDeleteShipment(shipment.id) },
     { label: 'CO2 Emission', icon: Leaf, onClick: () => alert('CO2 Emission ' + shipment.id) },
     { label: 'Generate TWB', icon: FilePlus2, onClick: () => alert('Generate TWB ' + shipment.id) },
     { label: 'Share Secure Link', icon: Link2, onClick: () => handleShareSecureLink(shipment) },
     { label: 'Copy link for share', icon: Copy, onClick: () => alert('Copy link for share ' + shipment.id) },
-    { label: 'Trip Details', icon: BookOpen, onClick: () => alert('Trip Details ' + shipment.id) },
+  { label: 'Trip Details', icon: BookOpen, onClick: () => handleTripDetails(shipment) },
     { label: 'Status', icon: List, onClick: () => {
       if (shipment.orders && shipment.orders.length > 0) {
-        handleStatusHistoryClick(shipment.orders[0])
+      handleStatusHistoryClick(shipment.orders[0]);
       }
     } },
     { label: 'Assign Vehicle', icon: CarTaxiFront, onClick: () => assignVehicleModal.openModal() },
     { label: 'Near by Vehicles', icon: LocateFixed, onClick: () => nearbyVehicleModal.openModal() },
     { label: 'Billing Details', icon: ReceiptText, onClick: () => alert('Billing Details ' + shipment.id) },
-  ]
-}
+];
 
 // Route status calculation with memoization
 const useRouteStatusCalculation = () => {
@@ -633,6 +641,8 @@ export default function ShipmentVisibility() {
   const { getCurrentState, getCurrentRoute, switchState, switchRoute } = useShipmentState()
   const { calculateRouteStatus } = useRouteStatusCalculation()
   const [expandedRow, setExpandedRow] = useState(null)
+  const [tripDetailsModalOpen, setTripDetailsModalOpen] = useState(false);
+  const [selectedTripShipment, setSelectedTripShipment] = useState(null);
 
   const statusHistoryModal = useStatusHistoryModal()
   const shareSecureLinkModal = useShareSecureLinkModal()
@@ -645,6 +655,12 @@ export default function ShipmentVisibility() {
   const handleStatusHistoryClick = useCallback((order) => {
     statusHistoryModal.openModal(order, shipments)
   }, [statusHistoryModal, shipments])
+
+
+  const handleTripDetails = (shipment) => {
+    setSelectedTripShipment(shipment);
+    setTripDetailsModalOpen(true);
+  };
 
   // Reset to first page when search term changes
   useEffect(() => {
@@ -710,9 +726,9 @@ export default function ShipmentVisibility() {
 
   // Share Secure Link handlers
   const handleShareSecureLink = useCallback((shipment) => {
-    // TODO: Replace with real link logic
     shareSecureLinkModal.openModal(shipment)
   }, [shareSecureLinkModal])
+
 
 
   if (loading) {
@@ -805,7 +821,7 @@ export default function ShipmentVisibility() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent side="right" align="start" className="min-w-[200px] px-4">
-                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal).map((action, idx) => (
+                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal, handleTripDetails).map((action, idx) => (
                               <DropdownMenuItem key={idx} onClick={action.onClick}>
                                 <action.icon className="w-4 h-4 mr-2" />
                                 {action.label}
@@ -1031,6 +1047,12 @@ export default function ShipmentVisibility() {
         onClose={nearbyVehicleModal.closeModal}
         radius={nearbyVehicleModal.radius}
         setRadius={nearbyVehicleModal.setRadius}
+      />
+      {/* Trip Details Modal */}
+      <TripDetailsModal
+        open={tripDetailsModalOpen}
+        onClose={() => setTripDetailsModalOpen(false)}
+        shipment={selectedTripShipment}
       />
     </div>
   )
