@@ -1,0 +1,292 @@
+{
+  "orders": [
+    {
+      "id": "125290009",
+      "source": "Cranford",
+      "destination": "Cincinnati",
+      "pickup": "2025-07-17 13:00:02",
+      "weight": "8.00KGS",
+      "volume": "8.00CUFT",
+      "quantity": "1.00",
+      "mode": "FTL",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-290009-A",
+          "type": "Box",
+          "quantity": 1,
+          "width": 0.8,
+          "height": 0.6,
+          "length": 1.2,
+          "weight": 8.0
+        }
+      ]
+    },
+    {
+      "id": "125060005",
+      "source": "Los Angeles",
+      "destination": "New York",
+      "pickup": "2025-01-17 22:00:00",
+      "weight": "25.00KGS",
+      "volume": "15.00CUFT",
+      "quantity": "2.00",
+      "mode": "FTL",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-060005-A",
+          "type": "Pallet",
+          "quantity": 1,
+          "width": 1.2,
+          "height": 1.5,
+          "length": 1.0,
+          "weight": 15.0
+        },
+        {
+          "id": "SU-060005-B",
+          "type": "Box",
+          "quantity": 1,
+          "width": 0.8,
+          "height": 0.6,
+          "length": 1.2,
+          "weight": 10.0
+        }
+      ]
+    },
+    {
+      "id": "125290005",
+      "source": "Walldorf",
+      "destination": "Cincinnati",
+      "pickup": "2025-07-15 16:34:10",
+      "weight": "11.00KGS",
+      "volume": "11.00CUFT",
+      "quantity": "1.00",
+      "mode": "Test Transport Mode",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-290005-A",
+          "type": "Crate",
+          "quantity": 1,
+          "width": 1.0,
+          "height": 1.0,
+          "length": 1.0,
+          "weight": 11.0
+        }
+      ]
+    },
+    {
+      "id": "125040001",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickup": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-040001-A",
+          "type": "Box",
+          "quantity": 5,
+          "width": 0.5,
+          "height": 0.5,
+          "length": 0.5,
+          "weight": 20.0
+        },
+        {
+          "id": "SU-040001-B",
+          "type": "Pallet",
+          "quantity": 5,
+          "width": 1.2,
+          "height": 1.5,
+          "length": 1.0,
+          "weight": 30.0
+        }
+      ]
+    },
+    {
+      "id": "125040002",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickup": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-040002-A",
+          "type": "Crate",
+          "quantity": 10,
+          "width": 1.0,
+          "height": 1.0,
+          "length": 1.0,
+          "weight": 28.4
+        }
+      ]
+    },
+    {
+      "id": "125040003",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickup": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-040003-A",
+          "type": "Box",
+          "quantity": 10,
+          "width": 0.5,
+          "height": 0.5,
+          "length": 0.5,
+          "weight": 28.4
+        }
+      ]
+    },
+    {
+      "id": "125040004",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickup": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-040004-A",
+          "type": "Box",
+          "quantity": 10,
+          "width": 0.5,
+          "height": 0.5,
+          "length": 0.5,
+          "weight": 28.4
+        }
+      ]
+    },
+    {
+      "id": "125040005",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickup": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": "Pending",
+      "shipmentUnits": [
+        {
+          "id": "SU-040005-A",
+          "type": "Box",
+          "quantity": 10,
+          "width": 0.5,
+          "height": 0.5,
+          "length": 0.5,
+          "weight": 28.4
+        }
+      ]
+    }
+  ],
+  "trips": [
+    {
+      "id": "TUSA2925290010",
+      "startDate": "2025-07-17",
+      "endDate": "2025-07-20",
+      "source": "Walldorf",
+      "destination": "Boise",
+      "vehicle": "20FT Container",
+      "driver": "Nick",
+      "vehicleType": "Container",
+      "mode": "Test Transport Mode",
+      "weight": "46.00KGS",
+      "volume": "544.00CUFT",
+      "unit": "2.00",
+      "customer": "customer1",
+      "carrier": "carrier1",
+      "status": "active"
+    },
+    {
+      "id": "TUSA1325060005",
+      "startDate": "2025-01-17",
+      "endDate": "2025-01-20",
+      "source": "Los Angeles",
+      "destination": "New York",
+      "vehicle": "20FT Container (Flat track)",
+      "driver": "Alberto",
+      "vehicleType": "Container",
+      "mode": "FTL",
+      "weight": "270.00KGS",
+      "volume": "13.50CUFT",
+      "unit": "11.00",
+      "customer": "customer2",
+      "carrier": "carrier2",
+      "status": "in-transit"
+    },
+    {
+      "id": "TUSA1325060006",
+      "startDate": "2025-01-18",
+      "endDate": "2025-01-22",
+      "source": "Chicago",
+      "destination": "Miami",
+      "vehicle": "40FT Container",
+      "driver": "Sarah",
+      "vehicleType": "Container",
+      "mode": "FTL",
+      "weight": "150.00KGS",
+      "volume": "25.00CUFT",
+      "unit": "5.00",
+      "customer": "customer3",
+      "carrier": "carrier3",
+      "status": "active"
+    }
+  ],
+  "customerData": {
+    "customer1": [
+      {
+        "id": "125290009",
+        "source": "Cranford",
+        "destination": "Cincinnati",
+        "pickup": "2025-07-17 13:00:02",
+        "weight": "8.00KGS",
+        "volume": "8.00CUFT",
+        "quantity": "1.00",
+        "mode": "FTL",
+        "status": "Pending"
+      }
+    ],
+    "customer2": [
+      {
+        "id": "125060005",
+        "source": "Los Angeles",
+        "destination": "New York",
+        "pickup": "2025-01-17 22:00:00",
+        "weight": "25.00KGS",
+        "volume": "15.00CUFT",
+        "quantity": "2.00",
+        "mode": "FTL",
+        "status": "Pending"
+      }
+    ],
+    "customer3": [
+      {
+        "id": "125290005",
+        "source": "Walldorf",
+        "destination": "Cincinnati",
+        "pickup": "2025-07-15 16:34:10",
+        "weight": "11.00KGS",
+        "volume": "11.00CUFT",
+        "quantity": "1.00",
+        "mode": "Test Transport Mode",
+        "status": "Pending"
+      }
+    ]
+  }
+}
