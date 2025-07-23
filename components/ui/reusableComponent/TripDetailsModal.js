@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import {
   Dialog,
   DialogContent,
@@ -29,11 +29,14 @@ function SummaryCard({ title, children }) {
 
 // Status timeline for Status View tab
 function StatusTimeline({ orders }) {
-  // Find all status events from all orders, flatten and sort by time
-  const allEvents = (orders || [])
-    .flatMap(order => (order.statusHistory || []).map(e => ({ ...e, orderId: order.orderId })))
-    .sort((a, b) => new Date(a.time) - new Date(b.time));
+  const allEvents = useMemo(() => {
+    return (orders || [])
+      .flatMap(order => (order.statusHistory || []).map(e => ({ ...e, orderId: order.orderId })))
+      .sort((a, b) => new Date(a.time) - new Date(b.time));
+  }, [orders]);
+
   if (!allEvents.length) return <div className="text-gray-400">No status history available.</div>;
+  
   return (
     <ol className="relative border-l border-blue-200 ml-2">
       {allEvents.map((event, idx) => (
@@ -153,8 +156,8 @@ function DynamicAccordionSection({ type, label, data, fields, columns, pickupDat
 }
 
 function DetailsTab({ shipment }) {
-  // Mock data for demonstration (replace with API data later)
-  const data = {
+
+  const data = useMemo(() => ({
     booking: [
       { label: "Company", value: "SXIN" },
       { label: "Branch", value: "SXINHYD" },
@@ -201,10 +204,10 @@ function DetailsTab({ shipment }) {
     cargoDetails: [
       { number: "code item", type: "METALS", description: "code item", weight: "200.000", volume: "250.000" },
     ],
-  };
+  }), []);
 
-  // Config for dynamic rendering (no design classes)
-  const sections = [
+  // Memoize sections config to prevent recreation
+  const sections = useMemo(() => [
     {
       key: 'booking',
       label: 'Booking',
@@ -280,7 +283,7 @@ function DetailsTab({ shipment }) {
         { key: 'volume', label: 'Volume' },
       ],
     },
-  ];
+  ], []);
 
   return (
     <Accordion type="multiple" defaultValue={sections.map(s => s.label)} className="space-y-2">
@@ -303,8 +306,12 @@ function DetailsTab({ shipment }) {
 
 // Documents tab: List attached documents from all orders
 function DocumentsTab({ orders }) {
-  const allDocs = (orders || []).flatMap(order => order.attachedDocuments || []);
+  const allDocs = useMemo(() => {
+    return (orders || []).flatMap(order => order.attachedDocuments || []);
+  }, [orders]);
+
   if (!allDocs.length) return <div className="text-gray-400">No documents available.</div>;
+  
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm border">
@@ -341,6 +348,7 @@ function DocumentsTab({ orders }) {
 // Timeline View: Show all order status events in a timeline (grouped by order)
 function TimelineTab({ orders }) {
   if (!orders?.length) return <div className="text-gray-400">No timeline data.</div>;
+  
   return (
     <div className="space-y-6">
       {orders.map((order, idx) => (
@@ -356,8 +364,8 @@ function TimelineTab({ orders }) {
 
 
 function ContainerInfoTab({ shipment }) {
-  // Mock data for demonstration (replace with API data later)
-  const containerDetails = {
+
+  const containerDetails = useMemo(() => ({
     containerNumber: "MSCU3408414",
     containerType: "20' DRY VAN",
     billOfLading: "MEDUVY292238",
@@ -368,8 +376,9 @@ function ContainerInfoTab({ shipment }) {
     portOfLoad: "YANTIAN, CN",
     portOfDischarge: "MANZANILLO, MX",
     deliveredStatus: "No",
-  };
-  const containerEvents = [
+  }), []);
+
+  const containerEvents = useMemo(() => [
     {
       order: 3,
       date: "07/05/2025",
@@ -394,9 +403,9 @@ function ContainerInfoTab({ shipment }) {
       vesselIMO: "9520039",
       vesselFlag: "MH",
     },
-  ];
+  ], []);
 
-  const containerDetailsFields = [
+  const containerDetailsFields = useMemo(() => [
     { key: "containerNumber", label: "Container Number" },
     { key: "containerType", label: "Container Type" },
     { key: "billOfLading", label: "Bill Of Lading Number" },
@@ -407,9 +416,9 @@ function ContainerInfoTab({ shipment }) {
     { key: "portOfLoad", label: "Port Of Load" },
     { key: "portOfDischarge", label: "Port Of Discharge" },
     { key: "deliveredStatus", label: "Delivered Status" },
-  ];
+  ], []);
 
-  const containerEventFields = [
+  const containerEventFields = useMemo(() => [
     { key: "order", label: "Order" },
     { key: "date", label: "Date" },
     { key: "location", label: "Location" },
@@ -420,7 +429,7 @@ function ContainerInfoTab({ shipment }) {
     { key: "smdgCode", label: "SMDG Code" },
     { key: "vesselIMO", label: "Vessel IMO" },
     { key: "vesselFlag", label: "Vessel Flag" },
-  ];
+  ], []);
 
   return (
     <Accordion type="multiple" defaultValue={["Container Tracking Details", "Container Events"]} className="space-y-2">
@@ -442,7 +451,7 @@ function ContainerInfoTab({ shipment }) {
           </div>
         </AccordionContent>
       </AccordionItem>
-      {/* Container Events Accordion (all events in one accordion) */}
+      {/* Container Events Accordion*/}
       <AccordionItem value="Container Events">
         <AccordionTrigger className="bg-[#006397] text-white px-4 py-2">Container Events</AccordionTrigger>
         <AccordionContent className="bg-white p-0 rounded-b-lg">
@@ -479,24 +488,82 @@ function SummaryTile({ icon: Icon, label, value }) {
 
 export default function TripDetailsModal({ open, onClose, shipment }) {
   if (!shipment) return null;
-  // Example calculations for summary tiles (replace with real logic as needed)
-  const eta = "0:0:0";
-  const mi = shipment.route?.segments?.reduce((sum, seg) => sum + (parseFloat(seg.distance) || 0), 0) + " mi";
-  const speed = "0 MPH";
-  const hos = "383 Hr";
-  const fence = "OUT";
-  const alarm = "0";
-  const routeLabel = shipment.route?.segments?.map(seg => seg.location).join(" → ") || "-";
 
-  // Last location logic
-  const lastOrder = shipment.orders?.[shipment.orders.length - 1] || {};
-  const lastLocation = lastOrder.location || shipment.destination;
-  const lastStatus = lastOrder.status || shipment.status;
-  const lastTime = lastOrder.endDT || shipment.endDT;
+  // Memoize calculations to prevent recalculation on every render
+  const eta = useMemo(() => "0:0:0", []);
+  
+  const mi = useMemo(() => {
+    return shipment.route?.segments?.reduce((sum, seg) => sum + (parseFloat(seg.distance) || 0), 0) + " mi";
+  }, [shipment.route?.segments]);
+  
+  const speed = useMemo(() => "0 MPH", []);
+  const hos = useMemo(() => "383 Hr", []);
+  const fence = useMemo(() => "OUT", []);
+  const alarm = useMemo(() => "0", []);
+  
+  const routeLabel = useMemo(() => {
+    return shipment.route?.segments?.map(seg => seg.location).join(" → ") || "-";
+  }, [shipment.route?.segments]);
 
-  // Driver details
-  const driver = shipment.driver || "N/A";
-  const vehicle = shipment.vehicle || "N/A";
+  // Memoize last location logic
+  const lastOrder = useMemo(() => {
+    return shipment.orders?.[shipment.orders.length - 1] || {};
+  }, [shipment.orders]);
+  
+  const lastLocation = useMemo(() => {
+    return lastOrder.location || shipment.destination;
+  }, [lastOrder.location, shipment.destination]);
+  
+  const lastStatus = useMemo(() => {
+    return lastOrder.status || shipment.status;
+  }, [lastOrder.status, shipment.status]);
+  
+  const lastTime = useMemo(() => {
+    return lastOrder.endDT || shipment.endDT;
+  }, [lastOrder.endDT, shipment.endDT]);
+
+  const driver = useMemo(() => shipment.driver || "N/A", [shipment.driver]);
+  const vehicle = useMemo(() => shipment.vehicle || "N/A", [shipment.vehicle]);
+
+  // Memoize tab content to prevent unnecessary re-renders
+  const statusTabContent = useMemo(() => (
+    <div className="p-4 bg-white rounded shadow flex flex-col md:flex-row gap-8">
+      {/* Left: Status Timeline */}
+      <div className="flex-1 min-w-0">
+        <StatusTimeline orders={shipment.orders} />
+      </div>
+      {/* Right: Larger Sticky Map */}
+      <div className="w-full md:w-[650px] lg:w-[800px] max-w-[1000px] min-h-[340px] h-[400px] flex items-center justify-center ml-0 md:ml-8 sticky top-8 self-start">
+        <div className="w-full h-full bg-gray-200 rounded-xl flex items-center justify-center shadow-inner">
+          <span className="text-gray-500">[Map will be shown here]</span>
+        </div>
+      </div>
+    </div>
+  ), [shipment.orders]);
+
+  const detailsTabContent = useMemo(() => (
+    <div className="p-4 bg-white rounded shadow">
+      <DetailsTab shipment={shipment} />
+    </div>
+  ), [shipment]);
+
+  const documentsTabContent = useMemo(() => (
+    <div className="p-4 bg-white rounded shadow">
+      <DocumentsTab orders={shipment.orders} />
+    </div>
+  ), [shipment.orders]);
+
+  const timelineTabContent = useMemo(() => (
+    <div className="p-4 bg-white rounded shadow">
+      <TimelineTab orders={shipment.orders} />
+    </div>
+  ), [shipment.orders]);
+
+  const containerTabContent = useMemo(() => (
+    <div className="p-4 bg-white rounded shadow">
+      <ContainerInfoTab shipment={shipment} />
+    </div>
+  ), [shipment]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -550,38 +617,19 @@ export default function TripDetailsModal({ open, onClose, shipment }) {
                 <TabsTrigger value="container">Container Info</TabsTrigger>
               </TabsList>
               <TabsContent value="status">
-                <div className="p-4 bg-white rounded shadow flex flex-col md:flex-row gap-8">
-                  {/* Left: Status Timeline */}
-                  <div className="flex-1 min-w-0">
-                    <StatusTimeline orders={shipment.orders} />
-                  </div>
-                  {/* Right: Larger Sticky Map */}
-                  <div className="w-full md:w-[650px] lg:w-[800px] max-w-[1000px] min-h-[340px] h-[400px] flex items-center justify-center ml-0 md:ml-8 sticky top-8 self-start">
-                    <div className="w-full h-full bg-gray-200 rounded-xl flex items-center justify-center shadow-inner">
-                      <span className="text-gray-500">[Map will be shown here]</span>
-                    </div>
-                  </div>
-                </div>
+                {statusTabContent}
               </TabsContent>
               <TabsContent value="details">
-                <div className="p-4 bg-white rounded shadow">
-                  <DetailsTab shipment={shipment} />
-                </div>
+                {detailsTabContent}
               </TabsContent>
               <TabsContent value="documents">
-                <div className="p-4 bg-white rounded shadow">
-                  <DocumentsTab orders={shipment.orders} />
-                </div>
+                {documentsTabContent}
               </TabsContent>
               <TabsContent value="timeline">
-                <div className="p-4 bg-white rounded shadow">
-                  <TimelineTab orders={shipment.orders} />
-                </div>
+                {timelineTabContent}
               </TabsContent>
               <TabsContent value="container">
-                <div className="p-4 bg-white rounded shadow">
-                  <ContainerInfoTab shipment={shipment} />
-                </div>
+                {containerTabContent}
               </TabsContent>
             </Tabs>
           </div>

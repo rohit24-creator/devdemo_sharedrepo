@@ -59,7 +59,7 @@ const CONSTANTS = {
   SEARCH_FIELDS: ['id', 'source', 'destination', 'customer', 'driver']
 }
 
-// Custom hooks for better separation of concerns
+// Custom hooks 
 const useShipments = () => {
   const [shipments, setShipments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -171,7 +171,7 @@ const getVehicleIcon = (vehicleType) => {
   return <IconComponent className="w-4 h-4 text-blue-600" />
 }
 
-// Define getActionsForShipment as a regular function (not useCallback, no dependency array)
+
 const getActionsForShipment = (
   shipment,
   handleDeleteShipment,
@@ -785,11 +785,11 @@ export default function ShipmentVisibility() {
         </div>
       </div>
 
-      {/* Main Table */}
+            {/* Main Table */}
       <Card className="border-0 shadow-sm">
         <CardContent className="p-0">
           <Table>
-            <TableHeader>
+            <TableHeader className="sticky top-0 z-50">
               <TableRow className="bg-[#006397] text-white hover:bg-[#006397]">
                 <TableHead className="text-white">Actions</TableHead>
                 <TableHead className="text-white">Id</TableHead>

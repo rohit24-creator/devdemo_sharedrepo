@@ -40,6 +40,7 @@ import {
   MessageCircle, 
   Link2
 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // --- Custom Hook for Status History Modal ---
 export function useStatusHistoryModal() {
@@ -184,31 +185,31 @@ export function AssignVehicleModal({ open, onClose, form, handleChange, handleUp
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="lg:max-w-[60rem] max-h-[80vh] p-0 overflow-y-auto">
+      <DialogContent className="lg:max-w-[60rem] max-h-[90vh] p-0 flex flex-col">
         <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
           <DialogTitle className="text-lg font-semibold flex items-center gap-2">
             Assign Vehicle
           </DialogTitle>
         </div>
-        <form className="px-8 py-4 bg-white">
+        <form className="flex-1 overflow-y-auto px-8 py-4 bg-white">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             {fields.map((field, idx) => (
               <div key={field.name}>
                 <label className="block font-medium mb-1 text-gray-700" htmlFor={field.name}>{field.label}</label>
                 {field.type === 'select' ? (
-                  <select
-                    aria-label={field.label}
-                    id={field.name}
-                    name={field.name}
+                  <Select
                     value={form[field.name]}
-                    onChange={handleChange}
-                    className="w-full border rounded-md h-9 px-3 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none transition"
-                    disabled={field.readOnly}
+                    onValueChange={value => handleChange({ target: { name: field.name, value, type: 'select-one' } })}
                   >
-                    {field.options.map(opt => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
+                    <SelectTrigger id={field.name} className="w-full border rounded-md h-9 px-3 text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none transition">
+                      <SelectValue placeholder={`Select ${field.label}`} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {field.options.map(opt => (
+                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 ) : (
                   <Input
                     aria-label={field.label}
@@ -237,7 +238,7 @@ export function AssignVehicleModal({ open, onClose, form, handleChange, handleUp
               <label htmlFor={checkboxField.name} className="text-gray-700">{checkboxField.label}</label>
             </div>
           </div>
-          <div className="flex justify-end gap-4 col-span-2 mt-10">
+          <div className="flex justify-end gap-4 col-span-2 mt-10 pb-4">
             <Button type="button" variant="outline" onClick={onClose} className="px-8 py-2 rounded border border-gray-300 text-gray-700 bg-white hover:bg-gray-100">Cancel</Button>
             <Button type="button" onClick={handleUpdate} className="bg-[#0082c9] text-white px-8 py-2 rounded hover:bg-[#006fa1]">Update</Button>
           </div>
