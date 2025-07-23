@@ -10,7 +10,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Eye, List, MapPin, FileText, Download, CheckCircle, /*Truck,*/ Clock, File, FileCheck2, FileDown, FileBarChart2, FileCheck, FileText as FileTextIcon, FileDown as FileDownIcon, FileCheck as FileCheckIcon, FileBarChart2 as FileBarChart2Icon, FolderOpen, Search, LayoutGrid, ArrowRight } from "lucide-react";
-import StatusHistoryModal from "./statusHistoryModal";
 import TripDetailsModal from "./TripDetailsModal";
 import {
   Dialog,
@@ -20,6 +19,8 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 // --- Filter Tab (copied/adapted from viewtable.js) ---
 function FilterTab({ filterFields, formValues, setFormValues, onSearch }) {
@@ -215,111 +216,31 @@ export default function OrderListWithActions({
     </Card>
   );
 
-  // --- Modal Content Renderers ---
   const renderModalContent = () => {
     if (!selectedOrder) return null;
     if (modalType === 'view') {
-      // Use the accordion-style details from /orders/view/[id] (copy structure, but use selectedOrder data)
-      // For brevity, just show a placeholder here; you can expand as needed
       return (
-        <div className="p-4">
-          <div className="font-bold text-lg mb-2">Order Details</div>
-          {/* TODO: Render accordions for booking data, reference details, routing details, cargo details, involved parties, etc. */}
-          <pre className="bg-gray-100 p-2 rounded text-xs">{JSON.stringify(selectedOrder, null, 2)}</pre>
-        </div>
+        <OrderViewModal open={true} onClose={closeModal} order={selectedOrder} />
       );
     }
     if (modalType === 'status') {
-      // Use StatusHistoryModal (pass dummy/selectedOrder data as needed)
       return (
-        <StatusHistoryModal
-          open={true}
-          onClose={closeModal}
-          statusHistory={selectedOrder.statusHistory || []}
-          attachedDocuments={selectedOrder.attachedDocuments || []}
-          drivers={selectedOrder.drivers || []}
-          distance={selectedOrder.distance || "-"}
-          duration={selectedOrder.duration || "-"}
-        />
-      );
-    }
-    if (modalType === 'liveTrack') {
-      // Use TripDetailsModal (pass dummy/selectedOrder data as needed)
-      return (
-        <TripDetailsModal
-          open={true}
-          onClose={closeModal}
-          shipment={selectedOrder}
-        />
+        <OrderStatusModal open={true} onClose={closeModal} order={selectedOrder} />
       );
     }
     if (modalType === 'manageDocs') {
-      // Show manage documents modal (as in your screenshot)
       return (
-        <Dialog open={true} onOpenChange={closeModal}>
-          <DialogContent className="max-w-2xl p-0">
-            <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
-              <DialogTitle className="text-lg font-semibold flex items-center gap-2">
-                Manage Documents: {selectedOrder.bookingId}
-              </DialogTitle>
-            </div>
-            <div className="p-6">
-              <div className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <FileTextIcon className="w-5 h-5 text-blue-700" /> Attached Documents
-              </div>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="bg-[#02abf5] text-white hover:bg-[#02abf5]">
-                      <th className="p-3 text-left">S.No</th>
-                      <th className="p-3 text-left">Location</th>
-                      <th className="p-3 text-left">Document Type</th>
-                      <th className="p-3 text-left">Document</th>
-                      <th className="p-3 text-left">Stop ID</th>
-                      <th className="p-3 text-left">Stop Type</th>
-                      <th className="p-3 text-left">Created By</th>
-                      <th className="p-3 text-left">Date & Time</th>
-                      <th className="p-3 text-left">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(selectedOrder.documents || []).map((doc, idx) => (
-                      <tr key={idx} className="border-b border-gray-100">
-                        <td className="p-3">{idx + 1}</td>
-                        <td className="p-3">{doc.location}</td>
-                        <td className="p-3">
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">{doc.docType}</span>
-                        </td>
-                        <td className="p-3">
-                          <Button variant="link" className="text-blue-700 px-0 py-0 h-auto min-w-0">View</Button>
-                        </td>
-                        <td className="p-3">{doc.stopId}</td>
-                        <td className="p-3">{doc.stopType}</td>
-                        <td className="p-3">{doc.createdBy}</td>
-                        <td className="p-3">{doc.time}</td>
-                        <td className="p-3">
-                          <Button variant="ghost" className="p-1"><Download className="w-4 h-4" /></Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="mt-6">
-                <Button className="bg-blue-600 text-white px-4 py-1 rounded">Upload New Document</Button>
-              </div>
-            </div>
-            <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2 rounded-b-lg">
-              <DialogClose asChild>
-                <Button variant="outline" className="px-6 rounded-full">Close</Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <OrderDocumentsModal open={true} onClose={closeModal} order={selectedOrder} />
+      );
+    }
+    if (modalType === 'liveTrack') {
+      return (
+        <TripDetailsModal open={true} onClose={closeModal} shipment={selectedOrder} />
       );
     }
     return null;
   };
+  
 
   return (
     <div>
@@ -338,3 +259,190 @@ export default function OrderListWithActions({
     </div>
   );
 } 
+
+// --- Modal Components ---
+function renderKeyValueGrid(fields, columns = 4) {
+  if (!fields) return <div className="text-gray-400">No data</div>;
+  return (
+    <div className={`grid grid-cols-1 md:grid-cols-${columns} gap-4`}>
+      {Object.entries(fields).map(([label, value]) => (
+        <div key={label} className="md:col-span-1">
+          <div className="text-sm font-semibold text-[#162d56] mb-1">{label}</div>
+          <div className="text-base text-gray-500">{value}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OrderViewModal({ open, onClose, order }) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh]">
+        <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
+          <DialogTitle className="text-lg font-semibold">Order Details</DialogTitle>
+        </div>
+        <div className="p-6 overflow-auto">
+          <Accordion type="multiple" className="mb-6" defaultValue={["Booking Info", "Reference Details", "Routing Details", "Cargo Details", "Involved Parties"]}>
+            <AccordionItem value="Booking Info">
+              <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Booking Info</AccordionTrigger>
+              <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+                {renderKeyValueGrid(order.bookingInfo, 4)}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="Reference Details">
+              <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Reference Details</AccordionTrigger>
+              <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+                {renderKeyValueGrid(order.referenceDetails, 4)}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="Routing Details">
+              <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Routing Details</AccordionTrigger>
+              <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+                {renderKeyValueGrid(order.routingDetails, 4)}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="Cargo Details">
+              <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Cargo Details</AccordionTrigger>
+              <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+                {renderKeyValueGrid(order.cargoDetails, 4)}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="Involved Parties">
+              <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Involved Parties</AccordionTrigger>
+              <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+                {renderKeyValueGrid(order.involvedParties, 4)}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2">
+          <DialogClose asChild>
+            <Button variant="outline" className="px-6 rounded-full">Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function OrderStatusModal({ open, onClose, order }) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh]">
+        <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
+          <DialogTitle className="text-lg font-semibold">Status History</DialogTitle>
+        </div>
+        <div className="px-6 py-4 text-sm">
+          <p><strong>Booking ID:</strong> {order.bookingId}</p>
+          <p><strong>Distance:</strong> {order.distance}</p>
+          <p><strong>Duration:</strong> {order.duration}</p>
+          {/* You can render tabs here as next step */}
+        </div>
+        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end">
+          <DialogClose asChild>
+            <Button variant="outline" className="px-6 rounded-full">Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function OrderDocumentsModal({ open, onClose, order }) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh]">
+
+        <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
+          <DialogTitle className="text-lg font-semibold">Manage Documents</DialogTitle>
+        </div>
+
+        <div className="p-6 overflow-auto">
+          <div className="font-semibold text-lg mb-4 flex items-center gap-2">
+            <FileTextIcon className="w-5 h-5 text-blue-700" /> Attached Documents
+          </div>
+
+
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-[#02abf5] text-white hover:bg-[#02abf5]">
+                    <TableHead className="p-3 text-left text-white">S.No</TableHead>
+                    <TableHead className="p-3 text-left text-white">Location</TableHead>
+                    <TableHead className="p-3 text-left text-white">Doc Type</TableHead>
+                    <TableHead className="p-3 text-left text-white">Document</TableHead>
+                    <TableHead className="p-3 text-left text-white">Stop ID</TableHead>
+                    <TableHead className="p-3 text-left text-white">Stop Type</TableHead>
+                    <TableHead className="p-3 text-left text-white">Created By</TableHead>
+                    <TableHead className="p-3 text-left text-white">Time</TableHead>
+                    <TableHead className="p-3 text-left text-white">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(order.documents || []).map((doc, idx) => (
+                    <TableRow key={idx} className="hover:bg-gray-50 border-b border-gray-100">
+                      <TableCell className="p-3">{idx + 1}</TableCell>
+                      <TableCell className="p-3">{doc.location}</TableCell>
+                      <TableCell className="p-3">
+                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">
+                          {doc.docType}
+                        </span>
+                      </TableCell>
+                      <TableCell className="p-3">
+                        <Button variant="link" className="text-blue-700 px-0 py-0 h-auto min-w-0">
+                          View
+                        </Button>
+                      </TableCell>
+                      <TableCell className="p-3">{doc.stopId}</TableCell>
+                      <TableCell className="p-3">
+                        <span className={doc.stopType === 'P' ? 'bg-green-100 text-green-800 px-2 py-1 text-xs rounded' : 'bg-red-100 text-red-800 px-2 py-1 text-xs rounded'}>
+                          {doc.stopType}
+                        </span>
+                      </TableCell>
+                      <TableCell className="p-3">{doc.createdBy}</TableCell>
+                      <TableCell className="p-3">{doc.time}</TableCell>
+                      <TableCell className="p-3">
+                        <Button variant="ghost" className="p-1">
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+
+            <div className="p-4 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer inline-block bg-white border border-gray-300 rounded px-4 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Choose Document
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => console.log(e.target.files)}
+                />
+                <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full">
+                  Upload New Document
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2 rounded-b-lg">
+          <DialogClose asChild>
+            <Button variant="outline" className="px-6 rounded-full">Close</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
