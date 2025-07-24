@@ -9,7 +9,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Eye, List, MapPin, FileText, Download, CheckCircle, /*Truck,*/ Clock, File, FileCheck2, FileDown, FileBarChart2, FileCheck, FileText as FileTextIcon, FileDown as FileDownIcon, FileCheck as FileCheckIcon, FileBarChart2 as FileBarChart2Icon, FolderOpen, Search, LayoutGrid, ArrowRight } from "lucide-react";
+import { Eye, List, MapPin, FileText, Download, CheckCircle, Truck, Clock, File, FileCheck2, FileDown, FileBarChart2, FileCheck, FileText as FileTextIcon, FileDown as FileDownIcon, FileCheck as FileCheckIcon, FileBarChart2 as FileBarChart2Icon, FolderOpen, Search, LayoutGrid, ArrowRight } from "lucide-react";
 import TripDetailsModal from "./TripDetailsModal";
 import {
   Dialog,
@@ -21,8 +21,38 @@ import {
 } from "@/components/ui/dialog";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Checkbox } from "@/components/ui/checkbox";
 
-// --- Filter Tab (copied/adapted from viewtable.js) ---
+// --- Status helpers  ---
+const statusColorMap = {
+  Delivered: "bg-green-500",
+  "In Transit": "bg-blue-500",
+  Pending: "bg-yellow-400",
+  default: "bg-gray-300"
+};
+const statusIconMap = {
+  Delivered: <CheckCircle className="w-4 h-4 mr-1" />,
+  "In Transit": <Truck className="w-4 h-4 mr-1" />,
+  Pending: <Truck className="w-4 h-4 mr-1" />,
+  default: <Truck className="w-4 h-4 mr-1" />,
+};
+const statusLabels = ["Pending", "In Transit", "Delivered"];
+const statusColors = ["bg-yellow-400", "bg-blue-500", "bg-green-500"];
+function getStatusStep(order) {
+  if (order.status === "Delivered") return 2;
+  if (order.status === "In Transit") return 1;
+  return 0;
+}
+
+
 function FilterTab({ filterFields, formValues, setFormValues, onSearch }) {
   const renderField = (field) => {
     const { name, label, type = "text", options = [] } = field;
@@ -117,17 +147,19 @@ function FilterTab({ filterFields, formValues, setFormValues, onSearch }) {
 export default function OrderListWithActions({
   orders = [],
   filterFields = [],
-  actionsConfig = {}, // { view: true, status: true, liveTrack: true, manageDocs: true, download: true, lrReport: true, checkbox: false }
+  actionsConfig = {},
   onSearch = () => {},
   onDownload = () => {},
   onDownloadLR = () => {},
   onDownloadEPOD = () => {},
-  // ...other action handlers as needed
+
+  orderType = 'active'
 }) {
   const [formValues, setFormValues] = useState({});
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [modalType, setModalType] = useState(null); // 'view', 'status', 'liveTrack', 'manageDocs'
+  const [modalType, setModalType] = useState(null); 
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState([]);
 
   // --- Modal open helpers ---
   const openModal = (order, type) => {
@@ -141,80 +173,151 @@ export default function OrderListWithActions({
     setModalType(null);
   };
 
+  const ORDERS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(orders.length / ORDERS_PER_PAGE);
+  const paginatedOrders = orders.slice((currentPage - 1) * ORDERS_PER_PAGE, currentPage * ORDERS_PER_PAGE);
+
+
+  const allSelected = paginatedOrders.length > 0 && paginatedOrders.every(order => selectedOrders.includes(order.id || order.bookingId));
+
+  // Handler: toggle all
+  const handleToggleAll = () => {
+    if (allSelected) {
+      setSelectedOrders([]);
+    } else {
+      setSelectedOrders(paginatedOrders.map(order => order.id || order.bookingId));
+    }
+  };
+
+  // Handler: toggle one
+  const handleToggleOne = (orderId) => {
+    setSelectedOrders(prev =>
+      prev.includes(orderId)
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
+
+  // Handler: download selected
+  const handleDownloadSelected = () => {
+    const selected = paginatedOrders.filter(order => selectedOrders.includes(order.id || order.bookingId));
+    onDownload(selected);
+  };
+
   // --- Render order card/row ---
-  const renderOrderCard = (order, idx) => (
-    <Card key={order.bookingId || idx} className="mb-4 shadow border border-gray-200">
-      <CardContent className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 gap-3">
-        {/* Left: Order Info */}
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-3 flex-1">
-          <div className="flex items-center gap-3">
-            {/* Replace Truck with universal orders icon */}
-            <FolderOpen className="w-8 h-8 text-blue-400" />
-            <div>
-              <div className="font-semibold text-lg text-[#006397]">
-                Booking ID : <span className="text-blue-700">#{order.bookingId}</span>
+  const renderOrderCard = (order, idx) => {
+    const statusStep = getStatusStep(order);
+    const statusColor = statusColorMap[order.status] || statusColorMap.default;
+    const statusIcon = statusIconMap[order.status] || statusIconMap.default;
+
+    // Info blocks config
+    const infoBlocks = [
+      {
+        key: 'from',
+        value: order.from,
+        label: order.fromDate,
+        icon: <MapPin className="w-4 h-4 text-[#006397]" />,
+      },
+      {
+        key: 'to',
+        value: order.to,
+        label: order.toDate,
+        icon: <MapPin className="w-4 h-4 text-[#006397]" />,
+      },
+      {
+        key: 'date',
+        value: orderType === 'pending' || orderType === 'done' ? order.deliveryDate : order.eta,
+        label: orderType === 'pending' || orderType === 'done' ? 'Delivery Date' : 'ETA',
+        icon: null,
+      },
+      {
+        key: 'custRef',
+        value: order.shipmentId,
+        label: 'Cust Ref',
+        icon: null,
+      },
+    ];
+
+    // Action buttons config
+    const actionButtons = [
+      { key: 'view', icon: Eye, handler: () => openModal(order, 'view'), show: actionsConfig.view, title: 'View' },
+      { key: 'status', icon: FileText, handler: () => openModal(order, 'status'), show: actionsConfig.status, title: 'Status View' },
+      { key: 'liveTrack', icon: MapPin, handler: () => openModal(order, 'liveTrack'), show: actionsConfig.liveTrack, title: 'Live Track' },
+      { key: 'manageDocs', icon: FileText, handler: () => openModal(order, 'manageDocs'), show: actionsConfig.manageDocs, title: 'Manage Documents' },
+      { key: 'download', icon: Download, handler: () => onDownload(order), show: actionsConfig.download, title: 'Download ePOD' },
+      { key: 'lrReport', icon: FileText, handler: () => onDownloadLR(order), show: actionsConfig.lrReport, title: 'Download LR Report' },
+    ];
+
+    return (
+      <div
+        key={order.id}
+        className={"relative flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all mb-4 overflow-hidden"}
+      >
+        {/* Left colored status bar */}
+        <div className={["w-2 md:w-3", statusColor, "flex-shrink-0"].join(" ")} />
+        {/* Main content */}
+        <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between px-8 py-10"> 
+          <div className="flex-1 flex flex-col gap-2 min-w-0">
+            {/* Top Row: Booking ID, Status */}
+            <div className="flex flex-wrap items-center gap-6 mb-1">
+              <div className="flex items-center gap-2 min-w-[180px]">
+                <FolderOpen className="w-6 h-6 text-[#006397]" />
+                <span className="text-lg font-bold text-[#006397] cursor-pointer hover:underline">Booking ID : #{order.bookingId}</span>
               </div>
-              <div className="text-gray-500 text-sm mt-3 flex items-center gap-6">
-                <div className="flex flex-col items-center">
-                  <span className="text-base font-semibold text-gray-700">{order.from}</span>
-                  <span className="text-sm font-semibold text-gray-500 mt-0.5">{order.date}</span>
-                </div>
-                <ArrowRight className="align-middle size-7 font-bold" />
-                <div className="flex flex-col items-center">
-                  <span className="text-base font-semibold text-gray-700">{order.to}</span>
-                  <span className="text-sm font-semibold text-gray-500 mt-0.5">{order.date}</span>
-                </div>
+              <span className={["flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white", statusColor].join(" ")}>{statusIcon}{order.status}</span>
+            </div>
+            <div className="flex flex-row items-start gap-12 mt-1">
+              <div className="flex flex-row items-start min-w-[320px] gap-4">
+                {/* From, Arrow, To */}
+                {infoBlocks.slice(0, 2).map((block, idx) => (
+                  <React.Fragment key={block.key}>
+                    <div className="flex flex-col min-w-[120px]">
+                      <span className="text-base font-semibold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
+                      <span className="text-xs text-gray-400 pt-1">{block.label}</span>
+                    </div>
+                    {idx === 0 && (
+                      <span className="flex items-center pt-0.5"><ArrowRight className="w-7 h-7 text-[#006397]" /></span>
+                    )}
+                  </React.Fragment>
+                ))}
               </div>
+              {/* Date and Cust Ref */}
+              {infoBlocks.slice(2).map((block) => (
+                <div key={block.key} className="flex flex-col min-w-[120px]">
+                  <span className="text-lg font-bold text-[#006397] flex items-center gap-1">{block.icon}{block.value}</span>
+                  <span className="text-xs text-gray-500 pt-1">{block.label}</span>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="ml-16 flex flex-col gap-1 min-w-[180px]">
-            <div className="text-sm text-gray-700 font-medium">{order.etaLabel || "ETA"}</div>
-            <div className="text-base text-blue-700 font-bold">{order.eta}</div>
-          </div>
-          <div className="ml-16 flex flex-col gap-1 min-w-[180px]">
-            <div className="text-sm text-gray-700 font-medium">Shipment ID</div>
-            <div className="text-base text-blue-700 font-bold">{order.shipmentId}</div>
+
+          <div className="flex flex-row gap-4 items-center justify-center ml-0 md:ml-8 mt-6 md:mt-0">
+            {actionsConfig.checkbox && (
+              <div className="flex items-center mr-4">
+                <Checkbox
+                  checked={selectedOrders.includes(order.id || order.bookingId)}
+                  onCheckedChange={() => handleToggleOne(order.id || order.bookingId)}
+                  className="rounded-full size-7 shadow-md border-2 border-[#006397] data-[state=checked]:bg-[#006397] data-[state=checked]:text-white flex items-center justify-center"
+                />
+              </div>
+            )}
+            {actionButtons.filter(btn => btn.show).map(btn => (
+              <button
+                key={btn.key}
+                onClick={btn.handler}
+                title={btn.title}
+                className="text-[#006397] hover:text-[#02abf5] p-3 rounded-full transition-colors shadow-md"
+                style={{ fontSize: 24 }}
+              >
+                <btn.icon className="w-6 h-6" />
+              </button>
+            ))}
           </div>
         </div>
-        {/* Right: Actions */}
-        <div className="flex items-center gap-3">
-          {actionsConfig.checkbox && (
-            <CheckCircle className="size-5 text-green-500" />
-          )}
-          {actionsConfig.view && (
-            <Button variant="ghost" onClick={() => openModal(order, 'view')} title="View">
-              <Eye className="size-5 text-[#006397]" />
-            </Button>
-          )}
-          {actionsConfig.status && (
-            <Button variant="ghost" onClick={() => openModal(order, 'status')} title="Status View">
-              <List className="size-5 text-[#006397]" />
-            </Button>
-          )}
-          {actionsConfig.liveTrack && (
-            <Button variant="ghost" onClick={() => openModal(order, 'liveTrack')} title="Live Track">
-              <MapPin className="size-5 text-[#006397]" />
-            </Button>
-          )}
-          {actionsConfig.manageDocs && (
-            <Button variant="ghost" onClick={() => openModal(order, 'manageDocs')} title="Manage Documents">
-              <FileText className="size-5 text-[#006397]" />
-            </Button>
-          )}
-          {actionsConfig.download && (
-            <Button variant="ghost" onClick={() => onDownload(order)} title="Download ePOD">
-              <Download className="size-5 text-[#006397]" />
-            </Button>
-          )}
-          {actionsConfig.lrReport && (
-            <Button variant="ghost" onClick={() => onDownloadLR(order)} title="Download LR Report">
-              <FileDown className="size-5 text-[#006397]" />
-            </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
+      </div>
+    );
+  };
 
   const renderModalContent = () => {
     if (!selectedOrder) return null;
@@ -243,19 +346,89 @@ export default function OrderListWithActions({
   
 
   return (
-    <div>
-      {/* Filter Tab */}
-      <FilterTab filterFields={filterFields} formValues={formValues} setFormValues={setFormValues} onSearch={onSearch} />
-      {/* Order List */}
-      <div>
-        {orders.length === 0 ? (
-          <div className="text-center text-gray-500 py-12">No orders found.</div>
-        ) : (
-          orders.map(renderOrderCard)
-        )}
+    <div className="rounded-2xl shadow-lg border border-gray-200 overflow-hidden bg-white">
+      {/* Filter Tab as Card Header */}
+      <div className="bg-gray-50 px-8 py-4 rounded-t-2xl flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div className="w-full">
+          <FilterTab filterFields={filterFields} formValues={formValues} setFormValues={setFormValues} onSearch={onSearch} />
+        </div>
       </div>
-      {/* Modals */}
-      {modalOpen && renderModalContent()}
+      {/* Subtle divider (shadow) */}
+      <div className="h-2 bg-gradient-to-b from-gray-100 to-transparent w-full" />
+      {/* Order List and Pagination as Card Content */}
+      <CardContent className="bg-white pt-2 pb-6 px-8 rounded-b-2xl">
+        {actionsConfig.checkbox && (
+          <div className="flex items-center justify-end gap-4 mb-4">
+            <Checkbox
+              checked={allSelected}
+              onCheckedChange={handleToggleAll}
+              className="rounded-full size-7 shadow-md border-2 border-[#006397] data-[state=checked]:bg-[#006397] data-[state=checked]:text-white flex items-center justify-center"
+            />
+            <Button
+              onClick={handleDownloadSelected}
+              className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
+              disabled={selectedOrders.length === 0}
+            >
+              Download
+            </Button>
+          </div>
+        )}
+        <div>
+          {paginatedOrders.length === 0 ? (
+            <div className="text-center text-gray-500 py-12">No orders found.</div>
+          ) : (
+            paginatedOrders.map(renderOrderCard)
+          )}
+        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6">
+            <div className="text-sm text-gray-600">
+              Showing {(currentPage - 1) * ORDERS_PER_PAGE + 1} to {Math.min(currentPage * ORDERS_PER_PAGE, orders.length)} of {orders.length} results
+            </div>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={e => {
+                      e.preventDefault();
+                      setCurrentPage(p => Math.max(1, p - 1));
+                    }}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault();
+                        setCurrentPage(page);
+                      }}
+                      isActive={currentPage === page}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    onClick={e => {
+                      e.preventDefault();
+                      setCurrentPage(p => Math.min(totalPages, p + 1));
+                    }}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+        {/* Modals */}
+        {modalOpen && renderModalContent()}
+      </CardContent>
     </div>
   );
 } 

@@ -8,14 +8,13 @@ const samplePendingOrders = [
     from: "Ankleshwar",
     to: "Rotterdam",
     date: "23 Apr 2025",
-    etaLabel: "ETA",
-    eta: "15 May 2025 7:25 PM",
+    deliveryDate: "15 May 2025 7:25 PM",
     shipmentId: "SX1745919917",
     documents: [
       { location: "Baroi, Gujarat", docType: "Others", stopId: "487874", stopType: "D", createdBy: "SHIVA MUNI", time: "08 May,25 09:32 PM" },
     ],
   },
-  // ...more orders
+  // ...more orders, add deliveryDate to each
 ];
 
 const filterFields = [
@@ -52,6 +51,7 @@ export default function PendingOrdersPage() {
         }}
         onSearch={handleSearch}
         onDownload={handleDownload}
+        orderType="pending"
       />
     </div>
   );

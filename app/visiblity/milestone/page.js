@@ -275,16 +275,16 @@ const useRouteStatusCalculation = () => {
     }
   }, [])
 
-  // Check if pickup is completed before allowing drop to start (for both single and multiple routes)
+ 
   const checkPickupCompletion = useCallback((shipment, dropLocation) => {
-    // Find the corresponding pickup location for this drop
+
     const routeSegments = shipment.route.segments
     const dropSegment = routeSegments.find(segment => 
       segment.type === 'drop' && segment.location === dropLocation
     )
     
     if (!dropSegment) {
-      return true // If no matching drop segment found, allow it
+      return true 
     }
     
     // Find the pickup segment that corresponds to this drop
@@ -293,19 +293,19 @@ const useRouteStatusCalculation = () => {
     )
     
     if (!pickupSegment) {
-      return true // If no matching pickup segment found, allow it
+      return true 
     }
     
-    // Check if pickup orders for this location are completed
+    
     const pickupOrders = shipment.orders.filter(order => 
       order.type === 'P' && order.location === pickupSegment.location
     )
     
     if (pickupOrders.length === 0) {
-      return true // If no pickup orders found, allow drop
+      return true 
     }
     
-    // Check if all pickup orders are completed
+    
     const pickupStatuses = pickupOrders.map(order => order.status)
     const allPickupsCompleted = pickupStatuses.every(status => 
       status === 'Picked up' || status === 'COMPLETED'
@@ -318,16 +318,16 @@ const useRouteStatusCalculation = () => {
   const checkPreviousRouteCompletion = useCallback((shipment, currentSegmentIndex) => {
     const routeSegments = shipment.route.segments
     
-    // For each previous route (pair of pickup and drop)
+    
     for (let routeIndex = 0; routeIndex < Math.floor(currentSegmentIndex / 2); routeIndex++) {
       const pickupSegmentIndex = routeIndex * 2
       const dropSegmentIndex = pickupSegmentIndex + 1
       
-      // Check if both pickup and drop of previous route are completed
+      
       const pickupStatus = calculateRouteStatus(shipment, 'pickup', routeSegments[pickupSegmentIndex].location, pickupSegmentIndex)
       const dropStatus = calculateRouteStatus(shipment, 'drop', routeSegments[dropSegmentIndex].location, dropSegmentIndex)
       
-      // If any previous route is not completed, block current route
+ 
       if (pickupStatus !== 'COMPLETED' || dropStatus !== 'COMPLETED') {
         return false
       }
@@ -349,10 +349,10 @@ const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentSt
       <div className={`w-full max-w-full sm:max-w-[600px] md:max-w-[900px] lg:max-w-[1200px] xl:max-w-[1550px] overflow-x-auto custom-scrollbar ${needsScrollPadding ? 'pb-4' : ''}`}>
         <div className="flex items-center space-x-4 whitespace-nowrap">
           {route.segments.map((segment, index) => {
-            // Calculate dynamic status based on individual order statuses
+
             const calculatedStatus = calculateRouteStatus(shipment, segment.type, segment.location, index)
             
-            // Generate P/D label based on actual orders for this location
+
             const segmentOrders = shipment.orders.filter(order => 
               order.type === (segment.type === 'pickup' ? 'P' : 'D') && 
               order.location === segment.location
@@ -697,7 +697,7 @@ export default function ShipmentVisibility() {
       const routeEnd = routeStart + 2
       const currentRouteSegments = routeSegments.slice(routeStart, routeEnd)
       
-      // Get locations for current route
+  
       const routeLocations = currentRouteSegments.map(segment => segment.location)
       
       return shipment.orders.filter(order => {
@@ -709,7 +709,6 @@ export default function ShipmentVisibility() {
         return routeLocations.includes(order.location)
       })
     } else {
-      // Single route - use existing logic
       if (state === 'pickup') {
         return shipment.orders.filter(order => order.type === 'P')
       } else if (state === 'drop') {
@@ -732,7 +731,7 @@ export default function ShipmentVisibility() {
     }
   }, [setShipments])
 
-  // Share Secure Link handlers
+
   const handleShareSecureLink = useCallback((shipment) => {
     shareSecureLinkModal.openModal(shipment)
   }, [shareSecureLinkModal])
