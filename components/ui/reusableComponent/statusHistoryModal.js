@@ -205,9 +205,9 @@ export function AssignVehicleModal({ open, onClose, form, handleChange, handleUp
                       <SelectValue placeholder={`Select ${field.label}`} />
                     </SelectTrigger>
                     <SelectContent>
-                      {field.options.map(opt => (
+                    {field.options.map(opt => (
                         <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                      ))}
+                    ))}
                     </SelectContent>
                   </Select>
                 ) : (

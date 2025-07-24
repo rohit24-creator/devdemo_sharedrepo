@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import {
-  Card, CardContent
+  Card, CardContent, CardHeader, CardTitle
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -275,15 +275,179 @@ function renderKeyValueGrid(fields, columns = 4) {
   );
 }
 
+
+function FilteredTable({ data, title }) {
+  const [displayCount, setDisplayCount] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const rows = Array.isArray(data) ? data : [data];
+  const headers = rows.length > 0 ? Object.keys(rows[0]) : [];
+  
+  // Filter rows based on search term
+  const filteredRows = useMemo(() => {
+    if (!searchTerm) return rows;
+    return rows.filter(row => 
+      Object.values(row).some(value => 
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [rows, searchTerm]);
+  
+  // Pagination
+  const totalPages = Math.ceil(filteredRows.length / displayCount);
+  const paginatedRows = filteredRows.slice(
+    (currentPage - 1) * displayCount,
+    currentPage * displayCount
+  );
+  
+  return (
+    <Card className="bg-white rounded-xl shadow border p-6">
+      <CardHeader className="p-0 border-b pb-4">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-lg font-semibold text-[#0088d2]">{title}</CardTitle>
+          
+          {/* Filter Controls */}
+          <div className="flex items-center space-x-4">
+            {/* Search Input */}
+            <div className="flex items-center space-x-2">
+              <label className="text-sm text-gray-600">Search</label>
+              <div className="relative">
+                <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // Reset to first page when searching
+                  }}
+                  className="pl-10 w-48 border border-gray-300 rounded-md h-8 text-sm"
+                />
+              </div>
+            </div>
+            
+            {/* Display Count */}
+            <div className="flex items-center space-x-2">
+              <label className="text-sm text-gray-600">Display</label>
+              <Select
+                value={displayCount.toString()}
+                onValueChange={(value) => {
+                  setDisplayCount(Number(value));
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-20 h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[5, 10, 20, 50].map((count) => (
+                    <SelectItem key={count} value={count.toString()}>
+                      {count}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-sm text-gray-600">records</span>
+            </div>
+            
+            {/* Pagination Controls */}
+            <div className="flex items-center space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="h-8 w-8 p-0"
+              >
+                {"<"}
+              </Button>
+              <span className="text-sm text-gray-600">
+                {currentPage} of {totalPages}
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                className="h-8 w-8 p-0"
+              >
+                {">"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </CardHeader>
+      
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {headers.map((header, idx) => (
+                <TableHead key={header} className={`text-[#006397] text-left text-sm font-semibold px-6 py-3 ${idx !== 0 ? 'border-l border-gray-300' : ''}`}>
+                  {header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedRows.length > 0 ? (
+              paginatedRows.map((row, rowIdx) => (
+                <TableRow key={rowIdx}>
+                  {headers.map((header, idx) => (
+                    <TableCell key={idx} className="px-6 py-3">
+                      {row[header] ?? ""}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={headers.length} className="text-center py-6 text-gray-500">
+                  {searchTerm ? "No results found for your search." : "No data available."}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
+}
+
+function renderTable(data) {
+  return <FilteredTable data={data} />;
+}
+
+function renderAccordionSection({ section, fields, order }) {
+  if (section === "Routing Details") {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {Object.entries(fields).map(([cardTitle, cardFields]) => (
+          <Card key={cardTitle} className="bg-white rounded-xl shadow border p-6">
+            <CardHeader className="p-0">
+              <CardTitle className="text-lg font-semibold mb-4 border-b pb-2 text-[#0088d2]">{cardTitle}</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {renderKeyValueGrid(cardFields, 2)}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+  
+
+  return renderKeyValueGrid(fields, 4);
+}
+
 function OrderViewModal({ open, onClose, order }) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh]">
+      <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh] flex flex-col">
         <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
           <DialogTitle className="text-lg font-semibold">Order Details</DialogTitle>
         </div>
-        <div className="p-6 overflow-auto">
-          <Accordion type="multiple" className="mb-6" defaultValue={["Booking Info", "Reference Details", "Routing Details", "Cargo Details", "Involved Parties"]}>
+        <div className="flex-1 overflow-y-auto p-6">
+          <Accordion type="single" className="mb-6" defaultValue="Booking Info">
             <AccordionItem value="Booking Info">
               <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Booking Info</AccordionTrigger>
               <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
@@ -293,25 +457,25 @@ function OrderViewModal({ open, onClose, order }) {
             <AccordionItem value="Reference Details">
               <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Reference Details</AccordionTrigger>
               <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-                {renderKeyValueGrid(order.referenceDetails, 4)}
+                {renderTable(order.referenceDetails, "Reference Details")}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="Routing Details">
               <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Routing Details</AccordionTrigger>
               <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-                {renderKeyValueGrid(order.routingDetails, 4)}
+                {renderAccordionSection({ section: "Routing Details", fields: order.routingDetails, order })}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="Cargo Details">
               <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Cargo Details</AccordionTrigger>
               <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-                {renderKeyValueGrid(order.cargoDetails, 4)}
+                {renderTable(order.cargoDetails, "Cargo Details")}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="Involved Parties">
               <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">Involved Parties</AccordionTrigger>
               <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
-                {renderKeyValueGrid(order.involvedParties, 4)}
+                {renderTable(order.involvedParties, "Involved Parties")}
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -326,20 +490,76 @@ function OrderViewModal({ open, onClose, order }) {
   );
 }
 
+function StatusTimeline({ statusHistory }) {
+  if (!statusHistory || statusHistory.length === 0) {
+    return <div className="text-gray-400 text-center py-8">No status history available.</div>;
+  }
+  return (
+    <ol className="relative border-l-2 border-blue-200 ml-4">
+      {statusHistory.map((event, idx) => (
+        <li key={idx} className="mb-8 ml-6 flex flex-col gap-1">
+          <span className="absolute -left-4 flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full ring-8 ring-white">
+            <Clock className="w-5 h-5 text-blue-600" />
+          </span>
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold text-blue-800 text-lg">{event.status || event.Status}</span>
+            <span className="text-sm text-gray-500 font-medium">{event.time || event.Time}</span>
+            <span className="text-base text-gray-400 font-medium">{event.location || event.Location}</span>
+            {event.stopId || event.StopID ? (
+              <span className="text-base text-gray-700 font-semibold">Stop ID: <span className="font-mono">{event.stopId || event.StopID}</span>{event.stopType || event.StopType ? `  (Type: ${event.stopType || event.StopType})` : ""}</span>
+            ) : null}
+            {event.comments || event.Comments ? (
+              <span className="text-base text-gray-700 italic font-semibold">{event.comments || event.Comments}</span>
+            ) : null}
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 function OrderStatusModal({ open, onClose, order }) {
+  const [search, setSearch] = React.useState("");
+  const statusHistory = order.statusHistory || [];
+  const filteredHistory = search
+    ? statusHistory.filter(event =>
+        Object.values(event).some(val =>
+          String(val).toLowerCase().includes(search.toLowerCase())
+        )
+      )
+    : statusHistory;
+  const distance = order.distance || "0 miles";
+  const duration = order.duration || "Not Found!";
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh]">
+      <DialogContent className="lg:max-w-2xl max-h-[90vh] flex flex-col p-0">
         <div className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center rounded-t-lg">
-          <DialogTitle className="text-lg font-semibold">Status History</DialogTitle>
+          <DialogTitle className="text-lg font-semibold">Status View{order?.bookingId ? ` : ${order.bookingId}` : ""}</DialogTitle>
         </div>
-        <div className="px-6 py-4 text-sm">
-          <p><strong>Booking ID:</strong> {order.bookingId}</p>
-          <p><strong>Distance:</strong> {order.distance}</p>
-          <p><strong>Duration:</strong> {order.duration}</p>
-          {/* You can render tabs here as next step */}
+        <div className="flex-1 overflow-y-auto p-6 bg-white">
+          {/* Est. Distance & Duration */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2">
+            <div className="text-base font-semibold text-gray-700">
+              <span className="text-gray-500">Est. Distance:</span> {distance}
+            </div>
+            <div className="text-base font-semibold text-gray-700">
+              <span className="text-gray-500">Est. Duration:</span> {duration}
+            </div>
+          </div>
+          {/* Search Bar */}
+          <div className="flex justify-end mb-4">
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="border border-gray-300 rounded-full px-4 py-1 w-64 text-sm h-8 focus:outline-none focus:ring-0 focus:border-gray-300"
+            />
+          </div>
+          <StatusTimeline statusHistory={filteredHistory} />
         </div>
-        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end">
+        <DialogFooter className="bg-gray-50 px-6 py-4 flex justify-end space-x-2 rounded-b-lg">
           <DialogClose asChild>
             <Button variant="outline" className="px-6 rounded-full">Close</Button>
           </DialogClose>
@@ -446,3 +666,4 @@ function OrderDocumentsModal({ open, onClose, order }) {
     </Dialog>
   );
 }
+ 
