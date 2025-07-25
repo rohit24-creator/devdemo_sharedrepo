@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import OrderListWithActions from "@/components/ui/reusableComponent/OrderListWithActions";
 
 const sampleActiveOrders = [
@@ -464,27 +464,66 @@ const filterFields = [
 
 export default function ActiveOrdersPage() {
   const [orders, setOrders] = useState(sampleActiveOrders);
+  const [filteredOrders, setFilteredOrders] = useState(sampleActiveOrders);
+  const [searchFilters, setSearchFilters] = useState({});
   
+  // Real search functionality
   const handleSearch = (filters) => {
     console.log("Search filters:", filters);
-    // Implement search logic here
+    setSearchFilters(filters);
+    
+    // Apply filters to orders
+    let filtered = [...sampleActiveOrders];
+    
+    // Filter by Booking ID
+    if (filters.bookingId) {
+      filtered = filtered.filter(order => 
+        order.bookingId.toLowerCase().includes(filters.bookingId.toLowerCase())
+      );
+    }
+    
+    // Filter by Reference No (Shipment ID)
+    if (filters.referenceNo) {
+      filtered = filtered.filter(order => 
+        order.shipmentId.toLowerCase().includes(filters.referenceNo.toLowerCase())
+      );
+    }
+    
+    // Filter by From Date
+    if (filters.fromDate) {
+      filtered = filtered.filter(order => 
+        new Date(order.fromDate) >= new Date(filters.fromDate)
+      );
+    }
+    
+    // Filter by To Date
+    if (filters.toDate) {
+      filtered = filtered.filter(order => 
+        new Date(order.toDate) <= new Date(filters.toDate)
+      );
+    }
+    
+    setFilteredOrders(filtered);
+    console.log(`Filtered ${sampleActiveOrders.length} orders to ${filtered.length} orders`);
   };
   
   const handleDownload = (order) => {
     console.log("Download ePOD for order:", order.id);
-    // Implement download logic here
+    // In real app, this would trigger file download
+    alert(`Downloading ePOD for ${order.bookingId}`);
   };
   
   const handleDownloadLR = (order) => {
     console.log("Download LR Report for order:", order.id);
-    // Implement download logic here
+    // In real app, this would trigger file download
+    alert(`Downloading LR Report for ${order.bookingId}`);
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Active Orders</h1>
       <OrderListWithActions
-        orders={orders}
+        orders={filteredOrders}
         filterFields={filterFields}
         actionsConfig={{
           view: true,

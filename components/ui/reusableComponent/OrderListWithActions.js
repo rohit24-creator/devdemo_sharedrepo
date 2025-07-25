@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import {
   Card, CardContent, CardHeader, CardTitle
 } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Eye, List, MapPin, FileText, Download, CheckCircle, Truck, Clock, File, FileCheck2, FileDown, FileBarChart2, FileCheck, FileText as FileTextIcon, FileDown as FileDownIcon, FileCheck as FileCheckIcon, FileBarChart2 as FileBarChart2Icon, FolderOpen, Search, LayoutGrid, ArrowRight } from "lucide-react";
+import { Eye, List, MapPin, FileText, Download, CheckCircle, Truck, Clock, File, FileCheck2, FileDown, FileBarChart2, FileCheck, FileText as FileTextIcon, FileDown as FileDownIcon, FileCheck as FileCheckIcon, FileBarChart2 as FileBarChart2Icon, FolderOpen, Search, LayoutGrid, ArrowRight, ChevronDown, Loader2 } from "lucide-react";
 import TripDetailsModal from "./TripDetailsModal";
 import {
   Dialog,
@@ -30,6 +30,8 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 // --- Status helpers  ---
 const statusColorMap = {
@@ -52,12 +54,134 @@ function getStatusStep(order) {
   return 0;
 }
 
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
+}
 
-function FilterTab({ filterFields, formValues, setFormValues, onSearch }) {
+// Custom dropdown component for Booking ID and Reference
+function ComboboxBookingId({ value, onChange, options, placeholder = "Select Booking ID" }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
+
+
+  const filteredOptions = useMemo(() => {
+    if (!debouncedSearch) return options;
+    return options.filter(option =>
+      String(option).toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
+  }, [options, debouncedSearch]);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {value
+            ? options.find((option) => option === value) || value
+            : placeholder}
+          <ChevronsUpDown className="opacity-50 ml-2 h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-full p-0">
+        <Command>
+          <CommandInput
+            value={search}
+            onValueChange={setSearch}
+            placeholder={`Search ${placeholder.toLowerCase()}...`}
+            className="h-9"
+          />
+          <CommandList>
+            {filteredOptions.length === 0 ? (
+              <CommandEmpty>No options found.</CommandEmpty>
+            ) : (
+              <CommandGroup>
+                {filteredOptions.map((option) => (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={(currentValue) => {
+                      onChange(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {option}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function FilterTab({ filterFields, formValues, setFormValues, onSearch, orders = [] }) {
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Extract unique values for dropdowns with error handling and loading state
+  const bookingIds = useMemo(() => {
+    try {
+      setIsLoadingOptions(true);
+      setError(null);
+      
+      const ids = [...new Set(orders.map(order => order.bookingId).filter(Boolean))];
+      const sortedIds = ids.sort();
+      
+      return sortedIds;
+    } catch (err) {
+      console.error('Error processing booking IDs:', err);
+      setError('Failed to load booking IDs');
+      return [];
+    } finally {
+      setIsLoadingOptions(false);
+    }
+  }, [orders]);
+
+  const referenceIds = useMemo(() => {
+    try {
+      setIsLoadingOptions(true);
+      setError(null);
+      
+      const refs = [...new Set(orders.map(order => order.shipmentId).filter(Boolean))];
+      const sortedRefs = refs.sort();
+      
+      return sortedRefs;
+    } catch (err) {
+      console.error('Error processing reference IDs:', err);
+      setError('Failed to load reference IDs');
+      return [];
+    } finally {
+      setIsLoadingOptions(false);
+    }
+  }, [orders]);
+
   const renderField = (field) => {
     const { name, label, type = "text", options = [] } = field;
+    
+    // Determine if this is a dropdown field
+    const isBookingIdDropdown = name === "bookingId";
+    const isReferenceDropdown = name === "referenceNo";
+    
     return (
-      <div key={name} className="flex flex-col gap-1 w-40">
+      <div key={name} className="flex flex-col gap-1 w-56">
         <label htmlFor={name} className="text-sm font-medium text-gray-700">
           {label}
         </label>
@@ -109,18 +233,33 @@ function FilterTab({ filterFields, formValues, setFormValues, onSearch }) {
               )}
             </SelectContent>
           </Select>
+        ) : isBookingIdDropdown ? (
+          <ComboboxBookingId
+            value={formValues[name] || ""}
+            onChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
+            options={bookingIds}
+            placeholder={label}
+          />
+        ) : isReferenceDropdown ? (
+          <ComboboxBookingId
+            value={formValues[name] || ""}
+            onChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
+            options={referenceIds}
+            placeholder={label}
+          />
         ) : (
           <Input
             type={type}
             id={name}
             value={formValues[name] || ""}
             onChange={(e) => setFormValues((prev) => ({ ...prev, [name]: e.target.value }))}
-            className="w-full border border-gray-300"
+            className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
           />
         )}
       </div>
     );
   };
+  
   return (
     <Card className="mb-4">
       <CardContent className="p-4 flex justify-between flex-wrap gap-4">
@@ -350,7 +489,7 @@ export default function OrderListWithActions({
       {/* Filter Tab as Card Header */}
       <div className="bg-gray-50 px-8 py-4 rounded-t-2xl flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div className="w-full">
-          <FilterTab filterFields={filterFields} formValues={formValues} setFormValues={setFormValues} onSearch={onSearch} />
+          <FilterTab filterFields={filterFields} formValues={formValues} setFormValues={setFormValues} onSearch={onSearch} orders={orders} />
         </div>
       </div>
       {/* Subtle divider (shadow) */}
