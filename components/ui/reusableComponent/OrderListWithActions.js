@@ -9,7 +9,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Eye, List, MapPin, FileText, Download, CheckCircle, Truck, Clock, File, FileCheck2, FileDown, FileBarChart2, FileCheck, FileText as FileTextIcon, FileDown as FileDownIcon, FileCheck as FileCheckIcon, FileBarChart2 as FileBarChart2Icon, FolderOpen, Search, LayoutGrid, ArrowRight, ChevronDown, Loader2 } from "lucide-react";
+import { Eye, List, MapPin, FileText, Download, CheckCircle, Truck, Clock, File, FileCheck2, FileDown, FileBarChart2, FileCheck, FileText as FileTextIcon, FileDown as FileDownIcon, FileCheck as FileCheckIcon, FileBarChart2 as FileBarChart2Icon, FolderOpen, Search, LayoutGrid, ArrowRight, ChevronDown, Loader2, MoreVertical } from "lucide-react";
 import TripDetailsModal from "./TripDetailsModal";
 import {
   Dialog,
@@ -376,6 +376,12 @@ export default function OrderListWithActions({
         label: 'Cust Ref',
         icon: null,
       },
+      {
+        key: 'customer',
+        value: order.customerName || "not found",
+        label: 'Customer',
+        icon: null,
+      },
     ];
 
     // Action buttons config
@@ -431,27 +437,60 @@ export default function OrderListWithActions({
             </div>
           </div>
 
-          <div className="flex flex-row gap-4 items-center justify-center ml-0 md:ml-8 mt-6 md:mt-0">
+          <div className="flex flex-row gap-2 items-center justify-end mt-4 flex-wrap">
             {actionsConfig.checkbox && (
-              <div className="flex items-center mr-4">
+              <div className="flex items-center mr-3">
                 <Checkbox
                   checked={selectedOrders.includes(order.id || order.bookingId)}
                   onCheckedChange={() => handleToggleOne(order.id || order.bookingId)}
-                  className="rounded-full size-7 shadow-md border-2 border-[#006397] data-[state=checked]:bg-[#006397] data-[state=checked]:text-white flex items-center justify-center"
+                  className="rounded-full size-6 shadow-md border-2 border-[#006397] data-[state=checked]:bg-[#006397] data-[state=checked]:text-white flex items-center justify-center"
                 />
               </div>
             )}
-            {actionButtons.filter(btn => btn.show).map(btn => (
+            
+            {/* Primary Action Buttons */}
+            {actionButtons.filter(btn => btn.show && ['view', 'status', 'liveTrack'].includes(btn.key)).map(btn => (
               <button
                 key={btn.key}
                 onClick={btn.handler}
                 title={btn.title}
-                className="text-[#006397] hover:text-[#02abf5] p-3 rounded-full transition-colors shadow-md"
-                style={{ fontSize: 24 }}
+                className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-2 rounded-full transition-colors font-semibold flex items-center gap-1"
+                style={{ fontSize: 12 }}
               >
-                <btn.icon className="w-6 h-6" />
+                <btn.icon className="w-4 h-4" />
+                <span className="font-medium">{btn.title}</span>
               </button>
             ))}
+            
+            {/* Dropdown for Secondary Actions */}
+            {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).length > 0 && (
+              <div className="relative">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      className="bg-[#006397] hover:bg-[#02abf5] text-white p-2 rounded-full transition-colors font-semibold"
+                      style={{ fontSize: 12 }}
+                    >
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-48 p-2" align="end">
+                    <div className="flex flex-col gap-1">
+                      {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).map(btn => (
+                        <button
+                          key={btn.key}
+                          onClick={btn.handler}
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                        >
+                          <btn.icon className="w-4 h-4" />
+                          <span>{btn.title}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
           </div>
         </div>
       </div>

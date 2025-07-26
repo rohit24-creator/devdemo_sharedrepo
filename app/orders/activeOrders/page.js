@@ -16,6 +16,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "334.71 miles",
     duration: "9 hours 26 mins",
+    customerName: "cohizon",
 
     statusHistory: [
       {
@@ -173,6 +174,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "1,420.5 miles",
     duration: "22 hours 10 mins",
+    customerName: "techcorp",
     // Status history for timeline modal
     statusHistory: [
       {
@@ -331,6 +333,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "400 miles",
     duration: "8 hours",
+    customerName: "Customer 3",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -346,6 +349,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "600 miles",
     duration: "10 hours",
+    customerName: "Customer 4",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -361,6 +365,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "300 miles",
     duration: "6 hours",
+    customerName: "Customer 5",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -376,6 +381,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "500 miles",
     duration: "9 hours",
+    customerName: "Customer 6",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -391,6 +397,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "100 miles",
     duration: "2 hours",
+    customerName: "Customer 7",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -406,6 +413,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "350 miles",
     duration: "7 hours",
+    customerName: "Customer 8",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -421,6 +429,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "700 miles",
     duration: "12 hours",
+    customerName: "Customer 9",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -436,6 +445,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "250 miles",
     duration: "5 hours",
+    customerName: "Customer 10",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   },
   {
@@ -451,6 +461,7 @@ const sampleActiveOrders = [
     status: "In Transit",
     distance: "450 miles",
     duration: "8 hours",
+    customerName: "Customer 11",
     statusHistory: [], bookingInfo: {}, referenceDetails: [], routingDetails: {}, cargoDetails: [], involvedParties: []
   }
 ];
