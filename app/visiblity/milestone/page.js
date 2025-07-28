@@ -17,7 +17,7 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from '@/components/ui/pagination'
-import StatusHistoryModal, { ShareSecureLinkModal, useStatusHistoryModal, useShareSecureLinkModal, AssignVehicleModal, useAssignVehicleModal, NearbyVehicleModal, useNearbyVehicleModal, BillingDetailsModal, useBillingDetailsModal, CO2EmissionModal, useCO2EmissionModal } from '@/components/ui/reusableComponent/statusHistoryModal'
+import StatusHistoryModal, { ShareSecureLinkModal, useStatusHistoryModal, useShareSecureLinkModal, AssignVehicleModal, useAssignVehicleModal, NearbyVehicleModal, useNearbyVehicleModal, BillingDetailsModal, useBillingDetailsModal, CO2EmissionModal, useCO2EmissionModal } from '@/components/ui/reusableComponent/milestoneModals'
 import {
   DropdownMenu,
   DropdownMenuTrigger,

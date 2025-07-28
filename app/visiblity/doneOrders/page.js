@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import OrderListWithActions from "@/components/ui/reusableComponent/OrderListWithActions";
+import OrderListWithActions from "@/components/ui/reusableComponent/activePendingDoneOrders";
 
 const sampleDoneOrders = [
   {
