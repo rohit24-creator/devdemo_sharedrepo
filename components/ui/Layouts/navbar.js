@@ -14,50 +14,50 @@ const navGroups = [
   {
     label: 'Business Partner',
     items: [
-      { href: '/businessPartner/partnerDetails', label: 'Partner Details' },
-      { href: '/businessPartner/additionalLocation', label: 'Additional Location' },
-      { href: '/businessPartner/financials', label: 'Financials' },
-      { href: '/businessPartner/EDIAPI', label: 'EDI-API' },
-      { href: '/businessPartner/switch', label: 'Switches' },
+      { href: '/masters/businessPartner/partnerDetails', label: 'Partner Details' },
+      { href: '/masters/businessPartner/additionalLocation', label: 'Additional Location' },
+      { href: '/masters/businessPartner/financials', label: 'Financials' },
+      { href: '/masters/businessPartner/EDIAPI', label: 'EDI-API' },
+      { href: '/masters/businessPartner/switch', label: 'Switches' },
     ],
   },
   {
     label: 'Profiles',
     items: [
-      { href: '/profiles/customerProfile', label: 'Customer Profile' },
-      { href: '/profiles/vendorProfile', label: 'Vendor Profile' },
-      { href: '/profiles/vehicleProfile', label: 'Vehicle Profile' },
+      { href: '/masters/profiles/customerProfile', label: 'Customer Profile' },
+      { href: '/masters/profiles/vendorProfile', label: 'Vendor Profile' },
+      { href: '/masters/profiles/vehicleProfile', label: 'Vehicle Profile' },
     ],
   },
   {
     label: 'Fleet',
     items: [
-      { href: '/fleet/Drivers', label: 'Drivers' },
-      { href: '/fleet/vehicles', label: 'Vehicles' },
-      { href: '/fleet/Co2form', label: 'Co2form' },
-      { href: '/fleet/costCenter', label: 'Cost Center' },
-      { href: '/fleet/orderType', label: 'Order Type' },
-      { href: '/fleet/vehicleType', label: 'Vehicle Type' },
+      { href: '/masters/fleet/Drivers', label: 'Drivers' },
+      { href: '/masters/fleet/vehicles', label: 'Vehicles' },
+      { href: '/masters/fleet/Co2form', label: 'Co2form' },
+      { href: '/masters/fleet/costCenter', label: 'Cost Center' },
+      { href: '/masters/fleet/orderType', label: 'Order Type' },
+      { href: '/masters/fleet/vehicleType', label: 'Vehicle Type' },
     ],
   },
   {
     label: 'PinCodes',
     items: [
-      { href: '/pinCodes/pinCode', label: 'Pincode' },
-      { href: '/pinCodes/preferedState', label: 'Prefered State' },
-      { href: '/pinCodes/tripallocationRatio', label: 'Trip allocation Ratio' },
+      { href: '/masters/pinCodes/pinCode', label: 'Pincode' },
+      { href: '/masters/pinCodes/preferedState', label: 'Prefered State' },
+      { href: '/masters/pinCodes/tripallocationRatio', label: 'Trip allocation Ratio' },
     ],
   },
 ]
 
 const navItems = [
-  { href: '/status', label: 'Status Master' },
-  { href: '/lanesMaster', label: 'Lanes Master' },
-  { href: '/regions', label: 'Regions' },
-  { href: '/shipmentType', label: 'Shipment Type' },
-  { href: '/trafficCode', label: 'Traffic Code' },
-  { href: '/allocationRules', label: 'Allocation Rules' },
-  { href: '/communication', label: 'Communication' },
+  { href: '/masters/status', label: 'Status Master' },
+  { href: '/masters/lanesMaster', label: 'Lanes Master' },
+  { href: '/masters/regions', label: 'Regions' },
+  { href: '/masters/shipmentType', label: 'Shipment Type' },
+  { href: '/masters/trafficCode', label: 'Traffic Code' },
+  { href: '/masters/allocationRules', label: 'Allocation Rules' },
+  { href: '/masters/communication', label: 'Communication' },
 ]
 
 export default function Navbar() {
