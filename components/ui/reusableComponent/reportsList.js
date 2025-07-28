@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, Search, LayoutGrid, FileText } from "lucide-react";
+import { ArrowUpDown, Search, LayoutGrid, FileText, MoreVertical } from "lucide-react";
 import { Edit, Eye, Trash2, History } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
@@ -256,29 +256,29 @@ export default function ReportsList({
         </div>
 
         <div className="flex items-end gap-6 pr-2">
-          {showFirstIcon && (
-            <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
-          )}
-          {showSecondIcon && (
+          {filterFields.length > 5 ? (
+            // Show 3-dots action button when more than 5 filter fields
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
+                <button
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium"
+                  style={{ fontSize: 13 }}
+                >
+                  <MoreVertical className="w-4 h-4" />
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
+                {showFirstIcon && (
+                  <DropdownMenuItem onClick={() => console.log("Search action")}>
+                    <Search size={16} className="mr-2" />
+                    Search
+                  </DropdownMenuItem>
+                )}
                 {secondIconMenu.map((item, idx) => (
                   <DropdownMenuItem key={idx} onClick={item.onClick}>
                     {item.label}
                   </DropdownMenuItem>
                 ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          {showThirdIcon && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
                 {thirdIconMenu.map((item, idx) => (
                   <DropdownMenuItem key={idx} onClick={item.onClick}>
                     {item.label}
@@ -286,6 +286,41 @@ export default function ReportsList({
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : (
+            // Show individual icons when 5 or fewer filter fields
+            <>
+              {showFirstIcon && (
+                <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+              )}
+              {showSecondIcon && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {secondIconMenu.map((item, idx) => (
+                      <DropdownMenuItem key={idx} onClick={item.onClick}>
+                        {item.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+              {showThirdIcon && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {thirdIconMenu.map((item, idx) => (
+                      <DropdownMenuItem key={idx} onClick={item.onClick}>
+                        {item.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </>
           )}
         </div>
       </CardContent>

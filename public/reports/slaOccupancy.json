@@ -1,0 +1,138 @@
+{
+  "headers": [
+    {
+      "accessorKey": "sno",
+      "header": "S.No"
+    },
+    {
+      "accessorKey": "vehicle",
+      "header": "Vehicle"
+    },
+    {
+      "accessorKey": "trips",
+      "header": "Trips"
+    },
+    {
+      "accessorKey": "km",
+      "header": "KM"
+    },
+    {
+      "accessorKey": "sla",
+      "header": "SLA"
+    },
+    {
+      "accessorKey": "volumeOccupancy",
+      "header": "Volume Occupancy"
+    },
+    {
+      "accessorKey": "distance",
+      "header": "Distance"
+    },
+    {
+      "accessorKey": "weightOccupancy",
+      "header": "Weight Occupancy"
+    }
+  ],
+  "rows": [
+    {
+      "sno": "1",
+      "vehicle": "Truck-001",
+      "trips": "15",
+      "km": "450",
+      "sla": "95%",
+      "volumeOccupancy": "78%",
+      "distance": "1200",
+      "weightOccupancy": "85%"
+    },
+    {
+      "sno": "2",
+      "vehicle": "Truck-002",
+      "trips": "12",
+      "km": "380",
+      "sla": "88%",
+      "volumeOccupancy": "65%",
+      "distance": "950",
+      "weightOccupancy": "72%"
+    },
+    {
+      "sno": "3",
+      "vehicle": "Truck-003",
+      "trips": "18",
+      "km": "520",
+      "sla": "92%",
+      "volumeOccupancy": "82%",
+      "distance": "1400",
+      "weightOccupancy": "90%"
+    },
+    {
+      "sno": "4",
+      "vehicle": "Truck-004",
+      "trips": "10",
+      "km": "320",
+      "sla": "85%",
+      "volumeOccupancy": "58%",
+      "distance": "800",
+      "weightOccupancy": "68%"
+    },
+    {
+      "sno": "5",
+      "vehicle": "Truck-005",
+      "trips": "14",
+      "km": "410",
+      "sla": "89%",
+      "volumeOccupancy": "71%",
+      "distance": "1100",
+      "weightOccupancy": "78%"
+    },
+    {
+      "sno": "6",
+      "vehicle": "Truck-006",
+      "trips": "16",
+      "km": "480",
+      "sla": "94%",
+      "volumeOccupancy": "79%",
+      "distance": "1300",
+      "weightOccupancy": "87%"
+    },
+    {
+      "sno": "7",
+      "vehicle": "Truck-007",
+      "trips": "11",
+      "km": "350",
+      "sla": "87%",
+      "volumeOccupancy": "62%",
+      "distance": "900",
+      "weightOccupancy": "70%"
+    },
+    {
+      "sno": "8",
+      "vehicle": "Truck-008",
+      "trips": "13",
+      "km": "390",
+      "sla": "91%",
+      "volumeOccupancy": "75%",
+      "distance": "1050",
+      "weightOccupancy": "82%"
+    },
+    {
+      "sno": "9",
+      "vehicle": "Truck-009",
+      "trips": "17",
+      "km": "510",
+      "sla": "96%",
+      "volumeOccupancy": "84%",
+      "distance": "1350",
+      "weightOccupancy": "92%"
+    },
+    {
+      "sno": "10",
+      "vehicle": "Truck-010",
+      "trips": "9",
+      "km": "280",
+      "sla": "83%",
+      "volumeOccupancy": "55%",
+      "distance": "750",
+      "weightOccupancy": "65%"
+    }
+  ]
+} 

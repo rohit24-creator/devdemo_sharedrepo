@@ -1,0 +1,93 @@
+{
+  "headers": [
+    {
+      "accessorKey": "shipmentShop",
+      "header": "Shipments/Shop"
+    },
+    {
+      "accessorKey": "delayed",
+      "header": "Delayed"
+    },
+    {
+      "accessorKey": "trip",
+      "header": "Trip"
+    }
+  ],
+  "rows": [
+    {
+      "shipmentShop": "Shop-001",
+      "delayed": "2",
+      "trip": "TRP-001"
+    },
+    {
+      "shipmentShop": "Shop-002",
+      "delayed": "0",
+      "trip": "TRP-002"
+    },
+    {
+      "shipmentShop": "Shop-003",
+      "delayed": "1",
+      "trip": "TRP-003"
+    },
+    {
+      "shipmentShop": "Shop-004",
+      "delayed": "3",
+      "trip": "TRP-004"
+    },
+    {
+      "shipmentShop": "Shop-005",
+      "delayed": "0",
+      "trip": "TRP-005"
+    },
+    {
+      "shipmentShop": "Shop-006",
+      "delayed": "1",
+      "trip": "TRP-006"
+    },
+    {
+      "shipmentShop": "Shop-007",
+      "delayed": "2",
+      "trip": "TRP-007"
+    },
+    {
+      "shipmentShop": "Shop-008",
+      "delayed": "0",
+      "trip": "TRP-008"
+    },
+    {
+      "shipmentShop": "Shop-009",
+      "delayed": "1",
+      "trip": "TRP-009"
+    },
+    {
+      "shipmentShop": "Shop-010",
+      "delayed": "2",
+      "trip": "TRP-010"
+    },
+    {
+      "shipmentShop": "Shop-011",
+      "delayed": "0",
+      "trip": "TRP-011"
+    },
+    {
+      "shipmentShop": "Shop-012",
+      "delayed": "1",
+      "trip": "TRP-012"
+    },
+    {
+      "shipmentShop": "Shop-013",
+      "delayed": "3",
+      "trip": "TRP-013"
+    },
+    {
+      "shipmentShop": "Shop-014",
+      "delayed": "0",
+      "trip": "TRP-014"
+    },
+    {
+      "shipmentShop": "Shop-015",
+      "delayed": "1",
+      "trip": "TRP-015"
+    }
+  ]
+} 
