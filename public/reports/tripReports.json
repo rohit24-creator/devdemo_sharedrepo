@@ -1,0 +1,124 @@
+{
+  "headers": [
+    {
+      "accessorKey": "tripShipment",
+      "header": "Trip / Shipment"
+    },
+    {
+      "accessorKey": "history",
+      "header": "History"
+    },
+    {
+      "accessorKey": "trip",
+      "header": "Trip"
+    },
+    {
+      "accessorKey": "tripTime",
+      "header": "Trip Time"
+    },
+    {
+      "accessorKey": "tripDate",
+      "header": "Trip Date"
+    },
+    {
+      "accessorKey": "totalUnits",
+      "header": "Total Units"
+    },
+    {
+      "accessorKey": "updatedUnits",
+      "header": "Updated Units"
+    }
+  ],
+  "rows": [
+    {
+      "tripShipment": "TRP-001/SHP-001",
+      "history": "Completed",
+      "trip": "TRP-001",
+      "tripTime": "14:30",
+      "tripDate": "2024-01-15",
+      "totalUnits": "150",
+      "updatedUnits": "145"
+    },
+    {
+      "tripShipment": "TRP-002/SHP-002",
+      "history": "In Progress",
+      "trip": "TRP-002",
+      "tripTime": "09:15",
+      "tripDate": "2024-01-16",
+      "totalUnits": "200",
+      "updatedUnits": "180"
+    },
+    {
+      "tripShipment": "TRP-003/SHP-003",
+      "history": "Pending",
+      "trip": "TRP-003",
+      "tripTime": "16:45",
+      "tripDate": "2024-01-17",
+      "totalUnits": "75",
+      "updatedUnits": "0"
+    },
+    {
+      "tripShipment": "TRP-004/SHP-004",
+      "history": "Completed",
+      "trip": "TRP-004",
+      "tripTime": "11:20",
+      "tripDate": "2024-01-18",
+      "totalUnits": "120",
+      "updatedUnits": "120"
+    },
+    {
+      "tripShipment": "TRP-005/SHP-005",
+      "history": "In Progress",
+      "trip": "TRP-005",
+      "tripTime": "13:00",
+      "tripDate": "2024-01-19",
+      "totalUnits": "90",
+      "updatedUnits": "65"
+    },
+    {
+      "tripShipment": "TRP-006/SHP-006",
+      "history": "Completed",
+      "trip": "TRP-006",
+      "tripTime": "08:30",
+      "tripDate": "2024-01-20",
+      "totalUnits": "180",
+      "updatedUnits": "175"
+    },
+    {
+      "tripShipment": "TRP-007/SHP-007",
+      "history": "Pending",
+      "trip": "TRP-007",
+      "tripTime": "15:45",
+      "tripDate": "2024-01-21",
+      "totalUnits": "110",
+      "updatedUnits": "0"
+    },
+    {
+      "tripShipment": "TRP-008/SHP-008",
+      "history": "In Progress",
+      "trip": "TRP-008",
+      "tripTime": "10:15",
+      "tripDate": "2024-01-22",
+      "totalUnits": "95",
+      "updatedUnits": "70"
+    },
+    {
+      "tripShipment": "TRP-009/SHP-009",
+      "history": "Completed",
+      "trip": "TRP-009",
+      "tripTime": "12:00",
+      "tripDate": "2024-01-23",
+      "totalUnits": "160",
+      "updatedUnits": "155"
+    },
+    {
+      "tripShipment": "TRP-010/SHP-010",
+      "history": "In Progress",
+      "trip": "TRP-010",
+      "tripTime": "17:30",
+      "tripDate": "2024-01-24",
+      "totalUnits": "85",
+      "updatedUnits": "45"
+    }
+  ]
+} 

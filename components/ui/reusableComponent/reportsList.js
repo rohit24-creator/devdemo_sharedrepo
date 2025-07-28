@@ -25,7 +25,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, Search, LayoutGrid, FileText, Download, Eye, Filter } from "lucide-react";
+import { ArrowUpDown, Search, LayoutGrid, FileText } from "lucide-react";
+import { Edit, Eye, Trash2, History } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -46,15 +47,13 @@ export default function ReportsList({
   rows = [],
   filterFields = [],
   onSearch = () => {},
-  onExport = () => {},
-  onViewReport = () => {},
-  showFilterIcon = true,
-  showExportIcon = true,
-  showViewIcon = true,
-  filterIconMenu = [],
-  exportIconMenu = [],
-  viewIconMenu = [],
-  enabledActions = ["view", "export", "filter"],
+  showActions = true,
+  showFirstIcon = true,
+  showSecondIcon = true,
+  showThirdIcon = true,
+  secondIconMenu = [],
+  thirdIconMenu = [],
+  enabledActions = ["edit", "view", "delete", "tripHistory"],
   onActionClick = () => {},
 }) {
   const [formValues, setFormValues] = useState({});
@@ -63,21 +62,25 @@ export default function ReportsList({
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
   const [selectedRows, setSelectedRows] = useState([]);
-  const [viewDialogOpen, setViewDialogOpen] = useState(false);
-  const [rowToView, setRowToView] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
 
   const allAvailableActions = {
+    edit: {
+      label: "Edit",
+      icon: <Edit size={18} className="mr-2" />,
+    },
     view: {
-      label: "View Report",
+      label: "View",
       icon: <Eye size={18} className="mr-2" />,
     },
-    export: {
-      label: "Export",
-      icon: <Download size={18} className="mr-2" />,
+    delete: {
+      label: "Delete",
+      icon: <Trash2 size={18} className="mr-2" />,
     },
-    filter: {
-      label: "Filter",
-      icon: <Filter size={18} className="mr-2" />,
+    tripHistory: {
+      label: "Trip History",
+      icon: <History size={18} className="mr-2" />,
     },
   };
 
@@ -89,9 +92,9 @@ export default function ReportsList({
             ...action,
             key,
             onClick: (row) => {
-              if (key === "view") {
-                setRowToView(row);
-                setViewDialogOpen(true);
+              if (key === "delete") {
+                setRowToDelete(row);
+                setDeleteDialogOpen(true);
               } else {
                 onActionClick(key, row);
               }
@@ -101,17 +104,17 @@ export default function ReportsList({
     })
     .filter(Boolean);
 
-  const handleViewConfirm = () => {
-    if (rowToView) {
-      onActionClick("view", rowToView);
+  const handleDeleteConfirm = () => {
+    if (rowToDelete) {
+      onActionClick("delete", rowToDelete);
     }
-    setViewDialogOpen(false);
-    setRowToView(null);
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
   };
 
-  const handleViewCancel = () => {
-    setViewDialogOpen(false);
-    setRowToView(null);
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
   };
 
   const handleChange = (name, value) => {
@@ -122,7 +125,7 @@ export default function ReportsList({
     const { name, label, type = "text", options = [] } = field;
 
     return (
-      <div key={name} className="flex flex-col gap-1 w-40">
+      <div key={name} className="flex flex-col gap-1 w-50">
         <label htmlFor={name} className="text-sm font-medium text-gray-700">
           {label}
         </label>
@@ -253,13 +256,16 @@ export default function ReportsList({
         </div>
 
         <div className="flex items-end gap-6 pr-2">
-          {showFilterIcon && (
+          {showFirstIcon && (
+            <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+          )}
+          {showSecondIcon && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Filter size={18} className="cursor-pointer text-gray-600 mb-1" />
+                <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {filterIconMenu.map((item, idx) => (
+                {secondIconMenu.map((item, idx) => (
                   <DropdownMenuItem key={idx} onClick={item.onClick}>
                     {item.label}
                   </DropdownMenuItem>
@@ -267,27 +273,13 @@ export default function ReportsList({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-          {showExportIcon && (
+          {showThirdIcon && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Download size={18} className="cursor-pointer text-gray-600 mb-1" />
+                <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {exportIconMenu.map((item, idx) => (
-                  <DropdownMenuItem key={idx} onClick={item.onClick}>
-                    {item.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          {showViewIcon && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Eye size={18} className="cursor-pointer text-gray-600 mb-1" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {viewIconMenu.map((item, idx) => (
+                {thirdIconMenu.map((item, idx) => (
                   <DropdownMenuItem key={idx} onClick={item.onClick}>
                     {item.label}
                   </DropdownMenuItem>
@@ -304,7 +296,18 @@ export default function ReportsList({
     <Card>
       <CardContent className="p-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-[#006397]">{title}</h2>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
+                Toggle Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="start">
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>View</DropdownMenuItem>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <div className="flex items-center space-x-2">
             <label htmlFor="display" className="text-sm">
@@ -360,7 +363,7 @@ export default function ReportsList({
                   className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                 />
               </TableHead>
-              {rows.length > 0 && (
+              {showActions && rows.length > 0 && (
                 <TableHead className="w-12 px-6 py-3" />
               )}
               {columns.map((col, index) => {
@@ -395,27 +398,29 @@ export default function ReportsList({
                     />
                   </TableCell>
 
-                  <TableCell className="px-6 py-3">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="text-xl px-2">
-                          ☰
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent side="right">
-                        {effectiveActions.map((action, idx) => (
-                          <DropdownMenuItem
-                            key={idx}
-                            onClick={() => action.onClick(row)}
-                            className="flex items-center gap-2"
-                          >
-                            {action.icon}
-                            {action.label}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+                  {showActions && (
+                    <TableCell className="px-6 py-3">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="text-xl px-2">
+                            ☰
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right">
+                          {effectiveActions.map((action, idx) => (
+                            <DropdownMenuItem
+                              key={idx}
+                              onClick={() => action.onClick(row)}
+                              className="flex items-center gap-2"
+                            >
+                              {action.icon}
+                              {action.label}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  )}
 
                   {columns.map((col) => (
                     <TableCell key={col.accessorKey} className="text-sm px-6 py-3">
@@ -427,7 +432,7 @@ export default function ReportsList({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + 2}
+                  colSpan={columns.length + (showActions ? 2 : 1)}
                   className="text-center py-6"
                 >
                   No reports available.
@@ -445,27 +450,27 @@ export default function ReportsList({
       {filterTab}
       <div className="mt-4">{tableContent}</div>
       
-      {/* View Report Dialog */}
-      <Dialog open={viewDialogOpen} onOpenChange={() => {}}>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={() => {}}>
         <DialogContent 
           className="top-20 left-1/2 transform -translate-x-1/2 [&>button]:hidden" 
           style={{ position: 'fixed', top: '20%' }}
         >
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">View Report</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">Confirm Delete</DialogTitle>
             <DialogDescription className="text-lg">
-              Are you sure you want to view this report?
+              Are you sure you want to delete this record?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="" onClick={handleViewCancel}>
+            <Button variant="" onClick={handleDeleteCancel}>
               Cancel
             </Button>
             <Button 
-              onClick={handleViewConfirm}
-              className="bg-[#006397] hover:bg-[#02abf5]"
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
             >
-              View
+              OK
             </Button>
           </DialogFooter>
         </DialogContent>
