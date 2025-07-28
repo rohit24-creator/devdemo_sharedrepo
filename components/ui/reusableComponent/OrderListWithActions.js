@@ -46,13 +46,6 @@ const statusIconMap = {
   Pending: <Truck className="w-4 h-4 mr-1" />,
   default: <Truck className="w-4 h-4 mr-1" />,
 };
-const statusLabels = ["Pending", "In Transit", "Delivered"];
-const statusColors = ["bg-yellow-400", "bg-blue-500", "bg-green-500"];
-function getStatusStep(order) {
-  if (order.status === "Delivered") return 2;
-  if (order.status === "In Transit") return 1;
-  return 0;
-}
 
 function useDebounce(value, delay) {
   const [debounced, setDebounced] = useState(value);
@@ -133,44 +126,17 @@ function ComboboxBookingId({ value, onChange, options, placeholder = "Select Boo
 }
 
 function FilterTab({ filterFields, formValues, setFormValues, onSearch, orders = [] }) {
-  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Extract unique values for dropdowns with error handling and loading state
+  // Extract unique values for dropdowns
   const bookingIds = useMemo(() => {
-    try {
-      setIsLoadingOptions(true);
-      setError(null);
-      
-      const ids = [...new Set(orders.map(order => order.bookingId).filter(Boolean))];
-      const sortedIds = ids.sort();
-      
-      return sortedIds;
-    } catch (err) {
-      console.error('Error processing booking IDs:', err);
-      setError('Failed to load booking IDs');
-      return [];
-    } finally {
-      setIsLoadingOptions(false);
-    }
+    const ids = [...new Set(orders.map(order => order.bookingId).filter(Boolean))];
+    const sortedIds = ids.sort();
+    return sortedIds;
   }, [orders]);
 
   const referenceIds = useMemo(() => {
-    try {
-      setIsLoadingOptions(true);
-      setError(null);
-      
-      const refs = [...new Set(orders.map(order => order.shipmentId).filter(Boolean))];
-      const sortedRefs = refs.sort();
-      
-      return sortedRefs;
-    } catch (err) {
-      console.error('Error processing reference IDs:', err);
-      setError('Failed to load reference IDs');
-      return [];
-    } finally {
-      setIsLoadingOptions(false);
-    }
+    const refs = [...new Set(orders.map(order => order.shipmentId).filter(Boolean))];
+    const sortedRefs = refs.sort();
+    return sortedRefs;
   }, [orders]);
 
   const renderField = (field) => {
@@ -261,24 +227,22 @@ function FilterTab({ filterFields, formValues, setFormValues, onSearch, orders =
   };
   
   return (
-    <Card className="mb-4">
-      <CardContent className="p-4 flex justify-between flex-wrap gap-4">
-        <div className="flex flex-wrap items-end gap-3">
-          {filterFields.map(renderField)}
-          <Button
-            className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
-            onClick={() => onSearch(formValues)}
-          >
-            Search
-          </Button>
-        </div>
-        <div className="flex items-end gap-6 pr-2">
-          <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
-          <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
-          <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex justify-between flex-wrap gap-4">
+      <div className="flex flex-wrap items-end gap-3">
+        {filterFields.map(renderField)}
+        <Button
+          className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
+          onClick={() => onSearch(formValues)}
+        >
+          Search
+        </Button>
+      </div>
+      <div className="flex items-end gap-6 pr-2">
+        <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+        <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
+        <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
+      </div>
+    </div>
   );
 }
 
@@ -346,7 +310,6 @@ export default function OrderListWithActions({
 
   // --- Render order card/row ---
   const renderOrderCard = (order, idx) => {
-    const statusStep = getStatusStep(order);
     const statusColor = statusColorMap[order.status] || statusColorMap.default;
     const statusIcon = statusIconMap[order.status] || statusIconMap.default;
 
@@ -382,6 +345,12 @@ export default function OrderListWithActions({
         label: 'Customer',
         icon: null,
       },
+      {
+        key: 'orderStatus',
+        value: order.orderStatus || "Gate In",
+        label: 'Order Status',
+        icon: null,
+      },
     ];
 
     // Action buttons config
@@ -399,10 +368,8 @@ export default function OrderListWithActions({
         key={order.id}
         className={"relative flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all mb-4 overflow-hidden"}
       >
-        {/* Left colored status bar */}
-        <div className={["w-2 md:w-3", statusColor, "flex-shrink-0"].join(" ")} />
         {/* Main content */}
-        <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between px-8 py-10"> 
+        <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between px-8 py-6"> 
           <div className="flex-1 flex flex-col gap-2 min-w-0">
             {/* Top Row: Booking ID, Status */}
             <div className="flex flex-wrap items-center gap-6 mb-1">
@@ -430,7 +397,7 @@ export default function OrderListWithActions({
               {/* Date and Cust Ref */}
               {infoBlocks.slice(2).map((block) => (
                 <div key={block.key} className="flex flex-col min-w-[120px]">
-                  <span className="text-lg font-bold text-[#006397] flex items-center gap-1">{block.icon}{block.value}</span>
+                  <span className="text-lg font-bold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
                   <span className="text-xs text-gray-500 pt-1">{block.label}</span>
                 </div>
               ))}
@@ -448,28 +415,42 @@ export default function OrderListWithActions({
               </div>
             )}
             
-            {/* Primary Action Buttons */}
-            {actionButtons.filter(btn => btn.show && ['view', 'status', 'liveTrack'].includes(btn.key)).map(btn => (
+            {/* Primary Action Buttons - Bold and prominent */}
+            {actionButtons.filter(btn => btn.show && ['view', 'liveTrack'].includes(btn.key)).map(btn => (
               <button
                 key={btn.key}
                 onClick={btn.handler}
                 title={btn.title}
-                className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-2 rounded-full transition-colors font-semibold flex items-center gap-1"
-                style={{ fontSize: 12 }}
+                className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 py-2 rounded-lg transition-colors font-semibold flex items-center gap-2 shadow-md"
+                style={{ fontSize: 13 }}
               >
                 <btn.icon className="w-4 h-4" />
                 <span className="font-medium">{btn.title}</span>
               </button>
             ))}
             
-            {/* Dropdown for Secondary Actions */}
+            {/* Secondary Action Buttons - Subtle styling */}
+            {actionButtons.filter(btn => btn.show && ['status'].includes(btn.key)).map(btn => (
+              <button
+                key={btn.key}
+                onClick={btn.handler}
+                title={btn.title}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2"
+                style={{ fontSize: 13 }}
+              >
+                <btn.icon className="w-4 h-4" />
+                <span>{btn.title}</span>
+              </button>
+            ))}
+            
+            {/* Dropdown for Other Actions */}
             {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).length > 0 && (
               <div className="relative">
                 <Popover>
                   <PopoverTrigger asChild>
                     <button
-                      className="bg-[#006397] hover:bg-[#02abf5] text-white p-2 rounded-full transition-colors font-semibold"
-                      style={{ fontSize: 12 }}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium"
+                      style={{ fontSize: 13 }}
                     >
                       <MoreVertical className="w-4 h-4" />
                     </button>
@@ -525,16 +506,12 @@ export default function OrderListWithActions({
 
   return (
     <div className="rounded-2xl shadow-lg border border-gray-200 overflow-hidden bg-white">
-      {/* Filter Tab as Card Header */}
-      <div className="bg-gray-50 px-8 py-4 rounded-t-2xl flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div className="w-full">
-          <FilterTab filterFields={filterFields} formValues={formValues} setFormValues={setFormValues} onSearch={onSearch} orders={orders} />
-        </div>
+      {/* Filter Tab - Compact design */}
+      <div className="px-8 py-4 border-b border-gray-100">
+        <FilterTab filterFields={filterFields} formValues={formValues} setFormValues={setFormValues} onSearch={onSearch} orders={orders} />
       </div>
-      {/* Subtle divider (shadow) */}
-      <div className="h-2 bg-gradient-to-b from-gray-100 to-transparent w-full" />
-      {/* Order List and Pagination as Card Content */}
-      <CardContent className="bg-white pt-2 pb-6 px-8 rounded-b-2xl">
+      {/* Order List and Pagination */}
+      <div className="px-8 py-4">
         {actionsConfig.checkbox && (
           <div className="flex items-center justify-end gap-4 mb-4">
             <Checkbox
@@ -606,7 +583,7 @@ export default function OrderListWithActions({
         )}
         {/* Modals */}
         {modalOpen && renderModalContent()}
-      </CardContent>
+      </div>
     </div>
   );
 } 
