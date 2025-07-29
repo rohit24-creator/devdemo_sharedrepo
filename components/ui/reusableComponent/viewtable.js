@@ -218,31 +218,28 @@ const renderField = (field) => {
     }
   };
 
-  // ✅ Checkbox logic
-  const isAllSelected =
+
+    const isAllSelected =
     paginatedRows.length > 0 &&
-    paginatedRows.every((row) => selectedRows.includes(row));
+    paginatedRows.every((row) => selectedRows.includes(row.id));
 
   const toggleSelectAll = () => {
+    const pageRowIds = paginatedRows.map((row) => row.id);
     if (isAllSelected) {
-      setSelectedRows((prev) =>
-        prev.filter((row) => !paginatedRows.includes(row))
-      );
+      setSelectedRows((prev) => prev.filter((id) => !pageRowIds.includes(id)));
     } else {
-      setSelectedRows((prev) => [
-        ...prev,
-        ...paginatedRows.filter((row) => !prev.includes(row)),
-      ]);
+      setSelectedRows((prev) => [...new Set([...prev, ...pageRowIds])]);
     }
   };
 
   const toggleRow = (row) => {
     setSelectedRows((prev) =>
-      prev.includes(row)
-        ? prev.filter((r) => r !== row)
-        : [...prev, row]
+      prev.includes(row.id)
+        ? prev.filter((id) => id !== row.id)
+        : [...prev, row.id]
     );
   };
+
 const filterTab = (
   <Card>
     <CardContent className="p-4 flex justify-between flex-wrap gap-4">
@@ -395,7 +392,7 @@ const filterTab = (
                 <TableRow key={rowIndex}>
                   <TableCell className="px-6 py-3">
                     <Checkbox
-                      checked={selectedRows.includes(row)}
+                      checked={selectedRows.includes(row.id)}
                       onCheckedChange={() => toggleRow(row)}
                       className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                     />

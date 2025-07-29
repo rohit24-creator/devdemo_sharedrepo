@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
-import { v4 as uuidv4 } from "uuid";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function KmReportsPage() {
   const [tabData, setTabData] = useState({});
@@ -51,15 +51,11 @@ export default function KmReportsPage() {
         const res = await fetch("/reports/kmReports.json");
         const data = await res.json();
 
-
         const processedData = {};
         Object.keys(data).forEach((tabKey) => {
           processedData[tabKey] = {
             headers: data[tabKey].headers,
-            rows: data[tabKey].rows.map((row, index) => ({
-              ...row,
-              id: row.id || uuidv4() || `${tabKey}-row-${index}`,
-            })),
+            rows: formatRowsWithId(data[tabKey].rows),
           };
         });
 

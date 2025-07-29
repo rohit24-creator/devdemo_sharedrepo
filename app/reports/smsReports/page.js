@@ -1,45 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { formatRowsWithId } from "@/lib/utils";
 
-export default function TripReportsPage() {
+export default function SmsReports() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
 
-
+  // Filter fields for SMS reports
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
-    { name: "toDate", label: "To Date", type: "date" },
-    { name: "tripVehicle", label: "Trip Vehicle" },
-    { 
-      name: "shipmentType", 
-      label: "Shipment Type", 
-      type: "select",
-      options: ["Express", "Standard", "Economy", "Premium"]
-    },
-    { name: "regularInput", label: "Regular Input" }
+    { name: "toDate", label: "To Date", type: "date" }
   ];
 
-
-
   const secondIconMenu = [
-    { label: "View as Grid", onClick: () => console.log("Grid View") },
-    { label: "View as Table", onClick: () => console.log("Table View") },
+    { label: "Export to Excel", onClick: () => console.log("Export to Excel") },
+    { label: "Export to PDF", onClick: () => console.log("Export to PDF") },
+    { label: "Print Report", onClick: () => console.log("Print Report") }
   ];
 
   const thirdIconMenu = [
-    { label: "Export PDF", onClick: () => console.log("PDF Export") },
-    { label: "Export Excel", onClick: () => console.log("Excel Export") },
+    { label: "Refresh Data", onClick: () => console.log("Refresh Data") },
+    { label: "Settings", onClick: () => console.log("Settings") }
   ];
+
+  const handleSearch = (formValues) => {
+    console.log("Search with values:", formValues);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/reports/tripReports.json");
+        const res = await fetch("/reports/smsReports.json");
         const data = await res.json();
-
 
         const formattedColumns = data.headers.map((header) => ({
           accessorKey: header.accessorKey,
@@ -49,23 +43,23 @@ export default function TripReportsPage() {
         const formattedRows = formatRowsWithId(data.rows);
         setColumns(formattedColumns);
         setRows(formattedRows);
-      } catch (err) {
-        console.error("Error fetching trip reports data:", err);
+      } catch (error) {
+        console.error("Error fetching SMS reports data:", error);
       }
     };
+
     fetchData();
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="p-6">
       <ReportsList
-        title="Trip Reports"
+        title="SMS Reports"
         columns={columns}
         rows={rows}
         filterFields={filterFields}
-        onSearch={(data) => {
-          console.log("Search Triggered with values:", data);
-        }}
+        onSearch={handleSearch}
+        showActions={false}
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
@@ -74,4 +68,4 @@ export default function TripReportsPage() {
       />
     </div>
   );
-}
+} 
