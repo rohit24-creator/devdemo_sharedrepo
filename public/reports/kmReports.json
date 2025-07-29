@@ -1,0 +1,56 @@
+{
+  "dayWise": {
+    "headers": [
+      { "accessorKey": "sno", "header": "S.No" },
+      { "accessorKey": "registerNumber", "header": "Register Number" },
+      { "accessorKey": "date", "header": "Date" },
+      { "accessorKey": "distance", "header": "Distance (km)" }
+    ],
+    "rows": [
+      { "sno": "1", "registerNumber": "TN-01-AB-1234", "date": "2024-01-15", "distance": "450" },
+      { "sno": "2", "registerNumber": "TN-02-CD-5678", "date": "2024-01-15", "distance": "380" },
+      { "sno": "3", "registerNumber": "TN-03-EF-9012", "date": "2024-01-15", "distance": "520" },
+      { "sno": "4", "registerNumber": "TN-04-GH-3456", "date": "2024-01-15", "distance": "320" },
+      { "sno": "5", "registerNumber": "TN-05-IJ-7890", "date": "2024-01-15", "distance": "410" },
+      { "sno": "6", "registerNumber": "TN-06-KL-2345", "date": "2024-01-15", "distance": "290" },
+      { "sno": "7", "registerNumber": "TN-07-MN-6789", "date": "2024-01-15", "distance": "480" },
+      { "sno": "8", "registerNumber": "TN-08-OP-0123", "date": "2024-01-15", "distance": "350" }
+    ]
+  },
+  "weekWise": {
+    "headers": [
+      { "accessorKey": "sno", "header": "S.No" },
+      { "accessorKey": "registerNumber", "header": "Register Number" },
+      { "accessorKey": "date", "header": "Date" },
+      { "accessorKey": "distance", "header": "Distance (km)" }
+    ],
+    "rows": [
+      { "sno": "1", "registerNumber": "TN-01-AB-1234", "date": "Week 1 (Jan 1-7)", "distance": "2,850" },
+      { "sno": "2", "registerNumber": "TN-02-CD-5678", "date": "Week 1 (Jan 1-7)", "distance": "2,380" },
+      { "sno": "3", "registerNumber": "TN-03-EF-9012", "date": "Week 1 (Jan 1-7)", "distance": "3,120" },
+      { "sno": "4", "registerNumber": "TN-04-GH-3456", "date": "Week 1 (Jan 1-7)", "distance": "1,920" },
+      { "sno": "5", "registerNumber": "TN-05-IJ-7890", "date": "Week 1 (Jan 1-7)", "distance": "2,460" },
+      { "sno": "6", "registerNumber": "TN-06-KL-2345", "date": "Week 2 (Jan 8-14)", "distance": "1,740" },
+      { "sno": "7", "registerNumber": "TN-07-MN-6789", "date": "Week 2 (Jan 8-14)", "distance": "2,880" },
+      { "sno": "8", "registerNumber": "TN-08-OP-0123", "date": "Week 2 (Jan 8-14)", "distance": "2,100" }
+    ]
+  },
+  "monthWise": {
+    "headers": [
+      { "accessorKey": "sno", "header": "S.No" },
+      { "accessorKey": "registerNumber", "header": "Register Number" },
+      { "accessorKey": "date", "header": "Date" },
+      { "accessorKey": "distance", "header": "Distance (km)" }
+    ],
+    "rows": [
+      { "sno": "1", "registerNumber": "TN-01-AB-1234", "date": "January 2024", "distance": "11,400" },
+      { "sno": "2", "registerNumber": "TN-02-CD-5678", "date": "January 2024", "distance": "9,520" },
+      { "sno": "3", "registerNumber": "TN-03-EF-9012", "date": "January 2024", "distance": "12,480" },
+      { "sno": "4", "registerNumber": "TN-04-GH-3456", "date": "January 2024", "distance": "7,680" },
+      { "sno": "5", "registerNumber": "TN-05-IJ-7890", "date": "January 2024", "distance": "9,840" },
+      { "sno": "6", "registerNumber": "TN-06-KL-2345", "date": "January 2024", "distance": "6,960" },
+      { "sno": "7", "registerNumber": "TN-07-MN-6789", "date": "January 2024", "distance": "11,520" },
+      { "sno": "8", "registerNumber": "TN-08-OP-0123", "date": "January 2024", "distance": "8,400" }
+    ]
+  }
+} 

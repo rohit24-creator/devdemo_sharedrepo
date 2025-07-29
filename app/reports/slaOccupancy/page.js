@@ -33,24 +33,6 @@ export default function SlaOccupancyPage() {
     }
   ];
 
-  // Action handler for report actions
-  const handleActionClick = (action, row) => {
-    if (action === "delete") {
-      const updatedTabData = { ...tabData };
-      Object.keys(updatedTabData).forEach((tabKey) => {
-        updatedTabData[tabKey].rows = updatedTabData[tabKey].rows.filter((r) => r.id !== row.id);
-      });
-      setTabData(updatedTabData);
-    } else if (action === "edit") {
-      console.log("Edit row", row);
-    } else if (action === "view") {
-      console.log("View row", row);
-    } else {
-      console.log("Unknown action", action, row);
-    }
-  };
-
-  // Icon menu items
   const secondIconMenu = [
     { label: "View as Grid", onClick: () => console.log("Grid View") },
     { label: "View as Table", onClick: () => console.log("Table View") },
@@ -67,7 +49,7 @@ export default function SlaOccupancyPage() {
         const res = await fetch("/reports/slaOccupancy.json");
         const data = await res.json();
 
-        // Add unique IDs to all rows
+
         const processedData = {};
         Object.keys(data).forEach((tabKey) => {
           processedData[tabKey] = {
@@ -111,8 +93,6 @@ export default function SlaOccupancyPage() {
         showThirdIcon={true}
         secondIconMenu={secondIconMenu}
         thirdIconMenu={thirdIconMenu}
-        enabledActions={["edit", "view", "delete"]}
-        onActionClick={handleActionClick}
         hasTabs={hasTabs}
       />
     </div>

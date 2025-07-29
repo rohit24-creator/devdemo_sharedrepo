@@ -22,19 +22,6 @@ export default function TripReportsPage() {
     { name: "regularInput", label: "Regular Input" }
   ];
 
-  // Action handler for report actions
-  const handleActionClick = (action, row) => {
-    if (action === "delete") {
-      const updated = rows.filter((r) => r.id !== row.id);
-      setRows(updated);
-    } else if (action === "edit") {
-      console.log("Edit row", row);
-    } else if (action === "view") {
-      console.log("View row", row); 
-    } else {
-      console.log("Unknown action", action, row);
-    }
-  };
 
   // Icon menu items
   const secondIconMenu = [
@@ -88,8 +75,6 @@ export default function TripReportsPage() {
         showThirdIcon={true}
         secondIconMenu={secondIconMenu}
         thirdIconMenu={thirdIconMenu}
-        enabledActions={["edit", "view", "delete"]}
-        onActionClick={handleActionClick}
       />
     </div>
   );

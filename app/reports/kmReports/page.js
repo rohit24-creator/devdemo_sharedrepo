@@ -4,43 +4,37 @@ import { useEffect, useState } from "react";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { v4 as uuidv4 } from "uuid";
 
-export default function ShipmentStopLevelPage() {
+export default function KmReportsPage() {
   const [tabData, setTabData] = useState({});
-  const [activeTab, setActiveTab] = useState("summary");
+  const [activeTab, setActiveTab] = useState("dayWise");
 
-  // Filter fields for shipment stop level reports
+
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
     { name: "toDate", label: "To Date", type: "date" },
-    { name: "tripVehicle", label: "Trip Vehicle" },
     { 
-      name: "zone", 
-      label: "Zone", 
-      type: "select",
-      options: ["North Zone", "South Zone", "East Zone", "West Zone", "Central Zone"]
-    },
-    { 
-      name: "orderId", 
-      label: "Order ID", 
-      type: "select",
-      options: ["ORD-001", "ORD-002", "ORD-003", "ORD-004", "ORD-005"]
-    },
-    { 
-      name: "regularDropdown", 
-      label: "Regular Dropdown", 
-      type: "select",
-      options: ["Option A", "Option B", "Option C", "Option D"]
-    },
-    { 
-      name: "shipmentType", 
-      label: "Shipment Type", 
-      type: "select",
-      options: ["Express", "Standard", "Economy", "Premium"]
+      name: "vehicle", 
+      label: "Vehicle", 
+      type: "filterSelect",
+      options: ["Truck-001", "Truck-002", "Truck-003", "Truck-004", "Truck-005", "Truck-006", "Truck-007", "Truck-008"]
     }
   ];
 
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      const updatedTabData = { ...tabData };
+      Object.keys(updatedTabData).forEach((tabKey) => {
+        updatedTabData[tabKey].rows = updatedTabData[tabKey].rows.filter((r) => r.id !== row.id);
+      });
+      setTabData(updatedTabData);
+    } else if (action === "edit") {
+      console.log("Edit row", row);
+    } else if (action === "view") {
+      console.log("View row", row);
+    } 
+  };
 
-  // Icon menu items
+
   const secondIconMenu = [
     { label: "View as Grid", onClick: () => console.log("Grid View") },
     { label: "View as Table", onClick: () => console.log("Table View") },
@@ -54,8 +48,9 @@ export default function ShipmentStopLevelPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/reports/shipmentStopLevel.json");
+        const res = await fetch("/reports/kmReports.json");
         const data = await res.json();
+
 
         const processedData = {};
         Object.keys(data).forEach((tabKey) => {
@@ -70,18 +65,19 @@ export default function ShipmentStopLevelPage() {
 
         setTabData(processedData);
       } catch (err) {
-        console.error("Error fetching shipment stop level data:", err);
+        console.error("Error fetching KM reports data:", err);
       }
     };
     fetchData();
   }, []);
 
-  // Simplified hasTabs prop with all data and config
+
   const hasTabs = {
     data: tabData,
     config: {
-      summary: "Summary",
-      reportDetails: "Report Details"
+      dayWise: "Day Wise",
+      weekWise: "Week Wise", 
+      monthWise: "Month Wise"
     },
     activeTab: activeTab,
     onTabChange: setActiveTab
@@ -90,7 +86,7 @@ export default function ShipmentStopLevelPage() {
   return (
     <div className="p-4">
       <ReportsList
-        title="Shipment Stop Level Reports"
+        title="KM Reports"
         filterFields={filterFields}
         onSearch={(data) => {
           console.log("Search Triggered with values:", data);
@@ -100,6 +96,9 @@ export default function ShipmentStopLevelPage() {
         showThirdIcon={true}
         secondIconMenu={secondIconMenu}
         thirdIconMenu={thirdIconMenu}
+        showActions={true}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
         hasTabs={hasTabs}
       />
     </div>

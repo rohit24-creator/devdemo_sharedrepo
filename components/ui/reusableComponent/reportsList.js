@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -41,6 +41,85 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
+
+
+function useDebounce(value, delay) {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
+}
+
+function FilterCombobox({ value, onChange, options, placeholder = "Select option" }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
+
+  const filteredOptions = useMemo(() => {
+    if (!debouncedSearch) return options;
+    return options.filter(option =>
+      String(option).toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
+  }, [options, debouncedSearch]);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {value
+            ? options.find((option) => option === value) || value
+            : placeholder}
+          <ChevronsUpDown className="opacity-50 ml-2 h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-full p-0">
+        <Command>
+          <CommandInput
+            value={search}
+            onValueChange={setSearch}
+            placeholder={`Search ${placeholder.toLowerCase()}...`}
+            className="h-9"
+          />
+          <CommandList>
+            {filteredOptions.length === 0 ? (
+              <CommandEmpty>No options found.</CommandEmpty>
+            ) : (
+              <CommandGroup>
+                {filteredOptions.map((option) => (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={(currentValue) => {
+                      onChange(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {option}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export default function ReportsList({
   title = "Reports",
@@ -48,15 +127,14 @@ export default function ReportsList({
   rows = [],
   filterFields = [],
   onSearch = () => {},
-  showActions = true,
+  showActions = false,
   showFirstIcon = true,
   showSecondIcon = true,
   showThirdIcon = true,
   secondIconMenu = [],
   thirdIconMenu = [],
-  enabledActions = ["edit", "view", "delete", "tripHistory"],
+  enabledActions = ["edit", "view", "delete"],
   onActionClick = () => {},
-  // Single prop for tabs - contains all tab data and config
   hasTabs = false,
 }) {
   const [formValues, setFormValues] = useState({});
@@ -85,10 +163,6 @@ export default function ReportsList({
     delete: {
       label: "Delete",
       icon: <Trash2 size={18} className="mr-2" />,
-    },
-    tripHistory: {
-      label: "Trip History",
-      icon: <History size={18} className="mr-2" />,
     },
   };
 
@@ -186,6 +260,13 @@ export default function ReportsList({
               )}
             </SelectContent>
           </Select>
+        ) : type === "filterSelect" ? (
+          <FilterCombobox
+            value={formValues[name] || ""}
+            onChange={(value) => handleChange(name, value)}
+            options={options}
+            placeholder={label}
+          />
         ) : (
           <Input
             type={type}
