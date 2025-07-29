@@ -281,9 +281,9 @@ export default function EdiTransactionsPage() {
         onSearch={handleSearch}
         onExport={handleExport}
         onViewReport={handleViewReport}
-        showFilterIcon={true}
-        showExportIcon={true}
-        showViewIcon={true}
+        showFirstIcon={true}
+        showSecondIcon={true}
+        showThirdIcon={true}
         filterIconMenu={filterIconMenu}
         exportIconMenu={exportIconMenu}
         viewIconMenu={viewIconMenu}
