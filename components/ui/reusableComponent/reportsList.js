@@ -322,7 +322,7 @@ export default function ReportsList({
     }
   };
 
-  // Fix checkbox functionality
+
   const isAllSelected =
     paginatedRows.length > 0 &&
     paginatedRows.every((row) => selectedRows.includes(row.id || row));

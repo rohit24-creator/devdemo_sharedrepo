@@ -4,25 +4,20 @@ import { useState, useEffect } from "react";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { formatRowsWithId } from "@/lib/utils";
 
-export default function SpeedReports() {
+export default function CustomerReport() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
 
-
+  // Filter fields for customer report
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
     { name: "toDate", label: "To Date", type: "date" },
+    { name: "trackingNumber", label: "Tracking Number" },
     { 
-      name: "allCarriers", 
-      label: "All Carriers", 
-      type: "filterSelect",
-      options: ["Carrier A", "Carrier B", "Carrier C", "Carrier D", "Carrier E", "Carrier F", "Carrier G", "Carrier H"]
-    },
-    { 
-      name: "drivers", 
-      label: "Drivers", 
-      type: "filterSelect",
-      options: ["John Doe", "Jane Smith", "Mike Johnson", "Sarah Wilson", "David Brown", "Lisa Davis", "Tom Wilson", "Emma Taylor"]
+      name: "status", 
+      label: "Status", 
+      type: "select",
+      options: ["Pending", "In Transit", "Delivered", "Cancelled", "Returned"]
     }
   ];
 
@@ -44,7 +39,7 @@ export default function SpeedReports() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/reports/speedReports.json");
+        const res = await fetch("/reports/operationalReport/customerReport.json");
         const data = await res.json();
 
         const formattedColumns = data.headers.map((header) => ({
@@ -56,7 +51,7 @@ export default function SpeedReports() {
         setColumns(formattedColumns);
         setRows(formattedRows);
       } catch (error) {
-        console.error("Error fetching speed reports data:", error);
+        console.error("Error fetching customer report data:", error);
       }
     };
 
@@ -66,7 +61,7 @@ export default function SpeedReports() {
   return (
     <div className="p-4">
       <ReportsList
-        title="Speed Reports"
+        title="Customer Report"
         columns={columns}
         rows={rows}
         filterFields={filterFields}

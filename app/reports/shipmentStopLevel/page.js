@@ -8,7 +8,7 @@ export default function ShipmentStopLevelPage() {
   const [tabData, setTabData] = useState({});
   const [activeTab, setActiveTab] = useState("summary");
 
-  // Filter fields for shipment stop level reports
+
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
     { name: "toDate", label: "To Date", type: "date" },
@@ -73,7 +73,7 @@ export default function ShipmentStopLevelPage() {
     fetchData();
   }, []);
 
-  // Simplified hasTabs prop with all data and config
+
   const hasTabs = {
     data: tabData,
     config: {
