@@ -5,8 +5,8 @@ import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { v4 as uuidv4 } from "uuid";
 
 export default function ShipmentStopLevelPage() {
-  const [columns, setColumns] = useState([]);
-  const [rows, setRows] = useState([]);
+  const [tabData, setTabData] = useState({});
+  const [activeTab, setActiveTab] = useState("summary");
 
   // Filter fields for shipment stop level reports
   const filterFields = [
@@ -42,8 +42,11 @@ export default function ShipmentStopLevelPage() {
   // Action handler for report actions
   const handleActionClick = (action, row) => {
     if (action === "delete") {
-      const updated = rows.filter((r) => r.id !== row.id);
-      setRows(updated);
+      const updatedTabData = { ...tabData };
+      Object.keys(updatedTabData).forEach((tabKey) => {
+        updatedTabData[tabKey].rows = updatedTabData[tabKey].rows.filter((r) => r.id !== row.id);
+      });
+      setTabData(updatedTabData);
     } else if (action === "edit") {
       console.log("Edit row", row);
     } else if (action === "view") {
@@ -70,20 +73,18 @@ export default function ShipmentStopLevelPage() {
         const res = await fetch("/reports/shipmentStopLevel.json");
         const data = await res.json();
 
-        // Format columns
-        const formattedColumns = data.headers.map((header) => ({
-          accessorKey: header.accessorKey,
-          header: header.header,
-        }));
+        const processedData = {};
+        Object.keys(data).forEach((tabKey) => {
+          processedData[tabKey] = {
+            headers: data[tabKey].headers,
+            rows: data[tabKey].rows.map((row, index) => ({
+              ...row,
+              id: row.id || uuidv4() || `${tabKey}-row-${index}`,
+            })),
+          };
+        });
 
-        // Add unique ID to each row 
-        const formattedRows = data.rows.map((row, index) => ({
-          ...row,
-          id: row.id || uuidv4() || `row-${index}`,
-        }));
-
-        setColumns(formattedColumns);
-        setRows(formattedRows);
+        setTabData(processedData);
       } catch (err) {
         console.error("Error fetching shipment stop level data:", err);
       }
@@ -91,12 +92,21 @@ export default function ShipmentStopLevelPage() {
     fetchData();
   }, []);
 
+  // Simplified hasTabs prop with all data and config
+  const hasTabs = {
+    data: tabData,
+    config: {
+      summary: "Summary",
+      reportDetails: "Report Details"
+    },
+    activeTab: activeTab,
+    onTabChange: setActiveTab
+  };
+
   return (
     <div className="p-4">
       <ReportsList
         title="Shipment Stop Level Reports"
-        columns={columns}
-        rows={rows}
         filterFields={filterFields}
         onSearch={(data) => {
           console.log("Search Triggered with values:", data);
@@ -108,6 +118,7 @@ export default function ShipmentStopLevelPage() {
         thirdIconMenu={thirdIconMenu}
         enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
+        hasTabs={hasTabs}
       />
     </div>
   );

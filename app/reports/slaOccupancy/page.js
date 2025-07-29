@@ -5,10 +5,9 @@ import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { v4 as uuidv4 } from "uuid";
 
 export default function SlaOccupancyPage() {
-  const [columns, setColumns] = useState([]);
-  const [rows, setRows] = useState([]);
+  const [tabData, setTabData] = useState({});
+  const [activeTab, setActiveTab] = useState("summary");
 
-  // Filter fields for SLA occupancy reports
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
     { name: "toDate", label: "To Date", type: "date" },
@@ -37,8 +36,11 @@ export default function SlaOccupancyPage() {
   // Action handler for report actions
   const handleActionClick = (action, row) => {
     if (action === "delete") {
-      const updated = rows.filter((r) => r.id !== row.id);
-      setRows(updated);
+      const updatedTabData = { ...tabData };
+      Object.keys(updatedTabData).forEach((tabKey) => {
+        updatedTabData[tabKey].rows = updatedTabData[tabKey].rows.filter((r) => r.id !== row.id);
+      });
+      setTabData(updatedTabData);
     } else if (action === "edit") {
       console.log("Edit row", row);
     } else if (action === "view") {
@@ -65,20 +67,19 @@ export default function SlaOccupancyPage() {
         const res = await fetch("/reports/slaOccupancy.json");
         const data = await res.json();
 
-        // Format columns
-        const formattedColumns = data.headers.map((header) => ({
-          accessorKey: header.accessorKey,
-          header: header.header,
-        }));
+        // Add unique IDs to all rows
+        const processedData = {};
+        Object.keys(data).forEach((tabKey) => {
+          processedData[tabKey] = {
+            headers: data[tabKey].headers,
+            rows: data[tabKey].rows.map((row, index) => ({
+              ...row,
+              id: row.id || uuidv4() || `${tabKey}-row-${index}`,
+            })),
+          };
+        });
 
-        // Add unique ID to each row 
-        const formattedRows = data.rows.map((row, index) => ({
-          ...row,
-          id: row.id || uuidv4() || `row-${index}`,
-        }));
-
-        setColumns(formattedColumns);
-        setRows(formattedRows);
+        setTabData(processedData);
       } catch (err) {
         console.error("Error fetching SLA occupancy data:", err);
       }
@@ -86,12 +87,21 @@ export default function SlaOccupancyPage() {
     fetchData();
   }, []);
 
+  // tabs logic
+  const hasTabs = {
+    data: tabData,
+    config: {
+      summary: "Summary",
+      reportDetails: "Report Details"
+    },
+    activeTab: activeTab,
+    onTabChange: setActiveTab
+  };
+
   return (
     <div className="p-4">
       <ReportsList
         title="SLA Occupancy Reports"
-        columns={columns}
-        rows={rows}
         filterFields={filterFields}
         onSearch={(data) => {
           console.log("Search Triggered with values:", data);
@@ -103,6 +113,7 @@ export default function SlaOccupancyPage() {
         thirdIconMenu={thirdIconMenu}
         enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
+        hasTabs={hasTabs}
       />
     </div>
   );

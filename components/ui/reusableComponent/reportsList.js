@@ -40,6 +40,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ReportsList({
   title = "Reports",
@@ -55,6 +56,8 @@ export default function ReportsList({
   thirdIconMenu = [],
   enabledActions = ["edit", "view", "delete", "tripHistory"],
   onActionClick = () => {},
+  // Single prop for tabs - contains all tab data and config
+  hasTabs = false,
 }) {
   const [formValues, setFormValues] = useState({});
   const [displayCount, setDisplayCount] = useState(30);
@@ -64,6 +67,11 @@ export default function ReportsList({
   const [selectedRows, setSelectedRows] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rowToDelete, setRowToDelete] = useState(null);
+  
+  // Extract tab data and config from hasTabs prop
+  const tabData = hasTabs && typeof hasTabs === 'object' ? hasTabs.data || {} : {};
+  const tabConfig = hasTabs && typeof hasTabs === 'object' ? hasTabs.config || {} : {};
+  const activeTab = hasTabs && typeof hasTabs === 'object' ? hasTabs.activeTab || Object.keys(tabData)[0] || "summary" : "summary";
 
   const allAvailableActions = {
     edit: {
@@ -191,16 +199,32 @@ export default function ReportsList({
     );
   };
 
+  // Get current data based on tabs or single table
+  const getCurrentData = () => {
+    if (hasTabs && tabData[activeTab]) {
+      return {
+        columns: tabData[activeTab].headers.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+        })),
+        rows: tabData[activeTab].rows,
+      };
+    }
+    return { columns, rows };
+  };
+
+  const { columns: currentColumns, rows: currentRows } = getCurrentData();
+
   const sortedRows = useMemo(() => {
-    if (!sortColumn) return rows;
-    return [...rows].sort((a, b) => {
+    if (!sortColumn) return currentRows;
+    return [...currentRows].sort((a, b) => {
       const aVal = a[sortColumn] || "";
       const bVal = b[sortColumn] || "";
       if (aVal < bVal) return sortDirection === "asc" ? -1 : 1;
       if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [rows, sortColumn, sortDirection]);
+  }, [currentRows, sortColumn, sortDirection]);
 
   const totalPages = Math.ceil(sortedRows.length / displayCount);
   const paginatedRows = sortedRows.slice(
@@ -217,28 +241,30 @@ export default function ReportsList({
     }
   };
 
+  // Fix checkbox functionality
   const isAllSelected =
     paginatedRows.length > 0 &&
-    paginatedRows.every((row) => selectedRows.includes(row));
+    paginatedRows.every((row) => selectedRows.includes(row.id || row));
 
   const toggleSelectAll = () => {
     if (isAllSelected) {
       setSelectedRows((prev) =>
-        prev.filter((row) => !paginatedRows.includes(row))
+        prev.filter((rowId) => !paginatedRows.some(row => (row.id || row) === rowId))
       );
     } else {
       setSelectedRows((prev) => [
         ...prev,
-        ...paginatedRows.filter((row) => !prev.includes(row)),
+        ...paginatedRows.map(row => row.id || row).filter(rowId => !prev.includes(rowId)),
       ]);
     }
   };
 
   const toggleRow = (row) => {
+    const rowId = row.id || row;
     setSelectedRows((prev) =>
-      prev.includes(row)
-        ? prev.filter((r) => r !== row)
-        : [...prev, row]
+      prev.includes(rowId)
+        ? prev.filter((r) => r !== rowId)
+        : [...prev, rowId]
     );
   };
 
@@ -327,7 +353,7 @@ export default function ReportsList({
     </Card>
   );
 
-  const tableContent = (
+  const renderTable = (tableColumns, tableRows) => (
     <Card>
       <CardContent className="p-4">
         <div className="flex justify-between items-center mb-4">
@@ -398,10 +424,10 @@ export default function ReportsList({
                   className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                 />
               </TableHead>
-              {showActions && rows.length > 0 && (
+              {showActions && tableRows.length > 0 && (
                 <TableHead className="w-12 px-6 py-3" />
               )}
-              {columns.map((col, index) => {
+              {tableColumns.map((col, index) => {
                 const isSortable = col.sortable !== false;
                 return (
                   <TableHead
@@ -427,7 +453,7 @@ export default function ReportsList({
                 <TableRow key={rowIndex}>
                   <TableCell className="px-6 py-3">
                     <Checkbox
-                      checked={selectedRows.includes(row)}
+                      checked={selectedRows.includes(row.id || row)}
                       onCheckedChange={() => toggleRow(row)}
                       className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                     />
@@ -457,7 +483,7 @@ export default function ReportsList({
                     </TableCell>
                   )}
 
-                  {columns.map((col) => (
+                  {tableColumns.map((col) => (
                     <TableCell key={col.accessorKey} className="text-sm px-6 py-3">
                       {row[col.accessorKey] ?? ""}
                     </TableCell>
@@ -467,7 +493,7 @@ export default function ReportsList({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + (showActions ? 2 : 1)}
+                  colSpan={tableColumns.length + (showActions ? 2 : 1)}
                   className="text-center py-6"
                 >
                   No reports available.
@@ -480,12 +506,46 @@ export default function ReportsList({
     </Card>
   );
 
+  // Main content based on whether tabs are enabled
+  const mainContent = hasTabs && typeof hasTabs === 'object' ? (
+    <div className="mt-4">
+      <Tabs value={activeTab} onValueChange={(value) => {
+        if (hasTabs.onTabChange) {
+          hasTabs.onTabChange(value);
+        }
+      }} className="w-full">
+        <TabsList className={`grid w-full mb-6`} style={{ 
+          gridTemplateColumns: `repeat(${Object.keys(tabData).length}, 1fr)` 
+        }}>
+          {Object.keys(tabData).map((tabKey) => (
+            <TabsTrigger key={tabKey} value={tabKey} className="text-sm font-medium">
+              {tabConfig[tabKey] || tabKey}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
+        {Object.keys(tabData).map((tabKey) => (
+          <TabsContent key={tabKey} value={tabKey}>
+            {renderTable(
+              tabData[tabKey].headers.map((header) => ({
+                accessorKey: header.accessorKey,
+                header: header.header,
+              })),
+              tabData[tabKey].rows
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
+  ) : (
+    <div className="mt-4">{renderTable(currentColumns, currentRows)}</div>
+  );
+
   return (
     <>
       {filterTab}
-      <div className="mt-4">{tableContent}</div>
-      
-      {/* Delete Confirmation Dialog */}
+      {mainContent}
+      {/* Single Delete Confirmation Dialog - works for both tabs and single table */}
       <Dialog open={deleteDialogOpen} onOpenChange={() => {}}>
         <DialogContent 
           className="top-20 left-1/2 transform -translate-x-1/2 [&>button]:hidden" 

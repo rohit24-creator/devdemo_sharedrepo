@@ -30,7 +30,7 @@ export default function TripReportsPage() {
     } else if (action === "edit") {
       console.log("Edit row", row);
     } else if (action === "view") {
-      console.log("View row", row);
+      console.log("View row", row); 
     } else {
       console.log("Unknown action", action, row);
     }
@@ -53,13 +53,12 @@ export default function TripReportsPage() {
         const res = await fetch("/reports/tripReports.json");
         const data = await res.json();
 
-        // Format columns
+
         const formattedColumns = data.headers.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
         }));
 
-        // Add unique ID to each row 
         const formattedRows = data.rows.map((row, index) => ({
           ...row,
           id: row.id || uuidv4() || `row-${index}`,
