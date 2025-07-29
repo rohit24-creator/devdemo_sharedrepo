@@ -1,0 +1,43 @@
+{
+  "headers": [
+    { "header": "Trip ID", "accessorKey": "id" },
+    { "header": "Booking ID", "accessorKey": "bookingId" },
+    { "header": "Status", "accessorKey": "status" },
+    { "header": "Vehicle", "accessorKey": "vehicle" },
+    { "header": "Driver", "accessorKey": "driver" },
+    { "header": "Estimated Late Pickup", "accessorKey": "estimatedLatePickup" },
+    { "header": "Actual Pick Up", "accessorKey": "actualPickUp" },
+    { "header": "Pickup Delay", "accessorKey": "pickupDelay" },
+    { "header": "Estimated Late Delivery", "accessorKey": "estimatedLateDelivery" },
+    { "header": "Actual Delivery", "accessorKey": "actualDelivery" },
+    { "header": "Delivery Delay", "accessorKey": "deliveryDelay" }
+  ],
+  "rows": [
+    {
+      "id": "6625310001",
+      "bookingId": "662590028",
+      "status": "Completed",
+      "vehicle": "KA01AB1234",
+      "driver": "Suresh Kumar",
+      "estimatedLatePickup": "2025-07-18 14:00:00",
+      "actualPickUp": "2025-07-18 14:04:34",
+      "pickupDelay": "2025-12-19 07:00:00",
+      "estimatedLateDelivery": "2025-12-19 07:00:00",
+      "actualDelivery": "2025-12-19 07:00:00",
+      "deliveryDelay": "No"
+    },
+    {
+      "id": "TTH3025290027",
+      "bookingId": "662590028",
+      "status": "Completed",
+      "vehicle": "KA01AB5678",
+      "driver": "John Doe",
+      "estimatedLatePickup": "2025-07-18 14:10:00",
+      "actualPickUp": "2025-07-18 14:13:55",
+      "pickupDelay": "2025-12-19 07:00:00",
+      "estimatedLateDelivery": "2025-12-19 07:00:00",
+      "actualDelivery": "2025-12-19 07:00:00",
+      "deliveryDelay": "No"
+    }
+  ]
+}

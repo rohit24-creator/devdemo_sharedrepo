@@ -1,0 +1,30 @@
+{
+  "headers": [
+    { "header": "Required pickup date", "accessorKey": "requiredPickupDate" },
+    { "header": "Required Delivery Date", "accessorKey": "requiredDeliveryDate" },
+    { "header": "Shipper Name", "accessorKey": "shipperName" },
+    { "header": "Consignee Name", "accessorKey": "consigneeName" },
+    { "header": "Total Packages", "accessorKey": "totalPackages" },
+    { "header": "LOG Creater Name", "accessorKey": "logCreaterName" },
+    { "header": "LOG Tracking Number", "accessorKey": "logTrackingNumber" },
+    { "header": "Real Pickup Date", "accessorKey": "realPickupDate" },
+    { "header": "Real Delivery Date", "accessorKey": "realDeliveryDate" },
+    { "header": "PUP", "accessorKey": "pup" },
+    { "header": "POD", "accessorKey": "pod" }
+  ],
+  "rows": [
+    {
+      "requiredPickupDate": "2024-01-15",
+      "requiredDeliveryDate": "2024-01-20",
+      "shipperName": "CEREAL PARTNERS (MALAYSIA) SDN. BHD.",
+      "consigneeName": "JTC LOGISTICS CO., LTD.",
+      "totalPackages": 	1.00,
+      "logCreaterName": "John Doe",
+      "logTrackingNumber": "KN1707969286",
+      "realPickupDate": "2024-01-15",
+      "realDeliveryDate": "2024-01-19",
+      "pup": "Yes",
+      "pod": "Yes"
+    }
+  ]
+}

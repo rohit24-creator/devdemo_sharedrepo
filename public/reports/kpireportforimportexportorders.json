@@ -1,0 +1,24 @@
+{
+  "headers": [
+    { "header": "S.No", "accessorKey": "sno" },
+    { "header": "Month", "accessorKey": "month" },
+    { "header": "Orders", "accessorKey": "orders" },
+    { "header": "IDJKT", "accessorKey": "idjkt" },
+    { "header": "IDSUB", "accessorKey": "idsub" },
+    { "header": "INHYD", "accessorKey": "inhyd" },
+    { "header": "INPNQ", "accessorKey": "inpnq" },
+    { "header": "NZAKL", "accessorKey": "nzakl" },
+    { "header": "PHMNL", "accessorKey": "phmnl" },
+    { "header": "THBKK", "accessorKey": "thbkk" },
+    { "header": "TWTPE", "accessorKey": "twtpe" },
+    { "header": "VNHAN", "accessorKey": "vnhan" },
+    { "header": "VNSGN", "accessorKey": "vnsgn" },
+    { "header": "MYKUL", "accessorKey": "mykul" },
+    { "header": "SGTGA", "accessorKey": "sgtga" },
+    { "header": "PHCEBU", "accessorKey": "phcebu" },
+    { "header": "PKKHI", "accessorKey": "pkkhi" },
+    { "header": "Total", "accessorKey": "total" }
+  ],
+  "rows": [
+  ]
+}

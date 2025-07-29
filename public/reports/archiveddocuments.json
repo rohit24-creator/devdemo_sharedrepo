@@ -1,0 +1,24 @@
+{
+  "headers": [
+    { "header": "Created By", "accessorKey": "createdBy" },
+    { "header": "Documents", "accessorKey": "documents" },
+    { "header": "Created On", "accessorKey": "createdOn" }
+  ],
+  "rows": [
+    {
+      "createdBy": "John Doe",
+      "documents": "Invoice_12345.pdf",
+      "createdOn": "2024-06-01"
+    },
+    {
+      "createdBy": "Jane Smith",
+      "documents": "PO_98765.pdf",
+      "createdOn": "2024-06-02"
+    },
+    {
+      "createdBy": "Admin",
+      "documents": "SX1739794654.pdf",
+      "createdOn": "2024-06-03"
+    }
+  ]
+}
