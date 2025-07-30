@@ -33,35 +33,147 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-// --- Status helpers  ---
-const statusColorMap = {
-  Delivered: "bg-green-500",
-  "In Transit": "bg-blue-500",
-  Pending: "bg-yellow-400",
-  default: "bg-gray-300"
-};
-const statusIconMap = {
-  Delivered: <CheckCircle className="w-4 h-4 mr-1" />,
-  "In Transit": <Truck className="w-4 h-4 mr-1" />,
-  Pending: <Truck className="w-4 h-4 mr-1" />,
-  default: <Truck className="w-4 h-4 mr-1" />,
+// --- Constants ---
+const CONSTANTS = {
+  ORDERS_PER_PAGE: 10,
+  STATUS_COLORS: {
+    Delivered: "bg-green-500",
+    "In Transit": "bg-blue-500",
+    Pending: "bg-yellow-400",
+    default: "bg-gray-300"
+  },
+  STATUS_ICONS: {
+    Delivered: <CheckCircle className="w-4 h-4 mr-1" />,
+    "In Transit": <Truck className="w-4 h-4 mr-1" />,
+    Pending: <Truck className="w-4 h-4 mr-1" />,
+    default: <Truck className="w-4 h-4 mr-1" />,
+  }
 };
 
-function useDebounce(value, delay) {
+// --- Custom Hooks ---
+
+// Debounce hook for search functionality
+const useDebounce = (value, delay) => {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
     const handler = setTimeout(() => setDebounced(value), delay);
     return () => clearTimeout(handler);
   }, [value, delay]);
   return debounced;
-}
+};
 
-// Custom dropdown component for Booking ID and Reference
-function ComboboxBookingId({ value, onChange, options, placeholder = "Select Booking ID" }) {
+// Order state management hook
+const useOrderState = (orders = []) => {
+  const [formValues, setFormValues] = useState({});
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [modalType, setModalType] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState([]);
+
+  // Extract unique values for dropdowns
+  const bookingIds = useMemo(() => {
+    const ids = [...new Set(orders.map(order => order.bookingId).filter(Boolean))];
+    return ids.sort();
+  }, [orders]);
+
+  const referenceIds = useMemo(() => {
+    const refs = [...new Set(orders.map(order => order.shipmentId).filter(Boolean))];
+    return refs.sort();
+  }, [orders]);
+
+  // Modal handlers
+  const openModal = useCallback((order, type) => {
+    setSelectedOrder(order);
+    setModalType(type);
+    setModalOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setModalOpen(false);
+    setSelectedOrder(null);
+    setModalType(null);
+  }, []);
+
+  return {
+    formValues,
+    setFormValues,
+    selectedOrder,
+    modalType,
+    modalOpen,
+    selectedOrders,
+    setSelectedOrders,
+    bookingIds,
+    referenceIds,
+    openModal,
+    closeModal
+  };
+};
+
+// Pagination hook
+const usePagination = (items, itemsPerPage = CONSTANTS.ORDERS_PER_PAGE) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(items.length / itemsPerPage);
+  const paginatedItems = items.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const goToPage = useCallback((page) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  }, [totalPages]);
+
+  const resetToFirstPage = useCallback(() => {
+    setCurrentPage(1);
+  }, []);
+
+  return {
+    currentPage,
+    totalPages,
+    paginatedItems,
+    goToPage,
+    resetToFirstPage
+  };
+};
+
+// Checkbox selection hook
+const useCheckboxSelection = (paginatedOrders, selectedOrders, setSelectedOrders) => {
+  const allSelected = useMemo(() => 
+    paginatedOrders.length > 0 && 
+    paginatedOrders.every(order => selectedOrders.includes(order.id || order.bookingId)),
+    [paginatedOrders, selectedOrders]
+  );
+
+  const handleToggleAll = useCallback(() => {
+    if (allSelected) {
+      setSelectedOrders([]);
+    } else {
+      setSelectedOrders(paginatedOrders.map(order => order.id || order.bookingId));
+    }
+  }, [allSelected, paginatedOrders, setSelectedOrders]);
+
+  const handleToggleOne = useCallback((orderId) => {
+    setSelectedOrders(prev =>
+      prev.includes(orderId)
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
+    );
+  }, [setSelectedOrders]);
+
+  return {
+    allSelected,
+    handleToggleAll,
+    handleToggleOne
+  };
+};
+
+// --- Sub-Components ---
+
+// Debounced combobox component
+const ComboboxBookingId = React.memo(({ value, onChange, options, placeholder = "Select Booking ID" }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
-
 
   const filteredOptions = useMemo(() => {
     if (!debouncedSearch) return options;
@@ -123,113 +235,130 @@ function ComboboxBookingId({ value, onChange, options, placeholder = "Select Boo
       </PopoverContent>
     </Popover>
   );
-}
+});
 
-function FilterTab({ filterFields, formValues, setFormValues, onSearch, orders = [] }) {
-  // Extract unique values for dropdowns
-  const bookingIds = useMemo(() => {
-    const ids = [...new Set(orders.map(order => order.bookingId).filter(Boolean))];
-    const sortedIds = ids.sort();
-    return sortedIds;
-  }, [orders]);
-
-  const referenceIds = useMemo(() => {
-    const refs = [...new Set(orders.map(order => order.shipmentId).filter(Boolean))];
-    const sortedRefs = refs.sort();
-    return sortedRefs;
-  }, [orders]);
-
-  const renderField = (field) => {
-    const { name, label, type = "text", options = [] } = field;
+// Filter field renderer component
+const FilterField = React.memo(({ field, formValues, setFormValues, bookingIds, referenceIds }) => {
+  const { name, label, type = "text", options = [] } = field;
+  
+  const isBookingIdDropdown = name === "bookingId";
+  const isReferenceDropdown = name === "referenceNo";
+  
+  const renderFieldContent = () => {
+    if (type === "date") {
+      return (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal border border-gray-300",
+                !formValues[name] && "text-muted-foreground"
+              )}
+            >
+              {formValues[name]
+                ? format(new Date(formValues[name]), "yyyy-MM-dd")
+                : "Select date"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={formValues[name] ? new Date(formValues[name]) : undefined}
+              onSelect={(date) =>
+                setFormValues((prev) => ({ ...prev, [name]: date ? format(date, "yyyy-MM-dd") : "" }))
+              }
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      );
+    }
     
-    // Determine if this is a dropdown field
-    const isBookingIdDropdown = name === "bookingId";
-    const isReferenceDropdown = name === "referenceNo";
+    if (type === "select") {
+      return (
+        <Select
+          value={formValues[name]}
+          onValueChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
+        >
+          <SelectTrigger className="w-full border border-gray-300">
+            <SelectValue placeholder={`Select ${label}`} />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) =>
+              typeof option === "string" ? (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ) : (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              )
+            )}
+          </SelectContent>
+        </Select>
+      );
+    }
+    
+    if (isBookingIdDropdown) {
+      return (
+        <ComboboxBookingId
+          value={formValues[name] || ""}
+          onChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
+          options={bookingIds}
+          placeholder={label}
+        />
+      );
+    }
+    
+    if (isReferenceDropdown) {
+      return (
+        <ComboboxBookingId
+          value={formValues[name] || ""}
+          onChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
+          options={referenceIds}
+          placeholder={label}
+        />
+      );
+    }
     
     return (
-      <div key={name} className="flex flex-col gap-1 w-56">
-        <label htmlFor={name} className="text-sm font-medium text-gray-700">
-          {label}
-        </label>
-        {type === "date" ? (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal border border-gray-300",
-                  !formValues[name] && "text-muted-foreground"
-                )}
-              >
-                {formValues[name]
-                  ? format(new Date(formValues[name]), "yyyy-MM-dd")
-                  : "Select date"}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={formValues[name] ? new Date(formValues[name]) : undefined}
-                onSelect={(date) =>
-                  setFormValues((prev) => ({ ...prev, [name]: date ? format(date, "yyyy-MM-dd") : "" }))
-                }
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        ) : type === "select" ? (
-          <Select
-            value={formValues[name]}
-            onValueChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
-          >
-            <SelectTrigger className="w-full border border-gray-300">
-              <SelectValue placeholder={`Select ${label}`} />
-            </SelectTrigger>
-            <SelectContent>
-              {options.map((option) =>
-                typeof option === "string" ? (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ) : (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                )
-              )}
-            </SelectContent>
-          </Select>
-        ) : isBookingIdDropdown ? (
-          <ComboboxBookingId
-            value={formValues[name] || ""}
-            onChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
-            options={bookingIds}
-            placeholder={label}
-          />
-        ) : isReferenceDropdown ? (
-          <ComboboxBookingId
-            value={formValues[name] || ""}
-            onChange={(value) => setFormValues((prev) => ({ ...prev, [name]: value }))}
-            options={referenceIds}
-            placeholder={label}
-          />
-        ) : (
-          <Input
-            type={type}
-            id={name}
-            value={formValues[name] || ""}
-            onChange={(e) => setFormValues((prev) => ({ ...prev, [name]: e.target.value }))}
-            className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-          />
-        )}
-      </div>
+      <Input
+        type={type}
+        id={name}
+        value={formValues[name] || ""}
+        onChange={(e) => setFormValues((prev) => ({ ...prev, [name]: e.target.value }))}
+        className="w-full border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+      />
     );
   };
-  
+
+  return (
+    <div className="flex flex-col gap-1 w-56">
+      <label htmlFor={name} className="text-sm font-medium text-gray-700">
+        {label}
+      </label>
+      {renderFieldContent()}
+    </div>
+  );
+});
+
+// Filter tab component
+const FilterTab = React.memo(({ filterFields, formValues, setFormValues, onSearch, bookingIds, referenceIds }) => {
   return (
     <div className="flex justify-between flex-wrap gap-4">
       <div className="flex flex-wrap items-end gap-3">
-        {filterFields.map(renderField)}
+        {filterFields.map((field) => (
+          <FilterField
+            key={field.name}
+            field={field}
+            formValues={formValues}
+            setFormValues={setFormValues}
+            bookingIds={bookingIds}
+            referenceIds={referenceIds}
+          />
+        ))}
         <Button
           className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
           onClick={() => onSearch(formValues)}
@@ -244,7 +373,184 @@ function FilterTab({ filterFields, formValues, setFormValues, onSearch, orders =
       </div>
     </div>
   );
-}
+});
+
+// Order card component
+const OrderCard = React.memo(({ 
+  order, 
+  orderType, 
+  actionsConfig, 
+  onDownload, 
+  onDownloadLR, 
+  onDownloadEPOD,
+  selectedOrders,
+  onToggleOne,
+  openModal 
+}) => {
+  const statusColor = CONSTANTS.STATUS_COLORS[order.status] || CONSTANTS.STATUS_COLORS.default;
+  const statusIcon = CONSTANTS.STATUS_ICONS[order.status] || CONSTANTS.STATUS_ICONS.default;
+
+  // Info blocks config
+  const infoBlocks = useMemo(() => [
+    {
+      key: 'from',
+      value: order.from,
+      label: order.fromDate,
+      icon: <MapPin className="w-4 h-4 text-[#006397]" />,
+    },
+    {
+      key: 'to',
+      value: order.to,
+      label: order.toDate,
+      icon: <MapPin className="w-4 h-4 text-[#006397]" />,
+    },
+    {
+      key: 'date',
+      value: orderType === 'pending' || orderType === 'done' ? order.deliveryDate : order.eta,
+      label: orderType === 'pending' || orderType === 'done' ? 'Delivery Date' : 'ETA',
+      icon: null,
+    },
+    {
+      key: 'custRef',
+      value: order.shipmentId,
+      label: 'Cust Ref',
+      icon: null,
+    },
+    {
+      key: 'customer',
+      value: order.customerName || "not found",
+      label: 'Customer',
+      icon: null,
+    },
+    {
+      key: 'orderStatus',
+      value: order.orderStatus || "Gate In",
+      label: 'Order Status',
+      icon: null,
+    },
+  ], [order, orderType]);
+
+  // Action buttons config
+  const actionButtons = useMemo(() => [
+    { key: 'view', icon: Eye, handler: () => openModal(order, 'view'), show: actionsConfig.view, title: 'View' },
+    { key: 'status', icon: FileText, handler: () => openModal(order, 'status'), show: actionsConfig.status, title: 'Status View' },
+    { key: 'liveTrack', icon: MapPin, handler: () => openModal(order, 'liveTrack'), show: actionsConfig.liveTrack, title: 'Live Track' },
+    { key: 'manageDocs', icon: FileText, handler: () => openModal(order, 'manageDocs'), show: actionsConfig.manageDocs, title: 'Manage Documents' },
+    { key: 'download', icon: Download, handler: () => onDownload(order), show: actionsConfig.download, title: 'Download ePOD' },
+    { key: 'lrReport', icon: FileText, handler: () => onDownloadLR(order), show: actionsConfig.lrReport, title: 'Download LR Report' },
+  ], [order, actionsConfig, openModal, onDownload, onDownloadLR]);
+
+  return (
+    <div className="relative flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all mb-4 overflow-hidden">
+      {/* Main content */}
+      <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between px-8 py-6"> 
+        <div className="flex-1 flex flex-col gap-2 min-w-0">
+          {/* Top Row: Booking ID, Status */}
+          <div className="flex flex-wrap items-center gap-6 mb-1">
+            <div className="flex items-center gap-2 min-w-[180px]">
+              <FolderOpen className="w-6 h-6 text-[#006397]" />
+              <span className="text-lg font-bold text-[#006397] cursor-pointer hover:underline">Booking ID : #{order.bookingId}</span>
+            </div>
+            <span className={["flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white", statusColor].join(" ")}>{statusIcon}{order.status}</span>
+          </div>
+          <div className="flex flex-row items-start gap-12 mt-1">
+            <div className="flex flex-row items-start min-w-[320px] gap-4">
+              {/* From, Arrow, To */}
+              {infoBlocks.slice(0, 2).map((block, idx) => (
+                <React.Fragment key={block.key}>
+                  <div className="flex flex-col min-w-[120px]">
+                    <span className="text-base font-semibold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
+                    <span className="text-xs text-gray-400 pt-1">{block.label}</span>
+                  </div>
+                  {idx === 0 && (
+                    <span className="flex items-center pt-0.5"><ArrowRight className="w-7 h-7 text-[#006397]" /></span>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+            {/* Date and Cust Ref */}
+            {infoBlocks.slice(2).map((block) => (
+              <div key={block.key} className="flex flex-col min-w-[120px]">
+                <span className="text-lg font-bold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
+                <span className="text-xs text-gray-500 pt-1">{block.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-row gap-2 items-center justify-end mt-4 flex-wrap">
+          {actionsConfig.checkbox && (
+            <div className="flex items-center mr-3">
+              <Checkbox
+                checked={selectedOrders.includes(order.id || order.bookingId)}
+                onCheckedChange={() => onToggleOne(order.id || order.bookingId)}
+                className="rounded-full size-6 shadow-md border-2 border-[#006397] data-[state=checked]:bg-[#006397] data-[state=checked]:text-white flex items-center justify-center"
+              />
+            </div>
+          )}
+          
+          {/* Primary Action Buttons - Bold and prominent */}
+          {actionButtons.filter(btn => btn.show && ['view', 'liveTrack'].includes(btn.key)).map(btn => (
+            <button
+              key={btn.key}
+              onClick={btn.handler}
+              title={btn.title}
+              className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 py-2 rounded-lg transition-colors font-semibold flex items-center gap-2 shadow-md"
+              style={{ fontSize: 13 }}
+            >
+              <btn.icon className="w-4 h-4" />
+              <span className="font-medium">{btn.title}</span>
+            </button>
+          ))}
+          
+          {/* Secondary Action Buttons - Subtle styling */}
+          {actionButtons.filter(btn => btn.show && ['status'].includes(btn.key)).map(btn => (
+            <button
+              key={btn.key}
+              onClick={btn.handler}
+              title={btn.title}
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2"
+              style={{ fontSize: 13 }}
+            >
+              <btn.icon className="w-4 h-4" />
+              <span>{btn.title}</span>
+            </button>
+          ))}
+          
+          {/* Dropdown for Other Actions */}
+          {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).length > 0 && (
+            <div className="relative">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium"
+                    style={{ fontSize: 13 }}
+                  >
+                    <MoreVertical className="w-4 h-4" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2" align="end">
+                  <div className="flex flex-col gap-1">
+                    {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).map(btn => (
+                      <button
+                        key={btn.key}
+                        onClick={btn.handler}
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                      >
+                        <btn.icon className="w-4 h-4" />
+                        <span>{btn.title}</span>
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
 
 // --- Main Reusable Order List Component ---
 export default function OrderListWithActions({
@@ -255,230 +561,45 @@ export default function OrderListWithActions({
   onDownload = () => {},
   onDownloadLR = () => {},
   onDownloadEPOD = () => {},
-
   orderType = 'active'
 }) {
-  const [formValues, setFormValues] = useState({});
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [modalType, setModalType] = useState(null); 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedOrders, setSelectedOrders] = useState([]);
+  // Custom hooks
+  const {
+    formValues,
+    setFormValues,
+    selectedOrder,
+    modalType,
+    modalOpen,
+    selectedOrders,
+    setSelectedOrders,
+    bookingIds,
+    referenceIds,
+    openModal,
+    closeModal
+  } = useOrderState(orders);
 
-  // --- Modal open helpers ---
-  const openModal = (order, type) => {
-    setSelectedOrder(order);
-    setModalType(type);
-    setModalOpen(true);
-  };
-  const closeModal = () => {
-    setModalOpen(false);
-    setSelectedOrder(null);
-    setModalType(null);
-  };
+  const {
+    currentPage,
+    totalPages,
+    paginatedItems: paginatedOrders,
+    goToPage,
+    resetToFirstPage
+  } = usePagination(orders, CONSTANTS.ORDERS_PER_PAGE);
 
-  const ORDERS_PER_PAGE = 10;
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(orders.length / ORDERS_PER_PAGE);
-  const paginatedOrders = orders.slice((currentPage - 1) * ORDERS_PER_PAGE, currentPage * ORDERS_PER_PAGE);
-
-
-  const allSelected = paginatedOrders.length > 0 && paginatedOrders.every(order => selectedOrders.includes(order.id || order.bookingId));
-
-  // Handler: toggle all
-  const handleToggleAll = () => {
-    if (allSelected) {
-      setSelectedOrders([]);
-    } else {
-      setSelectedOrders(paginatedOrders.map(order => order.id || order.bookingId));
-    }
-  };
-
-  // Handler: toggle one
-  const handleToggleOne = (orderId) => {
-    setSelectedOrders(prev =>
-      prev.includes(orderId)
-        ? prev.filter(id => id !== orderId)
-        : [...prev, orderId]
-    );
-  };
+  const {
+    allSelected,
+    handleToggleAll,
+    handleToggleOne
+  } = useCheckboxSelection(paginatedOrders, selectedOrders, setSelectedOrders);
 
   // Handler: download selected
-  const handleDownloadSelected = () => {
+  const handleDownloadSelected = useCallback(() => {
     const selected = paginatedOrders.filter(order => selectedOrders.includes(order.id || order.bookingId));
     onDownload(selected);
-  };
+  }, [paginatedOrders, selectedOrders, onDownload]);
 
-  // --- Render order card/row ---
-  const renderOrderCard = (order, idx) => {
-    const statusColor = statusColorMap[order.status] || statusColorMap.default;
-    const statusIcon = statusIconMap[order.status] || statusIconMap.default;
-
-    // Info blocks config
-    const infoBlocks = [
-      {
-        key: 'from',
-        value: order.from,
-        label: order.fromDate,
-        icon: <MapPin className="w-4 h-4 text-[#006397]" />,
-      },
-      {
-        key: 'to',
-        value: order.to,
-        label: order.toDate,
-        icon: <MapPin className="w-4 h-4 text-[#006397]" />,
-      },
-      {
-        key: 'date',
-        value: orderType === 'pending' || orderType === 'done' ? order.deliveryDate : order.eta,
-        label: orderType === 'pending' || orderType === 'done' ? 'Delivery Date' : 'ETA',
-        icon: null,
-      },
-      {
-        key: 'custRef',
-        value: order.shipmentId,
-        label: 'Cust Ref',
-        icon: null,
-      },
-      {
-        key: 'customer',
-        value: order.customerName || "not found",
-        label: 'Customer',
-        icon: null,
-      },
-      {
-        key: 'orderStatus',
-        value: order.orderStatus || "Gate In",
-        label: 'Order Status',
-        icon: null,
-      },
-    ];
-
-    // Action buttons config
-    const actionButtons = [
-      { key: 'view', icon: Eye, handler: () => openModal(order, 'view'), show: actionsConfig.view, title: 'View' },
-      { key: 'status', icon: FileText, handler: () => openModal(order, 'status'), show: actionsConfig.status, title: 'Status View' },
-      { key: 'liveTrack', icon: MapPin, handler: () => openModal(order, 'liveTrack'), show: actionsConfig.liveTrack, title: 'Live Track' },
-      { key: 'manageDocs', icon: FileText, handler: () => openModal(order, 'manageDocs'), show: actionsConfig.manageDocs, title: 'Manage Documents' },
-      { key: 'download', icon: Download, handler: () => onDownload(order), show: actionsConfig.download, title: 'Download ePOD' },
-      { key: 'lrReport', icon: FileText, handler: () => onDownloadLR(order), show: actionsConfig.lrReport, title: 'Download LR Report' },
-    ];
-
-    return (
-      <div
-        key={order.id}
-        className={"relative flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all mb-4 overflow-hidden"}
-      >
-        {/* Main content */}
-        <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between px-8 py-6"> 
-          <div className="flex-1 flex flex-col gap-2 min-w-0">
-            {/* Top Row: Booking ID, Status */}
-            <div className="flex flex-wrap items-center gap-6 mb-1">
-              <div className="flex items-center gap-2 min-w-[180px]">
-                <FolderOpen className="w-6 h-6 text-[#006397]" />
-                <span className="text-lg font-bold text-[#006397] cursor-pointer hover:underline">Booking ID : #{order.bookingId}</span>
-              </div>
-              <span className={["flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white", statusColor].join(" ")}>{statusIcon}{order.status}</span>
-            </div>
-            <div className="flex flex-row items-start gap-12 mt-1">
-              <div className="flex flex-row items-start min-w-[320px] gap-4">
-                {/* From, Arrow, To */}
-                {infoBlocks.slice(0, 2).map((block, idx) => (
-                  <React.Fragment key={block.key}>
-                    <div className="flex flex-col min-w-[120px]">
-                      <span className="text-base font-semibold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
-                      <span className="text-xs text-gray-400 pt-1">{block.label}</span>
-                    </div>
-                    {idx === 0 && (
-                      <span className="flex items-center pt-0.5"><ArrowRight className="w-7 h-7 text-[#006397]" /></span>
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-              {/* Date and Cust Ref */}
-              {infoBlocks.slice(2).map((block) => (
-                <div key={block.key} className="flex flex-col min-w-[120px]">
-                  <span className="text-lg font-bold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
-                  <span className="text-xs text-gray-500 pt-1">{block.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-row gap-2 items-center justify-end mt-4 flex-wrap">
-            {actionsConfig.checkbox && (
-              <div className="flex items-center mr-3">
-                <Checkbox
-                  checked={selectedOrders.includes(order.id || order.bookingId)}
-                  onCheckedChange={() => handleToggleOne(order.id || order.bookingId)}
-                  className="rounded-full size-6 shadow-md border-2 border-[#006397] data-[state=checked]:bg-[#006397] data-[state=checked]:text-white flex items-center justify-center"
-                />
-              </div>
-            )}
-            
-            {/* Primary Action Buttons - Bold and prominent */}
-            {actionButtons.filter(btn => btn.show && ['view', 'liveTrack'].includes(btn.key)).map(btn => (
-              <button
-                key={btn.key}
-                onClick={btn.handler}
-                title={btn.title}
-                className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 py-2 rounded-lg transition-colors font-semibold flex items-center gap-2 shadow-md"
-                style={{ fontSize: 13 }}
-              >
-                <btn.icon className="w-4 h-4" />
-                <span className="font-medium">{btn.title}</span>
-              </button>
-            ))}
-            
-            {/* Secondary Action Buttons - Subtle styling */}
-            {actionButtons.filter(btn => btn.show && ['status'].includes(btn.key)).map(btn => (
-              <button
-                key={btn.key}
-                onClick={btn.handler}
-                title={btn.title}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2"
-                style={{ fontSize: 13 }}
-              >
-                <btn.icon className="w-4 h-4" />
-                <span>{btn.title}</span>
-              </button>
-            ))}
-            
-            {/* Dropdown for Other Actions */}
-            {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).length > 0 && (
-              <div className="relative">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button
-                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium"
-                      style={{ fontSize: 13 }}
-                    >
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-48 p-2" align="end">
-                    <div className="flex flex-col gap-1">
-                      {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).map(btn => (
-                        <button
-                          key={btn.key}
-                          onClick={btn.handler}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                        >
-                          <btn.icon className="w-4 h-4" />
-                          <span>{btn.title}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderModalContent = () => {
+  // Modal content renderer
+  const renderModalContent = useCallback(() => {
     if (!selectedOrder) return null;
     if (modalType === 'view') {
       return (
@@ -501,14 +622,20 @@ export default function OrderListWithActions({
       );
     }
     return null;
-  };
-  
+  }, [selectedOrder, modalType, closeModal]);
 
   return (
     <div className="rounded-2xl shadow-lg border border-gray-200 overflow-hidden bg-white">
       {/* Filter Tab - Compact design */}
       <div className="px-8 py-4 border-b border-gray-100">
-        <FilterTab filterFields={filterFields} formValues={formValues} setFormValues={setFormValues} onSearch={onSearch} orders={orders} />
+        <FilterTab 
+          filterFields={filterFields} 
+          formValues={formValues} 
+          setFormValues={setFormValues} 
+          onSearch={onSearch} 
+          bookingIds={bookingIds}
+          referenceIds={referenceIds}
+        />
       </div>
       {/* Order List and Pagination */}
       <div className="px-8 py-4">
@@ -532,13 +659,26 @@ export default function OrderListWithActions({
           {paginatedOrders.length === 0 ? (
             <div className="text-center text-gray-500 py-12">No orders found.</div>
           ) : (
-            paginatedOrders.map(renderOrderCard)
+            paginatedOrders.map((order) => (
+              <OrderCard
+                key={order.id || order.bookingId}
+                order={order}
+                orderType={orderType}
+                actionsConfig={actionsConfig}
+                onDownload={onDownload}
+                onDownloadLR={onDownloadLR}
+                onDownloadEPOD={onDownloadEPOD}
+                selectedOrders={selectedOrders}
+                onToggleOne={handleToggleOne}
+                openModal={openModal}
+              />
+            ))
           )}
         </div>
         {totalPages > 1 && (
           <div className="flex items-center justify-between mt-6">
             <div className="text-sm text-gray-600">
-              Showing {(currentPage - 1) * ORDERS_PER_PAGE + 1} to {Math.min(currentPage * ORDERS_PER_PAGE, orders.length)} of {orders.length} results
+              Showing {(currentPage - 1) * CONSTANTS.ORDERS_PER_PAGE + 1} to {Math.min(currentPage * CONSTANTS.ORDERS_PER_PAGE, orders.length)} of {orders.length} results
             </div>
             <Pagination>
               <PaginationContent>
@@ -547,7 +687,7 @@ export default function OrderListWithActions({
                     href="#"
                     onClick={e => {
                       e.preventDefault();
-                      setCurrentPage(p => Math.max(1, p - 1));
+                      goToPage(currentPage - 1);
                     }}
                     className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
@@ -558,7 +698,7 @@ export default function OrderListWithActions({
                       href="#"
                       onClick={e => {
                         e.preventDefault();
-                        setCurrentPage(page);
+                        goToPage(page);
                       }}
                       isActive={currentPage === page}
                       className="cursor-pointer"
@@ -572,7 +712,7 @@ export default function OrderListWithActions({
                     href="#"
                     onClick={e => {
                       e.preventDefault();
-                      setCurrentPage(p => Math.min(totalPages, p + 1));
+                      goToPage(currentPage + 1);
                     }}
                     className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
@@ -603,8 +743,7 @@ function renderKeyValueGrid(fields, columns = 4) {
   );
 }
 
-
-function FilteredTable({ data, title }) {
+const FilteredTable = React.memo(({ data, title }) => {
   const [displayCount, setDisplayCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -739,13 +878,13 @@ function FilteredTable({ data, title }) {
       </CardContent>
     </Card>
   );
-}
+});
 
-function renderTable(data) {
+const renderTable = (data) => {
   return <FilteredTable data={data} />;
-}
+};
 
-function renderAccordionSection({ section, fields, order }) {
+const renderAccordionSection = ({ section, fields, order }) => {
   if (section === "Routing Details") {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -763,11 +902,10 @@ function renderAccordionSection({ section, fields, order }) {
     );
   }
   
-
   return renderKeyValueGrid(fields, 4);
-}
+};
 
-function OrderViewModal({ open, onClose, order }) {
+const OrderViewModal = React.memo(({ open, onClose, order }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh] flex flex-col">
@@ -816,9 +954,9 @@ function OrderViewModal({ open, onClose, order }) {
       </DialogContent>
     </Dialog>
   );
-}
+});
 
-function StatusTimeline({ statusHistory }) {
+const StatusTimeline = React.memo(({ statusHistory }) => {
   if (!statusHistory || statusHistory.length === 0) {
     return <div className="text-gray-400 text-center py-8">No status history available.</div>;
   }
@@ -844,18 +982,21 @@ function StatusTimeline({ statusHistory }) {
       ))}
     </ol>
   );
-}
+});
 
-function OrderStatusModal({ open, onClose, order }) {
+const OrderStatusModal = React.memo(({ open, onClose, order }) => {
   const [search, setSearch] = React.useState("");
   const statusHistory = order.statusHistory || [];
-  const filteredHistory = search
-    ? statusHistory.filter(event =>
-        Object.values(event).some(val =>
-          String(val).toLowerCase().includes(search.toLowerCase())
+  const filteredHistory = useMemo(() => 
+    search
+      ? statusHistory.filter(event =>
+          Object.values(event).some(val =>
+            String(val).toLowerCase().includes(search.toLowerCase())
+          )
         )
-      )
-    : statusHistory;
+      : statusHistory,
+    [statusHistory, search]
+  );
   const distance = order.distance || "0 miles";
   const duration = order.duration || "Not Found!";
 
@@ -895,9 +1036,9 @@ function OrderStatusModal({ open, onClose, order }) {
       </DialogContent>
     </Dialog>
   );
-}
+});
 
-function OrderDocumentsModal({ open, onClose, order }) {
+const OrderDocumentsModal = React.memo(({ open, onClose, order }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="lg:max-w-[70rem] p-0 max-h-[90vh]">
@@ -910,7 +1051,6 @@ function OrderDocumentsModal({ open, onClose, order }) {
           <div className="font-semibold text-lg mb-4 flex items-center gap-2">
             <FileTextIcon className="w-5 h-5 text-blue-700" /> Attached Documents
           </div>
-
 
           <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
@@ -962,7 +1102,6 @@ function OrderDocumentsModal({ open, onClose, order }) {
               </Table>
             </div>
 
-
             <div className="p-4 border-t border-gray-200">
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <label
@@ -993,5 +1132,5 @@ function OrderDocumentsModal({ open, onClose, order }) {
       </DialogContent>
     </Dialog>
   );
-}
+});
  

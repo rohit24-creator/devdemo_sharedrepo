@@ -21,7 +21,7 @@ export default function BookingsTable() {
   }, []);
 
   const handleView = (id) => {
-    router.push(`/orders/view/${id}`);
+    router.push(`/bookings/view/${id}`);
   };
 
   return (
