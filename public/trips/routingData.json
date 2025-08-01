@@ -1,0 +1,174 @@
+{
+  "headers": [
+    {
+      "accessorKey": "customerCode",
+      "header": "Customer Code"
+    },
+    {
+      "accessorKey": "routingId",
+      "header": "Routing ID"
+    },
+    {
+      "accessorKey": "transactionType",
+      "header": "Transaction Type"
+    },
+    {
+      "accessorKey": "triggeredType",
+      "header": "Triggered Type"
+    },
+    {
+      "accessorKey": "triggeredAt",
+      "header": "Triggered At"
+    },
+    {
+      "accessorKey": "orderType",
+      "header": "Order Type"
+    },
+    {
+      "accessorKey": "product",
+      "header": "Product"
+    },
+    {
+      "accessorKey": "service",
+      "header": "Service"
+    },
+    {
+      "accessorKey": "modeOfTransport",
+      "header": "Mode Of Transport"
+    },
+    {
+      "accessorKey": "incoTerms",
+      "header": "Inco Terms"
+    },
+    {
+      "accessorKey": "templateId",
+      "header": "Template ID"
+    },
+    {
+      "accessorKey": "vehicleId",
+      "header": "Vehicle ID"
+    }
+  ],
+  "rows": [
+    {
+      "id": "1",
+      "customerCode": "Gmail Logistics",
+      "routingId": "THTA00093",
+      "transactionType": "Invoice",
+      "triggeredType": "SCHEDULED",
+      "triggeredAt": "Order Booked",
+      "orderType": "FTL/LTL/AGRO",
+      "product": "Secure Chain",
+      "service": "AsiaLink LTL",
+      "modeOfTransport": "xbrder-FTL",
+      "incoTerms": "DDP",
+      "templateId": "TT25150001 - Test case",
+      "vehicleId": ""
+    },
+    {
+      "id": "2",
+      "customerCode": "332002",
+      "routingId": "THTA00092",
+      "transactionType": "Order",
+      "triggeredType": "SCHEDULED",
+      "triggeredAt": "Order Booked",
+      "orderType": "Nrml",
+      "product": "AsiaDirect",
+      "service": "FTL Oil&Gas",
+      "modeOfTransport": "Test Transport Mode",
+      "incoTerms": "",
+      "templateId": "TT25150002 - Test T1",
+      "vehicleId": ""
+    },
+    {
+      "id": "3",
+      "customerCode": "3302",
+      "routingId": "THTA00089",
+      "transactionType": "Order",
+      "triggeredType": "IMMEDIATE",
+      "triggeredAt": "Order Modified",
+      "orderType": "Nrml",
+      "product": "Secure",
+      "service": "Oil&Gas",
+      "modeOfTransport": "xbrder-Road+Rail",
+      "incoTerms": "",
+      "templateId": "TT25170001 -",
+      "vehicleId": ""
+    },
+    {
+      "id": "4",
+      "customerCode": "Amazon Logistics",
+      "routingId": "THTA00088",
+      "transactionType": "Invoice",
+      "triggeredType": "SCHEDULED",
+      "triggeredAt": "Order Booked",
+      "orderType": "Express",
+      "product": "Premium Chain",
+      "service": "Express Delivery",
+      "modeOfTransport": "Air Freight",
+      "incoTerms": "CIF",
+      "templateId": "TT25170002 - Express",
+      "vehicleId": "VH001"
+    },
+    {
+      "id": "5",
+      "customerCode": "FedEx Corp",
+      "routingId": "THTA00087",
+      "transactionType": "Order",
+      "triggeredType": "MANUAL",
+      "triggeredAt": "Order Created",
+      "orderType": "Bulk",
+      "product": "Standard",
+      "service": "Bulk Transport",
+      "modeOfTransport": "Rail Transport",
+      "incoTerms": "FOB",
+      "templateId": "TT25170003 - Bulk",
+      "vehicleId": "VH002"
+    },
+    {
+      "id": "6",
+      "customerCode": "DHL Express",
+      "routingId": "THTA00086",
+      "transactionType": "Invoice",
+      "triggeredType": "IMMEDIATE",
+      "triggeredAt": "Status Change",
+      "orderType": "FTL/LTL/AGRO",
+      "product": "Secure Chain",
+      "service": "International",
+      "modeOfTransport": "Sea Freight",
+      "incoTerms": "EXW",
+      "templateId": "TT25170004 - International",
+      "vehicleId": ""
+    },
+    {
+      "id": "7",
+      "customerCode": "UPS Logistics",
+      "routingId": "THTA00085",
+      "transactionType": "Order",
+      "triggeredType": "SCHEDULED",
+      "triggeredAt": "Order Booked",
+      "orderType": "Single",
+      "product": "Express",
+      "service": "Same Day",
+      "modeOfTransport": "Road Transport",
+      "incoTerms": "DDP",
+      "templateId": "TT25170005 - Same Day",
+      "vehicleId": "VH003"
+    },
+    {
+      "id": "8",
+      "customerCode": "TNT Express",
+      "routingId": "THTA00084",
+      "transactionType": "Invoice",
+      "triggeredType": "MANUAL",
+      "triggeredAt": "Order Created",
+      "orderType": "Nrml",
+      "product": "Standard",
+      "service": "Economy",
+      "modeOfTransport": "Road Transport",
+      "incoTerms": "FOB",
+      "templateId": "TT25170006 - Economy",
+      "vehicleId": ""
+    }
+  ]
+} 

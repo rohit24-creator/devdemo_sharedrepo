@@ -34,6 +34,10 @@ const customerIdModalColumns = [
   "Customer ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
 ];
 
+const originModalColumns = [
+  "Location Name", "Address", "City", "State", "Country", "Pincode"
+];
+
 const companyFindData = [
   { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
   { "Company Name": "TCS", "Company Code": "TCS01", Description: "Tata Consultancy Services" },
@@ -129,6 +133,74 @@ const consigneeIdData = [
   },
 ];
 
+// Dummy data for origin locations
+const originData = [
+  {
+    "Location Name": "Mumbai Port",
+    Address: "Mumbai Port Trust, Mumbai",
+    City: "Mumbai",
+    State: "Maharashtra",
+    Country: "India",
+    Pincode: "400001"
+  },
+  {
+    "Location Name": "Chennai Port",
+    Address: "Chennai Port Trust, Chennai",
+    City: "Chennai",
+    State: "Tamil Nadu",
+    Country: "India",
+    Pincode: "600001"
+  },
+  {
+    "Location Name": "Kolkata Port",
+    Address: "Kolkata Port Trust, Kolkata",
+    City: "Kolkata",
+    State: "West Bengal",
+    Country: "India",
+    Pincode: "700001"
+  },
+  {
+    "Location Name": "Vizag Port",
+    Address: "Visakhapatnam Port Trust, Vizag",
+    City: "Visakhapatnam",
+    State: "Andhra Pradesh",
+    Country: "India",
+    Pincode: "530001"
+  },
+  {
+    "Location Name": "Kandla Port",
+    Address: "Kandla Port Trust, Kandla",
+    City: "Kandla",
+    State: "Gujarat",
+    Country: "India",
+    Pincode: "370210"
+  },
+  {
+    "Location Name": "JNPT",
+    Address: "Jawaharlal Nehru Port Trust, Navi Mumbai",
+    City: "Navi Mumbai",
+    State: "Maharashtra",
+    Country: "India",
+    Pincode: "400707"
+  },
+  {
+    "Location Name": "Mundra Port",
+    Address: "Mundra Port, Mundra",
+    City: "Mundra",
+    State: "Gujarat",
+    Country: "India",
+    Pincode: "370421"
+  },
+  {
+    "Location Name": "Pipavav Port",
+    Address: "Pipavav Port, Pipavav",
+    City: "Pipavav",
+    State: "Gujarat",
+    Country: "India",
+    Pincode: "364265"
+  }
+];
+
 export function renderOrderFieldWithModals(
   fieldConfig,
   form,
@@ -141,23 +213,30 @@ export function renderOrderFieldWithModals(
     setFilteredBranchData,
     setFilteredCustomerIdData,
     branchListData,
-    customerIdData
+    customerIdData,
+    originData
   } = param;
-  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig;
+  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName } = fieldConfig;
+
+  // Use modalFieldName if provided (for table fields), otherwise use the field name
+  const baseFieldName = modalFieldName || name;
 
   // Select correct data for each ID field
   let idData = customerIdData;
   let idColumns = customerIdModalColumns;
-  if (name === "shipperId") {
+  if (baseFieldName === "shipperId") {
     idData = shipperIdData;
     idColumns = [
       "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
     ];
-  } else if (name === "consigneeId") {
+  } else if (baseFieldName === "consigneeId") {
     idData = consigneeIdData;
     idColumns = [
       "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
     ];
+  } else if (baseFieldName === "originLocation") {
+    idData = originData || [];
+    idColumns = originModalColumns;
   }
 
   return (
@@ -170,7 +249,7 @@ export function renderOrderFieldWithModals(
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>
-                {["companyCode", "branchCode"].includes(name) ? (
+                {["companyCode", "branchCode"].includes(baseFieldName) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
                     <Input
                       {...field}
@@ -186,7 +265,7 @@ export function renderOrderFieldWithModals(
                           onClick={() => {
                             setModalField && setModalField({ name, sectionIndex, form });
                             setModalType && setModalType(actionType);
-                            if (name === "branchCode") {
+                            if (baseFieldName === "branchCode") {
                               const selectedCompany = form.getValues("companyCode");
                               const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
                               setFilteredBranchData && setFilteredBranchData(filtered);
@@ -204,7 +283,7 @@ export function renderOrderFieldWithModals(
                       ))}
                     </div>
                   </div>
-                ) : ["customerId", "shipperId", "consigneeId"].includes(name) ? (
+                ) : ["customerId", "shipperId", "consigneeId", "originLocation"].includes(baseFieldName) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md overflow-hidden">
                     <Input
                       {...field}
@@ -215,19 +294,21 @@ export function renderOrderFieldWithModals(
                       className="w-full px-3 py-2 bg-white rounded-md border-none focus:outline-none focus:ring-0 focus:border-none"
                     />
                     <div className="absolute right-0 h-full bg-gray-100 flex items-center px-2 space-x-2">
-                      <button
-                        title="Search"
-                        type="button"
-                        onClick={() => {
-                          setModalField && setModalField({ name, sectionIndex, form });
-                          setModalType && setModalType("search");
-                          const id = typeof form.getValues === "function" ? form.getValues(name) : "";
-                          const match = idData.filter((x) => x[idColumns[0]].trim().toLowerCase() === id.trim().toLowerCase());
-                          setFilteredCustomerIdData && setFilteredCustomerIdData(match.length > 0 ? match : []);
-                        }}
-                      >
-                        <Search size={18} className="text-[#0088d2]" />
-                      </button>
+                      {baseFieldName !== "originLocation" && (
+                        <button
+                          title="Search"
+                          type="button"
+                          onClick={() => {
+                            setModalField && setModalField({ name, sectionIndex, form });
+                            setModalType && setModalType("search");
+                            const id = typeof form.getValues === "function" ? form.getValues(name) : "";
+                            const match = idData.filter((x) => x[idColumns[0]].trim().toLowerCase() === id.trim().toLowerCase());
+                            setFilteredCustomerIdData && setFilteredCustomerIdData(match.length > 0 ? match : []);
+                          }}
+                        >
+                          <Search size={18} className="text-[#0088d2]" />
+                        </button>
+                      )}
                       <button
                         title="List"
                         type="button"
@@ -244,7 +325,7 @@ export function renderOrderFieldWithModals(
                 ) : type === "select" ? (
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
-                      <SelectValue placeholder={`Select ${label}`} />
+                      <SelectValue placeholder={placeholder || `Select ${label}`} />
                     </SelectTrigger>
                     <SelectContent>
                       {options.map((option) =>
@@ -399,7 +480,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
         setModalField,
         setModalType,
         setFilteredCustomerIdData,
-        customerIdData
+        customerIdData,
+        originData
       }
     );
 
@@ -492,6 +574,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
                   : modalType === "search"
                   ? "Search Consignee Details"
                   : "Select Consignee"
+                : modalField.name === "originLocation"
+                ? "List of Origin Locations"
                 : ""
             }
             columns={
@@ -509,6 +593,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
                 ? [
                     "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
                   ]
+                : modalField.name === "originLocation"
+                ? originModalColumns
                 : []
             }
             data={
@@ -526,6 +612,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
                 ? filteredCustomerIdData
                 : modalField.name === "consigneeId"
                 ? filteredCustomerIdData
+                : modalField.name === "originLocation"
+                ? originData
                 : []
             }
             onSelect={(row) => {
@@ -545,6 +633,10 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
               } else if (modalField.name === "consigneeId") {
                 if (modalField.form) {
                   modalField.form.setValue("consigneeId", row["Consignee ID"]);
+                }
+              } else if (modalField.name === "originLocation") {
+                if (modalField.form) {
+                  modalField.form.setValue("originLocation", row["Location Name"]);
                 }
               }
               setModalField(null);
@@ -621,6 +713,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
                   : modalType === "search"
                   ? "Search Consignee Details"
                   : "Select Consignee"
+                : modalField.name === "originLocation"
+                ? "List of Origin Locations"
                 : ""
             }
             columns={
@@ -638,6 +732,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
                 ? [
                     "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
                   ]
+                : modalField.name === "originLocation"
+                ? originModalColumns
                 : []
             }
             data={
@@ -655,6 +751,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
                 ? filteredCustomerIdData
                 : modalField.name === "consigneeId"
                 ? filteredCustomerIdData
+                : modalField.name === "originLocation"
+                ? originData
                 : []
             }
             onSelect={(row) => {

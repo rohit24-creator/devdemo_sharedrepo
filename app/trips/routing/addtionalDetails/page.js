@@ -3,7 +3,7 @@ import React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { OrdersForm } from "@/components/ui/reusableComponent/orderFomrs";
+import { OrdersForm } from "@/components/ui/reusableComponent/orderForms";
 
 const cargoDetailsSchema = z.object({
   cargoType: z.string().min(1, { message: "Cargo Type is required" }),
