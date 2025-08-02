@@ -1,0 +1,126 @@
+{
+  "headers": [
+    {
+      "accessorKey": "tripId",
+      "header": "Trip ID"
+    },
+    {
+      "accessorKey": "vehicleNo",
+      "header": "Vehicle No."
+    },
+    {
+      "accessorKey": "expenseType",
+      "header": "Expense Type"
+    },
+    {
+      "accessorKey": "driver",
+      "header": "Driver"
+    },
+    {
+      "accessorKey": "haltingDays",
+      "header": "Halting Days"
+    },
+    {
+      "accessorKey": "haltingRevenue",
+      "header": "Halting Revenue"
+    },
+    {
+      "accessorKey": "amount",
+      "header": "Amount"
+    },
+    {
+      "accessorKey": "date",
+      "header": "Date"
+    }
+  ],
+  "rows": [
+    {
+      "id": "1",
+      "tripId": "TE001",
+      "vehicleNo": "MH01AB1234",
+      "expenseType": "Fuel",
+      "driver": "Rajesh Kumar",
+      "haltingDays": "2",
+      "haltingRevenue": "₹5,000",
+      "amount": "₹8,500",
+      "date": "2025-07-29"
+    },
+    {
+      "id": "2",
+      "tripId": "TE002",
+      "vehicleNo": "KA02CD5678",
+      "expenseType": "Toll",
+      "driver": "Suresh Patel",
+      "haltingDays": "1",
+      "haltingRevenue": "₹3,200",
+      "amount": "₹2,800",
+      "date": "2025-07-30"
+    },
+    {
+      "id": "3",
+      "tripId": "TE003",
+      "vehicleNo": "TN03EF9012",
+      "expenseType": "Maintenance",
+      "driver": "Amit Singh",
+      "haltingDays": "3",
+      "haltingRevenue": "₹7,500",
+      "amount": "₹12,000",
+      "date": "2025-07-31"
+    },
+    {
+      "id": "4",
+      "tripId": "TE004",
+      "vehicleNo": "GJ04GH3456",
+      "expenseType": "Food",
+      "driver": "Vikram Sharma",
+      "haltingDays": "1",
+      "haltingRevenue": "₹2,800",
+      "amount": "₹1,500",
+      "date": "2025-08-01"
+    },
+    {
+      "id": "5",
+      "tripId": "TE005",
+      "vehicleNo": "UP05IJ7890",
+      "expenseType": "Lodging",
+      "driver": "Deepak Verma",
+      "haltingDays": "2",
+      "haltingRevenue": "₹4,200",
+      "amount": "₹3,600",
+      "date": "2025-08-02"
+    },
+    {
+      "id": "6",
+      "tripId": "TE006",
+      "vehicleNo": "MP06KL1234",
+      "expenseType": "Permit",
+      "driver": "Rahul Gupta",
+      "haltingDays": "0",
+      "haltingRevenue": "₹0",
+      "amount": "₹1,200",
+      "date": "2025-08-03"
+    },
+    {
+      "id": "7",
+      "tripId": "TE007",
+      "vehicleNo": "MH07MN5678",
+      "expenseType": "Repair",
+      "driver": "Sanjay Joshi",
+      "haltingDays": "4",
+      "haltingRevenue": "₹9,000",
+      "amount": "₹15,500",
+      "date": "2025-08-04"
+    },
+    {
+      "id": "8",
+      "tripId": "TE008",
+      "vehicleNo": "DL08OP9012",
+      "expenseType": "Insurance",
+      "driver": "Manoj Tiwari",
+      "haltingDays": "1",
+      "haltingRevenue": "₹3,500",
+      "amount": "₹2,800",
+      "date": "2025-08-05"
+    }
+  ]
+} 
