@@ -220,6 +220,10 @@ export function renderOrderFieldWithModals(
 
   // Use modalFieldName if provided (for table fields), otherwise use the field name
   const baseFieldName = modalFieldName || name;
+  
+  // For table fields with array indices, we need to extract the base field name
+  const actualFieldName = name; // This is the full field name like "routeLegs.0.originLocation"
+  const isTableField = name.includes('.') && modalFieldName; // Check if this is a table field
 
   // Select correct data for each ID field
   let idData = customerIdData;
@@ -313,7 +317,12 @@ export function renderOrderFieldWithModals(
                         title="List"
                         type="button"
                         onClick={() => {
-                          setModalField && setModalField({ name, sectionIndex, form });
+                          setModalField && setModalField({ 
+                            name: actualFieldName, 
+                            baseFieldName: baseFieldName,
+                            sectionIndex, 
+                            form 
+                          });
                           setModalType && setModalType("list");
                           setFilteredCustomerIdData && setFilteredCustomerIdData(idData);
                         }}
@@ -544,99 +553,102 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
               setModalType(null)
             }}
             title={
-              modalField.name === "companyCode"
+              (modalField.baseFieldName || modalField.name) === "companyCode"
                 ? modalType === "list"
                   ? "List of Companies"
                   : modalType === "search"
                   ? "Search Company Details"
                   : "Select Company"
-                : modalField.name === "branchCode"
+                : (modalField.baseFieldName || modalField.name) === "branchCode"
                 ? modalType === "list"
                   ? "List of Branches"
                   : modalType === "search"
                   ? "Search Branch Details"
                   : "Select Branch"
-                : modalField.name === "customerId"
+                : (modalField.baseFieldName || modalField.name) === "customerId"
                 ? modalType === "list"
                   ? "List of Customers"
                   : modalType === "search"
                   ? "Search Customer Details"
                   : "Select Customer"
-                : modalField.name === "shipperId"
+                : (modalField.baseFieldName || modalField.name) === "shipperId"
                 ? modalType === "list"
                   ? "List of Shippers"
                   : modalType === "search"
                   ? "Search Shipper Details"
                   : "Select Shipper"
-                : modalField.name === "consigneeId"
+                : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? modalType === "list"
                   ? "List of Consignees"
                   : modalType === "search"
                   ? "Search Consignee Details"
                   : "Select Consignee"
-                : modalField.name === "originLocation"
+                : (modalField.baseFieldName || modalField.name) === "originLocation"
                 ? "List of Origin Locations"
                 : ""
             }
             columns={
-              modalField.name === "companyCode"
+              (modalField.baseFieldName || modalField.name) === "companyCode"
                 ? companyModalColumns
-                : modalField.name === "branchCode"
+                : (modalField.baseFieldName || modalField.name) === "branchCode"
                 ? branchModalColumns
-                : modalField.name === "customerId"
+                : (modalField.baseFieldName || modalField.name) === "customerId"
                 ? customerIdModalColumns
-                : modalField.name === "shipperId"
+                : (modalField.baseFieldName || modalField.name) === "shipperId"
                 ? [
                     "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
                   ]
-                : modalField.name === "consigneeId"
+                : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? [
                     "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
                   ]
-                : modalField.name === "originLocation"
+                : (modalField.baseFieldName || modalField.name) === "originLocation"
                 ? originModalColumns
                 : []
             }
             data={
-              modalField.name === "companyCode"
+              (modalField.baseFieldName || modalField.name) === "companyCode"
                 ? modalType === "list"
                   ? companyListData
                   : modalType === "search"
                   ? companySearchData
                   : companyFindData
-                : modalField.name === "branchCode"
+                : (modalField.baseFieldName || modalField.name) === "branchCode"
                 ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
-                : modalField.name === "customerId"
+                : (modalField.baseFieldName || modalField.name) === "customerId"
                 ? filteredCustomerIdData
-                : modalField.name === "shipperId"
+                : (modalField.baseFieldName || modalField.name) === "shipperId"
                 ? filteredCustomerIdData
-                : modalField.name === "consigneeId"
+                : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? filteredCustomerIdData
-                : modalField.name === "originLocation"
+                : (modalField.baseFieldName || modalField.name) === "originLocation"
                 ? originData
                 : []
             }
             onSelect={(row) => {
-              if (modalField.name === "companyCode") {
+              const fieldName = modalField.name; // Use the actual field name for setting values
+              const baseFieldName = modalField.baseFieldName || modalField.name;
+              
+              if (baseFieldName === "companyCode") {
                 modalField.form.setValue("companyCode", row["Company Code"]);
                 modalField.form.setValue("branchCode", "");
-              } else if (modalField.name === "branchCode") {
+              } else if (baseFieldName === "branchCode") {
                 modalField.form.setValue("branchCode", row["Branch Code"]);
-              } else if (modalField.name === "customerId") {
+              } else if (baseFieldName === "customerId") {
                 if (modalField.form) {
-                  modalField.form.setValue("customerId", row["Customer ID"]);
+                  modalField.form.setValue(fieldName, row["Customer ID"]);
                 }
-              } else if (modalField.name === "shipperId") {
+              } else if (baseFieldName === "shipperId") {
                 if (modalField.form) {
-                  modalField.form.setValue("shipperId", row["Shipper ID"]);
+                  modalField.form.setValue(fieldName, row["Shipper ID"]);
                 }
-              } else if (modalField.name === "consigneeId") {
+              } else if (baseFieldName === "consigneeId") {
                 if (modalField.form) {
-                  modalField.form.setValue("consigneeId", row["Consignee ID"]);
+                  modalField.form.setValue(fieldName, row["Consignee ID"]);
                 }
-              } else if (modalField.name === "originLocation") {
+              } else if (baseFieldName === "originLocation") {
                 if (modalField.form) {
-                  modalField.form.setValue("originLocation", row["Location Name"]);
+                  modalField.form.setValue(fieldName, row["Location Name"]);
                 }
               }
               setModalField(null);
@@ -683,95 +695,102 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
               setModalType(null)
             }}
             title={
-              modalField.name === "companyCode"
+              (modalField.baseFieldName || modalField.name) === "companyCode"
                 ? modalType === "list"
                   ? "List of Companies"
                   : modalType === "search"
                   ? "Search Company Details"
                   : "Select Company"
-                : modalField.name === "branchCode"
+                : (modalField.baseFieldName || modalField.name) === "branchCode"
                 ? modalType === "list"
                   ? "List of Branches"
                   : modalType === "search"
                   ? "Search Branch Details"
                   : "Select Branch"
-                : modalField.name === "customerId"
+                : (modalField.baseFieldName || modalField.name) === "customerId"
                 ? modalType === "list"
                   ? "List of Customers"
                   : modalType === "search"
                   ? "Search Customer Details"
                   : "Select Customer"
-                : modalField.name === "shipperId"
+                : (modalField.baseFieldName || modalField.name) === "shipperId"
                 ? modalType === "list"
                   ? "List of Shippers"
                   : modalType === "search"
                   ? "Search Shipper Details"
                   : "Select Shipper"
-                : modalField.name === "consigneeId"
+                : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? modalType === "list"
                   ? "List of Consignees"
                   : modalType === "search"
                   ? "Search Consignee Details"
                   : "Select Consignee"
-                : modalField.name === "originLocation"
+                : (modalField.baseFieldName || modalField.name) === "originLocation"
                 ? "List of Origin Locations"
                 : ""
             }
             columns={
-              modalField.name === "companyCode"
+              (modalField.baseFieldName || modalField.name) === "companyCode"
                 ? companyModalColumns
-                : modalField.name === "branchCode"
+                : (modalField.baseFieldName || modalField.name) === "branchCode"
                 ? branchModalColumns
-                : modalField.name === "customerId"
+                : (modalField.baseFieldName || modalField.name) === "customerId"
                 ? customerIdModalColumns
-                : modalField.name === "shipperId"
+                : (modalField.baseFieldName || modalField.name) === "shipperId"
                 ? [
                     "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
                   ]
-                : modalField.name === "consigneeId"
+                : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? [
                     "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
                   ]
-                : modalField.name === "originLocation"
+                : (modalField.baseFieldName || modalField.name) === "originLocation"
                 ? originModalColumns
                 : []
             }
             data={
-              modalField.name === "companyCode"
+              (modalField.baseFieldName || modalField.name) === "companyCode"
                 ? modalType === "list"
                   ? companyListData
                   : modalType === "search"
                   ? companySearchData
                   : companyFindData
-                : modalField.name === "branchCode"
+                : (modalField.baseFieldName || modalField.name) === "branchCode"
                 ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
-                : modalField.name === "customerId"
+                : (modalField.baseFieldName || modalField.name) === "customerId"
                 ? filteredCustomerIdData
-                : modalField.name === "shipperId"
+                : (modalField.baseFieldName || modalField.name) === "shipperId"
                 ? filteredCustomerIdData
-                : modalField.name === "consigneeId"
+                : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? filteredCustomerIdData
-                : modalField.name === "originLocation"
+                : (modalField.baseFieldName || modalField.name) === "originLocation"
                 ? originData
                 : []
             }
             onSelect={(row) => {
-              if (modalField.name === "companyCode") {
+              const fieldName = modalField.name; // Use the actual field name for setting values
+              const baseFieldName = modalField.baseFieldName || modalField.name;
+              
+              if (baseFieldName === "companyCode") {
                 modalField.form.setValue("companyCode", row["Company Code"]);
                 modalField.form.setValue("branchCode", "");
-              } else if (modalField.name === "branchCode") {
+              } else if (baseFieldName === "branchCode") {
                 modalField.form.setValue("branchCode", row["Branch Code"]);
-              } else if (modalField.name === "customerId") {
+              } else if (baseFieldName === "customerId") {
                 if (modalField.form) {
-                  modalField.form.setValue("customerId", row["Customer ID"]);
+                  modalField.form.setValue(fieldName, row["Customer ID"]);
                 }
-              } else if (modalField.name === "shipperId") {
+              } else if (baseFieldName === "shipperId") {
                 if (modalField.form) {
-                  modalField.form.setValue("shipperId", row["Shipper ID"]);
+                  modalField.form.setValue(fieldName, row["Shipper ID"]);
                 }
-              } else if (modalField.name === "consigneeId") {
+              } else if (baseFieldName === "consigneeId") {
                 if (modalField.form) {
-                  modalField.form.setValue("consigneeId", row["Consignee ID"]);
+                  modalField.form.setValue(fieldName, row["Consignee ID"]);
+                }
+              } else if (baseFieldName === "originLocation") {
+                if (modalField.form) {
+                  modalField.form.setValue(fieldName, row["Location Name"]);
                 }
               }
               setModalField(null);
