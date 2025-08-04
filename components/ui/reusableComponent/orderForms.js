@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -214,7 +214,8 @@ export function renderOrderFieldWithModals(
     setFilteredCustomerIdData,
     branchListData,
     customerIdData,
-    originData
+    originData,
+    customModalConfig
   } = param;
   const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName } = fieldConfig;
 
@@ -239,8 +240,23 @@ export function renderOrderFieldWithModals(
       "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
     ];
   } else if (baseFieldName === "originLocation") {
-    idData = originData || [];
-    idColumns = originModalColumns;
+    // Use custom configuration if available
+    if (customModalConfig?.originLocation) {
+      idData = customModalConfig.originLocation.data || originData || [];
+      idColumns = customModalConfig.originLocation.columns || originModalColumns;
+    } else {
+      idData = originData || [];
+      idColumns = originModalColumns;
+    }
+  } else if (baseFieldName === "dropLocation") {
+    // Use custom configuration if available
+    if (customModalConfig?.dropLocation) {
+      idData = customModalConfig.dropLocation.data || originData || [];
+      idColumns = customModalConfig.dropLocation.columns || originModalColumns;
+    } else {
+      idData = originData || [];
+      idColumns = originModalColumns;
+    }
   }
 
   return (
@@ -474,14 +490,38 @@ export function renderOrderFieldWithModals(
   )
 }
 
-export function OrdersForm({ sections = [], useAccordion = true }) {
+export function OrdersForm({ sections = [], useAccordion = true, customModalConfig = {} }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
   const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([])
+  const [locationData, setLocationData] = useState([])
+
+  // Load location data if custom config is provided
+  useEffect(() => {
+    const loadLocationData = async () => {
+      const section = sections[0]; // Get first section for now
+      const customConfig = section?.customModalConfig;
+      
+      if (customConfig?.originLocation?.dataSource) {
+        try {
+          const data = await customConfig.originLocation.dataSource();
+          setLocationData(data);
+        } catch (error) {
+          console.error('Error loading location data:', error);
+        }
+      }
+    };
+
+    loadLocationData();
+  }, [sections]);
 
   // Helper to render a field with all modal state/data
-  const renderField = (fieldConfig, form, sectionIndex) =>
-    renderOrderFieldWithModals(
+  const renderField = (fieldConfig, form, sectionIndex) => {
+    // Check if this section has custom modal config
+    const section = sections[sectionIndex];
+    const customConfig = section?.customModalConfig;
+    
+    return renderOrderFieldWithModals(
       fieldConfig,
       form,
       sectionIndex,
@@ -490,9 +530,11 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
         setModalType,
         setFilteredCustomerIdData,
         customerIdData,
-        originData
+        originData: customConfig ? locationData : originData,
+        customModalConfig: customConfig
       }
     );
+  };
 
   if (useAccordion) {
     const allSectionValues = sections.map(section => 
@@ -622,7 +664,9 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
                 : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? filteredCustomerIdData
                 : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? originData
+                ? locationData.length > 0 ? locationData : originData
+                : (modalField.baseFieldName || modalField.name) === "dropLocation"
+                ? locationData.length > 0 ? locationData : originData
                 : []
             }
             onSelect={(row) => {
