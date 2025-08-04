@@ -4,13 +4,11 @@ import { useEffect, useState } from "react";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Edit, Eye, Trash2, History } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
-import { renderOrderFieldWithModals } from "@/components/ui/reusableComponent/orderForms";
+import { useOrderFields } from "@/components/ui/reusableComponent/orderForms";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Form } from "@/components/ui/form";
-import { locationService, locationColumns } from "@/lib/api/locationService";
-import ReusableModal from "@/components/ui/reusableComponent/bussinessParnterModal";
 import {
   Dialog,
   DialogContent,
@@ -36,9 +34,9 @@ export default function TripsListingPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [isNewShipmentModalOpen, setIsNewShipmentModalOpen] = useState(false);
-  const [modalField, setModalField] = useState(null);
-  const [modalType, setModalType] = useState(null);
-  const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([]);
+  
+  // Use the flexible order fields hook
+  const { renderField, renderModal } = useOrderFields();
 
 
   const newShipmentForm = useForm({
@@ -198,42 +196,7 @@ export default function TripsListingPage() {
     setIsNewShipmentModalOpen(false);
   };
 
-  // Helper to render a field with custom modal data
-  const renderField = (fieldConfig) => {
-    // Add modalFieldName for dropLocation to enable modal functionality
-    const fieldWithModal = fieldConfig.name === "dropLocation" 
-      ? { ...fieldConfig, modalFieldName: "dropLocation" }
-      : fieldConfig;
-    
-    return renderOrderFieldWithModals(
-      fieldWithModal,
-      newShipmentForm,
-      0,
-      {
-        setModalField,
-        setModalType,
-        setFilteredCustomerIdData,
-        customerIdData: [],
-        originData: locationData // Use our filtered data
-      }
-    );
-  };
 
-  // Load location data for the modal
-  const [locationData, setLocationData] = useState([]);
-
-  useEffect(() => {
-    const loadLocationData = async () => {
-      try {
-        const data = await locationService.getOriginLocations(locationColumns.tripList);
-        setLocationData(data);
-      } catch (error) {
-        console.error('Error loading location data:', error);
-      }
-    };
-
-    loadLocationData();
-  }, []);
 
   return (
     <div className="p-4">
@@ -271,11 +234,11 @@ export default function TripsListingPage() {
             </DialogDescription>
           </DialogHeader>
 
-                    <div className="py-4">
+          <div className="py-4">
             <Form {...newShipmentForm}>
               <form onSubmit={newShipmentForm.handleSubmit(handleNewShipmentFormSubmit)}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {newShipmentFields.map((field) => renderField(field))}
+                  {newShipmentFields.map((field) => renderField(field, newShipmentForm, 0))}
                 </div>
 
                 <DialogFooter className="mt-6 pt-4 border-t border-gray-200">
@@ -300,37 +263,7 @@ export default function TripsListingPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Modal for origin location and drop location */}
-      {modalField && (
-        <ReusableModal
-          open={modalField !== null}
-          onClose={() => {
-            setModalField(null)
-            setModalType(null)
-          }}
-          title={
-            (modalField.baseFieldName || modalField.name) === "originLocation"
-              ? "List of Origin Locations"
-              : (modalField.baseFieldName || modalField.name) === "dropLocation"
-              ? "List of Drop Locations"
-              : ""
-          }
-          columns={locationColumns.tripList}
-          data={locationData}
-          onSelect={(row) => {
-            const fieldName = modalField.name;
-            const baseFieldName = modalField.baseFieldName || modalField.name;
-            
-            if (baseFieldName === "originLocation" || baseFieldName === "dropLocation") {
-              if (modalField.form) {
-                modalField.form.setValue(fieldName, row["Location Name"]);
-              }
-            }
-            setModalField(null);
-            setModalType(null);
-          }}
-        />
-      )}
+      {renderModal()}
     </div>
   );
 } 

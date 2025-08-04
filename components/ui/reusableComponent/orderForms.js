@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -214,8 +214,7 @@ export function renderOrderFieldWithModals(
     setFilteredCustomerIdData,
     branchListData,
     customerIdData,
-    originData,
-    customModalConfig
+    originData
   } = param;
   const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName } = fieldConfig;
 
@@ -239,24 +238,9 @@ export function renderOrderFieldWithModals(
     idColumns = [
       "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
     ];
-  } else if (baseFieldName === "originLocation") {
-    // Use custom configuration if available
-    if (customModalConfig?.originLocation) {
-      idData = customModalConfig.originLocation.data || originData || [];
-      idColumns = customModalConfig.originLocation.columns || originModalColumns;
-    } else {
-      idData = originData || [];
-      idColumns = originModalColumns;
-    }
-  } else if (baseFieldName === "dropLocation") {
-    // Use custom configuration if available
-    if (customModalConfig?.dropLocation) {
-      idData = customModalConfig.dropLocation.data || originData || [];
-      idColumns = customModalConfig.dropLocation.columns || originModalColumns;
-    } else {
-      idData = originData || [];
-      idColumns = originModalColumns;
-    }
+  } else if (baseFieldName === "originLocation" || baseFieldName === "dropLocation") {
+    idData = originData || [];
+    idColumns = originModalColumns;
   }
 
   return (
@@ -303,7 +287,7 @@ export function renderOrderFieldWithModals(
                       ))}
                     </div>
                   </div>
-                ) : ["customerId", "shipperId", "consigneeId", "originLocation"].includes(baseFieldName) ? (
+                ) : ["customerId", "shipperId", "consigneeId", "originLocation", "dropLocation"].includes(baseFieldName) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md overflow-hidden">
                     <Input
                       {...field}
@@ -314,7 +298,7 @@ export function renderOrderFieldWithModals(
                       className="w-full px-3 py-2 bg-white rounded-md border-none focus:outline-none focus:ring-0 focus:border-none"
                     />
                     <div className="absolute right-0 h-full bg-gray-100 flex items-center px-2 space-x-2">
-                      {baseFieldName !== "originLocation" && (
+                      {baseFieldName !== "originLocation" && baseFieldName !== "dropLocation" && (
                         <button
                           title="Search"
                           type="button"
@@ -490,38 +474,14 @@ export function renderOrderFieldWithModals(
   )
 }
 
-export function OrdersForm({ sections = [], useAccordion = true, customModalConfig = {} }) {
+export function OrdersForm({ sections = [], useAccordion = true }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
   const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([])
-  const [locationData, setLocationData] = useState([])
-
-  // Load location data if custom config is provided
-  useEffect(() => {
-    const loadLocationData = async () => {
-      const section = sections[0]; // Get first section for now
-      const customConfig = section?.customModalConfig;
-      
-      if (customConfig?.originLocation?.dataSource) {
-        try {
-          const data = await customConfig.originLocation.dataSource();
-          setLocationData(data);
-        } catch (error) {
-          console.error('Error loading location data:', error);
-        }
-      }
-    };
-
-    loadLocationData();
-  }, [sections]);
 
   // Helper to render a field with all modal state/data
-  const renderField = (fieldConfig, form, sectionIndex) => {
-    // Check if this section has custom modal config
-    const section = sections[sectionIndex];
-    const customConfig = section?.customModalConfig;
-    
-    return renderOrderFieldWithModals(
+  const renderField = (fieldConfig, form, sectionIndex) =>
+    renderOrderFieldWithModals(
       fieldConfig,
       form,
       sectionIndex,
@@ -530,11 +490,9 @@ export function OrdersForm({ sections = [], useAccordion = true, customModalConf
         setModalType,
         setFilteredCustomerIdData,
         customerIdData,
-        originData: customConfig ? locationData : originData,
-        customModalConfig: customConfig
+        originData
       }
     );
-  };
 
   if (useAccordion) {
     const allSectionValues = sections.map(section => 
@@ -664,9 +622,7 @@ export function OrdersForm({ sections = [], useAccordion = true, customModalConf
                 : (modalField.baseFieldName || modalField.name) === "consigneeId"
                 ? filteredCustomerIdData
                 : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? locationData.length > 0 ? locationData : originData
-                : (modalField.baseFieldName || modalField.name) === "dropLocation"
-                ? locationData.length > 0 ? locationData : originData
+                ? originData
                 : []
             }
             onSelect={(row) => {
@@ -845,4 +801,156 @@ export function OrdersForm({ sections = [], useAccordion = true, customModalConf
       </>
     );
   }
+}
+
+// New flexible hook for using order fields with any custom design
+export function useOrderFields() {
+  const [modalField, setModalField] = useState(null);
+  const [modalType, setModalType] = useState(null);
+  const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([]);
+
+
+
+  // Helper to render a field with modal functionality
+  const renderField = (fieldConfig, form, sectionIndex = 0) => {
+    return renderOrderFieldWithModals(
+      fieldConfig,
+      form,
+      sectionIndex,
+      {
+        setModalField,
+        setModalType,
+        setFilteredCustomerIdData,
+        branchListData: branchListData,
+      }
+    );
+  };
+
+
+  const renderModal = () => {
+    if (!modalField) return null;
+
+    return (
+      <ReusableModal
+        open={modalField !== null}
+        onClose={() => {
+          setModalField(null);
+          setModalType(null);
+        }}
+        title={
+          (modalField.baseFieldName || modalField.name) === "companyCode"
+            ? modalType === "list"
+              ? "List of Companies"
+              : modalType === "search"
+              ? "Search Company Details"
+              : "Select Company"
+            : (modalField.baseFieldName || modalField.name) === "branchCode"
+            ? modalType === "list"
+              ? "List of Branches"
+              : modalType === "search"
+              ? "Search Branch Details"
+              : "Select Branch"
+            : (modalField.baseFieldName || modalField.name) === "customerId"
+            ? modalType === "list"
+              ? "List of Customers"
+              : modalType === "search"
+              ? "Search Customer Details"
+              : "Select Customer"
+            : (modalField.baseFieldName || modalField.name) === "shipperId"
+            ? modalType === "list"
+              ? "List of Shippers"
+              : modalType === "search"
+              ? "Search Shipper Details"
+              : "Select Shipper"
+            : (modalField.baseFieldName || modalField.name) === "consigneeId"
+            ? modalType === "list"
+              ? "List of Consignees"
+              : modalType === "search"
+              ? "Search Consignee Details"
+              : "Select Consignee"
+            : (modalField.baseFieldName || modalField.name) === "originLocation"
+            ? "List of Origin Locations"
+            : (modalField.baseFieldName || modalField.name) === "dropLocation"
+            ? "List of Drop Locations"
+            : ""
+        }
+        columns={
+          (modalField.baseFieldName || modalField.name) === "companyCode"
+            ? companyModalColumns
+            : (modalField.baseFieldName || modalField.name) === "branchCode"
+            ? branchModalColumns
+            : (modalField.baseFieldName || modalField.name) === "customerId"
+            ? customerIdModalColumns
+            : (modalField.baseFieldName || modalField.name) === "shipperId"
+            ? [
+                "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+              ]
+            : (modalField.baseFieldName || modalField.name) === "consigneeId"
+            ? [
+                "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
+              ]
+            : (modalField.baseFieldName || modalField.name) === "originLocation" || (modalField.baseFieldName || modalField.name) === "dropLocation"
+            ? originModalColumns
+            : []
+        }
+        data={
+          (modalField.baseFieldName || modalField.name) === "companyCode"
+            ? modalType === "list"
+              ? companyListData
+              : modalType === "search"
+              ? companySearchData
+              : companyFindData
+            : (modalField.baseFieldName || modalField.name) === "branchCode"
+            ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
+            : (modalField.baseFieldName || modalField.name) === "customerId"
+            ? filteredCustomerIdData
+            : (modalField.baseFieldName || modalField.name) === "shipperId"
+            ? filteredCustomerIdData
+            : (modalField.baseFieldName || modalField.name) === "consigneeId"
+            ? filteredCustomerIdData
+            : (modalField.baseFieldName || modalField.name) === "originLocation" || (modalField.baseFieldName || modalField.name) === "dropLocation"
+            ? originData
+            : []
+        }
+        onSelect={(row) => {
+          const fieldName = modalField.name; // Use the actual field name for setting values
+          const baseFieldName = modalField.baseFieldName || modalField.name;
+          
+          if (baseFieldName === "companyCode") {
+            modalField.form.setValue("companyCode", row["Company Code"]);
+            modalField.form.setValue("branchCode", "");
+          } else if (baseFieldName === "branchCode") {
+            modalField.form.setValue("branchCode", row["Branch Code"]);
+          } else if (baseFieldName === "customerId") {
+            if (modalField.form) {
+              modalField.form.setValue(fieldName, row["Customer ID"]);
+            }
+          } else if (baseFieldName === "shipperId") {
+            if (modalField.form) {
+              modalField.form.setValue(fieldName, row["Shipper ID"]);
+            }
+          } else if (baseFieldName === "consigneeId") {
+            if (modalField.form) {
+              modalField.form.setValue(fieldName, row["Consignee ID"]);
+            }
+          } else if (baseFieldName === "originLocation" || baseFieldName === "dropLocation") {
+            if (modalField.form) {
+              modalField.form.setValue(fieldName, row["Location Name"]);
+            }
+          }
+          setModalField(null);
+          setModalType(null);
+        }}
+      />
+    );
+  };
+
+  return {
+    renderField,
+    renderModal,
+    modalField,
+    setModalField,
+    modalType,
+    setModalType
+  };
 }
