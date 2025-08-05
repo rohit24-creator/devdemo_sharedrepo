@@ -1,0 +1,22 @@
+{
+  "headers": [
+    {
+      "accessorKey": "fenceName",
+      "header": "Fence Name"
+    },
+    {
+      "accessorKey": "fenceLocation",
+      "header": "Location"
+    }
+  ],
+  "rows": [
+    {
+      "fenceName": "demotest fence",
+      "fenceLocation": "LondonGatwickAirportLGW, Horley, GatwickRH60NP, UK"
+    },
+    {
+      "fenceName": "Second fence",
+      "fenceLocation": "255GreenwichSt, NewYork, NY10007, USA"
+    }
+  ]
+} 
