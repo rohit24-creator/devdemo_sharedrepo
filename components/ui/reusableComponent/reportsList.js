@@ -586,7 +586,7 @@ export default function ReportsList({
     <>
       <Card>
         <CardContent className="p-4 flex justify-between flex-wrap gap-4">
-          <div className="flex flex-wrap items-end gap-3">
+          <div className="flex flex-wrap items-end gap-3 w-full lg:w-auto">
             {filterFields.map((field) => (
               <FilterField
                 key={field.name}
@@ -595,47 +595,50 @@ export default function ReportsList({
                 setFormValues={setFormValues}
               />
             ))}
-            <Button
-              className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
-              onClick={() => onSearch(formValues)}
-            >
-              Search
-            </Button>
+            {/* Search and Action buttons grouped together */}
+            <div className="flex items-end gap-2">
+              <Button
+                className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
+                onClick={() => onSearch(formValues)}
+              >
+                Search
+              </Button>
+              {/* 3-dots button - show on small screens when many fields */}
+              {filterFields.length > 5 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium"
+                      style={{ fontSize: 13 }}
+                    >
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {showFirstIcon && (
+                      <DropdownMenuItem onClick={() => console.log("Search action")}>
+                        <Search size={16} className="mr-2" />
+                        Search
+                      </DropdownMenuItem>
+                    )}
+                    {secondIconMenu.map((item, idx) => (
+                      <DropdownMenuItem key={idx} onClick={item.onClick}>
+                        {item.label}
+                      </DropdownMenuItem>
+                    ))}
+                    {thirdIconMenu.map((item, idx) => (
+                      <DropdownMenuItem key={idx} onClick={item.onClick}>
+                        {item.label}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
           </div>
 
-          <div className="flex items-end gap-6 pr-2">
-            {filterFields.length > 5 ? (
-              // Show 3-dots action button when more than 5 filter fields
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium"
-                    style={{ fontSize: 13 }}
-                  >
-                    <MoreVertical className="w-4 h-4" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {showFirstIcon && (
-                    <DropdownMenuItem onClick={() => console.log("Search action")}>
-                      <Search size={16} className="mr-2" />
-                      Search
-                    </DropdownMenuItem>
-                  )}
-                  {secondIconMenu.map((item, idx) => (
-                    <DropdownMenuItem key={idx} onClick={item.onClick}>
-                      {item.label}
-                    </DropdownMenuItem>
-                  ))}
-                  {thirdIconMenu.map((item, idx) => (
-                    <DropdownMenuItem key={idx} onClick={item.onClick}>
-                      {item.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              // Show individual icons when 5 or fewer filter fields
+          <div className="hidden lg:flex items-end gap-6 pr-2">
+            {filterFields.length <= 5 && (
               <>
                 {showFirstIcon && (
                   <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
