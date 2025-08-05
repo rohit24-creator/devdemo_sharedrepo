@@ -22,7 +22,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Search, FileText, FileSearch, Plus } from "lucide-react";
-import ReusableModal from "./bussinessParnterModal";
+import ReusableModal from "./bussinessPartnerModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -310,7 +310,16 @@ export function renderOrderFieldWithModals(
                       <Plus size={18} className="text-[#006397]" />
                     </button>
                   </div>
-                   ) : type === "radio" ? (
+                   ) : type === "date" ? (
+                    <Input
+                      {...field}
+                      value={field.value ?? ""}
+                      disabled={disabled}
+                      type="date"
+                      placeholder={placeholder}
+                      className={`w-full px-3 py-1.5 rounded-md border-2 border-[#E7ECFD] ${disabled ? "bg-gray-100" : ""}`}
+                    />
+                  ) : type === "radio" ? (
                                     <div className="mt-4 flex gap-6 items-center">
                                       <RadioGroup
                                         value={field.value}

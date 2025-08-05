@@ -8,6 +8,7 @@ import { OrdersForm } from "@/components/ui/reusableComponent/dashboardform";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, RotateCcw, X, Save } from "lucide-react";
+import FormModal from "@/components/ui/reusableComponent/formmodal";
 
 // Validation schema for Vehicle Finance form
 const vehicleFinanceSchema = z.object({
@@ -29,6 +30,8 @@ const vehicleFinanceSchema = z.object({
 
 export default function VehicleFinancePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalField, setModalField] = useState(null);
 
   // Form instances
   const vehicleFinanceForm = useForm({
@@ -51,8 +54,8 @@ export default function VehicleFinancePage() {
     },
   });
 
-  // Mock data for dropdowns
-  const vehicleOptions = [
+  // Mock data for dropdowns with state management
+  const [vehicleOptions, setVehicleOptions] = useState([
     "BHC 246",
     "586 5GX", 
     "DMC 4583",
@@ -63,16 +66,16 @@ export default function VehicleFinancePage() {
     "VAN 654",
     "TRK 987",
     "FLE 123"
-  ];
+  ]);
 
-  const loanTypeOptions = [
+  const [loanTypeOptions, setLoanTypeOptions] = useState([
     "Vehicle Loan",
     "Equipment Finance",
     "Lease Purchase",
     "Hire Purchase",
     "Operating Lease",
     "Finance Lease"
-  ];
+  ]);
 
   // Form submission handlers
   const handleVehicleFinanceSubmit = async (data) => {
@@ -101,15 +104,23 @@ export default function VehicleFinancePage() {
     }
   };
 
-  // Plus action handlers for adding new options
-  const handleAddVehicle = () => {
-    // Open modal or navigate to add vehicle page
-    alert("Add Vehicle functionality - Navigate to vehicle management");
+  // Modal handlers
+  const handlePlus = (field) => () => {
+    setModalField(field);
+    setModalOpen(true);
   };
 
-  const handleAddLoanType = () => {
-    // Open modal to add new loan type
-    alert("Add Loan Type functionality - Open loan type modal");
+  // Handle modal submit
+  const handleModalSubmit = (data) => {
+    if (modalField && data && data.name) {
+      if (modalField === "vehicleId") {
+        setVehicleOptions((prev) => [...prev, data.name]);
+      } else if (modalField === "loanType") {
+        setLoanTypeOptions((prev) => [...prev, data.name]);
+      }
+    }
+    setModalOpen(false);
+    setModalField(null);
   };
 
   // Form sections configuration
@@ -124,86 +135,85 @@ export default function VehicleFinancePage() {
           label: "Choose Vehicle *",
           type: "select",
           options: vehicleOptions,
-          // plusAction: handleAddVehicle,
         },
         {
           name: "loanType",
           label: "Choose Loan Type *",
           type: "select",
           options: loanTypeOptions,
-          plusAction: handleAddLoanType,
+          plusAction: handlePlus("loanType"),
         },
         {
           name: "financeCompanyName",
           label: "Finance Company Name *",
           type: "text",
-          placeholder: "Finance Company Name",
+          // placeholder: "Finance Company Name",
         },
         {
           name: "financeStartDate",
           label: "Finance Start Date *",
-          type: "text",
-          placeholder: "yyyy-mm-dd hh:mm:ss",
+          type: "date",
+          placeholder: "Start Date",
         },
         {
           name: "financeDueDate",
           label: "Finance Due Date *",
-          type: "text",
-          placeholder: "yyyy-mm-dd hh:mm:ss",
+          type: "date",
+          placeholder: "Due Date",
         },
         {
           name: "contactPerson",
           label: "Contact Person *",
           type: "text",
-          placeholder: "Contact Person",
+          // placeholder: "Contact Person",
         },
         {
           name: "contactNumber",
           label: "Contact Number *",
           type: "text",
-          placeholder: "Contact Number",
+          // placeholder: "Contact Number",
         },
         {
           name: "totalFinanceAmount",
           label: "Total Finance Amount *",
           type: "text",
-          placeholder: "Total Finance Amount",
+          // placeholder: "Total Finance Amount",
         },
         {
           name: "paidAmount",
           label: "Paid Amount *",
           type: "text",
-          placeholder: "Paid Amount",
+          // placeholder: "Paid Amount",
         },
         {
           name: "emiRate",
           label: "EMI Rate (%)",
           type: "text",
-          placeholder: "EMI Rate (%)",
+          // placeholder: "EMI Rate (%)",
         },
         {
           name: "numberOfMonths",
           label: "Number of Months",
           type: "text",
-          placeholder: "Number of Months",
+          // placeholder: "Number of Months",
         },
         {
           name: "dueAmount",
           label: "Due Amount",
           type: "text",
-          placeholder: "Due Amount",
+          // placeholder: "Due Amount",
         },
         {
           name: "otherCharges",
           label: "Other Charges",
           type: "text",
-          placeholder: "Other Charges",
+          // placeholder: "Other Charges",
         },
         {
           name: "description",
           label: "Description",
           type: "textarea",
-          placeholder: "Enter Description",
+          // placeholder: "Enter Description",
           wide: true,
         },
       ],
@@ -211,11 +221,40 @@ export default function VehicleFinancePage() {
   ];
 
   return (
-      <div className="p-6">
+    <div className="">
+
+            <div className="p-6">
+
+        {/* Form Content */}
             <OrdersForm
               sections={sections}
               disableAccordion={true}
             />
+
       </div>
+
+      {/* Modal for adding new options */}
+      <FormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalField ? 
+          modalField === "vehicleId" ? "Add New Vehicle" : 
+          modalField === "loanType" ? "Add New Loan Type" : 
+          ""
+          : ""
+        }
+        formFields={[
+          {
+            name: "name",
+            label: modalField === "vehicleId" ? "Enter Vehicle Name *" : "Enter Loan Type *",
+            type: "text"
+          }
+        ]}
+        onSubmit={handleModalSubmit}
+        footerType="submitOnly"
+        submitLabel="Save"
+        dialogClassName="max-w-md p-0"
+      />
+    </div>
   );
 }
