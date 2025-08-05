@@ -67,8 +67,6 @@ export default function TripTemplateListingPage() {
 
   const handleSearch = (searchData) => {
     console.log("Search filters:", searchData);
-    // Implement search logic here
-    // You can filter the rows based on searchData
   };
 
   return (

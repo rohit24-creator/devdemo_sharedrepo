@@ -45,7 +45,7 @@ import {
 } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
 import { FileSearch, FileText, Search } from "lucide-react"
-import ReusableModal from "./bussinessParnterModal"
+import ReusableModal from "./bussinessPartnerModal"
 import { format } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"

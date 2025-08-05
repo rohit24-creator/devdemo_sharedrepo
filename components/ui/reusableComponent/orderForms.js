@@ -23,7 +23,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Search, FileText, FileSearch, Plus } from "lucide-react";
-import ReusableModal from "./bussinessParnterModal";
+import ReusableModal from "./bussinessPartnerModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 

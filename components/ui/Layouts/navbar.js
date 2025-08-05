@@ -113,28 +113,25 @@ const navigationData = {
   trips: {
     label: 'Trips',
     items: [
-      { href: '/trips/trips/list', label: 'Trips' },
+      { href: '/trip/lists/trips', label: 'Trips' },
       {
         label: 'Trip Expense',
         items: [
-          { href: '/trips/tripExpense', label: 'Trip Expense' },
-          { href: '/trips/tripExpense/list', label: 'Trip Expense List' },
+          { href: '/trip/tripExpense', label: 'Trip Expense' },
         ],
       },
       {
         label: 'Trip Template',
         items: [
-          { href: '/trips/tripTemplate', label: 'Trip Template' },
-          { href: '/trips/tripTemplate/list', label: 'Trip Template List' },
+          { href: '/trip/tripTemplate', label: 'Trip Template' },
         ],
       },
-      { href: '/trips/returnTrucks/list', label: 'Return Trucks' },
+      { href: '/trip/lists/returnTrucks', label: 'Return Trucks' },
       {
         label: 'Routing',
         items: [
-          { href: '/trips/routing', label: 'Routing' },
-          { href: '/trips/routing/list', label: 'Routing List' },
-          { href: '/trips/routing/addtionalDetails', label: 'Additional Details' },
+          { href: '/trip/routing', label: 'Routing' },
+          { href: '/trip/routing/addtionalDetails', label: 'Additional Details' },
         ],
       },
     ],

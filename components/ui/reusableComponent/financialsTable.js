@@ -4,7 +4,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import ReusableModal from "./bussinessParnterModal";
+import ReusableModal from "./bussinessPartnerModal";
 import { Search } from "lucide-react";
 
 // Dummy data for customers and vendors (move here, not from parent)
