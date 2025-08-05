@@ -3,194 +3,208 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Truck, Bell, CheckCircle, Clock, Settings } from "lucide-react"
-import Image from "next/image"
+import { Truck, Activity, CheckCircle, Clock, Calendar, Package, Route, Car, Plus } from "lucide-react"
 
-export default function ShipmentXDashboard() {
-  const data = {
-    stats: {
-      activeBookings: 5,
-      pendingBookings: 4,
-      completedBookings: 6
-    },
-    bookings: {
-      active: [
-        { id: "125270004" },
-        { id: "125270002" },
-        { id: "125270003" },
-        { id: "125270001" },
-        { id: "125210013" }
-      ],
-      pending: [
-        { id: "125270005" },
-        { id: "125270006" },
-        { id: "125270007" },
-        { id: "125270008" }
-      ],
-      completed: [
-        { id: "125270009" },
-        { id: "125270010" },
-        { id: "125270011" },
-        { id: "125270012" },
-        { id: "125270013" },
-        { id: "125270014" }
-      ]
-    },
-    notifications: {
-      alerts: 2,
-      notifications: 8,
-      approvals: 3
+export default function ShipmentXWorkbench() {
+    const data = {
+        headerButtons: [
+            { id: 1, label: "New Booking", icon: "Plus" },
+            { id: 2, label: "Schedule", icon: "Calendar" },
+            { id: 3, label: "Reports", icon: "Activity" }
+        ],
+        dashboardData: {
+            alerts: 25,
+            notifications: 58,
+            approvals: 43
+        },
+        activeBookings: {
+            count: 45,
+            ids: ["125270004", "125270002", "125270003", "125270001", "125210013"]
+        },
+        pendingBookings: {
+            count: 64,
+            ids: ["125270005", "125270006", "125270007", "125270008", "125270002"]
+        },
+        completedBookings: {
+            count: 26,
+            ids: ["125270009", "125270010", "125270011", "125270012", "125270013", "125270014"]
+        }
     }
-  }
 
-  return (
-    <div className="flex min-h-screen bg-slate-150 p-8 gap-8">
-      {/* Left Panel */}
-      <div className="w-1/3 flex flex-col items-center justify-center text-center rounded-2xl shadow-md bg-gradient-to-br from-blue-100 via-blue-50 to-white p-10 border border-blue-200">
-        <h2 className="text-3xl font-medium text-blue-700 mb-2">Welcome to</h2>
-        <h1 className="text-5xl font-bold text-blue-600 tracking-tight mb-6">ShipmentX</h1>
-        <Image
-          src="/your-illustration.svg"
-          alt="ShipmentX Illustration"
-          width={360}
-          height={360}
-          className="rounded-lg"
-        />
-      </div>
+    return (
+        <div className="min-h-screen bg-gray-50">
+            {/* Navigation Bar */}
+            <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
+                <div className="max-w-7xl mx-auto flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                        <Truck className="text-blue-500 w-8 h-8" />
+                        <h1 className="text-4xl font-medium text-blue-900">Welcome to ShipmentX</h1>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                        {data.headerButtons.map((button) => (
+                            <Button
+                                key={button.id}
+                                className="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-lg flex items-center space-x-2"
+                            >
+                                {button.icon === "Plus" && <Plus className="w-4 h-4" />}
+                                {button.icon === "Calendar" && <Calendar className="w-4 h-4" />}
+                                {button.icon === "Activity" && <Activity className="w-4 h-4" />}
+                                <span>{button.label}</span>
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+            </nav>
 
-      {/* Right Panel */}
-      <div className="flex-1 grid grid-cols-2 gap-6">
-        {/* Booking Buttons */}
-        <Card className="col-span-2">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex gap-2 items-center text-blue-700">
-              <Settings className="text-blue-600 w-6 h-6" />
-              Booking Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-4">
-            {["Schedule a Booking", "Your Bookings", "Quick Book"].map((label, idx) => (
-              <Button key={idx} variant="outline" className="text-slate-700 border-slate-300 hover:bg-blue-50 font-normal">
-                {label}
-              </Button>
-            ))}
-          </CardContent>
-        </Card>
+            {/* Main Content */}
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* Alerts Row - Top Section */}
+                <div className="mb-12">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <Card className="bg-white shadow-sm border border-gray-200 h-[90px] hover:shadow-md transition-shadow">
+                            <CardContent className="p-6 h-full flex items-center">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-16 h-16 bg-red-500 rounded-lg flex items-center justify-center">
+                                        <Package className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-lg font-medium text-gray-600">Alerts</span>
+                                        <span className="text-2xl font-medium text-gray-900">{data.dashboardData.alerts}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card className="bg-white shadow-sm border border-gray-200 h-[90px] hover:shadow-md transition-shadow">
+                            <CardContent className="p-6 h-full flex items-center">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
+                                        <Route className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-lg font-medium text-gray-600">Notifications</span>
+                                        <span className="text-2xl font-medium text-gray-900">{data.dashboardData.notifications}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card className="bg-white shadow-sm border border-gray-200 h-[90px] hover:shadow-md transition-shadow">
+                            <CardContent className="p-6 h-full flex items-center">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-16 h-16 bg-green-500 rounded-lg flex items-center justify-center">
+                                        <Car className="w-8 h-8 text-white" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-lg font-medium text-gray-600">Approvals</span>
+                                        <span className="text-2xl font-medium text-gray-900">{data.dashboardData.approvals}</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
 
-        {/* Active Bookings */}
-        <Card className="relative">
-          <div className="absolute top-4 right-4">
-            <Badge className="bg-slate-700 text-white text-base px-4 py-2 rounded-full font-semibold">
-              {data.stats.activeBookings}
-            </Badge>
-          </div>
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex gap-2 items-center text-slate-700">
-              <Truck className="text-blue-600 w-6 h-6" /> Active Bookings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            {data.bookings.active.length > 0 ? (
-              data.bookings.active.map((booking, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full px-6 py-2 text-slate-600 border-slate-300 hover:bg-slate-100 min-w-[120px] font-normal"
-                >
-                  {booking.id}
-                </Button>
-              ))
-            ) : (
-              <p className="text-slate-500 text-sm italic">No bookings</p>
-            )}
-          </CardContent>
-        </Card>
+                {/* Booking Cards Section */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-medium text-gray-800">Booking Management</h3>
+                    </div>
 
-        {/* Pending Bookings */}
-        <Card className="relative">
-          <div className="absolute top-4 right-4">
-            <Badge className="bg-slate-700 text-white text-base px-4 py-2 rounded-full font-semibold">
-              {data.stats.pendingBookings}
-            </Badge>
-          </div>
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex gap-2 items-center text-slate-700">
-              <Clock className="text-amber-600 w-6 h-6" /> Pending Bookings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            {data.bookings.pending.length > 0 ? (
-              data.bookings.pending.map((booking, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full px-6 py-2 text-slate-600 border-slate-300 hover:bg-slate-100 min-w-[120px] font-normal"
-                >
-                  {booking.id}
-                </Button>
-              ))
-            ) : (
-              <p className="text-slate-500 text-sm italic">No bookings</p>
-            )}
-          </CardContent>
-        </Card>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Active Bookings */}
+                        <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-xl font-medium flex items-center justify-between text-gray-800">
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                            <Activity className="w-4 h-4 text-blue-600" />
+                                        </div>
+                                        <span>Active Bookings</span>
+                                    </div>
+                                    <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 text-lg px-3 py-1">
+                                        {data.activeBookings.count}
+                                    </Badge>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {data.activeBookings.ids.map((id, index) => (
+                                        <Button
+                                            key={index}
+                                            variant="outline"
+                                            size="sm"
+                                            className="rounded-full px-6 py-2 text-slate-600 border-slate-300 hover:bg-slate-100 min-w-[120px] font-normal"
+                                        >
+                                            {id}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
 
-        {/* Notifications */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex gap-2 items-center text-blue-700">
-              <Bell className="text-blue-600 w-6 h-6" />
-              Alerts & Notifications
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex justify-around items-center text-center">
-            <div>
-              <p className="text-3xl font-bold text-red-600">{data.notifications.alerts}</p>
-              <p className="text-base font-medium text-slate-600">Alerts</p>
+                        {/* Pending Bookings */}
+                        <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-xl font-medium flex items-center justify-between text-gray-800">
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                            <Clock className="w-4 h-4 text-yellow-600" />
+                                        </div>
+                                        <span>Pending Bookings</span>
+                                    </div>
+                                    <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 text-lg px-3 py-1">
+                                        {data.pendingBookings.count}
+                                    </Badge>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {data.pendingBookings.ids.map((id, index) => (
+                                        <Button
+                                            key={index}
+                                            variant="outline"
+                                            size="sm"
+                                            className="rounded-full px-6 py-2 text-slate-600 border-slate-300 hover:bg-slate-100 min-w-[120px] font-normal"
+                                        >
+                                            {id}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Completed Bookings */}
+                        <Card className="bg-white shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-xl font-medium flex items-center justify-between text-gray-800">
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                            <CheckCircle className="w-4 h-4 text-green-600" />
+                                        </div>
+                                        <span>Completed Bookings</span>
+                                    </div>
+                                    <Badge className="bg-green-100 text-green-700 hover:bg-green-200 text-lg px-3 py-1">
+                                        {data.completedBookings.count}
+                                    </Badge>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {data.completedBookings.ids.map((id, index) => (
+                                        <Button
+                                            key={index}
+                                            variant="outline"
+                                            size="sm"
+                                            className="rounded-full px-6 py-2 text-slate-600 border-slate-300 hover:bg-slate-100 min-w-[120px] font-normal"
+                                        >
+                                            {id}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </div>
-            <div>
-              <p className="text-3xl font-bold text-blue-600">{data.notifications.notifications}</p>
-              <p className="text-base font-medium text-slate-600">Notifications</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-green-600">{data.notifications.approvals}</p>
-              <p className="text-base font-medium text-slate-600">Approvals</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Completed Bookings */}
-        <Card className="relative">
-          <div className="absolute top-4 right-4">
-            <Badge className="bg-slate-700 text-white text-base px-4 py-2 rounded-full font-semibold">
-              {data.stats.completedBookings}
-            </Badge>
-          </div>
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold flex gap-2 items-center text-slate-700">
-              <CheckCircle className="text-green-600 w-6 h-6" /> Completed Bookings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
-            {data.bookings.completed.length > 0 ? (
-              data.bookings.completed.map((booking, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full px-6 py-2 text-slate-600 border-slate-300 hover:bg-slate-100 min-w-[120px] font-normal"
-                >
-                  {booking.id}
-                </Button>
-              ))
-            ) : (
-              <p className="text-slate-500 text-sm italic">No bookings</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  )
+        </div>
+    )
 }
