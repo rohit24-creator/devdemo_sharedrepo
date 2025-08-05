@@ -22,7 +22,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Search, FileText, FileSearch } from "lucide-react";
+import { Search, FileText, FileSearch, Plus } from "lucide-react";
 import ReusableModal from "./bussinessParnterModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -375,16 +375,14 @@ export function renderOrderFieldWithModals(
     setModalType,
     setFilteredCustomerIdData,
   } = param;
-  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName } = fieldConfig;
+  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName, plusAction } = fieldConfig;
 
-  // Use modalFieldName if provided (for table fields), otherwise use the field name
+
   const baseFieldName = modalFieldName || name;
-  
-  // For table fields with array indices, we need to extract the base field name
+
   const actualFieldName = name; // This is the full field name like "routeLegs.0.originLocation"
   const isTableField = name.includes('.') && modalFieldName; // Check if this is a table field
 
-  // Get modal config for this field
   const modalConfig = MODAL_CONFIG[baseFieldName];
 
   return (
@@ -481,20 +479,33 @@ export function renderOrderFieldWithModals(
                     </div>
                   </div>
                 ) : type === "select" ? (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
-                      <SelectValue placeholder={placeholder || `Select ${label}`} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {options.map((option) =>
-                        typeof option === "string" ? (
-                          <SelectItem key={option} value={option}>{option}</SelectItem>
-                        ) : (
-                          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
+                  (() => {
+                    const selectComponent = (
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
+                          <SelectValue placeholder={placeholder || `Select ${label}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {options.map((option) =>
+                            typeof option === "string" ? (
+                              <SelectItem key={option} value={option}>{option}</SelectItem>
+                            ) : (
+                              <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                            )
+                          )}
+                        </SelectContent>
+                      </Select>
+                    );
+
+                    return plusAction ? (
+                      <div className="flex items-center gap-2">
+                        {selectComponent}
+                        <button type="button" onClick={plusAction} className="p-1 rounded border-2 border-[#E7ECFD] bg-white hover:bg-gray-100">
+                          <Plus size={25} className="text-[#006397]" />
+                        </button>
+                      </div>
+                    ) : selectComponent;
+                  })()
                 ) : type === "date" ? (
                   <Popover>
                     <PopoverTrigger asChild>
