@@ -27,179 +27,342 @@ import ReusableModal from "./bussinessParnterModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-// Add modal columns and data for company and branch (copied from profilesForm.js)
-const companyModalColumns = ["Company Name", "Company Code", "Description"];
-const branchModalColumns = ["Branch Name", "Branch Code", "companyCode", "Description"];
-const customerIdModalColumns = [
-  "Customer ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-];
-
-const originModalColumns = [
-  "Location Name", "Address", "City", "State", "Country", "Pincode"
-];
-
-const companyFindData = [
-  { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
-  { "Company Name": "TCS", "Company Code": "TCS01", Description: "Tata Consultancy Services" },
-  { "Company Name": "Wipro", "Company Code": "WPR02", Description: "Wipro Ltd" },
-];
-
-const companyListData = [
-  { "Company Name": "Infosys", "Company Code": "INFY", Description: "Infosys Ltd" },
-  { "Company Name": "HCL", "Company Code": "HCL01", Description: "HCL Technologies" },
-  { "Company Name": "IBM", "Company Code": "IBM02", Description: "IBM India" },
-];
-
-const companySearchData = [
-  { "Company Name": "Capgemini", "Company Code": "CAP01", Description: "Capgemini India" },
-  { "Company Name": "Accenture", "Company Code": "ACC02", Description: "Accenture Solutions" },
-  { "Company Name": "Cognizant", "Company Code": "COG03", Description: "Cognizant Tech" },
-];
-
-const branchListData = [
-  { "Branch Name": "Bangkok", "Branch Code": "THBKK", Description: "Bangkok Branch", companyCode: "THKN" },
-  { "Branch Name": "Chennai", "Branch Code": "INCHN", Description: "Chennai Branch", companyCode: "TCS01" },
-  { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
-];
-
-const customerIdData = [
-  {
-    "Customer ID": "CUST001",
-    Name: "John Doe",
-    Street: "123 Main St",
-    City: "Bangkok",
-    Country: "Thailand",
-    Email: "john@example.com",
-    "Company Code": "THKN",
-    "Branch Code": "THBKK"
+// Modal configuration system
+const MODAL_CONFIG = {
+  companyCode: {
+    columns: ["Company Name", "Company Code", "Description"],
+    data: {
+      find: [
+        { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
+        { "Company Name": "TCS", "Company Code": "TCS01", Description: "Tata Consultancy Services" },
+        { "Company Name": "Wipro", "Company Code": "WPR02", Description: "Wipro Ltd" },
+      ],
+      list: [
+        { "Company Name": "Infosys", "Company Code": "INFY", Description: "Infosys Ltd" },
+        { "Company Name": "HCL", "Company Code": "HCL01", Description: "HCL Technologies" },
+        { "Company Name": "IBM", "Company Code": "IBM02", Description: "IBM India" },
+      ],
+      search: [
+        { "Company Name": "Capgemini", "Company Code": "CAP01", Description: "Capgemini India" },
+        { "Company Name": "Accenture", "Company Code": "ACC02", Description: "Accenture Solutions" },
+        { "Company Name": "Cognizant", "Company Code": "COG03", Description: "Cognizant Tech" },
+      ]
+    },
+    titles: {
+      list: "List of Companies",
+      search: "Search Company Details",
+      find: "Select Company"
+    },
+    valueKey: "Company Code"
   },
-  {
-    "Customer ID": "CUST002",
-    Name: "Jane Smith",
-    Street: "456 Second Ave",
-    City: "Chennai",
-    Country: "India",
-    Email: "jane@example.com",
-    "Company Code": "TCS01",
-    "Branch Code": "INCHN"
+  branchCode: {
+    columns: ["Branch Name", "Branch Code", "companyCode", "Description"],
+    data: [
+      { "Branch Name": "Bangkok", "Branch Code": "THBKK", Description: "Bangkok Branch", companyCode: "THKN" },
+      { "Branch Name": "Chennai", "Branch Code": "INCHN", Description: "Chennai Branch", companyCode: "TCS01" },
+      { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
+    ],
+    titles: {
+      list: "List of Branches",
+      search: "Search Branch Details", 
+      find: "Select Branch"
+    },
+    valueKey: "Branch Code",
+    filterBy: "companyCode"
   },
-];
-
-// Dummy data for shipperId
-const shipperIdData = [
-  {
-    "Shipper ID": "SHIP001",
-    Name: "Acme Shipping",
-    Street: "789 Ocean Ave",
-    City: "Mumbai",
-    Country: "India",
-    Email: "acme@ship.com",
-    "Company Code": "INFY",
-    "Branch Code": "INPUN"
+  customerId: {
+    columns: ["Customer ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"],
+    data: [
+      {
+        "Customer ID": "CUST001",
+        Name: "John Doe",
+        Street: "123 Main St",
+        City: "Bangkok",
+        Country: "Thailand",
+        Email: "john@example.com",
+        "Company Code": "THKN",
+        "Branch Code": "THBKK"
+      },
+      {
+        "Customer ID": "CUST002",
+        Name: "Jane Smith",
+        Street: "456 Second Ave",
+        City: "Chennai",
+        Country: "India",
+        Email: "jane@example.com",
+        "Company Code": "TCS01",
+        "Branch Code": "INCHN"
+      },
+    ],
+    titles: {
+      list: "List of Customers",
+      search: "Search Customer Details",
+      find: "Select Customer"
+    },
+    valueKey: "Customer ID"
   },
-  {
-    "Shipper ID": "SHIP002",
-    Name: "Global Freight",
-    Street: "101 River Rd",
-    City: "Bangkok",
-    Country: "Thailand",
-    Email: "global@freight.com",
-    "Company Code": "THKN",
-    "Branch Code": "THBKK"
+  shipperId: {
+    columns: ["Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"],
+    data: [
+      {
+        "Shipper ID": "SHIP001",
+        Name: "Acme Shipping",
+        Street: "789 Ocean Ave",
+        City: "Mumbai",
+        Country: "India",
+        Email: "acme@ship.com",
+        "Company Code": "INFY",
+        "Branch Code": "INPUN"
+      },
+      {
+        "Shipper ID": "SHIP002",
+        Name: "Global Freight",
+        Street: "101 River Rd",
+        City: "Bangkok",
+        Country: "Thailand",
+        Email: "global@freight.com",
+        "Company Code": "THKN",
+        "Branch Code": "THBKK"
+      },
+    ],
+    titles: {
+      list: "List of Shippers",
+      search: "Search Shipper Details",
+      find: "Select Shipper"
+    },
+    valueKey: "Shipper ID"
   },
-];
-
-// Dummy data for consigneeId
-const consigneeIdData = [
-  {
-    "Consignee ID": "CON001",
-    Name: "Best Consignee",
-    Street: "202 Main Plaza",
-    City: "Chennai",
-    Country: "India",
-    Email: "best@consignee.com",
-    "Company Code": "TCS01",
-    "Branch Code": "INCHN"
+  consigneeId: {
+    columns: ["Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"],
+    data: [
+      {
+        "Consignee ID": "CON001",
+        Name: "Best Consignee",
+        Street: "202 Main Plaza",
+        City: "Chennai",
+        Country: "India",
+        Email: "best@consignee.com",
+        "Company Code": "TCS01",
+        "Branch Code": "INCHN"
+      },
+      {
+        "Consignee ID": "CON002",
+        Name: "Quick Delivery",
+        Street: "303 Fast Lane",
+        City: "Pune",
+        Country: "India",
+        Email: "quick@delivery.com",
+        "Company Code": "WPR02",
+        "Branch Code": "INPUN"
+      },
+    ],
+    titles: {
+      list: "List of Consignees",
+      search: "Search Consignee Details",
+      find: "Select Consignee"
+    },
+    valueKey: "Consignee ID"
   },
-  {
-    "Consignee ID": "CON002",
-    Name: "Quick Delivery",
-    Street: "303 Fast Lane",
-    City: "Pune",
-    Country: "India",
-    Email: "quick@delivery.com",
-    "Company Code": "WPR02",
-    "Branch Code": "INPUN"
+  originLocation: {
+    columns: ["Location Name", "Address", "City", "State", "Country", "Pincode"],
+    data: [
+      {
+        "Location Name": "Mumbai Port",
+        Address: "Mumbai Port Trust, Mumbai",
+        City: "Mumbai",
+        State: "Maharashtra",
+        Country: "India",
+        Pincode: "400001"
+      },
+      {
+        "Location Name": "Chennai Port",
+        Address: "Chennai Port Trust, Chennai",
+        City: "Chennai",
+        State: "Tamil Nadu",
+        Country: "India",
+        Pincode: "600001"
+      },
+      {
+        "Location Name": "Kolkata Port",
+        Address: "Kolkata Port Trust, Kolkata",
+        City: "Kolkata",
+        State: "West Bengal",
+        Country: "India",
+        Pincode: "700001"
+      },
+      {
+        "Location Name": "Vizag Port",
+        Address: "Visakhapatnam Port Trust, Vizag",
+        City: "Visakhapatnam",
+        State: "Andhra Pradesh",
+        Country: "India",
+        Pincode: "530001"
+      },
+      {
+        "Location Name": "Kandla Port",
+        Address: "Kandla Port Trust, Kandla",
+        City: "Kandla",
+        State: "Gujarat",
+        Country: "India",
+        Pincode: "370210"
+      },
+      {
+        "Location Name": "JNPT",
+        Address: "Jawaharlal Nehru Port Trust, Navi Mumbai",
+        City: "Navi Mumbai",
+        State: "Maharashtra",
+        Country: "India",
+        Pincode: "400707"
+      },
+      {
+        "Location Name": "Mundra Port",
+        Address: "Mundra Port, Mundra",
+        City: "Mundra",
+        State: "Gujarat",
+        Country: "India",
+        Pincode: "370421"
+      },
+      {
+        "Location Name": "Pipavav Port",
+        Address: "Pipavav Port, Pipavav",
+        City: "Pipavav",
+        State: "Gujarat",
+        Country: "India",
+        Pincode: "364265"
+      }
+    ],
+    titles: {
+      list: "List of Origin Locations",
+      search: "Search Origin Locations",
+      find: "Select Origin Location"
+    },
+    valueKey: "Location Name"
   },
-];
-
-// Dummy data for origin locations
-const originData = [
-  {
-    "Location Name": "Mumbai Port",
-    Address: "Mumbai Port Trust, Mumbai",
-    City: "Mumbai",
-    State: "Maharashtra",
-    Country: "India",
-    Pincode: "400001"
-  },
-  {
-    "Location Name": "Chennai Port",
-    Address: "Chennai Port Trust, Chennai",
-    City: "Chennai",
-    State: "Tamil Nadu",
-    Country: "India",
-    Pincode: "600001"
-  },
-  {
-    "Location Name": "Kolkata Port",
-    Address: "Kolkata Port Trust, Kolkata",
-    City: "Kolkata",
-    State: "West Bengal",
-    Country: "India",
-    Pincode: "700001"
-  },
-  {
-    "Location Name": "Vizag Port",
-    Address: "Visakhapatnam Port Trust, Vizag",
-    City: "Visakhapatnam",
-    State: "Andhra Pradesh",
-    Country: "India",
-    Pincode: "530001"
-  },
-  {
-    "Location Name": "Kandla Port",
-    Address: "Kandla Port Trust, Kandla",
-    City: "Kandla",
-    State: "Gujarat",
-    Country: "India",
-    Pincode: "370210"
-  },
-  {
-    "Location Name": "JNPT",
-    Address: "Jawaharlal Nehru Port Trust, Navi Mumbai",
-    City: "Navi Mumbai",
-    State: "Maharashtra",
-    Country: "India",
-    Pincode: "400707"
-  },
-  {
-    "Location Name": "Mundra Port",
-    Address: "Mundra Port, Mundra",
-    City: "Mundra",
-    State: "Gujarat",
-    Country: "India",
-    Pincode: "370421"
-  },
-  {
-    "Location Name": "Pipavav Port",
-    Address: "Pipavav Port, Pipavav",
-    City: "Pipavav",
-    State: "Gujarat",
-    Country: "India",
-    Pincode: "364265"
+  dropLocation: {
+    columns: ["Location Name", "Address", "City", "State", "Country", "Pincode"],
+    data: [
+      {
+        "Location Name": "Mumbai Port",
+        Address: "Mumbai Port Trust, Mumbai",
+        City: "Mumbai",
+        State: "Maharashtra",
+        Country: "India",
+        Pincode: "400001"
+      },
+      {
+        "Location Name": "Chennai Port",
+        Address: "Chennai Port Trust, Chennai",
+        City: "Chennai",
+        State: "Tamil Nadu",
+        Country: "India",
+        Pincode: "600001"
+      },
+      {
+        "Location Name": "Kolkata Port",
+        Address: "Kolkata Port Trust, Kolkata",
+        City: "Kolkata",
+        State: "West Bengal",
+        Country: "India",
+        Pincode: "700001"
+      },
+      {
+        "Location Name": "Vizag Port",
+        Address: "Visakhapatnam Port Trust, Vizag",
+        City: "Visakhapatnam",
+        State: "Andhra Pradesh",
+        Country: "India",
+        Pincode: "530001"
+      },
+      {
+        "Location Name": "Kandla Port",
+        Address: "Kandla Port Trust, Kandla",
+        City: "Kandla",
+        State: "Gujarat",
+        Country: "India",
+        Pincode: "370210"
+      },
+      {
+        "Location Name": "JNPT",
+        Address: "Jawaharlal Nehru Port Trust, Navi Mumbai",
+        City: "Navi Mumbai",
+        State: "Maharashtra",
+        Country: "India",
+        Pincode: "400707"
+      },
+      {
+        "Location Name": "Mundra Port",
+        Address: "Mundra Port, Mundra",
+        City: "Mundra",
+        State: "Gujarat",
+        Country: "India",
+        Pincode: "370421"
+      },
+      {
+        "Location Name": "Pipavav Port",
+        Address: "Pipavav Port, Pipavav",
+        City: "Pipavav",
+        State: "Gujarat",
+        Country: "India",
+        Pincode: "364265"
+      }
+    ],
+    titles: {
+      list: "List of Drop Locations",
+      search: "Search Drop Locations", 
+      find: "Select Drop Location"
+    },
+    valueKey: "Location Name"
   }
-];
+};
+
+// Centralized modal renderer
+function renderModal(modalField, modalType, onClose, onSelect, filteredData = null) {
+  if (!modalField) return null;
+  
+  const baseFieldName = modalField.baseFieldName || modalField.name;
+  const config = MODAL_CONFIG[baseFieldName];
+  
+  if (!config) return null;
+
+  let modalData = config.data;
+  if (Array.isArray(config.data)) {
+    modalData = filteredData || config.data;
+  } else {
+    modalData = config.data[modalType] || config.data.list || [];
+  }
+
+  // Special handling for branchCode - use filtered data if available
+  if (baseFieldName === "branchCode") {
+    modalData = filteredData || config.data;
+  }
+
+
+
+  return (
+    <ReusableModal
+      open={modalField !== null}
+      onClose={onClose}
+      title={config.titles[modalType] || config.titles.list}
+      columns={config.columns}
+      data={modalData}
+      onSelect={(row) => {
+        const fieldName = modalField.name;
+        const value = row[config.valueKey];
+        
+        if (baseFieldName === "companyCode") {
+          modalField.form.setValue("companyCode", value);
+          modalField.form.setValue("branchCode", "");
+        } else if (baseFieldName === "branchCode") {
+          modalField.form.setValue("branchCode", value);
+        } else {
+          modalField.form.setValue(fieldName, value);
+        }
+        
+        onSelect();
+      }}
+    />
+  );
+}
 
 export function renderOrderFieldWithModals(
   fieldConfig,
@@ -210,11 +373,7 @@ export function renderOrderFieldWithModals(
   const {
     setModalField,
     setModalType,
-    setFilteredBranchData,
     setFilteredCustomerIdData,
-    branchListData,
-    customerIdData,
-    originData
   } = param;
   const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName } = fieldConfig;
 
@@ -225,23 +384,8 @@ export function renderOrderFieldWithModals(
   const actualFieldName = name; // This is the full field name like "routeLegs.0.originLocation"
   const isTableField = name.includes('.') && modalFieldName; // Check if this is a table field
 
-  // Select correct data for each ID field
-  let idData = customerIdData;
-  let idColumns = customerIdModalColumns;
-  if (baseFieldName === "shipperId") {
-    idData = shipperIdData;
-    idColumns = [
-      "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-    ];
-  } else if (baseFieldName === "consigneeId") {
-    idData = consigneeIdData;
-    idColumns = [
-      "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-    ];
-  } else if (baseFieldName === "originLocation" || baseFieldName === "dropLocation") {
-    idData = originData || [];
-    idColumns = originModalColumns;
-  }
+  // Get modal config for this field
+  const modalConfig = MODAL_CONFIG[baseFieldName];
 
   return (
     <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
@@ -266,15 +410,16 @@ export function renderOrderFieldWithModals(
                         <button
                           key={actionType}
                           type="button"
-                          onClick={() => {
-                            setModalField && setModalField({ name, sectionIndex, form });
-                            setModalType && setModalType(actionType);
-                            if (baseFieldName === "branchCode") {
-                              const selectedCompany = form.getValues("companyCode");
-                              const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
-                              setFilteredBranchData && setFilteredBranchData(filtered);
-                            }
-                          }}
+                            onClick={() => {
+                              setModalField && setModalField({ name, sectionIndex, form });
+                              setModalType && setModalType(actionType);
+                              if (baseFieldName === "branchCode") {
+                                const selectedCompany = form.getValues("companyCode");
+                                const branchConfig = MODAL_CONFIG.branchCode;
+                                const filtered = branchConfig.data.filter((b) => b.companyCode === selectedCompany);
+                                setFilteredCustomerIdData && setFilteredCustomerIdData(filtered);
+                              }
+                            }}
                         >
                           {actionType === "find" ? (
                             <FileSearch size={18} className="text-[#0088d2]" />
@@ -305,9 +450,13 @@ export function renderOrderFieldWithModals(
                           onClick={() => {
                             setModalField && setModalField({ name, sectionIndex, form });
                             setModalType && setModalType("search");
-                            const id = typeof form.getValues === "function" ? form.getValues(name) : "";
-                            const match = idData.filter((x) => x[idColumns[0]].trim().toLowerCase() === id.trim().toLowerCase());
-                            setFilteredCustomerIdData && setFilteredCustomerIdData(match.length > 0 ? match : []);
+                            if (modalConfig) {
+                              const currentValue = form.getValues(name);
+                              const match = modalConfig.data.filter((x) => 
+                                x[modalConfig.columns[0]].trim().toLowerCase() === currentValue?.trim().toLowerCase()
+                              );
+                              setFilteredCustomerIdData && setFilteredCustomerIdData(match.length > 0 ? match : []);
+                            }
                           }}
                         >
                           <Search size={18} className="text-[#0088d2]" />
@@ -324,7 +473,7 @@ export function renderOrderFieldWithModals(
                             form 
                           });
                           setModalType && setModalType("list");
-                          setFilteredCustomerIdData && setFilteredCustomerIdData(idData);
+                          setFilteredCustomerIdData && setFilteredCustomerIdData(modalConfig?.data || []);
                         }}
                       >
                         <FileText size={18} className="text-[#0088d2]" />
@@ -489,10 +638,18 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
         setModalField,
         setModalType,
         setFilteredCustomerIdData,
-        customerIdData,
-        originData
       }
     );
+
+  const handleModalClose = () => {
+    setModalField(null);
+    setModalType(null);
+  };
+
+  const handleModalSelect = () => {
+    setModalField(null);
+    setModalType(null);
+  };
 
   if (useAccordion) {
     const allSectionValues = sections.map(section => 
@@ -544,118 +701,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
             );
           })}
         </Accordion>
-        {/* Modal logic for companyCode, branchCode, customerId, shipperId, consigneeId */}
-        {modalField && (
-          <ReusableModal
-            open={modalField !== null}
-            onClose={() => {
-              setModalField(null)
-              setModalType(null)
-            }}
-            title={
-              (modalField.baseFieldName || modalField.name) === "companyCode"
-                ? modalType === "list"
-                  ? "List of Companies"
-                  : modalType === "search"
-                  ? "Search Company Details"
-                  : "Select Company"
-                : (modalField.baseFieldName || modalField.name) === "branchCode"
-                ? modalType === "list"
-                  ? "List of Branches"
-                  : modalType === "search"
-                  ? "Search Branch Details"
-                  : "Select Branch"
-                : (modalField.baseFieldName || modalField.name) === "customerId"
-                ? modalType === "list"
-                  ? "List of Customers"
-                  : modalType === "search"
-                  ? "Search Customer Details"
-                  : "Select Customer"
-                : (modalField.baseFieldName || modalField.name) === "shipperId"
-                ? modalType === "list"
-                  ? "List of Shippers"
-                  : modalType === "search"
-                  ? "Search Shipper Details"
-                  : "Select Shipper"
-                : (modalField.baseFieldName || modalField.name) === "consigneeId"
-                ? modalType === "list"
-                  ? "List of Consignees"
-                  : modalType === "search"
-                  ? "Search Consignee Details"
-                  : "Select Consignee"
-                : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? "List of Origin Locations"
-                : ""
-            }
-            columns={
-              (modalField.baseFieldName || modalField.name) === "companyCode"
-                ? companyModalColumns
-                : (modalField.baseFieldName || modalField.name) === "branchCode"
-                ? branchModalColumns
-                : (modalField.baseFieldName || modalField.name) === "customerId"
-                ? customerIdModalColumns
-                : (modalField.baseFieldName || modalField.name) === "shipperId"
-                ? [
-                    "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-                  ]
-                : (modalField.baseFieldName || modalField.name) === "consigneeId"
-                ? [
-                    "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-                  ]
-                : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? originModalColumns
-                : []
-            }
-            data={
-              (modalField.baseFieldName || modalField.name) === "companyCode"
-                ? modalType === "list"
-                  ? companyListData
-                  : modalType === "search"
-                  ? companySearchData
-                  : companyFindData
-                : (modalField.baseFieldName || modalField.name) === "branchCode"
-                ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
-                : (modalField.baseFieldName || modalField.name) === "customerId"
-                ? filteredCustomerIdData
-                : (modalField.baseFieldName || modalField.name) === "shipperId"
-                ? filteredCustomerIdData
-                : (modalField.baseFieldName || modalField.name) === "consigneeId"
-                ? filteredCustomerIdData
-                : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? originData
-                : []
-            }
-            onSelect={(row) => {
-              const fieldName = modalField.name; // Use the actual field name for setting values
-              const baseFieldName = modalField.baseFieldName || modalField.name;
-              
-              if (baseFieldName === "companyCode") {
-                modalField.form.setValue("companyCode", row["Company Code"]);
-                modalField.form.setValue("branchCode", "");
-              } else if (baseFieldName === "branchCode") {
-                modalField.form.setValue("branchCode", row["Branch Code"]);
-              } else if (baseFieldName === "customerId") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Customer ID"]);
-                }
-              } else if (baseFieldName === "shipperId") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Shipper ID"]);
-                }
-              } else if (baseFieldName === "consigneeId") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Consignee ID"]);
-                }
-              } else if (baseFieldName === "originLocation") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Location Name"]);
-                }
-              }
-              setModalField(null);
-              setModalType(null);
-            }}
-          />
-        )}
+        {/* Centralized modal rendering */}
+        {renderModal(modalField, modalType, handleModalClose, handleModalSelect, filteredCustomerIdData)}
       </>
     );
   } else {
@@ -686,118 +733,8 @@ export function OrdersForm({ sections = [], useAccordion = true }) {
             </div>
           </div>
         ))}
-        {/* Modal logic for companyCode, branchCode, customerId, shipperId, consigneeId */}
-        {modalField && (
-          <ReusableModal
-            open={modalField !== null}
-            onClose={() => {
-              setModalField(null)
-              setModalType(null)
-            }}
-            title={
-              (modalField.baseFieldName || modalField.name) === "companyCode"
-                ? modalType === "list"
-                  ? "List of Companies"
-                  : modalType === "search"
-                  ? "Search Company Details"
-                  : "Select Company"
-                : (modalField.baseFieldName || modalField.name) === "branchCode"
-                ? modalType === "list"
-                  ? "List of Branches"
-                  : modalType === "search"
-                  ? "Search Branch Details"
-                  : "Select Branch"
-                : (modalField.baseFieldName || modalField.name) === "customerId"
-                ? modalType === "list"
-                  ? "List of Customers"
-                  : modalType === "search"
-                  ? "Search Customer Details"
-                  : "Select Customer"
-                : (modalField.baseFieldName || modalField.name) === "shipperId"
-                ? modalType === "list"
-                  ? "List of Shippers"
-                  : modalType === "search"
-                  ? "Search Shipper Details"
-                  : "Select Shipper"
-                : (modalField.baseFieldName || modalField.name) === "consigneeId"
-                ? modalType === "list"
-                  ? "List of Consignees"
-                  : modalType === "search"
-                  ? "Search Consignee Details"
-                  : "Select Consignee"
-                : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? "List of Origin Locations"
-                : ""
-            }
-            columns={
-              (modalField.baseFieldName || modalField.name) === "companyCode"
-                ? companyModalColumns
-                : (modalField.baseFieldName || modalField.name) === "branchCode"
-                ? branchModalColumns
-                : (modalField.baseFieldName || modalField.name) === "customerId"
-                ? customerIdModalColumns
-                : (modalField.baseFieldName || modalField.name) === "shipperId"
-                ? [
-                    "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-                  ]
-                : (modalField.baseFieldName || modalField.name) === "consigneeId"
-                ? [
-                    "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-                  ]
-                : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? originModalColumns
-                : []
-            }
-            data={
-              (modalField.baseFieldName || modalField.name) === "companyCode"
-                ? modalType === "list"
-                  ? companyListData
-                  : modalType === "search"
-                  ? companySearchData
-                  : companyFindData
-                : (modalField.baseFieldName || modalField.name) === "branchCode"
-                ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
-                : (modalField.baseFieldName || modalField.name) === "customerId"
-                ? filteredCustomerIdData
-                : (modalField.baseFieldName || modalField.name) === "shipperId"
-                ? filteredCustomerIdData
-                : (modalField.baseFieldName || modalField.name) === "consigneeId"
-                ? filteredCustomerIdData
-                : (modalField.baseFieldName || modalField.name) === "originLocation"
-                ? originData
-                : []
-            }
-            onSelect={(row) => {
-              const fieldName = modalField.name; // Use the actual field name for setting values
-              const baseFieldName = modalField.baseFieldName || modalField.name;
-              
-              if (baseFieldName === "companyCode") {
-                modalField.form.setValue("companyCode", row["Company Code"]);
-                modalField.form.setValue("branchCode", "");
-              } else if (baseFieldName === "branchCode") {
-                modalField.form.setValue("branchCode", row["Branch Code"]);
-              } else if (baseFieldName === "customerId") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Customer ID"]);
-                }
-              } else if (baseFieldName === "shipperId") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Shipper ID"]);
-                }
-              } else if (baseFieldName === "consigneeId") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Consignee ID"]);
-                }
-              } else if (baseFieldName === "originLocation") {
-                if (modalField.form) {
-                  modalField.form.setValue(fieldName, row["Location Name"]);
-                }
-              }
-              setModalField(null);
-              setModalType(null);
-            }}
-          />
-        )}
+        {/* Centralized modal rendering */}
+        {renderModal(modalField, modalType, handleModalClose, handleModalSelect, filteredCustomerIdData)}
       </>
     );
   }
@@ -809,8 +746,6 @@ export function useOrderFields() {
   const [modalType, setModalType] = useState(null);
   const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([]);
 
-
-
   // Helper to render a field with modal functionality
   const renderField = (fieldConfig, form, sectionIndex = 0) => {
     return renderOrderFieldWithModals(
@@ -821,133 +756,27 @@ export function useOrderFields() {
         setModalField,
         setModalType,
         setFilteredCustomerIdData,
-        branchListData: branchListData,
       }
     );
   };
 
+  const handleModalClose = () => {
+    setModalField(null);
+    setModalType(null);
+  };
 
-  const renderModal = () => {
-    if (!modalField) return null;
+  const handleModalSelect = () => {
+    setModalField(null);
+    setModalType(null);
+  };
 
-    return (
-      <ReusableModal
-        open={modalField !== null}
-        onClose={() => {
-          setModalField(null);
-          setModalType(null);
-        }}
-        title={
-          (modalField.baseFieldName || modalField.name) === "companyCode"
-            ? modalType === "list"
-              ? "List of Companies"
-              : modalType === "search"
-              ? "Search Company Details"
-              : "Select Company"
-            : (modalField.baseFieldName || modalField.name) === "branchCode"
-            ? modalType === "list"
-              ? "List of Branches"
-              : modalType === "search"
-              ? "Search Branch Details"
-              : "Select Branch"
-            : (modalField.baseFieldName || modalField.name) === "customerId"
-            ? modalType === "list"
-              ? "List of Customers"
-              : modalType === "search"
-              ? "Search Customer Details"
-              : "Select Customer"
-            : (modalField.baseFieldName || modalField.name) === "shipperId"
-            ? modalType === "list"
-              ? "List of Shippers"
-              : modalType === "search"
-              ? "Search Shipper Details"
-              : "Select Shipper"
-            : (modalField.baseFieldName || modalField.name) === "consigneeId"
-            ? modalType === "list"
-              ? "List of Consignees"
-              : modalType === "search"
-              ? "Search Consignee Details"
-              : "Select Consignee"
-            : (modalField.baseFieldName || modalField.name) === "originLocation"
-            ? "List of Origin Locations"
-            : (modalField.baseFieldName || modalField.name) === "dropLocation"
-            ? "List of Drop Locations"
-            : ""
-        }
-        columns={
-          (modalField.baseFieldName || modalField.name) === "companyCode"
-            ? companyModalColumns
-            : (modalField.baseFieldName || modalField.name) === "branchCode"
-            ? branchModalColumns
-            : (modalField.baseFieldName || modalField.name) === "customerId"
-            ? customerIdModalColumns
-            : (modalField.baseFieldName || modalField.name) === "shipperId"
-            ? [
-                "Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-              ]
-            : (modalField.baseFieldName || modalField.name) === "consigneeId"
-            ? [
-                "Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-              ]
-            : (modalField.baseFieldName || modalField.name) === "originLocation" || (modalField.baseFieldName || modalField.name) === "dropLocation"
-            ? originModalColumns
-            : []
-        }
-        data={
-          (modalField.baseFieldName || modalField.name) === "companyCode"
-            ? modalType === "list"
-              ? companyListData
-              : modalType === "search"
-              ? companySearchData
-              : companyFindData
-            : (modalField.baseFieldName || modalField.name) === "branchCode"
-            ? branchListData.filter((b) => b.companyCode === (modalField.form?.getValues("companyCode") || ""))
-            : (modalField.baseFieldName || modalField.name) === "customerId"
-            ? filteredCustomerIdData
-            : (modalField.baseFieldName || modalField.name) === "shipperId"
-            ? filteredCustomerIdData
-            : (modalField.baseFieldName || modalField.name) === "consigneeId"
-            ? filteredCustomerIdData
-            : (modalField.baseFieldName || modalField.name) === "originLocation" || (modalField.baseFieldName || modalField.name) === "dropLocation"
-            ? originData
-            : []
-        }
-        onSelect={(row) => {
-          const fieldName = modalField.name; // Use the actual field name for setting values
-          const baseFieldName = modalField.baseFieldName || modalField.name;
-          
-          if (baseFieldName === "companyCode") {
-            modalField.form.setValue("companyCode", row["Company Code"]);
-            modalField.form.setValue("branchCode", "");
-          } else if (baseFieldName === "branchCode") {
-            modalField.form.setValue("branchCode", row["Branch Code"]);
-          } else if (baseFieldName === "customerId") {
-            if (modalField.form) {
-              modalField.form.setValue(fieldName, row["Customer ID"]);
-            }
-          } else if (baseFieldName === "shipperId") {
-            if (modalField.form) {
-              modalField.form.setValue(fieldName, row["Shipper ID"]);
-            }
-          } else if (baseFieldName === "consigneeId") {
-            if (modalField.form) {
-              modalField.form.setValue(fieldName, row["Consignee ID"]);
-            }
-          } else if (baseFieldName === "originLocation" || baseFieldName === "dropLocation") {
-            if (modalField.form) {
-              modalField.form.setValue(fieldName, row["Location Name"]);
-            }
-          }
-          setModalField(null);
-          setModalType(null);
-        }}
-      />
-    );
+  const renderModalComponent = () => {
+    return renderModal(modalField, modalType, handleModalClose, handleModalSelect, filteredCustomerIdData);
   };
 
   return {
     renderField,
-    renderModal,
+    renderModal: renderModalComponent,
     modalField,
     setModalField,
     modalType,
