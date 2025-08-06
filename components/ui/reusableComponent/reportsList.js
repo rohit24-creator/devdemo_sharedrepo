@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowUpDown, Search, LayoutGrid, FileText, MoreVertical } from "lucide-react";
-import { Edit, Eye, Trash2, History } from "lucide-react";
+import { Edit, Eye, Trash2, History, Route, Truck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -81,6 +81,18 @@ export default function ReportsList({
         tripHistory: {
             label: "Trip History",
             icon: <History size={18} className="mr-2" />,
+        },
+        map: {
+            label: "Map",
+            icon: <Eye size={18} className="mr-2" />,
+        },
+        trip: {
+            label: "Trip",
+            icon: <Route size={18} className="mr-2" />,
+        },
+        vehicle: {
+            label: "Vehicle",
+            icon: <Truck size={18} className="mr-2" />,
         },
     };
 

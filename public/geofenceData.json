@@ -17,6 +17,127 @@
     {
       "fenceName": "Second fence",
       "fenceLocation": "255GreenwichSt, NewYork, NY10007, USA"
+    },
+    {
+      "fenceName": "Downtown Zone",
+      "fenceLocation": "123MainSt, Downtown, CityCenter10001, USA"
+    },
+    {
+      "fenceName": "Airport Perimeter",
+      "fenceLocation": "456AirportBlvd, Terminal3, JFKInternationalAirport, NY11430, USA"
+    },
+    {
+      "fenceName": "Industrial Complex",
+      "fenceLocation": "789FactoryLane, IndustrialDistrict, ManufacturingZone20002, USA"
+    }
+  ],
+  "tripData": [
+    {
+      "tripId": "TUSA1325060005",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TSX3724370016",
+      "vehicle": "ERS 8579",
+      "status": "Active"
+    },
+    {
+      "tripId": "TUSA0225020019",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TUSA2925290010",
+      "vehicle": "692-KLS",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TUSA2125210010",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TUSA2725270004",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TUSA2725270003",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TUSA2725270002",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TUSA2725270001",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TSX4224420001-1",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    },
+    {
+      "tripId": "TSX4224420001",
+      "vehicle": "BHC 246",
+      "status": "Inactive"
+    }
+  ],
+  "vehicleData": [
+    {
+      "imei": "356938035643817",
+      "registerNumber": "TY6875767",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643818",
+      "registerNumber": "AP39K7007",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643819",
+      "registerNumber": "586 5GX",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643820",
+      "registerNumber": "DMC 4583",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643821",
+      "registerNumber": "AB4-195",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643822",
+      "registerNumber": "692-KLS",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643823",
+      "registerNumber": "UYR 869",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643824",
+      "registerNumber": "990 GIP",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643825",
+      "registerNumber": "175-GRK",
+      "status": "Inactive"
+    },
+    {
+      "imei": "356938035643826",
+      "registerNumber": "FDS 45C",
+      "status": "Inactive"
     }
   ]
 } 
