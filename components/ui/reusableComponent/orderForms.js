@@ -393,7 +393,7 @@ export function renderOrderFieldWithModals(
         render={({ field }) => {
           return (
             <FormItem>
-              <FormLabel>{label}</FormLabel>
+              {label && <FormLabel>{label}</FormLabel>}
               <FormControl>
                 {["companyCode", "branchCode"].includes(baseFieldName) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">

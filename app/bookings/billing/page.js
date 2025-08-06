@@ -22,10 +22,36 @@ const fieldConfig = [
 ]
 
 const tableColumns = [
-  { accessorKey: "itemName", header: "Item Name" },
-  { accessorKey: "quantity", header: "Quantity" },
-  { accessorKey: "rate", header: "Rate" },
-  { accessorKey: "amount", header: "Amount" },
+  { 
+    accessorKey: "itemName", 
+    header: "Item Name", 
+    type: "text",
+    placeholder: "Enter item name" 
+  },
+  { 
+    accessorKey: "customerId", 
+    header: "Customer ID", 
+    modalFieldName: "customerId",
+    placeholder: "Select customer" 
+  },
+  { 
+    accessorKey: "quantity", 
+    header: "Quantity", 
+    type: "number",
+    placeholder: "Enter quantity" 
+  },
+  { 
+    accessorKey: "rate", 
+    header: "Rate", 
+    type: "number",
+    placeholder: "Enter rate" 
+  },
+  { 
+    accessorKey: "amount", 
+    header: "Amount", 
+    type: "number",
+    placeholder: "Enter amount" 
+  },
 ]
 
 export default function BillingPage() {
@@ -62,15 +88,16 @@ export default function BillingPage() {
     {
       type: "table",
       title: "Billing Items",
-      dynamicRows: true, // Enable dynamic table logic
+      dynamicRows: true, 
       columns: tableColumns,
       defaultRow: {
         itemName: "",
+        customerId: "",
         quantity: "",
         rate: "",
         amount: "",
       },
-      initialRows: [], // Start with no rows
+      initialRows: [], 
     },
   ]
 

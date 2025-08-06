@@ -1,0 +1,79 @@
+{
+  "headers": [
+    { "accessorKey": "trackingNumber", "header": "Tracking Number" },
+    { "accessorKey": "createdDate", "header": "Created Date" },
+    { "accessorKey": "shipper", "header": "Shipper" },
+    { "accessorKey": "shipperCity", "header": "Shipper City" },
+    { "accessorKey": "shipperPostalcode", "header": "Shipper Postalcode" },
+    { "accessorKey": "shipperCountry", "header": "Shipper Country" },
+    { "accessorKey": "consignee", "header": "Consignee" },
+    { "accessorKey": "consigneeCity", "header": "Consignee City" },
+    { "accessorKey": "consigneePostalcode", "header": "Consignee Postalcode" },
+    { "accessorKey": "consigneeCountry", "header": "Consignee Country" },
+    { "accessorKey": "modeOfTransport", "header": "Mode Of Transport" },
+    { "accessorKey": "totalAmount", "header": "Total Amount" },
+    { "accessorKey": "currency", "header": "Currency" }
+  ],
+  "rows": [
+    {
+      "trackingNumber": "TRK-001",
+      "createdDate": "2024-01-15",
+      "shipper": "ABC Logistics",
+      "shipperCity": "Mumbai",
+      "shipperPostalcode": "400001",
+      "shipperCountry": "India",
+      "consignee": "XYZ Corp",
+      "consigneeCity": "Delhi",
+      "consigneePostalcode": "110001",
+      "consigneeCountry": "India",
+      "modeOfTransport": "Truck",
+      "totalAmount": "50000",
+      "currency": "INR"
+    },
+    {
+      "trackingNumber": "TRK-002",
+      "createdDate": "2024-01-16",
+      "shipper": "Global Shipping",
+      "shipperCity": "Chennai",
+      "shipperPostalcode": "600001",
+      "shipperCountry": "India",
+      "consignee": "Tech Solutions",
+      "consigneeCity": "Bangalore",
+      "consigneePostalcode": "560001",
+      "consigneeCountry": "India",
+      "modeOfTransport": "Rail",
+      "totalAmount": "75000",
+      "currency": "INR"
+    },
+    {
+      "trackingNumber": "TRK-003",
+      "createdDate": "2024-01-17",
+      "shipper": "Express Cargo",
+      "shipperCity": "Kolkata",
+      "shipperPostalcode": "700001",
+      "shipperCountry": "India",
+      "consignee": "Fast Delivery",
+      "consigneeCity": "Pune",
+      "consigneePostalcode": "411001",
+      "consigneeCountry": "India",
+      "modeOfTransport": "Air",
+      "totalAmount": "120000",
+      "currency": "INR"
+    },
+    {
+      "trackingNumber": "TRK-004",
+      "createdDate": "2024-01-18",
+      "shipper": "Premium Logistics",
+      "shipperCity": "Hyderabad",
+      "shipperPostalcode": "500001",
+      "shipperCountry": "India",
+      "consignee": "Elite Corp",
+      "consigneeCity": "Ahmedabad",
+      "consigneePostalcode": "380001",
+      "consigneeCountry": "India",
+      "modeOfTransport": "Truck",
+      "totalAmount": "85000",
+      "currency": "INR"
+    }
+  ]
+} 

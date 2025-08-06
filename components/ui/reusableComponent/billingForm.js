@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, FormProvider } from "react-hook-form";
 import {
   Accordion,
   AccordionItem,
@@ -329,82 +329,87 @@ const MODAL_CONFIG = {
   }
 };
 
-// Dynamic Table Component for billing forms
-function DynamicBillingTable({ section, form, renderField }) {
-  const { fields, append, remove, update } = useFieldArray({
+// Dynamic Table Component for billing forms (following trip template pattern)
+function DynamicBillingTable({ section, renderField }) {
+  const form = useForm({
+    defaultValues: {
+      rows: section.initialRows?.length > 0 ? section.initialRows : [section.defaultRow || {}],
+    },
+  });
+  
+  const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: section.dynamicRowsField || "dynamicRows",
+    name: "rows",
   });
 
-  const defaultRow = section.defaultRow || {};
   const columns = section.columns || [];
 
   const handleAddRow = () => {
-    append(defaultRow);
+    append(section.defaultRow || {});
   };
 
   const handleRemoveRow = (index) => {
     remove(index);
   };
 
-  const handleRowChange = (index, fieldName, value) => {
-    const updatedRow = { ...fields[index] };
-    updatedRow[fieldName] = value;
-    update(index, updatedRow);
-  };
-
   return (
-    <div className="bg-white shadow rounded-lg border border-[#E7ECFD] mt-4">
-      <Table className="w-full">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">
-              Action
-            </TableHead>
-            {columns.map((col, idx) => (
-              <TableHead
-                key={col.accessorKey}
-                className={
-                  `w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]` +
-                  (idx === 0 || idx > 0 ? " border-l border-[#E7ECFD]" : "")
-                }
-              >
-                {col.header}
+    <div className="bg-white shadow rounded-lg border border-[#E7ECFD]">
+      <FormProvider {...form}>
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">
+                Action
               </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {fields.map((row, rowIndex) => (
-            <TableRow key={row.id}>
-              <TableCell className="w-1/6 px-2">
-                <div className="flex gap-2 items-center">
-                  <Button 
-                    type="button" 
-                    size="sm" 
-                    variant="destructive" 
-                    className="px-3 py-1 rounded-full" 
-                    onClick={() => handleRemoveRow(rowIndex)} 
-                    tabIndex={-1}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </TableCell>
-              {columns.map((col) => (
-                <TableCell key={col.accessorKey} className="w-1/6 px-2">
-                  <Input
-                    value={row[col.accessorKey] || ""}
-                    onChange={(e) => handleRowChange(rowIndex, col.accessorKey, e.target.value)}
-                    className="w-full"
-                    placeholder={col.placeholder || col.header}
-                  />
-                </TableCell>
+              {columns.map((col, idx) => (
+                <TableHead
+                  key={col.accessorKey}
+                  className={
+                    `w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]` +
+                    (idx === 0 || idx > 0 ? " border-l border-[#E7ECFD]" : "")
+                  }
+                >
+                  {col.header}
+                </TableHead>
               ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {fields.map((row, rowIndex) => (
+              <TableRow key={row.id}>
+                <TableCell className="w-1/6 px-2">
+                  <div className="flex gap-2 items-center">
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      variant="destructive" 
+                      className="px-3 py-1 rounded-full" 
+                      onClick={() => handleRemoveRow(rowIndex)} 
+                      tabIndex={-1}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </TableCell>
+                {columns.map((col) => (
+                  <TableCell key={col.accessorKey} className="w-1/6 px-2">
+                    {renderField(
+                      { 
+                        ...col,
+                        name: `rows.${rowIndex}.${col.accessorKey}`,
+                        // Don't include label for table cells - labels are in table headers
+                        modalFieldName: col.modalFieldName || col.accessorKey
+                      },
+                      form,
+                      0 // sectionIndex for dynamic table
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </FormProvider>
       <div className="pl-3 mt-4 mb-6">
         <Button 
           type="button" 
@@ -493,7 +498,7 @@ export function renderBillingFieldWithModals(
         render={({ field }) => {
           return (
             <FormItem>
-              <FormLabel>{label}</FormLabel>
+              {label && <FormLabel>{label}</FormLabel>}
               <FormControl>
                 {["companyCode", "branchCode"].includes(baseFieldName) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
@@ -734,6 +739,59 @@ export function renderBillingFieldWithModals(
   )
 }
 
+// Table rendering function (following profilesForm pattern)
+function renderTable(section, renderField) {
+  // Check if this is a dynamic table (has dynamicRows property)
+  if (section.dynamicRows) {
+    return <DynamicBillingTable section={section} renderField={renderField} />;
+  }
+  
+  // Original static table rendering
+  return (
+    <Card>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12" />
+              {section.columns.map((col) => (
+                <TableHead key={col.accessorKey} className="text-[#006397] text-left text-sm font-semibold">
+                  {col.header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {(section.rows?.length > 0 ? section.rows : [{}]).map((row, rowIndex) => (
+              <TableRow key={rowIndex}>
+                <TableCell className="w-12 align-top pt-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-xl px-2 py-0">
+                        ☰
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right">
+                      <DropdownMenuItem>
+                        ➕ Add Row
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+                {section.columns.map((col) => (
+                  <TableCell key={col.accessorKey} className="text-sm">
+                    {row[col.accessorKey] ?? ""}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  )
+}
+
 export function BillingForm({ sections = [], useAccordion = true }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
@@ -791,7 +849,7 @@ export function BillingForm({ sections = [], useAccordion = true }) {
                   <div className="pt-6">
                     {section.renderLayout
                       ? section.renderLayout({ renderField })
-                      : (
+                      : section.form ? (
                         <Form {...section.form}>
                           <form
                             onSubmit={section.form.handleSubmit && section.form.handleSubmit(section.onSubmit, section.onInvalid)}
@@ -814,7 +872,10 @@ export function BillingForm({ sections = [], useAccordion = true }) {
                             )}
                           </form>
                         </Form>
-                      )}
+                      ) : null}
+                    
+                    {/* Render table if section type is table */}
+                    {section.type === "table" && renderTable(section, renderField)}
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -835,7 +896,7 @@ export function BillingForm({ sections = [], useAccordion = true }) {
             <div className="bg-[#ffffff] p-6 rounded-md shadow">
               {section.renderLayout
                 ? section.renderLayout({ renderField })
-                : (
+                : section.form ? (
                   <Form {...section.form}>
                     <form
                       onSubmit={section.form.handleSubmit && section.form.handleSubmit(section.onSubmit, section.onInvalid)}
@@ -858,7 +919,10 @@ export function BillingForm({ sections = [], useAccordion = true }) {
                       )}
                     </form>
                   </Form>
-                )}
+                ) : null}
+                
+                {/* Render table if section type is table */}
+                {section.type === "table" && renderTable(section, renderField)}
               </div>
           </div>
         ))}
