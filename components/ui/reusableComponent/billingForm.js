@@ -344,6 +344,7 @@ function DynamicBillingTable({ section, renderField }) {
 
   const columns = section.columns || [];
   const showActions = section.showActions !== false; // Default to true, but can be disabled
+  const mappingConfig = section.mappingConfig || null; // New mapping configuration
 
   const handleAddRow = () => {
     append(section.defaultRow || {});
@@ -359,6 +360,21 @@ function DynamicBillingTable({ section, renderField }) {
     console.log("Saving row data:", rowData);
     if (section.onSave) {
       section.onSave(rowData, rowIndex);
+    }
+  };
+
+  // Handle mapping when a dropdown value changes
+  const handleMappingChange = (rowIndex, fieldName, value) => {
+    if (mappingConfig && mappingConfig[fieldName]) {
+      const mapping = mappingConfig[fieldName];
+      const selectedData = mapping.data.find(item => item[mapping.keyField] === value);
+      
+      if (selectedData) {
+        // Update all mapped fields
+        mapping.mappedFields.forEach(mappedField => {
+          form.setValue(`rows.${rowIndex}.${mappedField}`, selectedData[mappedField]);
+        });
+      }
     }
   };
 
@@ -421,7 +437,16 @@ function DynamicBillingTable({ section, renderField }) {
                       { 
                         ...col,
                         name: `rows.${rowIndex}.${col.accessorKey}`,
-                        modalFieldName: col.modalFieldName || col.accessorKey
+                        modalFieldName: col.modalFieldName || col.accessorKey,
+                        // Add mapping support
+                        onValueChange: (value) => {
+                          // Call original onChange if exists
+                          if (col.onValueChange) {
+                            col.onValueChange(value);
+                          }
+                          // Handle mapping
+                          handleMappingChange(rowIndex, col.accessorKey, value);
+                        }
                       },
                       form,
                       0 
@@ -504,7 +529,7 @@ export function renderBillingFieldWithModals(
     setModalType,
     setFilteredCustomerIdData,
   } = param;
-  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName, plusAction } = fieldConfig;
+  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions, modalFieldName, plusAction, onValueChange } = fieldConfig;
 
   const baseFieldName = modalFieldName || name;
 
@@ -609,7 +634,15 @@ export function renderBillingFieldWithModals(
                 ) : type === "select" ? (
                   (() => {
                     const selectComponent = (
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select 
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          if (onValueChange) {
+                            onValueChange(value);
+                          }
+                        }} 
+                        value={field.value}
+                      >
                         <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
                           <SelectValue placeholder={placeholder || `Select ${label}`} />
                         </SelectTrigger>

@@ -11,8 +11,8 @@ const vatInfoSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
   companyCode: z.string().min(1, "Company Code is required"),
-  customerCode: z.string().min(1, "Customer Code is required"),
-  vendorCode: z.string().min(1, "Vendor Code is required"),
+  customerId: z.string().min(1, "Customer Code is required"),
+  vendorId: z.string().min(1, "Vendor Code is required"),
   vatCategory: z.string().min(1, "VAT Category is required"),
 });
 
@@ -102,8 +102,8 @@ export default function VatMasterPage() {
       name: "",
       description: "",
       companyCode: "",
-      customerCode: "",
-      vendorCode: "",
+      customerId: "",
+      vendorId: "",
       vatCategory: "",
     },
   });
@@ -135,7 +135,7 @@ export default function VatMasterPage() {
       type: "table",
       title: "Lane and Charges",
       dynamicRows: true,
-      showActions: true, 
+      showActions: false, 
       columns: laneChargesColumns,
       defaultRow: {
         sourceGeoCountry: "",
