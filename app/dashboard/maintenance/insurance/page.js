@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { OrdersForm } from "@/components/ui/reusableComponent/dashboardform";
+import { BillingForm } from "@/components/ui/reusableComponent/dashboardform";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, RotateCcw, X, Save } from "lucide-react";
@@ -155,19 +155,16 @@ export default function VehicleInsurancePage() {
           name: "insuranceCompany",
           label: "Insurance company *",
           type: "text",
-          placeholder: "Insurance company",
         },
         {
           name: "insuranceCompanyContact",
           label: "Insurance company Contact",
           type: "text",
-          placeholder: "Insurance company Contact",
         },
         {
           name: "insuranceCompanyAddress",
           label: "Insurance Company Address",
           type: "text",
-          placeholder: "Insurance Company Address",
         },
         {
           name: "insuranceType",
@@ -187,43 +184,36 @@ export default function VehicleInsurancePage() {
           name: "policyNumber",
           label: "Policy Number *",
           type: "text",
-          placeholder: "Policy Number",
         },
         {
           name: "insurerName",
           label: "Insurer Name *",
           type: "text",
-          placeholder: "Insurer Name",
         },
         {
           name: "insurerAddress",
           label: "Insurer Address",
           type: "text",
-          placeholder: "Insurer Address",
         },
         {
           name: "insuranceAmount",
           label: "Insurance Amount *",
           type: "text",
-          placeholder: "Insurance Amount",
         },
         {
           name: "startDate",
           label: "Start Date *",
           type: "date",
-          placeholder: "Start Date",
         },
         {
           name: "endDate",
           label: "End Date *",
           type: "date",
-          placeholder: "End Date",
         },
         {
           name: "description",
           label: "Description",
           type: "textarea",
-          placeholder: "Description",
           wide: true,
         },
       ],
@@ -233,10 +223,10 @@ export default function VehicleInsurancePage() {
   return (
     <div className="">
       <div className="p-6">
-            <OrdersForm
-              sections={sections}
-              disableAccordion={true}
-            />
+                    <BillingForm
+          sections={sections}
+          disableAccordion={true}
+        />
       </div>
 
       {/* Modal for adding new options */}

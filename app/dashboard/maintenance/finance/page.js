@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { OrdersForm } from "@/components/ui/reusableComponent/dashboardform";
+import { BillingForm } from "@/components/ui/reusableComponent/dashboardform";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, RotateCcw, X, Save } from "lucide-react";
@@ -129,6 +129,7 @@ export default function VehicleFinancePage() {
       title: "Vehicle Finance",
       form: vehicleFinanceForm,
       onSubmit: handleVehicleFinanceSubmit,
+      disableAccordionToggle: true,
       fields: [
         {
           name: "vehicleId",
@@ -153,13 +154,11 @@ export default function VehicleFinancePage() {
           name: "financeStartDate",
           label: "Finance Start Date *",
           type: "date",
-          placeholder: "Start Date",
         },
         {
           name: "financeDueDate",
           label: "Finance Due Date *",
           type: "date",
-          placeholder: "Due Date",
         },
         {
           name: "contactPerson",
@@ -226,9 +225,9 @@ export default function VehicleFinancePage() {
             <div className="p-6">
 
         {/* Form Content */}
-            <OrdersForm
+            <BillingForm
               sections={sections}
-              disableAccordion={true}
+              useAccordion={true}
             />
 
       </div>
