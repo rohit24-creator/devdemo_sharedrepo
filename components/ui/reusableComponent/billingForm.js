@@ -343,6 +343,7 @@ function DynamicBillingTable({ section, renderField }) {
   });
 
   const columns = section.columns || [];
+  const showActions = section.showActions !== false; // Default to true, but can be disabled
 
   const handleAddRow = () => {
     append(section.defaultRow || {});
@@ -352,15 +353,26 @@ function DynamicBillingTable({ section, renderField }) {
     remove(index);
   };
 
+  const handleSave = (rowIndex) => {
+    const formData = form.getValues();
+    const rowData = formData.rows[rowIndex];
+    console.log("Saving row data:", rowData);
+    if (section.onSave) {
+      section.onSave(rowData, rowIndex);
+    }
+  };
+
   return (
     <div className="bg-white shadow rounded-lg border border-[#E7ECFD]">
       <FormProvider {...form}>
         <Table className="w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">
-                Action
-              </TableHead>
+              {showActions && (
+                <TableHead className="w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">
+                  Action
+                </TableHead>
+              )}
               {columns.map((col, idx) => (
                 <TableHead
                   key={col.accessorKey}
@@ -377,31 +389,42 @@ function DynamicBillingTable({ section, renderField }) {
           <TableBody>
             {fields.map((row, rowIndex) => (
               <TableRow key={row.id}>
-                <TableCell className="w-1/6 px-2">
-                  <div className="flex gap-2 items-center">
-                    <Button 
-                      type="button" 
-                      size="sm" 
-                      variant="destructive" 
-                      className="px-3 py-1 rounded-full" 
-                      onClick={() => handleRemoveRow(rowIndex)} 
-                      tabIndex={-1}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </TableCell>
+                {showActions && (
+                  <TableCell className="w-1/6 px-2">
+                    <div className="flex gap-2 items-center">
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        variant="outline" 
+                        className="px-3 py-1 rounded-full text-[#006397] border-[#006397] hover:bg-[#e7ecfd]" 
+                        onClick={() => handleSave(rowIndex)}
+                        tabIndex={-1}
+                      >
+                        Save
+                      </Button>
+                      <Button 
+                        type="button" 
+                        size="sm" 
+                        variant="destructive" 
+                        className="px-3 py-1 rounded-full" 
+                        onClick={() => handleRemoveRow(rowIndex)} 
+                        tabIndex={-1}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </TableCell>
+                )}
                 {columns.map((col) => (
                   <TableCell key={col.accessorKey} className="w-1/6 px-2">
                     {renderField(
                       { 
                         ...col,
                         name: `rows.${rowIndex}.${col.accessorKey}`,
-                        // Don't include label for table cells - labels are in table headers
                         modalFieldName: col.modalFieldName || col.accessorKey
                       },
                       form,
-                      0 // sectionIndex for dynamic table
+                      0 
                     )}
                   </TableCell>
                 ))}

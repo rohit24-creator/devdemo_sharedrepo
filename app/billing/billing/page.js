@@ -104,7 +104,7 @@ const fieldConfig = [
 
 // Filter fields for the reports section
 const filterFields = [
-  { name: "bookingId", label: "Booking ID", type: "text" },
+  { name: "bookingId", label: "Booking ID", type: "filterSelect" },
   { name: "earlyPickupFromDate", label: "Early Pickup From Date", type: "date" },
   { name: "earlyPickupToDate", label: "Early Pickup To Date", type: "date" },
   { name: "earlyDeliveryFromDate", label: "Early Delivery From Date", type: "date" },
