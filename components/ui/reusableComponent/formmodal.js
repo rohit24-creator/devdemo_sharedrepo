@@ -28,7 +28,7 @@ function buildZodSchema(fields = []) {
       case "text":
       case "text+icons":
         shape[name] = z.string().optional();
-        break;
+        break; 
 
       case "number":
         shape[name] = z
@@ -88,25 +88,25 @@ export default function FormModal({ open, onClose, title, formFields = [], onSub
         </div>
         {/* Form Fields in 3-column grid */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="bg-white px-8 py-6 grid grid-cols-3 gap-x-6 gap-y-4">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="bg-white px-6 py-4 grid grid-cols-3 gap-x-4 gap-y-3">
             {formFields.map((field) => {
               const unitField = field.unitKey || field.unitName;
               return (
                 <div key={field.name} className="flex flex-col gap-1">
-                  <label className="font-medium text-sm mb-1">{field.label}</label>
+                  <label className="font-medium text-sm mb-0.5">{field.label}</label>
                   {field.type === "text" || field.type === "text+icons" ? (
-                    <Input {...form.register(field.name)} className="w-full px-4 py-2 text-base" />
+                    <Input {...form.register(field.name)} className="w-full px-3 py-1.5 text-sm" />
                   ) : field.type === "number" ? (
-                    <Input type="number" {...form.register(field.name)} className="w-full px-4 py-2 text-base" />
+                    <Input type="number" {...form.register(field.name)} className="w-full px-3 py-1.5 text-sm" />
                   ) : field.type === "number+unit" ? (
                     <div className="flex gap-2">
                       <Input
                         type="number"
                         {...form.register(field.name)}
                         placeholder={field.label}
-                        className="flex-1 w-full px-4 py-2 text-base"
+                        className="flex-1 w-full px-3 py-1.5 text-sm"
                       />
-                      <select {...form.register(unitField)} className="border px-4 py-2 rounded min-w-[80px] text-base w-auto">
+                      <select {...form.register(unitField)} className="border px-3 py-1.5 rounded min-w-[80px] text-sm w-auto">
                         {field.unitOptions?.map((opt) => (
                           <option key={opt} value={opt}>
                             {opt}
@@ -117,7 +117,7 @@ export default function FormModal({ open, onClose, title, formFields = [], onSub
                   ) : field.type === "checkbox" ? (
                     <input type="checkbox" {...form.register(field.name)} />
                   ) : (
-                    <Input {...form.register(field.name)} className="w-full px-4 py-2 text-base" />
+                    <Input {...form.register(field.name)} className="w-full px-3 py-1.5 text-sm" />
                   )}
                 </div>
               );
@@ -127,17 +127,17 @@ export default function FormModal({ open, onClose, title, formFields = [], onSub
           </form>
           {/* Footer row: Close/Add buttons */}
           {footerType === "submitOnly" ? (
-            <div className="w-full flex justify-end pt-6 bg-[#eaf3fc] px-8 py-4 rounded-b-md">
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-full">
+            <div className="w-full flex justify-end pt-4 bg-[#eaf3fc] px-6 py-3 rounded-b-md">
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-full">
                 {submitLabel}
               </Button>
             </div>
           ) : (
-            <div className="w-full flex justify-end gap-4 pt-6 bg-[#eaf3fc] px-8 py-6 rounded-b-md">
-              <Button type="button" variant="destructive" className="px-8 rounded-full" onClick={onClose}>
+            <div className="w-full flex justify-end gap-4 pt-4 bg-[#eaf3fc] px-6 py-4 rounded-b-md">
+              <Button type="button" variant="destructive" className="px-6 rounded-full" onClick={onClose}>
                 {closeLabel}
               </Button>
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-8 rounded-full">
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-full">
                 {submitLabel}
               </Button>
             </div>
