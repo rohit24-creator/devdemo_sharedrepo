@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { z } from "zod";
 import { BillingForm } from "@/components/ui/reusableComponent/billingForm";
 
 
@@ -71,6 +72,17 @@ const defaultServicesColumns = [
   },
 ];
 
+
+const defaultServicesRowSchema = z.object({
+  vasId: z.string().min(1, "VAS ID is required"),
+  vasName: z.string().optional(), 
+  chargeId: z.string().min(1, "Charge ID is required"),
+  chargeBasis: z.string().min(1, "Charge Basis is required"),
+  minimumAmount: z.string().min(1, "Minimum Amount is required"),
+  amount: z.string().min(1, "Amount is required"),
+  currency: z.string().optional(), 
+});
+
 export default function DefaultServicesPage() {
   const handleTableSave = (rowData, rowIndex) => {
     console.log("Default Service row saved:", rowData, "at index:", rowIndex);
@@ -93,6 +105,7 @@ export default function DefaultServicesPage() {
         currency: "",
       },
       onSave: handleTableSave,
+      tableSchema: defaultServicesRowSchema,
       mappingConfig: {
         vasId: {
           keyField: "vasId",

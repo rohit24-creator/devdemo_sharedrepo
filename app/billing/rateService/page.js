@@ -68,11 +68,25 @@ export default function RateServicePage() {
     },
   });
 
+
+  const rateDetailsRowSchema = z.object({
+    laneId: z.string().min(1, "Lane ID is required"),
+    laneName: z.string().optional(), 
+    sourceGeo: z.string().optional(), 
+    source: z.string().optional(), 
+    destinationGeo: z.string().optional(),
+    destination: z.string().optional(), 
+    calendar: z.string().min(1, "Calendar is required"),
+    days: z.string().min(1, "Days is required"),
+    hours: z.string().min(1, "Hours is required"), 
+    minutes: z.string().min(1, "Minutes is required"),
+  });
+
   const handleSubmit = (data) => {
     console.log("Rate Service Submitted:", data);
   };
 
-  // Lane data for mapping example
+ 
   const laneData = [
     {
       laneId: "LANE001",
@@ -210,7 +224,7 @@ export default function RateServicePage() {
       },
 
       onSave: handleTableSave,
-
+      tableSchema: rateDetailsRowSchema,
       mappingConfig: {
         laneId: {
           keyField: "laneId",

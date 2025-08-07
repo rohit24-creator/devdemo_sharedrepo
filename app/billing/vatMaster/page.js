@@ -16,6 +16,14 @@ const vatInfoSchema = z.object({
   vatCategory: z.string().min(1, "VAT Category is required"),
 });
 
+
+const laneChargesRowSchema = z.object({
+  sourceGeoCountry: z.string().min(1, "Source Geo Country is required"),
+  sourceCountry: z.string().min(1, "Source Country is required"),
+  destinationGeoCountry: z.string().min(1, "Destination Geo Country is required"),
+  destinationCountry: z.string().min(1, "Destination Country is required"),
+});
+
 const vatInfoFields = [
   { 
     name: "vatId", 
@@ -144,6 +152,7 @@ export default function VatMasterPage() {
         destinationCountry: "",
       },
       onSave: handleTableSave,
+      tableSchema: laneChargesRowSchema,
     },
   ];
 
