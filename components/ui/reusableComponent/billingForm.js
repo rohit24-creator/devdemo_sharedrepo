@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useForm, useFieldArray, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Accordion,
   AccordionItem,
@@ -333,9 +335,24 @@ const MODAL_CONFIG = {
 function DynamicBillingTable({ section, renderField }) {
   const form = useForm({
     defaultValues: {
-      rows: section.initialRows?.length > 0 ? section.initialRows : [section.defaultRow || {}],
+      rows: section.initialRows?.length > 0 ? section.initialRows : [section.defaultRow || {}], // Start with 1 default row
     },
+    resolver: section.tableSchema ? zodResolver(z.object({ rows: z.array(section.tableSchema) })) : undefined,
+    mode: "onChange", // Enable real-time validation
   });
+
+
+  React.useImperativeHandle(section.ref, () => ({
+    getData: () => form.getValues().rows,
+    validate: () => {
+      const data = form.getValues().rows;
+      if (section.tableSchema) {
+        const arraySchema = z.array(section.tableSchema);
+        return arraySchema.safeParse(data);
+      }
+      return { success: true, data };
+    }
+  }));
   
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -349,10 +366,39 @@ function DynamicBillingTable({ section, renderField }) {
   const handleAddRow = () => append(section.defaultRow || {});
   const handleRemoveRow = (index) => remove(index);
 
-  const handleSave = (rowIndex) => {
-    const formData = form.getValues();
-    const rowData = formData.rows[rowIndex];
-    if (section.onSave) section.onSave(rowData, rowIndex);
+  const handleSave = async (rowIndex) => {
+    try {
+      // Trigger validation and wait for it to complete
+      const isValid = await form.trigger();
+      
+      // Get current data
+      const formData = form.getValues();
+      const rowData = formData.rows[rowIndex];
+      
+      // Manual validation for this specific row to ensure we get errors
+      let rowErrors = {};
+      if (section.tableSchema) {
+        const rowValidation = section.tableSchema.safeParse(rowData);
+        if (!rowValidation.success) {
+          // Convert Zod errors to the format React Hook Form uses
+          rowValidation.error.issues.forEach(issue => {
+            const fieldName = issue.path[0];
+            if (fieldName) {
+              rowErrors[fieldName] = {
+                type: issue.code,
+                message: issue.message
+              };
+            }
+          });
+        }
+      }
+      
+      if (section.onSave) {
+        section.onSave(rowData, rowIndex, rowErrors);
+      }
+    } catch (error) {
+      console.error("Error in handleSave:", error);
+    }
   };
 
   const handleMappingChange = (rowIndex, fieldName, value) => {
@@ -419,7 +465,7 @@ function DynamicBillingTable({ section, renderField }) {
                 {columns.map((col) => (
                   <TableCell key={col.accessorKey} className="px-3 min-w-[160px] border-b border-gray-200">
                     {renderField(
-                      { 
+                      {
                         ...col,
                         name: `rows.${rowIndex}.${col.accessorKey}`,
                         modalFieldName: col.modalFieldName || col.accessorKey,
@@ -429,7 +475,7 @@ function DynamicBillingTable({ section, renderField }) {
                         }
                       },
                       form,
-                      0 
+                      0
                     )}
                   </TableCell>
                 ))}
