@@ -185,6 +185,7 @@ export default function AddVehicleTyrePage() {
       title: "Vehicle Tyre",
       form: vehicleTyreForm,
       onSubmit: handleVehicleTyreSubmit,
+     disableAccordionToggle: true,
       fields: [
         {
           name: "vehicle",
@@ -289,7 +290,6 @@ export default function AddVehicleTyrePage() {
         {/* Form Content */}
                 <BillingForm
           sections={sections}
-          disableAccordion={true}
         />
       </div>
 
