@@ -1,0 +1,26 @@
+{
+  "columns": [
+    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
+    { "accessorKey": "policyNumber", "header": "Policy Number" },
+    { "accessorKey": "companyName", "header": "Company Name" },
+    { "accessorKey": "userName", "header": "User Name" },
+    { "accessorKey": "insuranceType", "header": "Insurance Type" },
+    { "accessorKey": "amount", "header": "Amount" },
+    { "accessorKey": "startDate", "header": "Start Date" },
+    { "accessorKey": "expiryDate", "header": "Expiry Date" },
+    { "accessorKey": "agent", "header": "Agent" }
+  ],
+  "rows": [
+    {
+      "vehicleNumber": "ap402420",
+      "policyNumber": "46456645",
+      "companyName": "sx0001",
+      "userName": "sx000",
+      "insuranceType": "Vehicle Insurance",
+      "amount": "66.00",
+      "startDate": "2025-04-22 00:00:00",
+      "expiryDate": "2025-04-24 00:00:00",
+      "agent": "SXBKKADM-ADMIN"
+    }
+  ]
+}
