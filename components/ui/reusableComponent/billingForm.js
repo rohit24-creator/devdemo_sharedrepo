@@ -343,34 +343,23 @@ function DynamicBillingTable({ section, renderField }) {
   });
 
   const columns = section.columns || [];
-  const showActions = section.showActions !== false; // Default to true, but can be disabled
-  const mappingConfig = section.mappingConfig || null; // New mapping configuration
+  const showActions = section.showActions !== false; 
+  const mappingConfig = section.mappingConfig || null;
 
-  const handleAddRow = () => {
-    append(section.defaultRow || {});
-  };
-
-  const handleRemoveRow = (index) => {
-    remove(index);
-  };
+  const handleAddRow = () => append(section.defaultRow || {});
+  const handleRemoveRow = (index) => remove(index);
 
   const handleSave = (rowIndex) => {
     const formData = form.getValues();
     const rowData = formData.rows[rowIndex];
-    console.log("Saving row data:", rowData);
-    if (section.onSave) {
-      section.onSave(rowData, rowIndex);
-    }
+    if (section.onSave) section.onSave(rowData, rowIndex);
   };
 
-  // Handle mapping when a dropdown value changes
   const handleMappingChange = (rowIndex, fieldName, value) => {
     if (mappingConfig && mappingConfig[fieldName]) {
       const mapping = mappingConfig[fieldName];
       const selectedData = mapping.data.find(item => item[mapping.keyField] === value);
-      
       if (selectedData) {
-        // Update all mapped fields
         mapping.mappedFields.forEach(mappedField => {
           form.setValue(`rows.${rowIndex}.${mappedField}`, selectedData[mappedField]);
         });
@@ -378,24 +367,21 @@ function DynamicBillingTable({ section, renderField }) {
     }
   };
 
-  return (
-    <div className="bg-white shadow rounded-lg border border-[#E7ECFD]">
+      return (
+      <div className="relative bg-white shadow-lg rounded-xl border border-gray-200 overflow-x-auto dynamic-table-scroll">
       <FormProvider {...form}>
-        <Table className="w-full">
+        <Table className="min-w-[1100px] border-separate border-spacing-0">
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-[#f8fafc]">
               {showActions && (
-                <TableHead className="w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]">
+                <TableHead className="sticky left-0 bg-[#f8fafc] text-[#006397] font-semibold px-4 py-3 min-w-[130px] border-r border-gray-200 shadow-sm z-10">
                   Action
                 </TableHead>
               )}
-              {columns.map((col, idx) => (
+              {columns.map((col) => (
                 <TableHead
                   key={col.accessorKey}
-                  className={
-                    `w-1/6 text-[#006397] text-left text-sm font-semibold px-3 py-2 bg-[#f8fafc]` +
-                    (idx === 0 || idx > 0 ? " border-l border-[#E7ECFD]" : "")
-                  }
+                  className="text-[#006397] font-medium px-4 py-3 min-w-[160px] border-b border-gray-200"
                 >
                   {col.header}
                 </TableHead>
@@ -404,27 +390,26 @@ function DynamicBillingTable({ section, renderField }) {
           </TableHeader>
           <TableBody>
             {fields.map((row, rowIndex) => (
-              <TableRow key={row.id}>
+              <TableRow
+                key={row.id}
+                className="hover:bg-[#f9fbfd] transition-colors"
+              >
                 {showActions && (
-                  <TableCell className="w-1/6 px-2">
-                    <div className="flex gap-2 items-center">
-                      <Button 
-                        type="button" 
-                        size="sm" 
-                        variant="outline" 
-                        className="px-3 py-1 rounded-full text-[#006397] border-[#006397] hover:bg-[#e7ecfd]" 
+                  <TableCell className="sticky left-0 bg-white px-3 min-w-[130px] border-r border-gray-200 z-10">
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="px-3 py-1 rounded-full text-[#006397] border-[#006397] hover:bg-[#e7ecfd]"
                         onClick={() => handleSave(rowIndex)}
-                        tabIndex={-1}
                       >
                         Save
                       </Button>
-                      <Button 
-                        type="button" 
-                        size="sm" 
-                        variant="destructive" 
-                        className="px-3 py-1 rounded-full" 
-                        onClick={() => handleRemoveRow(rowIndex)} 
-                        tabIndex={-1}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="px-3 py-1 rounded-full"
+                        onClick={() => handleRemoveRow(rowIndex)}
                       >
                         Delete
                       </Button>
@@ -432,19 +417,14 @@ function DynamicBillingTable({ section, renderField }) {
                   </TableCell>
                 )}
                 {columns.map((col) => (
-                  <TableCell key={col.accessorKey} className="w-1/6 px-2">
+                  <TableCell key={col.accessorKey} className="px-3 min-w-[160px] border-b border-gray-200">
                     {renderField(
                       { 
                         ...col,
                         name: `rows.${rowIndex}.${col.accessorKey}`,
                         modalFieldName: col.modalFieldName || col.accessorKey,
-                        // Add mapping support
                         onValueChange: (value) => {
-                          // Call original onChange if exists
-                          if (col.onValueChange) {
-                            col.onValueChange(value);
-                          }
-                          // Handle mapping
+                          if (col.onValueChange) col.onValueChange(value);
                           handleMappingChange(rowIndex, col.accessorKey, value);
                         }
                       },
