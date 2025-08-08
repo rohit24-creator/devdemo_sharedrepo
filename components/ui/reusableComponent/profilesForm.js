@@ -52,58 +52,90 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { cn } from "@/lib/utils"
 import { Checkbox } from "@/components/ui/checkbox";
 
-const companyModalColumns = ["Company Name", "Company Code", "Description"]
-const branchModalColumns = ["Branch Name", "Branch Code", "companyCode", "Description"]
-const customerIdModalColumns = [
-  "Customer ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"
-];
-
-const companyFindData = [
-  { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
-  { "Company Name": "TCS", "Company Code": "TCS01", Description: "Tata Consultancy Services" },
-  { "Company Name": "Wipro", "Company Code": "WPR02", Description: "Wipro Ltd" },
-]
-
-const companyListData = [
-  { "Company Name": "Infosys", "Company Code": "INFY", Description: "Infosys Ltd" },
-  { "Company Name": "HCL", "Company Code": "HCL01", Description: "HCL Technologies" },
-  { "Company Name": "IBM", "Company Code": "IBM02", Description: "IBM India" },
-]
-
-const companySearchData = [
-  { "Company Name": "Capgemini", "Company Code": "CAP01", Description: "Capgemini India" },
-  { "Company Name": "Accenture", "Company Code": "ACC02", Description: "Accenture Solutions" },
-  { "Company Name": "Cognizant", "Company Code": "COG03", Description: "Cognizant Tech" },
-]
-
-const branchListData = [
-  { "Branch Name": "Bangkok", "Branch Code": "THBKK", Description: "Bangkok Branch", companyCode: "THKN" },
-  { "Branch Name": "Chennai", "Branch Code": "INCHN", Description: "Chennai Branch", companyCode: "TCS01" },
-  { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
-]
-
-const customerIdData = [
-  {
-    "Customer ID": "CUST001",
-    Name: "John Doe",
-    Street: "123 Main St",
-    City: "Bangkok",
-    Country: "Thailand",
-    Email: "john@example.com",
-    "Company Code": "THKN",
-    "Branch Code": "THBKK"
+// Centralized modal configuration (same pattern as orderForms/billing)
+const MODAL_CONFIG = {
+  companyCode: {
+    columns: ["Company Name", "Company Code", "Description"],
+    data: {
+      find: [
+        { "Company Name": "THKN", "Company Code": "THKN", Description: "THKN" },
+        { "Company Name": "TCS", "Company Code": "TCS01", Description: "Tata Consultancy Services" },
+        { "Company Name": "Wipro", "Company Code": "WPR02", Description: "Wipro Ltd" },
+      ],
+      list: [
+        { "Company Name": "Infosys", "Company Code": "INFY", Description: "Infosys Ltd" },
+        { "Company Name": "HCL", "Company Code": "HCL01", Description: "HCL Technologies" },
+        { "Company Name": "IBM", "Company Code": "IBM02", Description: "IBM India" },
+      ],
+      search: [
+        { "Company Name": "Capgemini", "Company Code": "CAP01", Description: "Capgemini India" },
+        { "Company Name": "Accenture", "Company Code": "ACC02", Description: "Accenture Solutions" },
+        { "Company Name": "Cognizant", "Company Code": "COG03", Description: "Cognizant Tech" },
+      ],
+    },
+    titles: {
+      list: "List of Companies",
+      search: "Search Company Details",
+      find: "Select Company",
+    },
+    valueKey: "Company Code",
   },
-  {
-    "Customer ID": "CUST002",
-    Name: "Jane Smith",
-    Street: "456 Second Ave",
-    City: "Chennai",
-    Country: "India",
-    Email: "jane@example.com",
-    "Company Code": "TCS01",
-    "Branch Code": "INCHN"
+  branchCode: {
+    columns: ["Branch Name", "Branch Code", "companyCode", "Description"],
+    data: [
+      { "Branch Name": "Bangkok", "Branch Code": "THBKK", Description: "Bangkok Branch", companyCode: "THKN" },
+      { "Branch Name": "Chennai", "Branch Code": "INCHN", Description: "Chennai Branch", companyCode: "TCS01" },
+      { "Branch Name": "Pune", "Branch Code": "INPUN", Description: "Pune Branch", companyCode: "WPR02" },
+    ],
+    titles: {
+      list: "List of Branches",
+      search: "Search Branch Details",
+      find: "Select Branch",
+    },
+    valueKey: "Branch Code",
+    filterBy: "companyCode",
   },
-];
+  customerId: {
+    columns: [
+      "Customer ID",
+      "Name",
+      "Street",
+      "City",
+      "Country",
+      "Email",
+      "Company Code",
+      "Branch Code",
+    ],
+    data: [
+      {
+        "Customer ID": "CUST001",
+        Name: "John Doe",
+        Street: "123 Main St",
+        City: "Bangkok",
+        Country: "Thailand",
+        Email: "john@example.com",
+        "Company Code": "THKN",
+        "Branch Code": "THBKK",
+      },
+      {
+        "Customer ID": "CUST002",
+        Name: "Jane Smith",
+        Street: "456 Second Ave",
+        City: "Chennai",
+        Country: "India",
+        Email: "jane@example.com",
+        "Company Code": "TCS01",
+        "Branch Code": "INCHN",
+      },
+    ],
+    titles: {
+      list: "List of Customers",
+      search: "Search Customer Details",
+      find: "Select Customer",
+    },
+    valueKey: "Customer ID",
+  },
+};
 
 // Data for different profile types
 const profileData = {
@@ -205,21 +237,58 @@ const profileData = {
   ]
 };
 
+// Centralized modal renderer
+function renderModal(modalField, modalType, onClose, onSelect, filteredData = null) {
+  if (!modalField) return null;
+  const baseFieldName = modalField.baseFieldName || modalField.name;
+  const config = MODAL_CONFIG[baseFieldName];
+  if (!config) return null;
+
+  let modalData = config.data;
+  if (Array.isArray(config.data)) {
+    modalData = filteredData || config.data;
+  } else {
+    modalData = config.data[modalType] || config.data.list || [];
+  }
+
+  if (baseFieldName === "branchCode") {
+    modalData = filteredData || config.data;
+  }
+
+  return (
+    <ReusableModal
+      open={modalField !== null}
+      onClose={onClose}
+      title={config.titles[modalType] || config.titles.list}
+      columns={config.columns}
+      data={modalData}
+      onSelect={(row) => {
+        const fieldName = modalField.name;
+        const value = row[config.valueKey];
+        if (baseFieldName === "companyCode") {
+          modalField.form.setValue("companyCode", value);
+          modalField.form.setValue("branchCode", "");
+        } else if (baseFieldName === "branchCode") {
+          modalField.form.setValue("branchCode", value);
+        } else if (baseFieldName === "customerId") {
+          modalField.form.setValue(fieldName, value);
+        } else {
+          modalField.form.setValue(fieldName, value);
+        }
+        onSelect();
+      }}
+    />
+  );
+}
+
 export function renderFieldWithModals(
   fieldConfig,
   form,
   sectionIndex,
   param = {}
 ) {
-  const {
-    setModalField,
-    setModalType,
-    setFilteredBranchData,
-    setFilteredCustomerIdData,
-    branchListData,
-    customerIdData
-  } = param;
-    const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
+  const { setModalField, setModalType, setFilteredModalData } = param;
+  const { name, label, type = "text", disabled = false, options = [], wide = false, placeholder, unitOptions } = fieldConfig
 
     return (
       <div key={name} className={wide ? "md:col-span-2" : "md:col-span-1"}>
@@ -230,10 +299,7 @@ export function renderFieldWithModals(
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>
-              {[
-                "companyCode",
-                "branchCode"
-              ].includes(name) ? (
+              {["companyCode", "branchCode"].includes(name) ? (
                   <div className="relative flex items-center border-2 border-[#E7ECFD] rounded-md bg-gray-100">
                     <Input
                       {...field}
@@ -251,8 +317,8 @@ export function renderFieldWithModals(
                           setModalType && setModalType(actionType);
                             if (name === "branchCode") {
                               const selectedCompany = form.getValues("companyCode");
-                              const filtered = branchListData.filter((b) => b.companyCode === selectedCompany);
-                            setFilteredBranchData && setFilteredBranchData(filtered);
+                              const filtered = MODAL_CONFIG.branchCode.data.filter((b) => b.companyCode === selectedCompany);
+                              setFilteredModalData && setFilteredModalData(filtered);
                             }
                           }}
                         >
@@ -282,8 +348,9 @@ export function renderFieldWithModals(
                         setModalField && setModalField({ name, sectionIndex, form });
                         setModalType && setModalType("search");
                           const id = form.getValues("customerId");
-                          const match = customerIdData.filter((x) => x["Customer ID"] === id);
-                        setFilteredCustomerIdData && setFilteredCustomerIdData(match.length > 0 ? match : []);
+                          const base = MODAL_CONFIG.customerId.data || [];
+                          const match = base.filter((x) => x["Customer ID"] === id);
+                          setFilteredModalData && setFilteredModalData(match.length > 0 ? match : []);
                         }}
                       >
                         <Search size={18} className="text-[#0088d2]" />
@@ -294,7 +361,7 @@ export function renderFieldWithModals(
                         onClick={() => {
                         setModalField && setModalField({ name, sectionIndex, form });
                         setModalType && setModalType("list");
-                        setFilteredCustomerIdData && setFilteredCustomerIdData(customerIdData);
+                        setFilteredModalData && setFilteredModalData(MODAL_CONFIG.customerId.data || []);
                         }}
                       >
                         <FileText size={18} className="text-[#0088d2]" />
@@ -454,8 +521,7 @@ export function renderFieldWithModals(
 export function ReusableForm({ sections = [], tableAccordion = true }) {
   const [modalField, setModalField] = useState(null)
   const [modalType, setModalType] = useState(null)
-  const [filteredBranchData, setFilteredBranchData] = useState([])
-  const [filteredCustomerIdData, setFilteredCustomerIdData] = useState([])
+  const [filteredModalData, setFilteredModalData] = useState([])
 
   // Helper to render a field with all modal state/data
   const renderField = (fieldConfig, form, sectionIndex) =>
@@ -466,10 +532,7 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
       {
         setModalField,
         setModalType,
-        setFilteredBranchData,
-        setFilteredCustomerIdData,
-        branchListData,
-        customerIdData
+        setFilteredModalData,
       }
     );
 
@@ -561,69 +624,13 @@ export function ReusableForm({ sections = [], tableAccordion = true }) {
     </div>
   ))}
 
-      {/* Reusable Modal */}
-      {modalField && (
-        <ReusableModal
-          open={modalField !== null}
-          onClose={() => {
-            setModalField(null)
-            setModalType(null)
-          }}
-          title={
-            modalField.name === "companyCode"
-              ? modalType === "list"
-                ? "List of Companies"
-                : modalType === "search"
-                ? "Search Company Details"
-                : "Select Company"
-              : modalField.name === "branchCode"
-              ? modalType === "list"
-                ? "List of Branches"
-                : modalType === "search"
-                ? "Search Branch Details"
-                : "Select Branch"
-              : modalField.name === "customerId"
-              ? modalType === "list"
-                ? "List of Customers"
-                : modalType === "search"
-                ? "Search Customer Details"
-                : "Select Customer"
-              : ""
-          }
-          columns={
-            modalField.name === "companyCode"
-              ? companyModalColumns
-              : modalField.name === "branchCode"
-              ? branchModalColumns
-              : customerIdModalColumns
-          }
-          data={
-            modalField.name === "companyCode"
-              ? modalType === "list"
-                ? companyListData
-                : modalType === "search"
-                ? companySearchData
-                : companyFindData
-              : modalField.name === "branchCode"
-              ? filteredBranchData
-              : filteredCustomerIdData
-          }
-          onSelect={(row) => {
-            const section = sections[modalField.sectionIndex];
-            if (modalField.name === "companyCode") {
-              section.form.setValue("companyCode", row["Company Code"]);
-              section.form.setValue("branchCode", "");
-            } else if (modalField.name === "branchCode") {
-              section.form.setValue("branchCode", row["Branch Code"]);
-            } else if (modalField.name === "customerId") {
-              if (modalField.form) {
-                modalField.form.setValue("customerId", row["Customer ID"]);
-              }
-            }
-            setModalField(null);
-            setModalType(null);
-          }}
-        />
+      {/* Centralized Modal */}
+      {renderModal(
+        modalField,
+        modalType,
+        () => { setModalField(null); setModalType(null); },
+        () => { setModalField(null); setModalType(null); },
+        filteredModalData
       )}
     </>
   )
