@@ -359,6 +359,9 @@ function DynamicBillingTable({ section, renderField }) {
     name: "rows",
   });
 
+  // Watch rows to trigger re-render when any row value changes (for dynamic disabled states)
+  const watchedRows = form.watch("rows");
+
   const columns = section.columns || [];
   const showActions = section.showActions !== false; 
   const mappingConfig = section.mappingConfig || null;
@@ -469,6 +472,7 @@ function DynamicBillingTable({ section, renderField }) {
                         ...col,
                         name: `rows.${rowIndex}.${col.accessorKey}`,
                         modalFieldName: col.modalFieldName || col.accessorKey,
+                        disabled: typeof col.getDisabled === "function" ? col.getDisabled(watchedRows?.[rowIndex]) : col.disabled,
                         onValueChange: (value) => {
                           if (col.onValueChange) col.onValueChange(value);
                           handleMappingChange(rowIndex, col.accessorKey, value);
@@ -668,8 +672,9 @@ export function renderBillingFieldWithModals(
                           }
                         }} 
                         value={field.value}
+                        disabled={disabled}
                       >
-                        <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full">
+                        <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full" disabled={disabled}>
                           <SelectValue placeholder={placeholder || `Select ${label}`} />
                         </SelectTrigger>
                         <SelectContent>
