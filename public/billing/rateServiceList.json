@@ -1,0 +1,30 @@
+{
+  "headers": [
+    { "accessorKey": "check", "header": "Check" },
+    { "accessorKey": "serviceId", "header": "Service ID" },
+    { "accessorKey": "serviceName", "header": "Service Name" },
+    { "accessorKey": "serviceType", "header": "Service Type" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" }
+  ],
+  "rows": [
+    {
+      "check": "Yes",
+      "serviceId": "SRV-001",
+      "serviceName": "Express Delivery",
+      "serviceType": "Express",
+      "companyCode": "THKN",
+      "branchCode": "THBKK"
+    },
+    {
+      "check": "No",
+      "serviceId": "SRV-002",
+      "serviceName": "Standard Freight",
+      "serviceType": "Standard",
+      "companyCode": "TCS01",
+      "branchCode": "INCHN"
+    }
+  ]
+}
+
+
