@@ -5,9 +5,12 @@ import ReportsList from '@/components/ui/reusableComponent/reportsList'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useRouter } from 'next/navigation'
+
 
 export default function GeofenceListPage() {
   // State Management
+  const router = useRouter()
   const [columns, setColumns] = useState([])
   const [rows, setRows] = useState([])
   const [tripModalOpen, setTripModalOpen] = useState(false)
@@ -56,17 +59,21 @@ export default function GeofenceListPage() {
       setVehicleData(vehicleDataFromJson)
       setVehicleModalOpen(true)
     }
+    else if (action === 'map') {
+      // Navigate to the Geofence Map page (replace with your actual route)
+      router.push('/geofences/viewGeoFence')
+    }
   }
 
   const handleStatusChange = (tripId, newStatus) => {
-    setTripData(prev => 
-      prev.map(trip => 
-        trip.tripId === tripId 
+    setTripData(prev =>
+      prev.map(trip =>
+        trip.tripId === tripId
           ? { ...trip, status: newStatus }
           : trip
       )
     )
-    
+
     // Show status message temporarily
     setShowStatusMessage(true)
     setTimeout(() => {
@@ -75,14 +82,14 @@ export default function GeofenceListPage() {
   }
 
   const handleVehicleStatusChange = (imei, newStatus) => {
-    setVehicleData(prev => 
-      prev.map(vehicle => 
-        vehicle.imei === imei 
+    setVehicleData(prev =>
+      prev.map(vehicle =>
+        vehicle.imei === imei
           ? { ...vehicle, status: newStatus }
           : vehicle
       )
     )
-    
+
     // Show status message temporarily
     setShowStatusMessage(true)
     setTimeout(() => {
@@ -117,14 +124,13 @@ export default function GeofenceListPage() {
             </DialogTitle>
           </DialogHeader>
 
-         {showStatusMessage && (
-  <p className="text-green-600 text-xl font-semibold mb-0">
-    Geo Fence Assigned
-  </p>
-)}
+          {showStatusMessage && (
+            <p className="text-green-600 text-xl font-semibold -mt-5">
+              Geo Fence Assigned
+            </p>
+          )}
 
-          
-          <div className="overflow-y-auto max-h-[75vh]">
+          <div className="overflow-y-auto max-h-[75vh] -mt-5">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -174,8 +180,8 @@ export default function GeofenceListPage() {
               Geo Fence Assigned
             </p>
           )}
-          
-          <div className="overflow-y-auto max-h-[75vh]">
+
+          <div className="overflow-y-auto max-h-[75vh] -mt-5">
             <Table>
               <TableHeader>
                 <TableRow>
