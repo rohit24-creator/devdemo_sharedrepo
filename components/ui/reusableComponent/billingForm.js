@@ -816,7 +816,7 @@ export function renderBillingFieldWithModals(
                         {fieldConfig.inputField.type === "select" ? (
                           <Select 
                             onValueChange={(value) => {
-                              // Get the field name for the input (e.g., if checkbox is "reference1Checkbox", input is "reference1")
+                              // Get the field name for the input
                               const inputFieldName = name.replace('Checkbox', '');
                               form.setValue(inputFieldName, value);
                             }}
