@@ -1,0 +1,26 @@
+{
+  "columns": [
+    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
+    { "accessorKey": "financeCompanyName", "header": "Finance Company Name" },
+    { "accessorKey": "userName", "header": "User Name" },
+    { "accessorKey": "loanType", "header": "Loan Type" },
+    { "accessorKey": "financeAmount", "header": "Finance Amount" },
+    { "accessorKey": "startDate", "header": "Start Date" },
+    { "accessorKey": "dueDate", "header": "Due Date" },
+    { "accessorKey": "emiRate", "header": "EMI Rate" },
+    { "accessorKey": "numberOfMonths", "header": "Number of Months" }
+  ],
+  "rows": [
+    {
+      "vehicleNumber": "KN42602193",
+      "financeCompanyName": "SX 0012",
+      "userName": "M Srinivasa Reddy",
+      "loanType": "Vehicle Load",
+      "financeAmount": "435345.00",
+      "startDate": "2025-03-27",
+      "dueDate": "2025-03-29",
+      "emiRate": "0.00",
+      "numberOfMonths": "6"
+    }
+  ]
+}
