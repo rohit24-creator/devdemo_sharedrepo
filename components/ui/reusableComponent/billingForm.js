@@ -804,6 +804,56 @@ export function renderBillingFieldWithModals(
                       )}
                     </RadioGroup>
                   </div>
+                ) : type === "checkboxWithInput" ? (
+                  <div className="flex items-center gap-3">
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={disabled}
+                    />
+                    {fieldConfig.inputField && (
+                      <div className="flex-1">
+                        {fieldConfig.inputField.type === "select" ? (
+                          <Select 
+                            onValueChange={(value) => {
+                              // Get the field name for the input (e.g., if checkbox is "reference1Checkbox", input is "reference1")
+                              const inputFieldName = name.replace('Checkbox', '');
+                              form.setValue(inputFieldName, value);
+                            }}
+                            value={form.watch(name.replace('Checkbox', '')) || ""}
+                            disabled={!field.value} // Disabled when checkbox is unchecked
+                          >
+                            <SelectTrigger className="border-2 border-[#E7ECFD] bg-white w-full" disabled={!field.value}>
+                              <SelectValue placeholder={fieldConfig.inputField.placeholder} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {fieldConfig.inputField.options.map((option) =>
+                                typeof option === "string" ? (
+                                  <SelectItem key={option} value={option}>{option}</SelectItem>
+                                ) : (
+                                  <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                                )
+                              )}
+                            </SelectContent>
+                          </Select>
+                        ) : fieldConfig.inputField.type === "text" ? (
+                          <Input
+                            value={form.watch(name.replace('Checkbox', '')) || ""}
+                            onChange={(e) => {
+                              const inputFieldName = name.replace('Checkbox', '');
+                              form.setValue(inputFieldName, e.target.value);
+                            }}
+                            disabled={!field.value}
+                            type={fieldConfig.inputField.type}
+                            placeholder={fieldConfig.inputField.placeholder}
+                            className={`w-full px-3 py-2 rounded-md border-2 border-[#E7ECFD] ${
+                              !field.value ? "bg-gray-100" : ""
+                            }`}
+                          />
+                        ) : null}
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <Input
                     {...field}
