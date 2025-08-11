@@ -1,0 +1,30 @@
+{
+  "columns": [
+    { "accessorKey": "carrier", "header": "Carrier" },
+    { "accessorKey": "city", "header": "City" },
+    { "accessorKey": "zip", "header": "Zip" },
+    { "accessorKey": "totalMiles", "header": "Total Miles" },
+    { "accessorKey": "chargeRate2014", "header": "Charge Rate 2014" },
+    { "accessorKey": "chargeRate2020", "header": "Charge Rate 2020" },
+    { "accessorKey": "chargeRate2022", "header": "Charge Rate 2022" },
+    { "accessorKey": "fscPercent", "header": "FSC%" },
+    { "accessorKey": "fscDollar", "header": "FSC$" },
+    { "accessorKey": "greenTruckFeesGtfPercent", "header": "Green Truck Fees GTF%" },
+    { "accessorKey": "greenTruckFeesGtfDollar", "header": "Green Truck Fees GTF$" }
+  ],
+  "rows": [
+    {
+      "carrier": "ShipmentX",
+      "city": "Bangkok",
+      "zip": "10110",
+      "totalMiles": 0,
+      "chargeRate2014": 0,
+      "chargeRate2020": 0,
+      "chargeRate2022": 0,
+      "fscPercent": 0,
+      "fscDollar": 0,
+      "greenTruckFeesGtfPercent": 0,
+      "greenTruckFeesGtfDollar": 0
+    }
+  ]
+}

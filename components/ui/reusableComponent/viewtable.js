@@ -153,6 +153,7 @@ const renderField = (field) => {
               onSelect={(date) =>
                 handleChange(name, date ? format(date, "yyyy-MM-dd") : "")
               }
+              disabled={(date) => date > new Date()}
               initialFocus
             />
           </PopoverContent>
