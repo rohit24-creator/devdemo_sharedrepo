@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-
-const ReusableMassStatus = dynamic(() => import("@/components/ui/reusableComponent/reusablemasstatus"), { ssr: false });
+import ReusableMassStatus from "@/components/ui/reusableComponent/reusablemasstatus";
 
 export default function MassStatusPage() {
   const [columns, setColumns] = useState([]);
