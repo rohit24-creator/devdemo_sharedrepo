@@ -423,7 +423,7 @@ function DynamicBillingTable({ section, renderField }) {
           <TableHeader>
             <TableRow className="bg-[#f8fafc]">
               {showActions && (
-                <TableHead className="sticky left-0 bg-[#f8fafc] text-[#006397] font-semibold px-4 py-3 min-w-[130px] border-r border-gray-200 shadow-sm z-10">
+                <TableHead className="sticky left-0 bg-[#f8fafc] text-[#006397] font-semibold px-4 py-3 w-[130px] border-r border-gray-200 shadow-sm z-10">
                   Action
                 </TableHead>
               )}
@@ -444,7 +444,7 @@ function DynamicBillingTable({ section, renderField }) {
                 className="hover:bg-[#f9fbfd] transition-colors"
               >
                 {showActions && (
-                  <TableCell className="sticky left-0 bg-white px-3 min-w-[130px] border-r border-gray-200 z-10">
+                  <TableCell className="sticky left-0 bg-white px-3 w-[130px] border-r border-gray-200 z-10">
                     <div className="flex gap-2">
                       <Button
                         size="sm"
