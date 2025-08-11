@@ -12,6 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import {
   Truck, FileText, ShoppingCart, UserSquare, ScanLine, Ruler, ArrowLeftRight,
   ArrowUpDown, Weight, BarChart2, List, Layers, Square, SplitSquare,
@@ -23,8 +27,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import ReusableModal from "../reusableComponent/bussinessParnterModal";
-import FormModal from "../reusableComponent/formmodal";
+import ReusableModal from "./bussinessPartnerModal";
+import FormModal from "./formmodal";
 
 export default function ReusableTable({ fields, data, onChange, accordionTitle, modalData, formFields }) {
   const iconMap = {
@@ -219,6 +223,42 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                               <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 {field.label}
                               </label>
+                            </div>
+                          ) : field.type === 'date' ? (
+                            <div className="w-full flex items-center gap-2">
+                              <Input
+                                type="text"
+                                placeholder="YYYY-MM-DD"
+                                value={row[field.key] || ''}
+                                onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
+                                className="w-[120px]"
+                                maxLength={10}
+                              />
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    className={cn(
+                                      "w-[44px] justify-center text-left font-normal p-0",
+                                      !row[field.key] && "text-muted-foreground"
+                                    )}
+                                  >
+                                    <span className="sr-only">Pick date</span>
+                                    📅
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                  <Calendar
+                                    mode="single"
+                                    selected={row[field.key] ? new Date(row[field.key]) : undefined}
+                                    onSelect={(date) =>
+                                      handleCellChange(rowIdx, field.key, date ? format(date, "yyyy-MM-dd") : "")
+                                    }
+                                    disabled={(date) => date > new Date()}
+                                    initialFocus
+                                  />
+                                </PopoverContent>
+                              </Popover>
                             </div>
                           ) : null}
                         </TableCell>
