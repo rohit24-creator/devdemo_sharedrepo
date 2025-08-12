@@ -331,6 +331,20 @@ const MODAL_CONFIG = {
   }
 };
 
+// Exported mapping function
+export const handleMappingChange = (mappingConfig, fieldName, value, form, rowIndex = null) => {
+  if (mappingConfig && mappingConfig[fieldName]) {
+    const mapping = mappingConfig[fieldName];
+    const selectedData = mapping.data.find(item => item[mapping.keyField] === value);
+    if (selectedData) {
+      mapping.mappedFields.forEach(mappedField => {
+        const fieldPath = rowIndex !== null ? `rows.${rowIndex}.${mappedField}` : mappedField;
+        form.setValue(fieldPath, selectedData[mappedField]);
+      });
+    }
+  }
+};
+
 // Dynamic Table Component for billing forms (following trip template pattern)
 function DynamicBillingTable({ section, renderField }) {
   const form = useForm({
@@ -404,16 +418,9 @@ function DynamicBillingTable({ section, renderField }) {
     }
   };
 
-  const handleMappingChange = (rowIndex, fieldName, value) => {
-    if (mappingConfig && mappingConfig[fieldName]) {
-      const mapping = mappingConfig[fieldName];
-      const selectedData = mapping.data.find(item => item[mapping.keyField] === value);
-      if (selectedData) {
-        mapping.mappedFields.forEach(mappedField => {
-          form.setValue(`rows.${rowIndex}.${mappedField}`, selectedData[mappedField]);
-        });
-      }
-    }
+  // Using the exported mapping function
+  const handleTableMappingChange = (rowIndex, fieldName, value) => {
+    handleMappingChange(mappingConfig, fieldName, value, form, rowIndex);
   };
 
       return (
@@ -475,7 +482,7 @@ function DynamicBillingTable({ section, renderField }) {
                         disabled: typeof col.getDisabled === "function" ? col.getDisabled(watchedRows?.[rowIndex]) : col.disabled,
                         onValueChange: (value) => {
                           if (col.onValueChange) col.onValueChange(value);
-                          handleMappingChange(rowIndex, col.accessorKey, value);
+                          handleTableMappingChange(rowIndex, col.accessorKey, value);
                         }
                       },
                       form,
