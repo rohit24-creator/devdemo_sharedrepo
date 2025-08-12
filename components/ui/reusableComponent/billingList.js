@@ -244,6 +244,7 @@ export default function BillingList({
   enabledActions = ["edit", "view", "delete"],
   onActionClick = () => {},
   hasTabs = false,
+  hideFilterSection = false,
 }) {
   // State management
   const [formValues, setFormValues] = useState({});
@@ -614,41 +615,43 @@ export default function BillingList({
 
   return (
     <>
-      <Card>
-        <CardContent className="p-4 flex justify-between flex-wrap gap-4">
-          <div className="flex flex-wrap items-end gap-3 w-full lg:w-auto">
-            {filterFields.map((field) => (
-              <FilterField key={field.name} field={field} formValues={formValues} setFormValues={setFormValues} />
-            ))}
-            {/* Search and Action buttons grouped together */}
-            <div className="flex items-end gap-2">
-              <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full" onClick={() => onSearch(formValues)}>
-                Search
-              </Button>
+      {!hideFilterSection && (
+        <Card>
+          <CardContent className="p-4 flex justify-between flex-wrap gap-4">
+            <div className="flex flex-wrap items-end gap-3 w-full lg:w-auto">
+              {filterFields.map((field) => (
+                <FilterField key={field.name} field={field} formValues={formValues} setFormValues={setFormValues} />
+              ))}
+              {/* Search and Action buttons grouped together */}
+              <div className="flex items-end gap-2">
+                <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full" onClick={() => onSearch(formValues)}>
+                  Search
+                </Button>
+              </div>
             </div>
-          </div>
 
-          <div className="hidden lg:flex items-end gap-6 pr-2">
-            {filterFields.length <= 5 && (
-              <>
-                <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent></DropdownMenuContent>
-                </DropdownMenu>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent></DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            <div className="hidden lg:flex items-end gap-6 pr-2">
+              {filterFields.length <= 5 && (
+                <>
+                  <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent></DropdownMenuContent>
+                  </DropdownMenu>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent></DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
       {mainContent}
       {/* Single Delete Confirmation Dialog - works for both tabs and single table */}
       <Dialog open={deleteDialogOpen} onOpenChange={() => {}}>
