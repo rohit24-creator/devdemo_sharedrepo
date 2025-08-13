@@ -1,0 +1,187 @@
+{
+  "stats": {
+    "pendingBookings": 25,
+    "activeBookings": 67,
+    "completedBookings": 42,
+    "alerts": 8
+  },
+  "chatData": [
+    {
+      "status": "Online",
+      "name": "Jacob",
+      "phone": "4844760243",
+      "type": "Customer"
+    },
+    {
+      "status": "Offline",
+      "name": "Tampa",
+      "phone": "9876543210",
+      "type": "Carrier"
+    },
+    {
+      "status": "Online",
+      "name": "Tucson",
+      "phone": "7911123456",
+      "type": "Customer"
+    },
+    {
+      "status": "Offline",
+      "name": "Chicago",
+      "phone": "19876543211",
+      "type": "Carrier"
+    },
+    {
+      "status": "Online",
+      "name": "Dallas",
+      "phone": "12345678",
+      "type": "Customer"
+    },
+    {
+      "status": "Offline",
+      "name": "Miami",
+      "phone": "9876543212",
+      "type": "Carrier"
+    },
+    {
+      "status": "Online",
+      "name": "Seattle",
+      "phone": "123456789",
+      "type": "Customer"
+    },
+    {
+      "status": "Offline",
+      "name": "Boston",
+      "phone": "9876543213",
+      "type": "Carrier"
+    },
+    {
+      "status": "Online",
+      "name": "Atlanta",
+      "phone": "123456789",
+      "type": "Customer"
+    },
+    {
+      "status": "Offline",
+      "name": "Phoenix",
+      "phone": "19876543214",
+      "type": "Carrier"
+    }
+  ],
+  "forecastData": [
+    {
+      "date": "07-Mar-2025",
+      "pickup": 1,
+      "deliveries": 8
+    },
+    {
+      "date": "15-Jun-2025",
+      "pickup": 5,
+      "deliveries": 1
+    },
+    {
+      "date": "22-Mar-2025",
+      "pickup": 9,
+      "deliveries": 0
+    },
+    {
+      "date": "05-Feb-2025",
+      "pickup": 0,
+      "deliveries": 6
+    },
+    {
+      "date": "12-Apr-2025",
+      "pickup": 2,
+      "deliveries": 9
+    },
+    {
+      "date": "19-Jul-2025",
+      "pickup": 4,
+      "deliveries": 2
+    },
+    {
+      "date": "26-Apr-2025",
+      "pickup": 1,
+      "deliveries": 9
+    },
+    {
+      "date": "03-May-2025",
+      "pickup": 6,
+      "deliveries": 3
+    },
+    {
+      "date": "10-Oct-2025",
+      "pickup": 0,
+      "deliveries": 7
+    },
+    {
+      "date": "17-May-2025",
+      "pickup": 8,
+      "deliveries": 5
+    },
+    {
+      "date": "24-May-2025",
+      "pickup": 0,
+      "deliveries": 4
+    },
+    {
+      "date": "31-May-2025",
+      "pickup": 9,
+      "deliveries": 8
+    },
+    {
+      "date": "07-Jun-2025",
+      "pickup": 1,
+      "deliveries": 0
+    }
+  ],
+  "spotRates": [
+    {
+      "invoice": "10212122151152",
+      "client": "TMS SX",
+      "status": "Active"
+    },
+    {
+      "invoice": "10212122151153",
+      "client": "TMS SX",
+      "status": "Pending"
+    },
+    {
+      "invoice": "10212122151154",
+      "client": "TMS SX",
+      "status": "Active"
+    },
+    {
+      "invoice": "10212122151155",
+      "client": "TMS SX",
+      "status": "Completed"
+    },
+    {
+      "invoice": "10212122151156",
+      "client": "TMS SX",
+      "status": "Active"
+    }
+  ],
+  "recentShipments": [
+    {
+      "id": "125220002",
+      "source": "Walldorf",
+      "destination": "BROOMFIELD",
+      "status": "In Transit",
+      "pickup": "2025-01-26"
+    },
+    {
+      "id": "125220001",
+      "source": "Walldorf",
+      "destination": "BROOMFIELD",
+      "status": "Active",
+      "pickup": "2025-01-26"
+    },
+    {
+      "id": "125040001",
+      "source": "FISKDALE",
+      "destination": "FISKDALE",
+      "status": "Delivered",
+      "pickup": "2024-12-20"
+    }
+  ]
+}

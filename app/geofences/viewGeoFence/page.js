@@ -4,21 +4,23 @@ import { Card } from '@/components/ui/card'
 import { MoveLeft } from "lucide-react"
 import { useRouter } from 'next/navigation'
 
-
-export default function GeofencePage() {
+export default function ViewGeofencePage() {
     const router = useRouter()
     return (
         <Card className="w-full h-full p-4 shadow-sm border">
             {/* Google Map Section */}
-            <div className="flex flex-wrap items-center gap-3 w-full">
-                <h1 className="text-2xl font-medium text-blue-900">View GeoFence</h1>
-                <Button className="ml-auto flex items-center gap-2 bg-[#006397] hover:bg-[#02abf5] text-white" onClick={() => router.push('/geofences/geofencelist')}>
+            <div className="flex flex-wrap items-center gap-3 w-full mb-0">
+                <h1 className="text-3xl font-medium text-[#006397]">View GeoFence</h1>
+                <Button 
+                    className="ml-auto flex items-center gap-2 bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full" 
+                    onClick={() => router.push('/geofences/geofencelist')}
+                >
                     <MoveLeft className="w-5 h-5" />
-                    View Geofence
+                    Back to List
                 </Button>
             </div>
 
-            <div className="w-full h-[75vh] rounded border overflow-hidden">
+            <div className="w-full h-[75vh] rounded border overflow-hidden -mt-4">
                 <iframe
                     title="Geofence Map"
                     className="w-full h-full"
