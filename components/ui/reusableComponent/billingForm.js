@@ -890,41 +890,72 @@ function renderTable(section, renderField) {
     return <DynamicBillingTable section={section} renderField={renderField} />;
   }
   
-  // Original static table rendering
+  // For custom tables, use the custom table renderer
+  if (section.customTable) {
+    return renderCustomTable(section);
+  }
+  
+  // If no custom table and no dynamic rows, return null
+  return null;
+}
+
+// Custom table renderer for billing forms
+function renderCustomTable(section) {
+  // Check if this is a Min/Max table
+  if (section.tableType === "minMax") {
+    return null; // Removed custom table design - will be designed later
+  }
+  
+  // Default custom table rendering
   return (
-    <Card>
+    <Card className="mt-6">
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12" />
-              {section.columns.map((col) => (
-                <TableHead key={col.accessorKey} className="text-[#006397] text-left text-sm font-semibold">
-                  {col.header}
+              <TableHead className="w-12 text-[#162d56] text-sm font-semibold px-3 py-2">
+                <Checkbox className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]" />
+              </TableHead>
+              <TableHead className="w-16 px-3 py-2" />
+              {Object.keys(section.schema?.shape || {}).map((field) => (
+                <TableHead
+                  key={field}
+                  className="text-[#162d56] text-sm font-semibold px-3 py-2"
+                >
+                  {field}
                 </TableHead>
               ))}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(section.rows?.length > 0 ? section.rows : [{}]).map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
-                <TableCell className="w-12 align-top pt-2">
+            {(section.entries || []).map((entry, index) => (
+              <TableRow key={index}>
+                <TableCell className="px-3 py-2">
+                  <Checkbox className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]" />
+                </TableCell>
+                <TableCell className="px-3 py-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-xl px-2 py-0">
-                        ☰
+                      <Button variant="ghost" size="icon">
+                        <span className="text-xl">☰</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right">
-                      <DropdownMenuItem>
-                        ➕ Add Row
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => section.onEdit?.(entry, index)}>
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-red-600"
+                        onClick={() => section.onDelete?.(entry)}
+                      >
+                        Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
-                {section.columns.map((col) => (
-                  <TableCell key={col.accessorKey} className="text-sm">
-                    {row[col.accessorKey] ?? ""}
+                {Object.keys(section.schema?.shape || {}).map((key) => (
+                  <TableCell key={key} className="text-sm px-3 py-2">
+                    {key === "xsdFile" ? entry[key]?.name || "" : entry[key]}
                   </TableCell>
                 ))}
               </TableRow>
@@ -933,7 +964,7 @@ function renderTable(section, renderField) {
         </Table>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export function BillingForm({ sections = [], useAccordion = true }) {
@@ -1020,12 +1051,34 @@ export function BillingForm({ sections = [], useAccordion = true }) {
                     
                     {/* Render table if section type is table */}
                     {section.type === "table" && renderTable(section, renderField)}
+                    
+                    {/* Custom table inside the form (if renderOutsideForm is false) */}
+                    {section.customTable &&
+                      !section.customTable.renderOutsideForm &&
+                      ((section.customTable.entries?.length > 0) || section.customTable.tableType) &&
+                      renderCustomTable(section.customTable)}
                   </div>
                 </AccordionContent>
               </AccordionItem>
             );
           })}
         </Accordion>
+        
+        {/* Custom tables rendered outside the accordion/form */}
+        {sections
+          .filter(
+            (section) =>
+              section.type === "form" &&
+              section.customTable &&
+              section.customTable.renderOutsideForm &&
+              ((section.customTable.entries?.length > 0) || section.customTable.tableType)
+          )
+          .map((section, index) => (
+            <div key={`custom-table-${index}`} className="mt-4">
+              {renderCustomTable(section.customTable)}
+            </div>
+          ))}
+        
         {/* Centralized modal rendering */}
         {renderModal(modalField, modalType, handleModalClose, handleModalSelect, filteredCustomerIdData)}
       </>
@@ -1067,9 +1120,31 @@ export function BillingForm({ sections = [], useAccordion = true }) {
                 
                 {/* Render table if section type is table */}
                 {section.type === "table" && renderTable(section, renderField)}
+                
+                {/* Custom table inside the form (if renderOutsideForm is false) */}
+                {section.customTable &&
+                  !section.customTable.renderOutsideForm &&
+                  ((section.customTable.entries?.length > 0) || section.customTable.tableType) &&
+                  renderCustomTable(section.customTable)}
               </div>
           </div>
         ))}
+        
+        {/* Custom tables rendered outside the accordion/form */}
+        {sections
+          .filter(
+            (section) =>
+              section.type === "form" &&
+              section.customTable &&
+              section.customTable.renderOutsideForm &&
+              ((section.customTable.entries?.length > 0) || section.customTable.tableType)
+          )
+          .map((section, index) => (
+            <div key={`custom-table-${index}`} className="mt-4">
+              {renderCustomTable(section.customTable)}
+            </div>
+          ))}
+        
         {/* Centralized modal rendering */}
         {renderModal(modalField, modalType, handleModalClose, handleModalSelect, filteredCustomerIdData)}
       </>

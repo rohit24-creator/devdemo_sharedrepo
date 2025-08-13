@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { BillingForm } from "@/components/ui/reusableComponent/billingForm";
+import { BillingForm, useBillingFields } from "@/components/ui/reusableComponent/billingForm";
 
 const rateTierSchema = z.object({
   tierId: z.string().min(1, "Tier ID is required"),
@@ -122,6 +122,10 @@ export default function RateTierPage() {
           </button>
         </div>
       ),
+      customTable: {
+        tableType: "minMax",
+      },
+      renderOutsideForm: false
     },
   ];
 

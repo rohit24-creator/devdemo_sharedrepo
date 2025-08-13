@@ -387,16 +387,17 @@ export default function QuickRatesPage() {
           onActionClick={handleActionClick}
           hideFilterSection={true}
         />
-      </div>
-      
-              <div className="mt-8 flex justify-end space-x-4">
-          <Button variant="outline" className="border-gray-300" onClick={handleCancel}>
+
+        {/* Save/Cancel Buttons */}
+        <div className="flex justify-end gap-4 mt-8">
+          <Button variant="outline" className="px-6 py-2" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleSave}>
-            Save Template
+          <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-6 py-2" onClick={handleSave}>
+            Save
           </Button>
         </div>
+      </div>
     </div>
   );
 }
