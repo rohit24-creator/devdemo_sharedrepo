@@ -1,0 +1,58 @@
+{
+  "headers": [
+    { "accessorKey": "geoTierId", "header": "Geo Tier ID" },
+    { "accessorKey": "geoTierName", "header": "Geo Tier Name" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "geoHierarchy", "header": "Geo Hierarchy" },
+    { "accessorKey": "currency", "header": "Currency" },
+    { "accessorKey": "uom", "header": "UOM" }
+  ],
+  "rows": [
+    {
+      "geoTierId": "GEO-001",
+      "geoTierName": "North India Zone",
+      "companyCode": "THKN",
+      "branchCode": "THBKK",
+      "geoHierarchy": "Country > Zone > State",
+      "currency": "THB",
+      "uom": "KM"
+    },
+    {
+      "geoTierId": "GEO-002",
+      "geoTierName": "South India Zone",
+      "companyCode": "TCS01",
+      "branchCode": "INCHN",
+      "geoHierarchy": "Country > Zone > State",
+      "currency": "INR",
+      "uom": "KM"
+    },
+    {
+      "geoTierId": "GEO-003",
+      "geoTierName": "West India Zone",
+      "companyCode": "WPR02",
+      "branchCode": "INPUN",
+      "geoHierarchy": "Country > Zone > State",
+      "currency": "INR",
+      "uom": "KM"
+    },
+    {
+      "geoTierId": "GEO-004",
+      "geoTierName": "East India Zone",
+      "companyCode": "INFY",
+      "branchCode": "INPUN",
+      "geoHierarchy": "Country > Zone > State",
+      "currency": "INR",
+      "uom": "KM"
+    },
+    {
+      "geoTierId": "GEO-005",
+      "geoTierName": "Central India Zone",
+      "companyCode": "HCL01",
+      "branchCode": "INCHN",
+      "geoHierarchy": "Country > Zone > State",
+      "currency": "INR",
+      "uom": "KM"
+    }
+  ]
+}
