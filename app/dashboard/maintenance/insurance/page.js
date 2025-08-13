@@ -123,12 +123,10 @@ export default function VehicleInsurancePage() {
       if (modalField === "vehicleId") {
         setVehicleOptions((prev) => [...prev, data.name]);
       } else if (modalField === "insuranceType") {
-        // For insurance type, we'll use the financeCompanyName as the insurance type name
         if (data.financeCompanyName) {
           setInsuranceTypeOptions((prev) => [...prev, data.financeCompanyName]);
         }
       } else if (modalField === "agent") {
-        // For agent, we'll use the name field as the agent name
         if (data.name) {
           setAgentOptions((prev) => [...prev, data.name]);
         }
@@ -138,86 +136,89 @@ export default function VehicleInsurancePage() {
     setModalField(null);
   };
 
-  // Form sections configuration
+  const fieldConfig = [
+    {
+      name: "vehicleId",
+      label: "Choose Vehicle *",
+      type: "select",
+      options: vehicleOptions
+    },
+    {
+      name: "insuranceCompany",
+      label: "Insurance Company *",
+      type: "text"
+    },
+    {
+      name: "insuranceCompanyContact",
+      label: "Insurance Company Contact",
+      type: "text"
+    },
+    {
+      name: "insuranceCompanyAddress",
+      label: "Insurance Company Address",
+      type: "text"
+    },
+    {
+      name: "insuranceType",
+      label: "Choose Insurance Type *",
+      type: "select",
+      options: insuranceTypeOptions,
+      plusAction: handlePlus("insuranceType")
+    },
+    {
+      name: "agent",
+      label: "Choose Agent *",
+      type: "select",
+      options: agentOptions,
+      plusAction: handlePlus("agent")
+    },
+    {
+      name: "policyNumber",
+      label: "Policy Number *",
+      type: "text"
+    },
+    {
+      name: "insurerName",
+      label: "Insurer Name *",
+      type: "text"
+    },
+    {
+      name: "insurerAddress",
+      label: "Insurer Address",
+      type: "text"
+    },
+    {
+      name: "insuranceAmount",
+      label: "Insurance Amount *",
+      type: "text"
+    },
+    {
+      name: "startDate",
+      label: "Start Date *",
+      type: "date"
+    },
+    {
+      name: "endDate",
+      label: "End Date *",
+      type: "date"
+    },
+    {
+      name: "description",
+      label: "Description",
+      type: "textarea",
+      wide: true
+    }
+  ];
+
   const sections = [
     {
+      type: "form",
       title: "Vehicle Insurance",
       form: vehicleInsuranceForm,
+      fields: fieldConfig,
       onSubmit: handleVehicleInsuranceSubmit,
-      fields: [
-        {
-          name: "vehicleId",
-          label: "Choose Vehicle *",
-          type: "select",
-          options: vehicleOptions,
-        },
-        {
-          name: "insuranceCompany",
-          label: "Insurance company *",
-          type: "text",
-        },
-        {
-          name: "insuranceCompanyContact",
-          label: "Insurance company Contact",
-          type: "text",
-        },
-        {
-          name: "insuranceCompanyAddress",
-          label: "Insurance Company Address",
-          type: "text",
-        },
-        {
-          name: "insuranceType",
-          label: "Choose Insurance Type *",
-          type: "select",
-          options: insuranceTypeOptions,
-          plusAction: handlePlus("insuranceType"),
-        },
-        {
-          name: "agent",
-          label: "Choose Agent *",
-          type: "select",
-          options: agentOptions,
-          plusAction: handlePlus("agent"),
-        },
-        {
-          name: "policyNumber",
-          label: "Policy Number *",
-          type: "text",
-        },
-        {
-          name: "insurerName",
-          label: "Insurer Name *",
-          type: "text",
-        },
-        {
-          name: "insurerAddress",
-          label: "Insurer Address",
-          type: "text",
-        },
-        {
-          name: "insuranceAmount",
-          label: "Insurance Amount *",
-          type: "text",
-        },
-        {
-          name: "startDate",
-          label: "Start Date *",
-          type: "date",
-        },
-        {
-          name: "endDate",
-          label: "End Date *",
-          type: "date",
-        },
-        {
-          name: "description",
-          label: "Description",
-          type: "textarea",
-          wide: true,
-        },
-      ],
-    },
+      disableAccordionToggle: true,
+    }
   ];
 
   return (

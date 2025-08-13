@@ -132,65 +132,67 @@ export default function RegularMaintenancePage() {
     setModalField(null);
   };
 
-  // Form sections configuration
+  const fieldConfig = [
+    {
+      name: "vehicleNumber",
+      label: "Vehicle Number *",
+      type: "select",
+      options: vehicleOptions
+    },
+    {
+      name: "maintenanceType",
+      label: "Maintenance Type *",
+      type: "select",
+      options: maintenanceTypeOptions,
+      plusAction: handlePlus("maintenanceType")
+    },
+    {
+      name: "daysKm",
+      label: "Days/KM *",
+      type: "select",
+      options: daysKmOptions
+    },
+    {
+      name: "startDate",
+      label: "Start Date *",
+      type: "date"
+    },
+    {
+      name: "endDate",
+      label: "End Date *",
+      type: "date"
+    },
+    {
+      name: "status",
+      label: "Status",
+      type: "select",
+      options: statusOptions
+    },
+    {
+      name: "description",
+      label: "Description",
+      type: "text"
+    },
+    {
+      name: "remarks",
+      label: "Remarks",
+      type: "text"
+    },
+    {
+      name: "document",
+      label: "Document",
+      type: "file"
+    }
+  ];
+
   const sections = [
     {
       title: "Regular Maintenance",
       form: regularMaintenanceForm,
+      fields: fieldConfig,
       onSubmit: handleRegularMaintenanceSubmit,
-      fields: [
-        {
-          name: "vehicleNumber",
-          label: "Vehicle Number *",
-          type: "select",
-          options: vehicleOptions,
-        },
-        {
-          name: "maintenanceType",
-          label: "Maintenance Type *",
-          type: "select",
-          options: maintenanceTypeOptions,
-          plusAction: handlePlus("maintenanceType"),
-        },
-        {
-          name: "daysKm",
-          label: "Days/KM *",
-          type: "select",
-          options: daysKmOptions,
-        },
-        {
-          name: "startDate",
-          label: "Start Date *",
-          type: "date",
-        },
-        {
-          name: "endDate",
-          label: "End Date *",
-          type: "date",
-        },
-        {
-          name: "status",
-          label: "Status",
-          type: "select",
-          options: statusOptions,
-        },
-        {
-          name: "description",
-          label: "Description",
-          type: "text",
-        },
-        {
-          name: "remarks",
-          label: "Remarks",
-          type: "text",
-        },
-        {
-          name: "document",
-          label: "Document",
-          type: "file",
-        },
-      ],
-    },
+      disableAccordionToggle: true
+    }
   ];
 
   return (

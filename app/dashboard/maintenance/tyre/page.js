@@ -179,108 +179,110 @@ export default function AddVehicleTyrePage() {
     setModalField(null);
   };
 
-  // Form sections configuration
+  const fieldConfig = [
+    {
+      name: "vehicle",
+      label: "Choose Vehicle *",
+      type: "select",
+      options: vehicleOptions,
+      plusAction: handlePlus("vehicle")
+    },
+    {
+      name: "tyreNumber",
+      label: "Tyre Number *",
+      type: "text"
+    },
+    {
+      name: "tyreSize",
+      label: "Tyre Size",
+      type: "text"
+    },
+    {
+      name: "nsd",
+      label: "NSD",
+      type: "text"
+    },
+    {
+      name: "amount",
+      label: "Amount",
+      type: "text"
+    },
+    {
+      name: "tyreCategory",
+      label: "Choose Tyre Category *",
+      type: "select",
+      options: tyreCategoryOptions,
+      plusAction: handlePlus("tyreCategory")
+    },
+    {
+      name: "tyreCompany",
+      label: "Choose Tyre Company *",
+      type: "select",
+      options: tyreCompanyOptions,
+      plusAction: handlePlus("tyreCompany")
+    },
+    {
+      name: "tyreType",
+      label: "Choose Tyre Type *",
+      type: "select",
+      options: tyreTypeOptions,
+      plusAction: handlePlus("tyreType")
+    },
+    {
+      name: "tyrePattern",
+      label: "Choose Tyre Pattern *",
+      type: "select",
+      options: tyrePatternOptions,
+      plusAction: handlePlus("tyrePattern")
+    },
+    {
+      name: "vendor",
+      label: "Choose Vendor *",
+      type: "select",
+      options: vendorOptions,
+      plusAction: handlePlus("vendor")
+    },
+    {
+      name: "quantity",
+      label: "Quantity *",
+      type: "text"
+    },
+    {
+      name: "purchasedDate",
+      label: "Purchased Date",
+      type: "date"
+    },
+    {
+      name: "warrantyFrom",
+      label: "Warranty From",
+      type: "date"
+    },
+    {
+      name: "warrantyTo",
+      label: "Warranty To",
+      type: "date"
+    },
+    {
+      name: "warrantyInformation",
+      label: "Warranty Information",
+      type: "textarea",
+      wide: true
+    },
+    {
+      name: "tyreDocument",
+      label: "Tyre Document",
+      type: "file"
+    }
+  ];
+
   const sections = [
     {
       title: "Vehicle Tyre",
       form: vehicleTyreForm,
+      fields: fieldConfig,
       onSubmit: handleVehicleTyreSubmit,
-     disableAccordionToggle: true,
-      fields: [
-        {
-          name: "vehicle",
-          label: "Choose Vehicle *",
-          type: "select",
-          options: vehicleOptions,
-        },
-        {
-          name: "tyreNumber",
-          label: "Tyre Number *",
-          type: "text",
-        },
-        {
-          name: "tyreSize",
-          label: "Tyre Size",
-          type: "text",
-        },
-        {
-          name: "nsd",
-          label: "NSD",
-          type: "text",
-        },
-        {
-          name: "amount",
-          label: "Amount",
-          type: "text",
-        },
-        {
-          name: "tyreCategory",
-          label: "Choose Tyre Category *",
-          type: "select",
-          options: tyreCategoryOptions,
-          plusAction: handlePlus("tyreCategory"),
-        },
-        {
-          name: "tyreCompany",
-          label: "Choose Tyre Company *",
-          type: "select",
-          options: tyreCompanyOptions,
-          plusAction: handlePlus("tyreCompany"),
-        },
-        {
-          name: "tyreType",
-          label: "Choose Tyre Type *",
-          type: "select",
-          options: tyreTypeOptions,
-          plusAction: handlePlus("tyreType"),
-        },
-        {
-          name: "tyrePattern",
-          label: "Choose Tyre Pattern *",
-          type: "select",
-          options: tyrePatternOptions,
-          plusAction: handlePlus("tyrePattern"),
-        },
-        {
-          name: "vendor",
-          label: "Choose Vendor *",
-          type: "select",
-          options: vendorOptions,
-          plusAction: handlePlus("vendor"),
-        },
-        {
-          name: "quantity",
-          label: "Quantity *",
-          type: "text",
-        },
-        {
-          name: "purchasedDate",
-          label: "Purchased Date",
-          type: "date",
-        },
-        {
-          name: "warrantyFrom",
-          label: "Warranty From",
-          type: "date",
-        },
-        {
-          name: "warrantyTo",
-          label: "Warranty To",
-          type: "date",
-        },
-        {
-          name: "warrantyInformation",
-          label: "Warranty Information",
-          type: "textarea",
-          wide: true,
-        },
-        {
-          name: "tyreDocument",
-          label: "Tyre Document",
-          type: "file",
-        },
-      ],
-    },
+      disableAccordionToggle: true
+    }
   ];
 
   return (

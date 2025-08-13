@@ -28,7 +28,10 @@ export default function AddVehicleBatteryPage() {
   const [modalField, setModalField] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Form instance
+  const [vehicleOptions, setVehicleOptions] = useState(["BHC 246", "586 5GX", "DMC 4583", "TRK 789", "FLE 456"]);
+  const [batteryBrandOptions, setBatteryBrandOptions] = useState(["Amaron", "Exide", "Luminous", "Livguard"]);
+  const [vendorOptions, setVendorOptions] = useState(["ABC Battery Suppliers", "PowerCell Corp", "GreenVolt Traders"]);
+
   const batteryForm = useForm({
     resolver: zodResolver(vehicleBatterySchema),
     defaultValues: {
@@ -47,18 +50,6 @@ export default function AddVehicleBatteryPage() {
       batteryDocument: null,
     },
   });
-
-  const [vehicleOptions, setVehicleOptions] = useState([
-    "BHC 246", "586 5GX", "DMC 4583", "TRK 789", "FLE 456"
-  ]);
-
-  const [batteryBrandOptions, setBatteryBrandOptions] = useState([
-    "Amaron", "Exide", "Luminous", "Livguard"
-  ]);
-
-  const [vendorOptions, setVendorOptions] = useState([
-    "ABC Battery Suppliers", "PowerCell Corp", "GreenVolt Traders"
-  ]);
 
   const handleBatterySubmit = async (data) => {
     console.log("Battery Data:", data);
@@ -90,92 +81,53 @@ export default function AddVehicleBatteryPage() {
     setModalField(null);
   };
 
+  const fieldConfig = [
+    { 
+      name: "vehicle", 
+      label: "Choose Vehicle *", 
+      type: "select", 
+      options: vehicleOptions,
+      plusAction: handlePlus("vehicle")
+    },
+    { name: "batteryName", label: "Battery Name *", type: "text" },
+    { name: "batteryNumber", label: "Battery Number *", type: "text" },
+    { name: "batterySize", label: "Battery Size", type: "text" },
+    { name: "amount", label: "Amount", type: "text" },
+    { 
+      name: "batteryBrand", 
+      label: "Choose Battery Brand *", 
+      type: "select", 
+      options: batteryBrandOptions,
+      plusAction: handlePlus("batteryBrand")
+    },
+    { 
+      name: "vendor", 
+      label: "Choose Vendor *", 
+      type: "select", 
+      options: vendorOptions,
+      plusAction: handlePlus("vendor")
+    },
+    { name: "batteryQuantity", label: "Battery Quantity", type: "text" },
+    { name: "purchasedDate", label: "Purchased Date", type: "date" },
+    { name: "warrantyFrom", label: "Warranty From", type: "date" },
+    { name: "warrantyTo", label: "Warranty To", type: "date" },
+    { name: "warrantyInformation", label: "Warranty Information", type: "textarea" },
+    { name: "batteryDocument", label: "Battery Document", type: "file" },
+  ];
+
   const sections = [
     {
       title: "Vehicle Battery",
       form: batteryForm,
+      fields: fieldConfig,
       onSubmit: handleBatterySubmit,
-      disableAccordionToggle: true,
-      fields: [
-        {
-          name: "vehicle",
-          label: "Choose Vehicle *",
-          type: "select",
-          options: vehicleOptions,
-        },
-        {
-          name: "batteryName",
-          label: "Battery Name *",
-          type: "text",
-        },
-        {
-          name: "batteryNumber",
-          label: "Battery Number *",
-          type: "text",
-        },
-        {
-          name: "batterySize",
-          label: "Battery Size",
-          type: "text",
-        },
-        {
-          name: "amount",
-          label: "Amount",
-          type: "text",
-        },
-        {
-          name: "batteryBrand",
-          label: "Choose Battery Brand *",
-          type: "select",
-          options: batteryBrandOptions,
-          plusAction: handlePlus("batteryBrand"),
-        },
-        {
-          name: "vendor",
-          label: "Choose Vendor *",
-          type: "select",
-          options: vendorOptions,
-          plusAction: handlePlus("vendor"),
-        },
-        {
-          name: "batteryQuantity",
-          label: "Battery Quantity",
-          type: "text",
-        },
-        {
-          name: "purchasedDate",
-          label: "Purchased Date",
-          type: "date",
-        },
-        {
-          name: "warrantyFrom",
-          label: "Warranty From",
-          type: "date",
-        },
-        {
-          name: "warrantyTo",
-          label: "Warranty To",
-          type: "date",
-        },
-        {
-          name: "warrantyInformation",
-          label: "Warranty Information",
-          type: "textarea",
-          wide: true,
-        },
-        {
-          name: "batteryDocument",
-          label: "Battery Document",
-          type: "file",
-        },
-      ],
-    },
+      disableAccordionToggle: true
+    }
   ];
 
   return (
     <div className="p-6">
-      <BillingForm sections={sections}
- />
+      <BillingForm sections={sections} />
       <FormModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}

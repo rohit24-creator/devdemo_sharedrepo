@@ -123,100 +123,91 @@ export default function VehicleFinancePage() {
     setModalField(null);
   };
 
-  // Form sections configuration
+  const fieldConfig = [
+    {
+      name: "vehicleId",
+      label: "Choose Vehicle *",
+      type: "select",
+      options: vehicleOptions
+    },
+    {
+      name: "loanType",
+      label: "Choose Loan Type *",
+      type: "select",
+      options: loanTypeOptions,
+      plusAction: handlePlus("loanType")
+    },
+    {
+      name: "financeCompanyName",
+      label: "Finance Company Name *",
+      type: "text"
+    },
+    {
+      name: "financeStartDate",
+      label: "Finance Start Date *",
+      type: "date"
+    },
+    {
+      name: "financeDueDate",
+      label: "Finance Due Date *",
+      type: "date"
+    },
+    {
+      name: "contactPerson",
+      label: "Contact Person *",
+      type: "text"
+    },
+    {
+      name: "contactNumber",
+      label: "Contact Number *",
+      type: "text"
+    },
+    {
+      name: "totalFinanceAmount",
+      label: "Total Finance Amount *",
+      type: "text"
+    },
+    {
+      name: "paidAmount",
+      label: "Paid Amount *",
+      type: "text"
+    },
+    {
+      name: "emiRate",
+      label: "EMI Rate (%)",
+      type: "text"
+    },
+    {
+      name: "numberOfMonths",
+      label: "Number of Months",
+      type: "text"
+    },
+    {
+      name: "dueAmount",
+      label: "Due Amount",
+      type: "text"
+    },
+    {
+      name: "otherCharges",
+      label: "Other Charges",
+      type: "text"
+    },
+    {
+      name: "description",
+      label: "Description",
+      type: "textarea",
+      wide: true
+    }
+  ];
+
   const sections = [
     {
       title: "Vehicle Finance",
       form: vehicleFinanceForm,
       onSubmit: handleVehicleFinanceSubmit,
       disableAccordionToggle: true,
-      fields: [
-        {
-          name: "vehicleId",
-          label: "Choose Vehicle *",
-          type: "select",
-          options: vehicleOptions,
-        },
-        {
-          name: "loanType",
-          label: "Choose Loan Type *",
-          type: "select",
-          options: loanTypeOptions,
-          plusAction: handlePlus("loanType"),
-        },
-        {
-          name: "financeCompanyName",
-          label: "Finance Company Name *",
-          type: "text",
-          // placeholder: "Finance Company Name",
-        },
-        {
-          name: "financeStartDate",
-          label: "Finance Start Date *",
-          type: "date",
-        },
-        {
-          name: "financeDueDate",
-          label: "Finance Due Date *",
-          type: "date",
-        },
-        {
-          name: "contactPerson",
-          label: "Contact Person *",
-          type: "text",
-          // placeholder: "Contact Person",
-        },
-        {
-          name: "contactNumber",
-          label: "Contact Number *",
-          type: "text",
-          // placeholder: "Contact Number",
-        },
-        {
-          name: "totalFinanceAmount",
-          label: "Total Finance Amount *",
-          type: "text",
-          // placeholder: "Total Finance Amount",
-        },
-        {
-          name: "paidAmount",
-          label: "Paid Amount *",
-          type: "text",
-          // placeholder: "Paid Amount",
-        },
-        {
-          name: "emiRate",
-          label: "EMI Rate (%)",
-          type: "text",
-          // placeholder: "EMI Rate (%)",
-        },
-        {
-          name: "numberOfMonths",
-          label: "Number of Months",
-          type: "text",
-          // placeholder: "Number of Months",
-        },
-        {
-          name: "dueAmount",
-          label: "Due Amount",
-          type: "text",
-          // placeholder: "Due Amount",
-        },
-        {
-          name: "otherCharges",
-          label: "Other Charges",
-          type: "text",
-          // placeholder: "Other Charges",
-        },
-        {
-          name: "description",
-          label: "Description",
-          type: "textarea",
-          // placeholder: "Enter Description",
-          wide: true,
-        },
-      ],
-    },
+      fields: fieldConfig
+    }
   ];
 
   return (
