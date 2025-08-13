@@ -31,8 +31,14 @@ export default function VatMasterListPage() {
       try {
         const res = await fetch("/billing/vatMasterList.json");
         const data = await res.json();
+        
+        const formattedColumns = data.headers.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+        }));
+
         setRows(formatRowsWithId(data.rows || []));
-        setColumns(data.headers || []);
+        setColumns(formattedColumns);
       } catch (err) {
         console.error("Error fetching VAT Master List data:", err);
       }
