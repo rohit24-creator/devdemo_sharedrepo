@@ -241,7 +241,7 @@ export default function BillingList({
   showThirdIcon = true,
   secondIconMenu = [],
   thirdIconMenu = [],
-  enabledActions = ["edit", "view", "delete"],
+  enabledActions = ["edit", "view", "delete", "generateCreditNote"],
   onActionClick = () => {},
   hasTabs = false,
   hideFilterSection = false,
@@ -287,6 +287,10 @@ export default function BillingList({
       delete: {
         label: "Delete",
         icon: <Trash2 size={18} className="mr-2" />,
+      },
+      generateCreditNote: {
+        label: "Generate Credit Note",
+        icon: <Eye size={18} className="mr-2" />,
       },
     }),
     []
