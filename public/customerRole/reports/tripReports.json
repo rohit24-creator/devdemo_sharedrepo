@@ -1,0 +1,76 @@
+{
+  "headers": [
+    { "accessorKey": "tripShipment", "header": "Trip / Shipment" },
+    { "accessorKey": "history", "header": "History" },
+    { "accessorKey": "trip", "header": "Trip" },
+    { "accessorKey": "vehicle", "header": "Vehicle" },
+    { "accessorKey": "driver", "header": "Driver" },
+    { "accessorKey": "delay", "header": "Delay" },
+    { "accessorKey": "tripTime", "header": "Trip Time" },
+    { "accessorKey": "tripDate", "header": "Trip Date" },
+    { "accessorKey": "totalUnits", "header": "Total Units" },
+    { "accessorKey": "updatedUnits", "header": "Updated Units" }
+  ],
+  "rows": [
+    {
+      "tripShipment": "TRIP-001",
+      "history": "Started → In Transit → Delivered",
+      "trip": "Mumbai to Pune",
+      "vehicle": "MH-12-AB-1234",
+      "driver": "Rajesh Kumar",
+      "delay": "0 hours",
+      "tripTime": "4 hours",
+      "tripDate": "2024-01-15",
+      "totalUnits": "50",
+      "updatedUnits": "50"
+    },
+    {
+      "tripShipment": "TRIP-002",
+      "history": "Started → In Transit → Delayed",
+      "trip": "Chennai to Bangalore",
+      "vehicle": "TN-01-CD-5678",
+      "driver": "Suresh Reddy",
+      "delay": "2 hours",
+      "tripTime": "8 hours",
+      "tripDate": "2024-01-16",
+      "totalUnits": "75",
+      "updatedUnits": "70"
+    },
+    {
+      "tripShipment": "TRIP-003",
+      "history": "Started → In Transit → Delivered",
+      "trip": "Kolkata to Hyderabad",
+      "vehicle": "WB-02-EF-9012",
+      "driver": "Amit Das",
+      "delay": "1 hour",
+      "tripTime": "12 hours",
+      "tripDate": "2024-01-17",
+      "totalUnits": "100",
+      "updatedUnits": "100"
+    },
+    {
+      "tripShipment": "TRIP-004",
+      "history": "Started → Delivered",
+      "trip": "Delhi to Gurgaon",
+      "vehicle": "DL-03-GH-3456",
+      "driver": "Vikram Singh",
+      "delay": "0 hours",
+      "tripTime": "1 hour",
+      "tripDate": "2024-01-18",
+      "totalUnits": "25",
+      "updatedUnits": "25"
+    },
+    {
+      "tripShipment": "TRIP-005",
+      "history": "Started → In Transit",
+      "trip": "Ahmedabad to Surat",
+      "vehicle": "GJ-04-IJ-7890",
+      "driver": "Harsh Patel",
+      "delay": "0 hours",
+      "tripTime": "5 hours",
+      "tripDate": "2024-01-19",
+      "totalUnits": "60",
+      "updatedUnits": "45"
+    }
+  ]
+}

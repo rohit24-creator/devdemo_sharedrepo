@@ -1,0 +1,82 @@
+{
+  "headers": [
+    { "accessorKey": "check", "header": "Check" },
+    { "accessorKey": "bookingId", "header": "Booking ID" },
+    { "accessorKey": "product", "header": "Product" },
+    { "accessorKey": "customer", "header": "Customer" },
+    { "accessorKey": "estimatedEarlyPickup", "header": "Estimated Early Pickup" },
+    { "accessorKey": "estimatedLatePickup", "header": "Estimated Late Pickup" },
+    { "accessorKey": "estimatedEarlyDelivery", "header": "Estimated Early Delivery" },
+    { "accessorKey": "estimatedLateDelivery", "header": "Estimated Late Delivery" },
+    { "accessorKey": "pickupAddress", "header": "PickUp Address" },
+    { "accessorKey": "deliveryAddress", "header": "Delivery Address" },
+    { "accessorKey": "pickupStatus", "header": "PickUp Status" }
+  ],
+  "rows": [
+    {
+      "check": true,
+      "bookingId": "BK-001",
+      "product": "Electronics",
+      "customer": "Premium Customer",
+      "estimatedEarlyPickup": "09:00 AM",
+      "estimatedLatePickup": "11:00 AM",
+      "estimatedEarlyDelivery": "02:00 PM",
+      "estimatedLateDelivery": "04:00 PM",
+      "pickupAddress": "123 Main St, Mumbai, Maharashtra",
+      "deliveryAddress": "456 Second Ave, Pune, Maharashtra",
+      "pickupStatus": "Completed"
+    },
+    {
+      "check": false,
+      "bookingId": "BK-002",
+      "product": "Clothing",
+      "customer": "Standard Customer",
+      "estimatedEarlyPickup": "10:00 AM",
+      "estimatedLatePickup": "12:00 PM",
+      "estimatedEarlyDelivery": "03:00 PM",
+      "estimatedLateDelivery": "05:00 PM",
+      "pickupAddress": "789 Ocean Ave, Chennai, Tamil Nadu",
+      "deliveryAddress": "101 River Rd, Bangalore, Karnataka",
+      "pickupStatus": "In Progress"
+    },
+    {
+      "check": true,
+      "bookingId": "BK-003",
+      "product": "Furniture",
+      "customer": "Economy Customer",
+      "estimatedEarlyPickup": "08:00 AM",
+      "estimatedLatePickup": "10:00 AM",
+      "estimatedEarlyDelivery": "01:00 PM",
+      "estimatedLateDelivery": "03:00 PM",
+      "pickupAddress": "202 Main Plaza, Kolkata, West Bengal",
+      "deliveryAddress": "303 Fast Lane, Hyderabad, Telangana",
+      "pickupStatus": "Scheduled"
+    },
+    {
+      "check": false,
+      "bookingId": "BK-004",
+      "product": "Books",
+      "customer": "VIP Customer",
+      "estimatedEarlyPickup": "11:00 AM",
+      "estimatedLatePickup": "01:00 PM",
+      "estimatedEarlyDelivery": "04:00 PM",
+      "estimatedLateDelivery": "06:00 PM",
+      "pickupAddress": "404 High St, Delhi, Delhi",
+      "deliveryAddress": "505 Low St, Gurgaon, Haryana",
+      "pickupStatus": "Pending"
+    },
+    {
+      "check": true,
+      "bookingId": "BK-005",
+      "product": "Sports Equipment",
+      "customer": "Express Customer",
+      "estimatedEarlyPickup": "07:00 AM",
+      "estimatedLatePickup": "09:00 AM",
+      "estimatedEarlyDelivery": "12:00 PM",
+      "estimatedLateDelivery": "02:00 PM",
+      "pickupAddress": "606 Sports Ave, Ahmedabad, Gujarat",
+      "deliveryAddress": "707 Game St, Surat, Gujarat",
+      "pickupStatus": "Completed"
+    }
+  ]
+}
