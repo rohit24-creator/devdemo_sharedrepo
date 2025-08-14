@@ -229,8 +229,8 @@ const FilterField = React.memo(({ field, formValues, setFormValues }) => {
   );
 });
 
-export default function BillingList({
-  title = "Billing List",
+export default function CustomerRoleList({
+  title = "Customer Role List",
   columns = [],
   rows = [],
   filterFields = [],
@@ -241,7 +241,7 @@ export default function BillingList({
   showThirdIcon = true,
   secondIconMenu = [],
   thirdIconMenu = [],
-  enabledActions = ["edit", "view", "delete", "generateCreditNote"],
+  enabledActions = ["edit", "view", "delete"],
   onActionClick = () => {},
   hideFilterSection = false,
 }) {
@@ -271,10 +271,6 @@ export default function BillingList({
       delete: {
         label: "Delete",
         icon: <Trash2 size={18} className="mr-2" />,
-      },
-      generateCreditNote: {
-        label: "Generate Credit Note",
-        icon: <Eye size={18} className="mr-2" />,
       },
     }),
     []
@@ -523,7 +519,7 @@ export default function BillingList({
               ) : (
                 <TableRow>
                   <TableCell colSpan={tableColumns.length + (showActions ? 2 : 1)} className="text-center py-6">
-                    No billing reports available.
+                    No customer role reports available.
                   </TableCell>
                 </TableRow>
               )}
@@ -611,5 +607,3 @@ export default function BillingList({
     </>
   );
 }
-
-
