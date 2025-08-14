@@ -138,9 +138,12 @@ const FilterCombobox = React.memo(({ value, onChange, options, placeholder = "Se
 const FilterField = React.memo(({ field, formValues, setFormValues }) => {
   const { name, label, type = "text", options = [] } = field;
 
-  const handleChange = useCallback((name, value) => {
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-  }, [setFormValues]);
+  const handleChange = useCallback(
+    (name, value) => {
+      setFormValues((prev) => ({ ...prev, [name]: value }));
+    },
+    [setFormValues]
+  );
 
   const renderFieldContent = useCallback(() => {
     if (type === "date") {
@@ -172,7 +175,7 @@ const FilterField = React.memo(({ field, formValues, setFormValues }) => {
         </Popover>
       );
     }
-    
+
     if (type === "select") {
       return (
         <Select
@@ -198,7 +201,7 @@ const FilterField = React.memo(({ field, formValues, setFormValues }) => {
         </Select>
       );
     }
-    
+
     if (type === "filterSelect") {
       return (
         <FilterCombobox
@@ -209,7 +212,7 @@ const FilterField = React.memo(({ field, formValues, setFormValues }) => {
         />
       );
     }
-    
+
     return (
       <Input
         type={type}

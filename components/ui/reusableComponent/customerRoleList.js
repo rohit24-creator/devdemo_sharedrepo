@@ -176,7 +176,10 @@ const FilterField = React.memo(({ field, formValues, setFormValues }) => {
 
     if (type === "select") {
       return (
-        <Select value={formValues[name]} onValueChange={(value) => handleChange(name, value)}>
+        <Select
+          value={formValues[name]}
+          onValueChange={(value) => handleChange(name, value)}
+        >
           <SelectTrigger className="w-full border border-gray-300">
             <SelectValue placeholder={`Select ${label}`} />
           </SelectTrigger>

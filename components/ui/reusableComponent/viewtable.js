@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -40,15 +40,103 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
+import { ChevronsUpDown, Check } from "lucide-react";
 
 // --- Constants ---
 const CONSTANTS = {
   DEFAULT_DISPLAY_COUNT: 30,
   DEFAULT_PAGE: 1,
-  DEFAULT_SORT_DIRECTION: "asc"
+  DEFAULT_SORT_DIRECTION: "asc",
+  DEBOUNCE_DELAY: 300,
+};
+
+// --- Custom Hooks ---
+
+// Debounce hook for search functionality
+const useDebounce = (value, delay = CONSTANTS.DEBOUNCE_DELAY) => {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
 };
 
 // --- Sub-Components ---
+
+// Debounced combobox component
+const FilterCombobox = React.memo(({ value, onChange, options, placeholder = "Select option" }) => {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, CONSTANTS.DEBOUNCE_DELAY);
+
+  const filteredOptions = useMemo(() => {
+    if (!debouncedSearch) return options;
+    return options.filter((option) =>
+      String(option).toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
+  }, [options, debouncedSearch]);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {value ? options.find((option) => option === value) || value : placeholder}
+          <ChevronsUpDown className="opacity-50 ml-2 h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-full p-0">
+        <Command>
+          <CommandInput
+            value={search}
+            onValueChange={setSearch}
+            placeholder={`Search ${placeholder.toLowerCase()}...`}
+            className="h-9"
+          />
+          <CommandList>
+            {filteredOptions.length === 0 ? (
+              <CommandEmpty>No options found.</CommandEmpty>
+            ) : (
+              <CommandGroup>
+                {filteredOptions.map((option) => (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={(currentValue) => {
+                      onChange(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {option}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+});
 
 // Filter field renderer component
 const FilterField = React.memo(({ field, formValues, setFormValues }) => {
@@ -114,7 +202,18 @@ const FilterField = React.memo(({ field, formValues, setFormValues }) => {
         </Select>
       );
     }
-    
+
+    if (type === "filterSelect") {
+      return (
+        <FilterCombobox
+          value={formValues[name] || ""}
+          onChange={(value) => handleChange(name, value)}
+          options={options}
+          placeholder={label}
+        />
+      );
+    }
+
     return (
       <Input
         type={type}
