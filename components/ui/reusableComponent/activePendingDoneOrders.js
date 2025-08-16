@@ -443,44 +443,44 @@ const OrderCard = React.memo(({
   return (
     <div className="relative flex bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all mb-4 overflow-hidden">
       {/* Main content */}
-      <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between px-8 py-6"> 
+      <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between px-4 sm:px-6 lg:px-8 pr-6 lg:pr-8 py-6"> 
         <div className="flex-1 flex flex-col gap-2 min-w-0">
           {/* Top Row: Booking ID, Status */}
-          <div className="flex flex-wrap items-center gap-6 mb-1">
-            <div className="flex items-center gap-2 min-w-[180px]">
-              <FolderOpen className="w-6 h-6 text-[#006397]" />
-              <span className="text-lg font-bold text-[#006397] cursor-pointer hover:underline">Booking ID : #{order.bookingId}</span>
+          <div className="flex flex-wrap items-center gap-6 lg:gap-8 mb-1">
+            <div className="flex items-center gap-2 w-44 lg:w-52 flex-shrink-0">
+              <FolderOpen className="w-6 h-6 text-[#006397] flex-shrink-0" />
+              <span className="text-lg font-bold text-[#006397] cursor-pointer hover:underline whitespace-nowrap">Booking ID : #{order.bookingId}</span>
             </div>
-            <span className={["flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white", statusColor].join(" ")}>{statusIcon}{order.status}</span>
+            <span className={["flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white flex-shrink-0 ml-4", statusColor].join(" ")}>{statusIcon}{order.status}</span>
           </div>
-          <div className="flex flex-row items-start gap-12 mt-1">
-            <div className="flex flex-row items-start min-w-[320px] gap-4">
+          <div className="flex flex-row items-start gap-10 sm:gap-12 lg:gap-14 mt-1">
+            <div className="flex flex-row items-start gap-3 sm:gap-4 flex-shrink-0">
               {/* From, Arrow, To */}
               {infoBlocks.slice(0, 2).map((block, idx) => (
                 <React.Fragment key={block.key}>
-                  <div className="flex flex-col min-w-[120px]">
-                    <span className="text-base font-semibold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
-                    <span className="text-xs text-gray-400 pt-1">{block.label}</span>
+                  <div className="flex flex-col w-20 sm:w-24 lg:w-28 flex-shrink-0">
+                    <span className="text-base font-semibold text-gray-700 flex items-center gap-1 whitespace-nowrap">{block.icon}{block.value}</span>
+                    <span className="text-xs text-gray-400 pt-1 whitespace-nowrap">{block.label}</span>
                   </div>
                   {idx === 0 && (
-                    <span className="flex items-center pt-0.5"><ArrowRight className="w-7 h-7 text-[#006397]" /></span>
+                    <span className="flex items-center pt-0.5 flex-shrink-0"><ArrowRight className="w-6 sm:w-7 h-6 sm:h-7 text-[#006397]" /></span>
                   )}
                 </React.Fragment>
               ))}
             </div>
             {/* Date and Cust Ref */}
             {infoBlocks.slice(2).map((block) => (
-              <div key={block.key} className="flex flex-col min-w-[120px]">
-                <span className="text-lg font-bold text-gray-700 flex items-center gap-1">{block.icon}{block.value}</span>
-                <span className="text-xs text-gray-500 pt-1">{block.label}</span>
+              <div key={block.key} className="flex flex-col w-20 sm:w-24 lg:w-28 flex-shrink-0">
+                <span className="text-lg font-bold text-gray-700 flex items-center gap-1 whitespace-nowrap">{block.icon}{block.value}</span>
+                <span className="text-xs text-gray-500 pt-1 whitespace-nowrap">{block.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="flex flex-row gap-2 items-center justify-end mt-4 flex-wrap">
+        <div className="flex flex-row gap-1 items-center justify-end mt-4 flex-shrink-0 ml-4">
           {actionsConfig.checkbox && (
-            <div className="flex items-center mr-3">
+            <div className="flex items-center mr-2 flex-shrink-0">
               <Checkbox
                 checked={selectedOrders.includes(order.id || order.bookingId)}
                 onCheckedChange={() => onToggleOne(order.id || order.bookingId)}
@@ -495,10 +495,10 @@ const OrderCard = React.memo(({
               key={btn.key}
               onClick={btn.handler}
               title={btn.title}
-              className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 py-2 rounded-lg transition-colors font-semibold flex items-center gap-2 shadow-md"
-              style={{ fontSize: 13 }}
+              className="bg-[#006397] hover:bg-[#02abf5] text-white px-2 sm:px-2 lg:px-3 py-1.5 rounded-lg transition-colors font-semibold flex items-center gap-1 shadow-md flex-shrink-0 whitespace-nowrap"
+              style={{ fontSize: 12 }}
             >
-              <btn.icon className="w-4 h-4" />
+              <btn.icon className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="font-medium">{btn.title}</span>
             </button>
           ))}
@@ -509,21 +509,21 @@ const OrderCard = React.memo(({
               key={btn.key}
               onClick={btn.handler}
               title={btn.title}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2"
-              style={{ fontSize: 13 }}
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 px-2 sm:px-2 lg:px-3 py-1.5 rounded-lg transition-colors font-medium flex items-center gap-1 flex-shrink-0 whitespace-nowrap"
+              style={{ fontSize: 12 }}
             >
-              <btn.icon className="w-4 h-4" />
+              <btn.icon className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{btn.title}</span>
             </button>
           ))}
           
           {/* Dropdown for Other Actions */}
           {actionButtons.filter(btn => btn.show && !['view', 'status', 'liveTrack'].includes(btn.key)).length > 0 && (
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <Popover>
                 <PopoverTrigger asChild>
                   <button
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 p-2 rounded-lg transition-colors font-medium flex-shrink-0"
                     style={{ fontSize: 13 }}
                   >
                     <MoreVertical className="w-4 h-4" />
