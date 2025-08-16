@@ -26,6 +26,47 @@ import {
 } from '@/components/ui/dropdown-menu'
 import TripDetailsModal from '@/components/ui/reusableComponent/TripDetailsModal'
 
+// Minimal CSS for table responsiveness at 100% zoom - using only essential styles
+const tableStyles = `
+  .milestone-table-container {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  
+  .milestone-table {
+    min-width: 1200px;
+    table-layout: fixed;
+  }
+  
+  .milestone-table th,
+  .milestone-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Ensure table fits properly at 100% zoom */
+  @media screen and (min-width: 1200px) {
+    .milestone-table-container {
+      overflow-x: hidden;
+    }
+    
+    .milestone-table {
+      min-width: auto;
+      width: 100%;
+    }
+  }
+  
+  @media screen and (max-width: 1199px) {
+    .milestone-table-container {
+      overflow-x: auto;
+    }
+    
+    .milestone-table {
+      min-width: 1200px;
+    }
+  }
+`
 
 const CONSTANTS = {
   DEFAULT_ITEMS_PER_PAGE: 10,
@@ -346,8 +387,8 @@ const RouteVisualizer = React.memo(({ route, shipmentId, onStateClick, currentSt
 
   return (
     <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-      <div className={`w-full max-w-full sm:max-w-[600px] md:max-w-[900px] lg:max-w-[1200px] xl:max-w-[1550px] overflow-x-auto custom-scrollbar ${needsScrollPadding ? 'pb-4' : ''}`}>
-        <div className="flex items-center space-x-4 whitespace-nowrap">
+      <div className={`w-full overflow-x-auto ${needsScrollPadding ? 'pb-4' : ''}`} style={{ maxWidth: '100%' }}>
+        <div className="flex items-center space-x-4 whitespace-nowrap min-w-max">
           {route.segments.map((segment, index) => {
 
             const calculatedStatus = calculateRouteStatus(shipment, segment.type, segment.location, index)
@@ -747,8 +788,10 @@ export default function ShipmentVisibility() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
+    <>
+      <style dangerouslySetInnerHTML={{ __html: tableStyles }} />
+      <div className="p-6 space-y-6">
+        {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Shipment Visibility</h1>
@@ -787,74 +830,74 @@ export default function ShipmentVisibility() {
             {/* Main Table */}
       <Card className="border-0 shadow-sm">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader className="sticky top-0 z-50">
-              <TableRow className="bg-[#006397] text-white hover:bg-[#006397]">
-                <TableHead className="text-white">Actions</TableHead>
-                <TableHead className="text-white">Id</TableHead>
-                <TableHead className="text-white">Source</TableHead>
-                <TableHead className="text-white">Destination</TableHead>
-                <TableHead className="text-white">Start DT</TableHead>
-                <TableHead className="text-white">End DT</TableHead>
-                <TableHead className="text-white">Customer</TableHead>
-                <TableHead className="text-white">Carrier</TableHead>
-                <TableHead className="text-white">SCAC</TableHead>
-                <TableHead className="text-white">Driver</TableHead>
-                <TableHead className="text-white">Vehicle</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentItems.map((shipment) => (
-                <React.Fragment key={shipment.id}>
-                  <TableRow className="hover:bg-gray-50 border-b border-gray-200">
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <input type="checkbox" className="rounded" />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => toggleRow(shipment.id)}
-                        >
-                          {expandedRow === shipment.id ? (
-                            <ChevronUp className="w-4 h-4" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4" />
-                          )}
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent side="right" align="start" className="min-w-[200px] px-4">
-                            {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal, handleTripDetails, handleBillingDetails, handleCO2Emission).map((action, idx) => (
-                              <DropdownMenuItem key={idx} onClick={action.onClick}>
-                                <action.icon className="w-4 h-4 mr-2" />
-                                {action.label}
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        {getVehicleIcon(shipment.vehicleType)}
-                        <span className="font-medium">{shipment.id}</span>
-                        <span className="text-xs text-gray-500 capitalize">({shipment.vehicleType || 'truck'})</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>{shipment.source}</TableCell>
-                    <TableCell>{shipment.destination}</TableCell>
-                    <TableCell>{shipment.startDT}</TableCell>
-                    <TableCell>{shipment.endDT}</TableCell>
-                    <TableCell>{shipment.customer}</TableCell>
-                    <TableCell>{shipment.carrier}</TableCell>
-                    <TableCell>{shipment.scac}</TableCell>
-                    <TableCell>{shipment.driver}</TableCell>
-                    <TableCell>{shipment.vehicle}</TableCell>
-                  </TableRow>
+          <div className="milestone-table-container overflow-x-auto max-w-full">
+            <Table className="milestone-table min-w-[1200px] xl:min-w-full">
+              <TableHeader className="sticky top-0 z-50 bg-[#006397]">
+                <TableRow className="bg-[#006397] text-white hover:bg-[#006397]">
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Actions</TableHead>
+                  <TableHead className="text-white w-48 xl:w-auto text-left font-semibold">Id</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Source</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Destination</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Start DT</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">End DT</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Customer</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Carrier</TableHead>
+                  <TableHead className="text-white w-24 xl:w-auto text-left font-semibold">SCAC</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Driver</TableHead>
+                  <TableHead className="text-white w-32 xl:w-auto text-left font-semibold">Vehicle</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentItems.map((shipment) => (
+                  <React.Fragment key={shipment.id}>
+                    <TableRow className="hover:bg-gray-50 border-b border-gray-200">
+                      <TableCell className="w-32 xl:w-auto">
+                        <div className="flex items-center space-x-2">
+                          <input type="checkbox" className="rounded" />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleRow(shipment.id)}
+                          >
+                            {expandedRow === shipment.id ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="right" align="start" className="min-w-[200px] px-4">
+                              {getActionsForShipment(shipment, handleDeleteShipment, handleStatusHistoryClick, handleShareSecureLink, assignVehicleModal, nearbyVehicleModal, handleTripDetails, handleBillingDetails, handleCO2Emission).map((action, idx) => (
+                                <DropdownMenuItem key={idx} onClick={action.onClick}>
+                                  <action.icon className="w-4 h-4 mr-2" />
+                                  {action.label}
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-48 xl:w-auto">
+                        <div className="flex items-center space-x-2">
+                          {getVehicleIcon(shipment.vehicleType)}
+                          <span className="font-medium truncate">{shipment.id}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.source}</TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.destination}</TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.startDT}</TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.endDT}</TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.customer}</TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.carrier}</TableCell>
+                      <TableCell className="w-24 xl:w-auto truncate">{shipment.scac}</TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.driver}</TableCell>
+                      <TableCell className="w-32 xl:w-auto truncate">{shipment.vehicle}</TableCell>
+                    </TableRow>
 
                   {/* Route Status Row */}
                   <TableRow className="hover:bg-transparent border-b border-gray-200">
@@ -967,6 +1010,7 @@ export default function ShipmentVisibility() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -1072,6 +1116,7 @@ export default function ShipmentVisibility() {
         onClose={co2EmissionModal.closeModal}
         data={co2EmissionModal.data}
       />
-    </div>
+      </div>
+    </>
   )
 }

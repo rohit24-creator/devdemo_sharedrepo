@@ -119,43 +119,6 @@
   }
 }
 
-/* Custom styles for route visualization scroll */
-.route-scroll-container {
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  max-width: 100%;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f1f5f9;
-}
-
-.route-scroll-container::-webkit-scrollbar {
-  height: 6px;
-}
-
-.route-scroll-container::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 3px;
-}
-
-.route-scroll-container::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 3px;
-}
-
-.route-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Override table overflow for shipment visibility page */
-.shipment-table-container [data-slot="table-container"] {
-  overflow-x: visible !important;
-  overflow-y: visible !important;
-}
-
-.shipment-table-container table {
-  width: 100% !important;
-  min-width: auto !important;
-}
 
 
 
