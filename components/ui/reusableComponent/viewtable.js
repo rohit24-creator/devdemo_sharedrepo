@@ -374,8 +374,8 @@ export default function ReusableTable({
   // Table rendering component
   const renderTable = useCallback(() => (
     <Card>
-      <CardContent className="p-4">
-        <div className="flex justify-between items-center mb-4">
+             <CardContent className="p-3">
+                 <div className="flex justify-between items-center mb-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
@@ -431,28 +431,28 @@ export default function ReusableTable({
           </div>
         </div>
 
-        <hr className="border-t border-gray-300 mb-4" />
+                 <hr className="border-t border-gray-300 mb-3" />
 
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-200">
-              <TableHead className="w-12 px-6 py-3">
+                             <TableHead className="w-10 px-4 py-2">
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={toggleSelectAll}
                   className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                 />
               </TableHead>
-              {showActions && rows.length > 0 && (
-                <TableHead className="w-12 px-6 py-3" />
-              )}
+                             {showActions && rows.length > 0 && (
+                 <TableHead className="w-10 px-4 py-2" />
+               )}
               {columns.map((col, index) => {
                 const isSortable = col.sortable !== false;
                 return (
                   <TableHead
                     key={col.accessorKey}
                     onClick={() => isSortable && handleSort(col.accessorKey)}
-                    className={`text-[#006397] text-left text-sm font-semibold px-6 py-3 ${
+                                         className={`text-[#006397] text-left text-sm font-semibold px-4 py-2 ${
                       isSortable ? "cursor-pointer select-none" : ""
                     } ${index !== 0 ? "border-l border-gray-300" : ""}`}
                   >
@@ -470,16 +470,16 @@ export default function ReusableTable({
             {paginatedRows.length > 0 ? (
               paginatedRows.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
-                  <TableCell className="px-6 py-3">
-                    <Checkbox
-                      checked={selectedRows.includes(row.id)}
-                      onCheckedChange={() => toggleRow(row)}
-                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
-                    />
-                  </TableCell>
+                                     <TableCell className="px-4 py-2">
+                     <Checkbox
+                       checked={selectedRows.includes(row.id)}
+                       onCheckedChange={() => toggleRow(row)}
+                       className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                     />
+                   </TableCell>
 
                   {showActions && (
-                    <TableCell className="px-6 py-3">
+                    <TableCell className="px-4 py-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="text-xl px-2">
@@ -502,18 +502,18 @@ export default function ReusableTable({
                     </TableCell>
                   )}
 
-                  {columns.map((col) => (
-                    <TableCell key={col.accessorKey} className="text-sm px-6 py-3">
-                      {row[col.accessorKey] ?? ""}
-                    </TableCell>
-                  ))}
+                                     {columns.map((col) => (
+                     <TableCell key={col.accessorKey} className="text-sm px-4 py-2">
+                       {row[col.accessorKey] ?? ""}
+                     </TableCell>
+                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
                   colSpan={columns.length + (showActions ? 2 : 1)}
-                  className="text-center py-6"
+                  className="text-center py-4"
                 >
                   No data available.
                 </TableCell>
@@ -528,7 +528,7 @@ export default function ReusableTable({
   return (
     <>
       <Card>
-        <CardContent className="p-4 flex justify-between flex-wrap gap-4">
+        <CardContent className="p-3 flex justify-between flex-wrap gap-3">
           <div className="flex flex-wrap items-end gap-3">
             {filterFields.map((field) => (
               <FilterField
@@ -582,7 +582,7 @@ export default function ReusableTable({
         </CardContent>
       </Card>
       
-      <div className="mt-4">{renderTable()}</div>
+             <div className="mt-3">{renderTable()}</div>
       
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={() => {}}>

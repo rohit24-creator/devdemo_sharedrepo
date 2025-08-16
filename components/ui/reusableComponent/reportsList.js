@@ -399,8 +399,8 @@ export default function ReportsList({
   // Keep the original simple renderTable function
   const renderTable = useCallback((tableColumns, tableRows) => (
     <Card>
-      <CardContent className="p-4">
-        <div className="flex justify-between items-center mb-4">
+      <CardContent className="p-3">
+        <div className="flex justify-between items-center mb-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
@@ -456,12 +456,12 @@ export default function ReportsList({
           </div>
         </div>
 
-        <hr className="border-t border-gray-300 mb-4" />
+        <hr className="border-t border-gray-300 mb-3" />
 
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-200">
-              <TableHead className="w-12 px-6 py-3">
+              <TableHead className="w-10 px-4 py-2">
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={toggleSelectAll}
@@ -469,7 +469,7 @@ export default function ReportsList({
                 />
               </TableHead>
               {showActions && tableRows.length > 0 && (
-                <TableHead className="w-12 px-6 py-3" />
+                <TableHead className="w-10 px-4 py-2" />
               )}
               {tableColumns.map((col, index) => {
                 const isSortable = col.sortable !== false;
@@ -477,7 +477,7 @@ export default function ReportsList({
                   <TableHead
                     key={col.accessorKey}
                     onClick={() => isSortable && handleSort(col.accessorKey)}
-                    className={`text-[#006397] text-left text-sm font-semibold px-6 py-3 ${
+                    className={`text-[#006397] text-left text-sm font-semibold px-4 py-2 ${
                       isSortable ? "cursor-pointer select-none" : ""
                     } ${index !== 0 ? "border-l border-gray-300" : ""}`}
                   >
@@ -495,16 +495,16 @@ export default function ReportsList({
             {paginatedRows.length > 0 ? (
               paginatedRows.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
-                  <TableCell className="px-6 py-3">
-                    <Checkbox
-                      checked={selectedRows.includes(row.id)}
-                      onCheckedChange={() => toggleRow(row)}
-                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
-                    />
-                  </TableCell>
+                                      <TableCell className="px-4 py-2">
+                      <Checkbox
+                        checked={selectedRows.includes(row.id)}
+                        onCheckedChange={() => toggleRow(row)}
+                        className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                      />
+                    </TableCell>
 
-                  {showActions && (
-                    <TableCell className="px-6 py-3">
+                                      {showActions && (
+                      <TableCell className="px-4 py-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="text-xl px-2">
@@ -527,18 +527,18 @@ export default function ReportsList({
                     </TableCell>
                   )}
 
-                  {tableColumns.map((col) => (
-                    <TableCell key={col.accessorKey} className="text-sm px-6 py-3">
-                      {row[col.accessorKey] ?? ""}
-                    </TableCell>
-                  ))}
+                                      {tableColumns.map((col) => (
+                      <TableCell key={col.accessorKey} className="text-sm px-4 py-2">
+                        {row[col.accessorKey] ?? ""}
+                      </TableCell>
+                    ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
                   colSpan={tableColumns.length + (showActions ? 2 : 1)}
-                  className="text-center py-6"
+                  className="text-center py-4"
                 >
                   No reports available.
                 </TableCell>
@@ -552,13 +552,13 @@ export default function ReportsList({
 
   // Main content based on whether tabs are enabled
   const mainContent = hasTabs && typeof hasTabs === 'object' ? (
-    <div className="mt-4">
+    <div className="mt-3">
       <Tabs value={activeTab} onValueChange={(value) => {
         if (hasTabs.onTabChange) {
           hasTabs.onTabChange(value);
         }
       }} className="w-full">
-        <TabsList className={`grid w-full mb-6`} style={{ 
+        <TabsList className={`grid w-full mb-4`} style={{ 
           gridTemplateColumns: `repeat(${Object.keys(tabData).length}, 1fr)` 
         }}>
           {Object.keys(tabData).map((tabKey) => (
@@ -582,13 +582,13 @@ export default function ReportsList({
       </Tabs>
     </div>
   ) : (
-    <div className="mt-4">{renderTable(currentColumns, currentRows)}</div>
+    <div className="mt-3">{renderTable(currentColumns, currentRows)}</div>
   );
 
   return (
     <>
       <Card>
-        <CardContent className="p-4 flex justify-between flex-wrap gap-4">
+        <CardContent className="p-3 flex justify-between flex-wrap gap-3">
           <div className="flex flex-wrap items-end gap-3 w-full lg:w-auto">
             {filterFields.map((field) => (
               <FilterField
