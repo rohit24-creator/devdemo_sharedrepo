@@ -1,0 +1,56 @@
+{
+  "columns": [
+    { "accessorKey": "poId", "header": "PO ID" },
+    { "accessorKey": "productName", "header": "Product Name" },
+    { "accessorKey": "purchaseQty", "header": "Purchase Qty" },
+    { "accessorKey": "usedQty", "header": "Used Qty" },
+    { "accessorKey": "ratePer", "header": "Rate Per" },
+    { "accessorKey": "taxAmt", "header": "Tax Amt" },
+    { "accessorKey": "totalAmount", "header": "Total Amount" },
+    { "accessorKey": "purchasedDate", "header": "Purchased Date" },
+    { "accessorKey": "deliveryDate", "header": "Delivery Date" },
+    { "accessorKey": "vendor", "header": "Vendor" },
+    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" }
+  ],
+  "rows": [
+    {
+      "poId": "SHX1",
+      "productName": "route",
+      "purchaseQty": "23.00",
+      "usedQty": "23.00",
+      "ratePer": "23",
+      "taxAmt": "23.00",
+      "totalAmount": "233.00",
+      "purchasedDate": "2025-04-11 16:00:52",
+      "deliveryDate": "2025-04-12 00:00:00",
+      "vendor": "1704227",
+      "vehicleNumber": "ap402420"
+    },
+    {
+      "poId": "SHX1",
+      "productName": "Light",
+      "purchaseQty": "12.00",
+      "usedQty": "12.00",
+      "ratePer": "12",
+      "taxAmt": "12.00",
+      "totalAmount": "122.00",
+      "purchasedDate": "2025-04-10 14:00:56",
+      "deliveryDate": "2025-04-11 00:00:00",
+      "vendor": "Speedy Freight Inc.",
+      "vehicleNumber": "73-2539"
+    },
+    {
+      "poId": "SHX1",
+      "productName": "Light",
+      "purchaseQty": "11.00",
+      "usedQty": "11.00",
+      "ratePer": "11",
+      "taxAmt": "11.00",
+      "totalAmount": "11.00",
+      "purchasedDate": "2025-04-09 11:00:10",
+      "deliveryDate": "2025-04-09 00:00:00",
+      "vendor": "1704227",
+      "vehicleNumber": "2 ผข 9138"
+    }
+  ]
+}
