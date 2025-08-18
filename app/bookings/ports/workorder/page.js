@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { OrdersForm } from "@/components/ui/reusableComponent/orderForms";
+import { BillingForm } from "@/components/ui/reusableComponent/dashboardform";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, RotateCcw, X, Save } from "lucide-react";
-import FormModal from "@/components/ui/reusableComponent/formmodal";
 
 // Validation schema for Work Order form
 const workOrderSchema = z.object({
@@ -26,8 +25,6 @@ const workOrderSchema = z.object({
 
 export default function WorkOrderFormPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalField, setModalField] = useState(null);
 
   // Form instance
   const workOrderForm = useForm({
@@ -81,8 +78,13 @@ export default function WorkOrderFormPage() {
 
   // Open modal for a specific field
   const handlePlus = (field) => () => {
-    setModalField(field);
-    setModalOpen(true);
+    if (field === "departmentCode") {
+      const newDepartment = prompt("Enter new department name:");
+      if (newDepartment && newDepartment.trim()) {
+        setDepartmentOptions((prev) => [...prev, newDepartment.trim()]);
+        alert("Department added successfully!");
+      }
+    }
   };
 
   // Handle modal submit
@@ -91,9 +93,14 @@ export default function WorkOrderFormPage() {
       if (modalField === "departmentCode") {
         setDepartmentOptions((prev) => [...prev, data.name]);
       }
+      // Always close modal and reset field after successful update
+      setModalOpen(false);
+      setModalField(null);
+    } else {
+      // Also close modal even if validation fails
+      setModalOpen(false);
+      setModalField(null);
     }
-    setModalOpen(false);
-    setModalField(null);
   };
 
   // Field configuration
@@ -168,33 +175,11 @@ export default function WorkOrderFormPage() {
     <div className="">
       <div className="p-6">
         {/* Form Content */}
-        <OrdersForm
+        <BillingForm
           sections={sections}
           useAccordion={true}
         />
       </div>
-
-      {/* Modal for adding new options */}
-      <FormModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={modalField ? 
-          modalField === "departmentCode" ? "Add New Department" : 
-          ""
-          : ""
-        }
-        formFields={[
-          {
-            name: "name",
-            label: modalField === "departmentCode" ? "Enter Department Name *" : "Enter Name *",
-            type: "text"
-          }
-        ]}
-        onSubmit={handleModalSubmit}
-        footerType="submitOnly"
-        submitLabel="Save"
-        dialogClassName="max-w-md p-0"
-      />
     </div>
   );
 }
