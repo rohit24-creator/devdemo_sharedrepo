@@ -85,6 +85,7 @@ const sections = [
     title: "EDI/API",
     form,
     fields: ediFields,
+    disableAccordionToggle: true,
     onSubmit,
     children: (
       <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">

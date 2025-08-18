@@ -119,3 +119,48 @@
   }
 }
 
+
+
+
+
+/* scroll bar excedded routes in route viusalizer mile stone */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #006397;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #e5e7eb;
+}
+.custom-scrollbar {
+  scrollbar-color: #006397 #e5e7eb;
+  scrollbar-width: thin;
+}
+
+/* Dynamic table scrollbar - for billing form */
+.dynamic-table-scroll::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.dynamic-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.dynamic-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.dynamic-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.6);
+}
+
+.dynamic-table-scroll {
+  scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+  scrollbar-width: thin;
+}

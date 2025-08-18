@@ -1,0 +1,46 @@
+{
+  "headers": [
+    { "accessorKey": "check", "header": "Check" },
+    { "accessorKey": "consolidationRuleId", "header": "Consolidation Rule ID" },
+    { "accessorKey": "consolidationRuleName", "header": "Consolidation Rule Name" },
+    { "accessorKey": "tariffType", "header": "Tariff Type" },
+    { "accessorKey": "consolidationRuleUom", "header": "Consolidation Rule UOM" }
+  ],
+  "rows": [
+    {
+      "check": true,
+      "consolidationRuleId": "CONS-001",
+      "consolidationRuleName": "Weight Based Consolidation",
+      "tariffType": "Freight",
+      "consolidationRuleUom": "KG"
+    },
+    {
+      "check": false,
+      "consolidationRuleId": "CONS-002",
+      "consolidationRuleName": "Volume Based Consolidation",
+      "tariffType": "Surcharge",
+      "consolidationRuleUom": "CBM"
+    },
+    {
+      "check": true,
+      "consolidationRuleId": "CONS-003",
+      "consolidationRuleName": "Distance Based Consolidation",
+      "tariffType": "Tax",
+      "consolidationRuleUom": "KM"
+    },
+    {
+      "check": false,
+      "consolidationRuleId": "CONS-004",
+      "consolidationRuleName": "Time Based Consolidation",
+      "tariffType": "Handling",
+      "consolidationRuleUom": "HOURS"
+    },
+    {
+      "check": true,
+      "consolidationRuleId": "CONS-005",
+      "consolidationRuleName": "Mixed Criteria Consolidation",
+      "tariffType": "Freight",
+      "consolidationRuleUom": "KG"
+    }
+  ]
+}

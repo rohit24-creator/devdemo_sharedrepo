@@ -1,0 +1,103 @@
+{
+  "headers": [
+    { "accessorKey": "id", "header": "ID" },
+    { "accessorKey": "module", "header": "Module" },
+    { "accessorKey": "sentTo", "header": "Sent To" },
+    { "accessorKey": "message", "header": "Message" },
+    { "accessorKey": "trip", "header": "Trip" },
+    { "accessorKey": "employeeDriver", "header": "Employee/Driver" },
+    { "accessorKey": "sentOn", "header": "Sent On" }
+  ],
+  "rows": [
+    {
+      "id": "SMS-001",
+      "module": "Booking",
+      "sentTo": "+91-9876543210",
+      "message": "Your booking has been confirmed. Trip ID: TRP-001",
+      "trip": "TRP-001",
+      "employeeDriver": "John Doe",
+      "sentOn": "2024-01-15 10:30:00"
+    },
+    {
+      "id": "SMS-002",
+      "module": "Delivery",
+      "sentTo": "+91-9876543211",
+      "message": "Your package is out for delivery. Expected time: 2:00 PM",
+      "trip": "TRP-002",
+      "employeeDriver": "Jane Smith",
+      "sentOn": "2024-01-15 11:45:00"
+    },
+    {
+      "id": "SMS-003",
+      "module": "Tracking",
+      "sentTo": "+91-9876543212",
+      "message": "Your shipment has reached the destination hub",
+      "trip": "TRP-003",
+      "employeeDriver": "Mike Johnson",
+      "sentOn": "2024-01-15 14:20:00"
+    },
+    {
+      "id": "SMS-004",
+      "module": "Booking",
+      "sentTo": "+91-9876543213",
+      "message": "Booking reminder: Your pickup is scheduled for tomorrow",
+      "trip": "TRP-004",
+      "employeeDriver": "Sarah Wilson",
+      "sentOn": "2024-01-15 16:15:00"
+    },
+    {
+      "id": "SMS-005",
+      "module": "Delivery",
+      "sentTo": "+91-9876543214",
+      "message": "Delivery completed successfully. Thank you for choosing our service",
+      "trip": "TRP-005",
+      "employeeDriver": "David Brown",
+      "sentOn": "2024-01-15 18:30:00"
+    },
+    {
+      "id": "SMS-006",
+      "module": "Tracking",
+      "sentTo": "+91-9876543215",
+      "message": "Your shipment is in transit. Current location: Mumbai Hub",
+      "trip": "TRP-006",
+      "employeeDriver": "Lisa Davis",
+      "sentOn": "2024-01-16 09:15:00"
+    },
+    {
+      "id": "SMS-007",
+      "module": "Booking",
+      "sentTo": "+91-9876543216",
+      "message": "New booking request received. Please confirm details",
+      "trip": "TRP-007",
+      "employeeDriver": "Tom Wilson",
+      "sentOn": "2024-01-16 10:45:00"
+    },
+    {
+      "id": "SMS-008",
+      "module": "Delivery",
+      "sentTo": "+91-9876543217",
+      "message": "Delivery attempt failed. Will retry tomorrow",
+      "trip": "TRP-008",
+      "employeeDriver": "Emma Taylor",
+      "sentOn": "2024-01-16 12:30:00"
+    },
+    {
+      "id": "SMS-009",
+      "module": "Tracking",
+      "sentTo": "+91-9876543218",
+      "message": "Your package has been picked up from origin",
+      "trip": "TRP-009",
+      "employeeDriver": "Alex Johnson",
+      "sentOn": "2024-01-16 14:20:00"
+    },
+    {
+      "id": "SMS-010",
+      "module": "Booking",
+      "sentTo": "+91-9876543219",
+      "message": "Booking cancelled as requested. Refund will be processed",
+      "trip": "TRP-010",
+      "employeeDriver": "Maria Garcia",
+      "sentOn": "2024-01-16 16:00:00"
+    }
+  ]
+} 

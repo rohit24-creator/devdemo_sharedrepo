@@ -1,0 +1,70 @@
+{
+  "headers": [
+    { "accessorKey": "orderId", "header": "Order ID" },
+    { "accessorKey": "deliveryNote", "header": "Delivery Note" },
+    { "accessorKey": "delivery", "header": "Delivery" },
+    { "accessorKey": "status", "header": "Status" },
+    { "accessorKey": "pieces", "header": "Pieces" },
+    { "accessorKey": "weightKgs", "header": "Weight(Kgs)" },
+    { "accessorKey": "volume", "header": "Volume" },
+    { "accessorKey": "trucker", "header": "Trucker" },
+    { "accessorKey": "createdDate", "header": "Created Date" }
+  ],
+  "rows": [
+    {
+      "orderId": "ORD-001",
+      "deliveryNote": "DN-001",
+      "delivery": "Delivered",
+      "status": "Completed",
+      "pieces": "50",
+      "weightKgs": "250",
+      "volume": "2.5",
+      "trucker": "Trucker A",
+      "createdDate": "2024-01-15"
+    },
+    {
+      "orderId": "ORD-002",
+      "deliveryNote": "DN-002",
+      "delivery": "In Transit",
+      "status": "Active",
+      "pieces": "75",
+      "weightKgs": "375",
+      "volume": "3.8",
+      "trucker": "Trucker B",
+      "createdDate": "2024-01-16"
+    },
+    {
+      "orderId": "ORD-003",
+      "deliveryNote": "DN-003",
+      "delivery": "Pending",
+      "status": "Scheduled",
+      "pieces": "30",
+      "weightKgs": "150",
+      "volume": "1.5",
+      "trucker": "Trucker C",
+      "createdDate": "2024-01-17"
+    },
+    {
+      "orderId": "ORD-004",
+      "deliveryNote": "DN-004",
+      "delivery": "Delivered",
+      "status": "Completed",
+      "pieces": "100",
+      "weightKgs": "500",
+      "volume": "5.0",
+      "trucker": "Trucker D",
+      "createdDate": "2024-01-18"
+    },
+    {
+      "orderId": "ORD-005",
+      "deliveryNote": "DN-005",
+      "delivery": "In Transit",
+      "status": "Active",
+      "pieces": "45",
+      "weightKgs": "225",
+      "volume": "2.3",
+      "trucker": "Trucker E",
+      "createdDate": "2024-01-19"
+    }
+  ]
+} 

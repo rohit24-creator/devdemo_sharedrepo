@@ -41,7 +41,7 @@ export default function VehicleTypeFormPage() {
   ];
 
   return (
-    <div className="p-4">
+    <div className="p-6">
       <ReusableForm
         sections={[
           {
@@ -49,6 +49,7 @@ export default function VehicleTypeFormPage() {
             type: "form",
             form,
             fields,
+            disableAccordionToggle: true,
            onSubmit: (data) => {
               console.log("Submitted:", data);
               if (data.attachment) {

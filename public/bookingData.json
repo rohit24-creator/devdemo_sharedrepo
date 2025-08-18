@@ -1,0 +1,517 @@
+{
+  "1": {
+    "generalInfo": {
+      "General Info": {
+        "Booking ID": "BKG-001",
+        "Product *": "Mobile",
+        "Order Status": "PENDING",
+        "Company Code *": "THKN",
+        "External Order ID": "EXT-12345",
+        "Delivery Terms": "FOB",
+        "Service *": "Air",
+        "Branch Code *": "BCH-01",
+        "Inco Terms": "FOB",
+        "Order Type *": "Bulk",
+        "Mode Of Transport *": "Truck",
+        "Department Code *": "Sales",
+        "Customer ID *": "CUST001",
+        "# Cust-DO": "DO-789",
+        "# Custref-PO": "PO-456",
+        "Goods Value": "10000 USD",
+        "Original Document Sent": "2024-06-01",
+        "Original Document Received": "2024-06-02",
+        "Shipment Type": "Type1",
+        "Region": "North",
+        "Driver Pickup Instructions": "Call before pickup.",
+        "Driver Delivery Instructions": "Deliver to warehouse.",
+        "123 Load Board": "Yes",
+        "Truck Stop": "No",
+        "DAT": "Yes"
+      },
+      "Routing Details": {
+        "Shipper": {
+          "Shipper ID *": "SHIP001",
+          "Shipper Name *": "Acme Corp",
+          "Street *": "123 Shipper St",
+          "Estimated Early Pickup *": "2024-06-05",
+          "City *": "Bangkok",
+          "Estimated Late Pickup *": "2024-06-06",
+          "Province *": "Bangkok",
+          "Country *": "Thailand",
+          "Zipcode *": "10110",
+          "Phone": "021234567",
+          "Fax": "021234568",
+          "Email": "shipper@acme.com"
+        },
+        "Consignee": {
+          "Consignee ID *": "CON001",
+          "Consignee Name *": "Beta Ltd",
+          "Estimated Early Delivery *": "2024-06-07",
+          "Street *": "456 Consignee Ave",
+          "City *": "Chennai",
+          "Estimated Late Delivery *": "2024-06-08",
+          "Province *": "Tamil Nadu",
+          "Country *": "India",
+          "Zipcode *": "600001",
+          "Phone": "0441234567",
+          "Fax": "0441234568",
+          "Email": "consignee@beta.com"
+        }
+      },
+      "Shipping Info": {
+        "Shipping Method": "Air",
+        "Tracking Number": "TRACK123",
+        "Carrier": "DHL Express",
+        "Estimated Departure": "2024-06-05 09:00",
+        "Estimated Arrival": "2024-06-07 18:00",
+        "Port of Loading": "Bangkok Intl Airport",
+        "Port of Discharge": "Chennai Intl Airport",
+        "Container Number": "CONT-001",
+        "Seal Number": "SEAL-12345"
+      },
+      "Other": {
+        "Notes": "Urgent delivery",
+        "Special Instructions": "Handle with care. Fragile.",
+        "Insurance": "Yes",
+        "Insurance Value": "5000 USD",
+        "Customs Cleared": "Yes",
+        "Warehouse Location": "WH-12A",
+        "Last Updated": "2024-06-04 15:30"
+      }
+    },
+    "financials": {
+      "Amount": 1000,
+      "Currency": "USD",
+      "Status": "Paid",
+      "summary": {
+        "Total revenue": 1000,
+        "Total cost": 500,
+        "Gross profit": 500
+      },
+      "revenue": [
+        {
+          "role": "Customer",
+          "code": "CUST001",
+          "name": "John Doe",
+          "amount": "1000",
+          "bu": "BU1",
+          "flightRecorder": "FR1",
+          "foreignCurrency": "USD",
+          "currencyExchange": "Yes",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-001",
+          "idCard": "ID-001",
+          "creditNoteNumber": "CN-001",
+          "invoiceDate": "2024-06-01",
+          "invoiceCreationDate": "2024-06-01",
+          "invoiceReceivedDate": "2024-06-02",
+          "status": "Paid"
+        },
+        {
+          "role": "Customer",
+          "code": "CUST002",
+          "name": "Jane Smith",
+          "amount": "700",
+          "bu": "BU2",
+          "flightRecorder": "FR2",
+          "foreignCurrency": "USD",
+          "currencyExchange": "No",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-002",
+          "idCard": "ID-002",
+          "creditNoteNumber": "CN-002",
+          "invoiceDate": "2024-06-03",
+          "invoiceCreationDate": "2024-06-03",
+          "invoiceReceivedDate": "2024-06-04",
+          "status": "Unpaid"
+        }
+      ],
+      "cost": [
+        {
+          "role": "Vendor",
+          "code": "VEND001",
+          "name": "Acme Supplies",
+          "amount": "500",
+          "bu": "BU3",
+          "flightRecorder": "FR3",
+          "foreignCurrency": "USD",
+          "currencyExchange": "No",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-003",
+          "idCard": "ID-003",
+          "creditNoteNumber": "CN-003",
+          "invoiceDate": "2024-06-05",
+          "invoiceCreationDate": "2024-06-05",
+          "invoiceReceivedDate": "2024-06-06",
+          "status": "Paid"
+        },
+        {
+          "role": "Vendor",
+          "code": "VEND002",
+          "name": "Beta Logistics",
+          "amount": "350",
+          "bu": "BU4",
+          "flightRecorder": "FR4",
+          "foreignCurrency": "USD",
+          "currencyExchange": "Yes",
+          "exchangeRate": "1.0",
+          "invoiceNumber": "INV-004",
+          "idCard": "ID-004",
+          "creditNoteNumber": "CN-004",
+          "invoiceDate": "2024-06-07",
+          "invoiceCreationDate": "2024-06-07",
+          "invoiceReceivedDate": "2024-06-08",
+          "status": "Unpaid"
+        }
+      ]
+    },
+    "addOns": {
+      "valueAddedService": [
+        {
+          "Service ID": "SVC-001",
+          "Service Name": "Express Delivery",
+          "Service Type": "Premium",
+          "Service Description": "Priority handling and faster delivery",
+          "Service Cost": "150 USD",
+          "Service Status": "Active",
+          "Service Provider": "Express Logistics",
+          "Service Date": "2024-06-01",
+          "Service Duration": "2-3 days",
+          "Service Coverage": "International"
+        },
+        {
+          "Service ID": "SVC-002",
+          "Service Name": "Insurance Coverage",
+          "Service Type": "Protection",
+          "Service Description": "Full insurance coverage for shipment",
+          "Service Cost": "75 USD",
+          "Service Status": "Active",
+          "Service Provider": "Global Insurance",
+          "Service Date": "2024-06-02",
+          "Service Duration": "Full journey",
+          "Service Coverage": "Comprehensive"
+        }
+      ]
+    },
+    "orderReference": {
+      "reference": [
+        {
+          "Reference ID": "REF-001",
+          "Reference Type": "Customer PO",
+          "Reference Number": "PO-2024-001",
+          "Reference Date": "2024-06-01",
+          "Description": "Customer purchase order reference",
+          "Status": "Active",
+          "Created By": "John Doe",
+          "Created Date": "2024-06-01"
+        },
+        {
+          "Reference ID": "REF-002",
+          "Reference Type": "Internal Order",
+          "Reference Number": "IO-2024-001",
+          "Reference Date": "2024-06-02",
+          "Description": "Internal order tracking reference",
+          "Status": "Active",
+          "Created By": "Jane Smith",
+          "Created Date": "2024-06-02"
+        }
+      ],
+      "statusList": [
+        {
+          "Status ID": "ST-001",
+          "Status Name": "Order Created",
+          "Status Date": "2024-06-01",
+          "Status Time": "09:00:00",
+          "Status Description": "Order has been created in the system",
+          "Updated By": "System",
+          "Next Status": "Order Confirmed"
+        },
+        {
+          "Status ID": "ST-002",
+          "Status Name": "Order Confirmed",
+          "Status Date": "2024-06-02",
+          "Status Time": "14:30:00",
+          "Status Description": "Order has been confirmed by customer",
+          "Updated By": "Customer Service",
+          "Next Status": "In Transit"
+        }
+      ],
+      "documentsList": [
+        {
+          "Document ID": "DOC-001",
+          "Document Type": "Invoice",
+          "Document Number": "INV-2024-001",
+          "Document Date": "2024-06-01",
+          "Document Status": "Generated",
+          "File Size": "2.5 MB",
+          "Uploaded By": "Finance Team",
+          "Upload Date": "2024-06-01"
+        },
+        {
+          "Document ID": "DOC-002",
+          "Document Type": "Packing List",
+          "Document Number": "PL-2024-001",
+          "Document Date": "2024-06-02",
+          "Document Status": "Generated",
+          "File Size": "1.8 MB",
+          "Uploaded By": "Warehouse Team",
+          "Upload Date": "2024-06-02"
+        }
+      ],
+      "quotesList": [
+        {
+          "Quote ID": "QT-001",
+          "Quote Number": "Q-2024-001",
+          "Quote Date": "2024-06-01",
+          "Quote Amount": "1500 USD",
+          "Quote Status": "Accepted",
+          "Valid Until": "2024-06-15",
+          "Created By": "Sales Team",
+          "Customer Response": "Accepted"
+        },
+        {
+          "Quote ID": "QT-002",
+          "Quote Number": "Q-2024-002",
+          "Quote Date": "2024-06-03",
+          "Quote Amount": "2000 USD",
+          "Quote Status": "Pending",
+          "Valid Until": "2024-06-20",
+          "Created By": "Sales Team",
+          "Customer Response": "Under Review"
+        }
+      ]
+    }
+  },
+  "2": {
+    "generalInfo": {
+      "General Info": {
+        "Booking ID": "BKG-002",
+        "Product *": "Laptop",
+        "Order Status": "CONFIRMED",
+        "Company Code *": "TCS01",
+        "External Order ID": "EXT-67890",
+        "Delivery Terms": "CIF",
+        "Service *": "Sea",
+        "Branch Code *": "BCH-02",
+        "Inco Terms": "CIF",
+        "Order Type *": "Single",
+        "Mode Of Transport *": "Ship",
+        "Department Code *": "Logistics",
+        "Customer ID *": "CUST002",
+        "# Cust-DO": "DO-123",
+        "# Custref-PO": "PO-789",
+        "Goods Value": "20000 EUR",
+        "Original Document Sent": "2024-06-03",
+        "Original Document Received": "2024-06-04",
+        "Shipment Type": "Type2",
+        "Region": "South",
+        "Driver Pickup Instructions": "Arrive before 10am.",
+        "Driver Delivery Instructions": "Leave at reception.",
+        "123 Load Board": "No",
+        "Truck Stop": "Yes",
+        "DAT": "No"
+      },
+      "Routing Details": {
+        "Shipper": {
+          "Shipper ID *": "SHIP002",
+          "Shipper Name *": "Gamma Exports",
+          "Street *": "789 Shipper Lane",
+          "Estimated Early Pickup *": "2024-06-10",
+          "City *": "Pune",
+          "Estimated Late Pickup *": "2024-06-11",
+          "Province *": "Maharashtra",
+          "Country *": "India",
+          "Zipcode *": "411001",
+          "Phone": "0201234567",
+          "Fax": "0201234568",
+          "Email": "shipper@gamma.com"
+        },
+        "Consignee": {
+          "Consignee ID *": "CON002",
+          "Consignee Name *": "Delta Imports",
+          "Estimated Early Delivery *": "2024-06-12",
+          "Street *": "321 Consignee Blvd",
+          "City *": "Bangkok",
+          "Estimated Late Delivery *": "2024-06-13",
+          "Province *": "Bangkok",
+          "Country *": "Thailand",
+          "Zipcode *": "10200",
+          "Phone": "021234569",
+          "Fax": "021234570",
+          "Email": "consignee@delta.com"
+        }
+      },
+      "Shipping Info": {
+        "Shipping Method": "Sea",
+        "Tracking Number": "TRACK456",
+        "Carrier": "Maersk Line",
+        "Estimated Departure": "2024-06-15 14:00",
+        "Estimated Arrival": "2024-06-25 10:00",
+        "Port of Loading": "Mumbai Port",
+        "Port of Discharge": "Bangkok Port",
+        "Container Number": "CONT-002",
+        "Seal Number": "SEAL-67890"
+      },
+      "Other": {
+        "Notes": "Standard delivery",
+        "Special Instructions": "Stack upright. Do not drop.",
+        "Insurance": "No",
+        "Insurance Value": "0",
+        "Customs Cleared": "No",
+        "Warehouse Location": "WH-34B",
+        "Last Updated": "2024-06-14 11:20"
+      }
+    },
+    "financials": {
+      "Amount": 2000,
+      "Currency": "EUR",
+      "Status": "Unpaid",
+      "summary": {
+        "Total revenue": 2000,
+        "Total cost": 1200,
+        "Gross profit": 800
+      },
+      "revenue": [
+        {
+          "role": "Customer",
+          "code": "CUST003",
+          "name": "Alice Brown",
+          "amount": "1200",
+          "bu": "BU5",
+          "flightRecorder": "FR5",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "Yes",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-005",
+          "idCard": "ID-005",
+          "creditNoteNumber": "CN-005",
+          "invoiceDate": "2024-06-10",
+          "invoiceCreationDate": "2024-06-10",
+          "invoiceReceivedDate": "2024-06-11",
+          "status": "Paid"
+        },
+        {
+          "role": "Customer",
+          "code": "CUST004",
+          "name": "Bob White",
+          "amount": "800",
+          "bu": "BU6",
+          "flightRecorder": "FR6",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "No",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-006",
+          "idCard": "ID-006",
+          "creditNoteNumber": "CN-006",
+          "invoiceDate": "2024-06-12",
+          "invoiceCreationDate": "2024-06-12",
+          "invoiceReceivedDate": "2024-06-13",
+          "status": "Unpaid"
+        }
+      ],
+      "cost": [
+        {
+          "role": "Vendor",
+          "code": "VEND003",
+          "name": "Gamma Exports",
+          "amount": "600",
+          "bu": "BU7",
+          "flightRecorder": "FR7",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "Yes",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-007",
+          "idCard": "ID-007",
+          "creditNoteNumber": "CN-007",
+          "invoiceDate": "2024-06-14",
+          "invoiceCreationDate": "2024-06-14",
+          "invoiceReceivedDate": "2024-06-15",
+          "status": "Paid"
+        },
+        {
+          "role": "Vendor",
+          "code": "VEND004",
+          "name": "Delta Imports",
+          "amount": "400",
+          "bu": "BU8",
+          "flightRecorder": "FR8",
+          "foreignCurrency": "EUR",
+          "currencyExchange": "No",
+          "exchangeRate": "0.9",
+          "invoiceNumber": "INV-008",
+          "idCard": "ID-008",
+          "creditNoteNumber": "CN-008",
+          "invoiceDate": "2024-06-16",
+          "invoiceCreationDate": "2024-06-16",
+          "invoiceReceivedDate": "2024-06-17",
+          "status": "Unpaid"
+        }
+      ]
+    },
+    "addOns": {
+      "valueAddedService": [
+        {
+          "Service ID": "SVC-003",
+          "Service Name": "Temperature Control",
+          "Service Type": "Special Handling",
+          "Service Description": "Temperature-controlled shipping for sensitive goods",
+          "Service Cost": "200 EUR",
+          "Service Status": "Active",
+          "Service Provider": "CoolTrans",
+          "Service Date": "2024-06-11",
+          "Service Duration": "Full journey",
+          "Service Coverage": "International"
+        }
+      ]
+    },
+    "orderReference": {
+      "reference": [
+        {
+          "Reference ID": "REF-003",
+          "Reference Type": "Customer PO",
+          "Reference Number": "PO-2024-002",
+          "Reference Date": "2024-06-10",
+          "Description": "Customer purchase order reference",
+          "Status": "Active",
+          "Created By": "Alice Brown",
+          "Created Date": "2024-06-10"
+        }
+      ],
+      "statusList": [
+        {
+          "Status ID": "ST-003",
+          "Status Name": "Order Created",
+          "Status Date": "2024-06-10",
+          "Status Time": "10:00:00",
+          "Status Description": "Order has been created in the system",
+          "Updated By": "System",
+          "Next Status": "Order Confirmed"
+        }
+      ],
+      "documentsList": [
+        {
+          "Document ID": "DOC-003",
+          "Document Type": "Invoice",
+          "Document Number": "INV-2024-002",
+          "Document Date": "2024-06-10",
+          "Document Status": "Generated",
+          "File Size": "3.2 MB",
+          "Uploaded By": "Finance Team",
+          "Upload Date": "2024-06-10"
+        }
+      ],
+      "quotesList": [
+        {
+          "Quote ID": "QT-003",
+          "Quote Number": "Q-2024-003",
+          "Quote Date": "2024-06-10",
+          "Quote Amount": "2500 EUR",
+          "Quote Status": "Accepted",
+          "Valid Until": "2024-06-25",
+          "Created By": "Sales Team",
+          "Customer Response": "Accepted"
+        }
+      ]
+    }
+  }
+} 

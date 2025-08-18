@@ -1,0 +1,76 @@
+{
+  "headers": [
+    { "accessorKey": "rateRecord", "header": "Rate Record" },
+    { "accessorKey": "rateOffering", "header": "Rate Offering" },
+    { "accessorKey": "rateService", "header": "Rate Service" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "customerProfile", "header": "Customer Profile" },
+    { "accessorKey": "carrierProfile", "header": "Carrier Profile" },
+    { "accessorKey": "createdOn", "header": "Created On" },
+    { "accessorKey": "ratePreferenceId", "header": "Rate Preference ID" },
+    { "accessorKey": "ratePreferenceName", "header": "Rate Preference Name" }
+  ],
+  "rows": [
+    {
+      "rateRecord": "RATE-001",
+      "rateOffering": "OFF-0001",
+      "rateService": "Express Service",
+      "companyCode": "THKN",
+      "branchCode": "THBKK",
+      "customerProfile": "Premium Customer",
+      "carrierProfile": "Express Carrier",
+      "createdOn": "2024-01-15",
+      "ratePreferenceId": "PREF-001",
+      "ratePreferenceName": "Premium Express Route"
+    },
+    {
+      "rateRecord": "RATE-002",
+      "rateOffering": "OFF-0002",
+      "rateService": "Standard Service",
+      "companyCode": "TCS01",
+      "branchCode": "INCHN",
+      "customerProfile": "Standard Customer",
+      "carrierProfile": "Standard Carrier",
+      "createdOn": "2024-01-20",
+      "ratePreferenceId": "PREF-002",
+      "ratePreferenceName": "Standard South Route"
+    },
+    {
+      "rateRecord": "RATE-003",
+      "rateOffering": "OFF-0003",
+      "rateService": "Economy Service",
+      "companyCode": "WPR02",
+      "branchCode": "INPUN",
+      "customerProfile": "Economy Customer",
+      "carrierProfile": "Economy Carrier",
+      "createdOn": "2024-01-25",
+      "ratePreferenceId": "PREF-003",
+      "ratePreferenceName": "Economy West Route"
+    },
+    {
+      "rateRecord": "RATE-004",
+      "rateOffering": "OFF-0004",
+      "rateService": "Premium Service",
+      "companyCode": "INFY",
+      "branchCode": "INPUN",
+      "customerProfile": "VIP Customer",
+      "carrierProfile": "Premium Carrier",
+      "createdOn": "2024-02-01",
+      "ratePreferenceId": "PREF-004",
+      "ratePreferenceName": "VIP Premium Route"
+    },
+    {
+      "rateRecord": "RATE-005",
+      "rateOffering": "OFF-0005",
+      "rateService": "Express Service",
+      "companyCode": "HCL01",
+      "branchCode": "INCHN",
+      "customerProfile": "Express Customer",
+      "carrierProfile": "Fast Carrier",
+      "createdOn": "2024-02-05",
+      "ratePreferenceId": "PREF-005",
+      "ratePreferenceName": "Fast Express Route"
+    }
+  ]
+}

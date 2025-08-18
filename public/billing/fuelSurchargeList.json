@@ -1,0 +1,58 @@
+{
+  "headers": [
+    { "accessorKey": "check", "header": "Check" },
+    { "accessorKey": "fafId", "header": "FAF ID" },
+    { "accessorKey": "fafName", "header": "FAF Name" },
+    { "accessorKey": "customerName", "header": "Customer Name" },
+    { "accessorKey": "vendorName", "header": "Vendor Name" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" }
+  ],
+  "rows": [
+    {
+      "check": true,
+      "fafId": "FAF-001",
+      "fafName": "Fuel Adjustment Factor Q1",
+      "customerName": "Premium Customer",
+      "vendorName": "Express Carrier",
+      "companyCode": "THKN",
+      "branchCode": "THBKK"
+    },
+    {
+      "check": false,
+      "fafId": "FAF-002",
+      "fafName": "Fuel Adjustment Factor Q2",
+      "customerName": "Standard Customer",
+      "vendorName": "Standard Carrier",
+      "companyCode": "TCS01",
+      "branchCode": "INCHN"
+    },
+    {
+      "check": true,
+      "fafId": "FAF-003",
+      "fafName": "Fuel Adjustment Factor Q3",
+      "customerName": "Economy Customer",
+      "vendorName": "Economy Carrier",
+      "companyCode": "WPR02",
+      "branchCode": "INPUN"
+    },
+    {
+      "check": false,
+      "fafId": "FAF-004",
+      "fafName": "Fuel Adjustment Factor Q4",
+      "customerName": "VIP Customer",
+      "vendorName": "Premium Carrier",
+      "companyCode": "INFY",
+      "branchCode": "INPUN"
+    },
+    {
+      "check": true,
+      "fafId": "FAF-005",
+      "fafName": "Fuel Adjustment Factor Annual",
+      "customerName": "Express Customer",
+      "vendorName": "Fast Carrier",
+      "companyCode": "HCL01",
+      "branchCode": "INCHN"
+    }
+  ]
+}

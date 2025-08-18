@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -40,98 +40,115 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
+import { ChevronsUpDown, Check } from "lucide-react";
 
-export default function ReusableTable({
-  title = "Table",
-  columns = [],
-  rows = [],
-  actions = [],
-  showActions = true,
-  filterFields = [],
-  onSearch = () => {},
-  showFirstIcon = true,
-  showSecondIcon = true,
-  showThirdIcon = true,
-  secondIconMenu = [],
-  thirdIconMenu = [],
-  enabledActions = ["edit", "view", "delete", "tripHistory"], // <-- use prop, not hardcoded
-  onActionClick = () => {},                   // <-- use prop, not hardcoded
-}) {
-  const [formValues, setFormValues] = useState({});
-  const [displayCount, setDisplayCount] = useState(30);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortColumn, setSortColumn] = useState(null);
-  const [sortDirection, setSortDirection] = useState("asc");
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [rowToDelete, setRowToDelete] = useState(null);
+// --- Constants ---
+const CONSTANTS = {
+  DEFAULT_DISPLAY_COUNT: 30,
+  DEFAULT_PAGE: 1,
+  DEFAULT_SORT_DIRECTION: "asc",
+  DEBOUNCE_DELAY: 300,
+};
 
-  const allAvailableActions = {
-    edit: {
-      label: "Edit",
-      icon: <Edit size={18} className="mr-2" />,
-    },
-    view: {
-      label: "View",
-      icon: <Eye size={18} className="mr-2" />,
-    },
-    delete: {
-      label: "Delete",
-      icon: <Trash2 size={18} className="mr-2" />,
-    },
-    tripHistory: {
-      label: "Trip History",
-      icon: <History size={18} className="mr-2" />,
-    },
-  };
+// --- Custom Hooks ---
 
-  const effectiveActions = enabledActions
-    .map((key) => {
-      const action = allAvailableActions[key];
-      return action
-        ? {
-            ...action,
-            key,
-            onClick: (row) => {
-              if (key === "delete") {
-                setRowToDelete(row);
-                setDeleteDialogOpen(true);
-              } else {
-                onActionClick(key, row);
-              }
-            },
-          }
-        : null;
-    })
-    .filter(Boolean);
+// Debounce hook for search functionality
+const useDebounce = (value, delay = CONSTANTS.DEBOUNCE_DELAY) => {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
+};
 
-  const handleDeleteConfirm = () => {
-    if (rowToDelete) {
-      onActionClick("delete", rowToDelete);
-    }
-    setDeleteDialogOpen(false);
-    setRowToDelete(null);
-  };
+// --- Sub-Components ---
 
-  const handleDeleteCancel = () => {
-    setDeleteDialogOpen(false);
-    setRowToDelete(null);
-  };
+// Debounced combobox component
+const FilterCombobox = React.memo(({ value, onChange, options, placeholder = "Select option" }) => {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, CONSTANTS.DEBOUNCE_DELAY);
 
-  const handleChange = (name, value) => {
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-  };
-
-const renderField = (field) => {
-  const { name, label, type = "text", options = [] } = field;
+  const filteredOptions = useMemo(() => {
+    if (!debouncedSearch) return options;
+    return options.filter((option) =>
+      String(option).toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
+  }, [options, debouncedSearch]);
 
   return (
-    <div key={name} className="flex flex-col gap-1 w-40">
-      <label htmlFor={name} className="text-sm font-medium text-gray-700">
-        {label}
-      </label>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between"
+        >
+          {value ? options.find((option) => option === value) || value : placeholder}
+          <ChevronsUpDown className="opacity-50 ml-2 h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-full p-0">
+        <Command>
+          <CommandInput
+            value={search}
+            onValueChange={setSearch}
+            placeholder={`Search ${placeholder.toLowerCase()}...`}
+            className="h-9"
+          />
+          <CommandList>
+            {filteredOptions.length === 0 ? (
+              <CommandEmpty>No options found.</CommandEmpty>
+            ) : (
+              <CommandGroup>
+                {filteredOptions.map((option) => (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={(currentValue) => {
+                      onChange(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {option}
+                    <Check
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        value === option ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+});
 
-      {type === "date" ? (
+// Filter field renderer component
+const FilterField = React.memo(({ field, formValues, setFormValues }) => {
+  const { name, label, type = "text", options = [] } = field;
+
+  const handleChange = useCallback((name, value) => {
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  }, [setFormValues]);
+
+  const renderFieldContent = useCallback(() => {
+    if (type === "date") {
+      return (
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -157,7 +174,11 @@ const renderField = (field) => {
             />
           </PopoverContent>
         </Popover>
-      ) : type === "select" ? (
+      );
+    }
+    
+    if (type === "select") {
+      return (
         <Select
           value={formValues[name]}
           onValueChange={(value) => handleChange(name, value)}
@@ -179,19 +200,126 @@ const renderField = (field) => {
             )}
           </SelectContent>
         </Select>
-      ) : (
-        <Input
-          type={type}
-          id={name}
+      );
+    }
+
+    if (type === "filterSelect") {
+      return (
+        <FilterCombobox
           value={formValues[name] || ""}
-          onChange={(e) => handleChange(name, e.target.value)}
-          className="w-full border border-gray-300"
+          onChange={(value) => handleChange(name, value)}
+          options={options}
+          placeholder={label}
         />
-      )}
+      );
+    }
+
+    return (
+      <Input
+        type={type}
+        id={name}
+        value={formValues[name] || ""}
+        onChange={(e) => handleChange(name, e.target.value)}
+        className="w-full border border-gray-300"
+      />
+    );
+  }, [type, formValues, name, label, options, handleChange]);
+
+  return (
+    <div key={name} className="flex flex-col gap-1 w-40">
+      <label htmlFor={name} className="text-sm font-medium text-gray-700">
+        {label}
+      </label>
+      {renderFieldContent()}
     </div>
   );
-};
+});
 
+export default function ReusableTable({
+  title = "Table",
+  columns = [],
+  rows = [],
+  actions = [],
+  showActions = true,
+  filterFields = [],
+  onSearch = () => {},
+  showFirstIcon = true,
+  showSecondIcon = true,
+  showThirdIcon = true,
+  secondIconMenu = [],
+  thirdIconMenu = [],
+  enabledActions = ["edit", "view", "delete", "tripHistory"],
+  onActionClick = () => {},
+}) {
+  // State management
+  const [formValues, setFormValues] = useState({});
+  const [displayCount, setDisplayCount] = useState(CONSTANTS.DEFAULT_DISPLAY_COUNT);
+  const [currentPage, setCurrentPage] = useState(CONSTANTS.DEFAULT_PAGE);
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState(CONSTANTS.DEFAULT_SORT_DIRECTION);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState(null);
+
+  // Available actions configuration
+  const allAvailableActions = useMemo(() => ({
+    edit: {
+      label: "Edit",
+      icon: <Edit size={18} className="mr-2" />,
+    },
+    view: {
+      label: "View",
+      icon: <Eye size={18} className="mr-2" />,
+    },
+    delete: {
+      label: "Delete",
+      icon: <Trash2 size={18} className="mr-2" />,
+    },
+    tripHistory: {
+      label: "Trip History",
+      icon: <History size={18} className="mr-2" />,
+    },
+  }), []);
+
+  // Effective actions based on enabled actions
+  const effectiveActions = useMemo(() => 
+    enabledActions
+      .map((key) => {
+        const action = allAvailableActions[key];
+        return action
+          ? {
+              ...action,
+              key,
+              onClick: (row) => {
+                if (key === "delete") {
+                  setRowToDelete(row);
+                  setDeleteDialogOpen(true);
+                } else {
+                  onActionClick(key, row);
+                }
+              },
+            }
+          : null;
+      })
+      .filter(Boolean),
+    [enabledActions, allAvailableActions, onActionClick, setRowToDelete, setDeleteDialogOpen]
+  );
+
+  // Delete handlers
+  const handleDeleteConfirm = useCallback(() => {
+    if (rowToDelete) {
+      onActionClick("delete", rowToDelete);
+    }
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
+  }, [rowToDelete, onActionClick, setDeleteDialogOpen, setRowToDelete]);
+
+  const handleDeleteCancel = useCallback(() => {
+    setDeleteDialogOpen(false);
+    setRowToDelete(null);
+  }, [setDeleteDialogOpen, setRowToDelete]);
+
+  // Sorting logic
   const sortedRows = useMemo(() => {
     if (!sortColumn) return rows;
     return [...rows].sort((a, b) => {
@@ -203,102 +331,51 @@ const renderField = (field) => {
     });
   }, [rows, sortColumn, sortDirection]);
 
-  const totalPages = Math.ceil(sortedRows.length / displayCount);
-  const paginatedRows = sortedRows.slice(
-    (currentPage - 1) * displayCount,
-    currentPage * displayCount
+  const totalPages = useMemo(() => Math.ceil(sortedRows.length / displayCount), [sortedRows.length, displayCount]);
+  const paginatedRows = useMemo(() => 
+    sortedRows.slice((currentPage - 1) * displayCount, currentPage * displayCount),
+    [sortedRows, currentPage, displayCount]
   );
 
-  const handleSort = (accessorKey) => {
+  // Sort handler
+  const handleSort = useCallback((accessorKey) => {
     if (sortColumn === accessorKey) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortColumn(accessorKey);
       setSortDirection("asc");
     }
-  };
+  }, [sortColumn, setSortColumn, setSortDirection]);
 
-  // ✅ Checkbox logic
-  const isAllSelected =
+  // Checkbox selection logic
+  const isAllSelected = useMemo(() =>
     paginatedRows.length > 0 &&
-    paginatedRows.every((row) => selectedRows.includes(row));
+    paginatedRows.every((row) => selectedRows.includes(row.id)),
+    [paginatedRows, selectedRows]
+  );
 
-  const toggleSelectAll = () => {
+  const toggleSelectAll = useCallback(() => {
+    const pageRowIds = paginatedRows.map((row) => row.id);
     if (isAllSelected) {
-      setSelectedRows((prev) =>
-        prev.filter((row) => !paginatedRows.includes(row))
-      );
+      setSelectedRows((prev) => prev.filter((id) => !pageRowIds.includes(id)));
     } else {
-      setSelectedRows((prev) => [
-        ...prev,
-        ...paginatedRows.filter((row) => !prev.includes(row)),
-      ]);
+      setSelectedRows((prev) => [...new Set([...prev, ...pageRowIds])]);
     }
-  };
+  }, [isAllSelected, paginatedRows, setSelectedRows]);
 
-  const toggleRow = (row) => {
+  const toggleRow = useCallback((row) => {
     setSelectedRows((prev) =>
-      prev.includes(row)
-        ? prev.filter((r) => r !== row)
-        : [...prev, row]
+      prev.includes(row.id)
+        ? prev.filter((id) => id !== row.id)
+        : [...prev, row.id]
     );
-  };
-const filterTab = (
-  <Card>
-    <CardContent className="p-4 flex justify-between flex-wrap gap-4">
+  }, [setSelectedRows]);
 
-      <div className="flex flex-wrap items-end gap-3">
-        {filterFields.map(renderField)}
-        <Button
-          className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
-          onClick={() => onSearch(formValues)}
-        >
-          Search
-        </Button>
-      </div>
-
-      <div className="flex items-end gap-6 pr-2">
-        {showFirstIcon && (
-          <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
-        )}
-        {showSecondIcon && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {secondIconMenu.map((item, idx) => (
-                <DropdownMenuItem key={idx} onClick={item.onClick}>
-                  {item.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-        {showThirdIcon && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {thirdIconMenu.map((item, idx) => (
-                <DropdownMenuItem key={idx} onClick={item.onClick}>
-                  {item.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
-      </div>
-    </CardContent>
-  </Card>
-);
-
-
-  const tableContent = (
+  // Table rendering component
+  const renderTable = useCallback(() => (
     <Card>
-      <CardContent className="p-4">
-        <div className="flex justify-between items-center mb-4">
+             <CardContent className="p-3">
+                 <div className="flex justify-between items-center mb-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="bg-[#006397] hover:bg-[#02abf5] text-white px-3 py-1 rounded-sm text-sm">
@@ -354,28 +431,28 @@ const filterTab = (
           </div>
         </div>
 
-        <hr className="border-t border-gray-300 mb-4" />
+                 <hr className="border-t border-gray-300 mb-3" />
 
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-200">
-              <TableHead className="w-12 px-6 py-3">
+                             <TableHead className="w-10 px-4 py-2">
                 <Checkbox
                   checked={isAllSelected}
                   onCheckedChange={toggleSelectAll}
                   className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
                 />
               </TableHead>
-              {showActions && rows.length > 0 && (
-                <TableHead className="w-12 px-6 py-3" />
-              )}
+                             {showActions && rows.length > 0 && (
+                 <TableHead className="w-10 px-4 py-2" />
+               )}
               {columns.map((col, index) => {
                 const isSortable = col.sortable !== false;
                 return (
                   <TableHead
                     key={col.accessorKey}
                     onClick={() => isSortable && handleSort(col.accessorKey)}
-                    className={`text-[#006397] text-left text-sm font-semibold px-6 py-3 ${
+                                         className={`text-[#006397] text-left text-sm font-semibold px-4 py-2 ${
                       isSortable ? "cursor-pointer select-none" : ""
                     } ${index !== 0 ? "border-l border-gray-300" : ""}`}
                   >
@@ -393,16 +470,16 @@ const filterTab = (
             {paginatedRows.length > 0 ? (
               paginatedRows.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
-                  <TableCell className="px-6 py-3">
-                    <Checkbox
-                      checked={selectedRows.includes(row)}
-                      onCheckedChange={() => toggleRow(row)}
-                      className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
-                    />
-                  </TableCell>
+                                     <TableCell className="px-4 py-2">
+                     <Checkbox
+                       checked={selectedRows.includes(row.id)}
+                       onCheckedChange={() => toggleRow(row)}
+                       className="border-[#003366] data-[state=checked]:bg-[#006397] data-[state=checked]:border-[#006397]"
+                     />
+                   </TableCell>
 
                   {showActions && (
-                    <TableCell className="px-6 py-3">
+                    <TableCell className="px-4 py-2">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="text-xl px-2">
@@ -425,18 +502,18 @@ const filterTab = (
                     </TableCell>
                   )}
 
-                  {columns.map((col) => (
-                    <TableCell key={col.accessorKey} className="text-sm px-6 py-3">
-                      {row[col.accessorKey] ?? ""}
-                    </TableCell>
-                  ))}
+                                     {columns.map((col) => (
+                     <TableCell key={col.accessorKey} className="text-sm px-4 py-2">
+                       {row[col.accessorKey] ?? ""}
+                     </TableCell>
+                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
                   colSpan={columns.length + (showActions ? 2 : 1)}
-                  className="text-center py-6"
+                  className="text-center py-4"
                 >
                   No data available.
                 </TableCell>
@@ -446,12 +523,66 @@ const filterTab = (
         </Table>
       </CardContent>
     </Card>
-  );
+  ), [displayCount, setDisplayCount, currentPage, setCurrentPage, totalPages, isAllSelected, toggleSelectAll, selectedRows, toggleRow, showActions, effectiveActions, handleSort, columns, rows, paginatedRows]);
 
   return (
     <>
-      {filterTab}
-      <div className="mt-4">{tableContent}</div>
+      <Card>
+        <CardContent className="p-3 flex justify-between flex-wrap gap-3">
+          <div className="flex flex-wrap items-end gap-3">
+            {filterFields.map((field) => (
+              <FilterField
+                key={field.name}
+                field={field}
+                formValues={formValues}
+                setFormValues={setFormValues}
+              />
+            ))}
+            <Button
+              className="bg-[#006397] hover:bg-[#02abf5] text-white px-4 rounded-full"
+              onClick={() => onSearch(formValues)}
+            >
+              Search
+            </Button>
+          </div>
+
+          <div className="flex items-end gap-6 pr-2">
+            {showFirstIcon && (
+              <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+            )}
+            {showSecondIcon && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {secondIconMenu.map((item, idx) => (
+                    <DropdownMenuItem key={idx} onClick={item.onClick}>
+                      {item.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            {showThirdIcon && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <FileText size={18} className="cursor-pointer text-gray-600 mb-1" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {thirdIconMenu.map((item, idx) => (
+                    <DropdownMenuItem key={idx} onClick={item.onClick}>
+                      {item.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+      
+             <div className="mt-3">{renderTable()}</div>
       
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={() => {}}>

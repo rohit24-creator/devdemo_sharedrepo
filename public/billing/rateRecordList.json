@@ -1,0 +1,32 @@
+{
+  "headers": [
+    { "accessorKey": "rateId", "header": "Rate ID" },
+    { "accessorKey": "rateRecordName", "header": "Rate Record Name" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "offeringId", "header": "Offering ID" },
+    { "accessorKey": "companyCode", "header": "Company Code" }
+  ],
+  "rows": [
+    {
+      "rateId": "RATE-001",
+      "rateRecordName": "Express North Route",
+      "branchCode": "THBKK",
+      "offeringId": "OFF-0001",
+      "companyCode": "THKN"
+    },
+    {
+      "rateId": "RATE-002",
+      "rateRecordName": "Standard South Route",
+      "branchCode": "INCHN",
+      "offeringId": "OFF-0002",
+      "companyCode": "TCS01"
+    },
+    {
+      "rateId": "RATE-003",
+      "rateRecordName": "Premium West Route",
+      "branchCode": "INPUN",
+      "offeringId": "OFF-0003",
+      "companyCode": "WPR02"
+    }
+  ]
+}

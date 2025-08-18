@@ -64,8 +64,8 @@ export default function StatusViewPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        enabledActions={["edit", "view", "delete"]} // show only needed actions
-        onActionClick={handleActionClick} // trigger delete/edit/view
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick} 
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
           { label: "Table View", onClick: () => console.log("Table View") },

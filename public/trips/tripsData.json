@@ -1,0 +1,198 @@
+{
+  "headers": [
+    {
+      "accessorKey": "shipmentId",
+      "header": "Shipment ID"
+    },
+    {
+      "accessorKey": "startDate",
+      "header": "Start Date"
+    },
+    {
+      "accessorKey": "endDate",
+      "header": "End Date"
+    },
+    {
+      "accessorKey": "source",
+      "header": "Source"
+    },
+    {
+      "accessorKey": "destination",
+      "header": "Destination"
+    },
+    {
+      "accessorKey": "carrierName",
+      "header": "Carrier Name"
+    },
+    {
+      "accessorKey": "driverName",
+      "header": "Driver Name"
+    },
+    {
+      "accessorKey": "vehicleId",
+      "header": "Vehicle ID"
+    },
+    {
+      "accessorKey": "vehicleType",
+      "header": "Vehicle Type"
+    },
+    {
+      "accessorKey": "mode",
+      "header": "Mode"
+    },
+    {
+      "accessorKey": "weight",
+      "header": "Weight"
+    },
+    {
+      "accessorKey": "volume",
+      "header": "Volume"
+    },
+    {
+      "accessorKey": "units",
+      "header": "Units"
+    },
+    {
+      "accessorKey": "pickUp",
+      "header": "Pick Up"
+    }
+  ],
+  "rows": [
+    {
+      "id": "1",
+      "shipmentId": "TRIP001",
+      "startDate": "2025-07-29",
+      "endDate": "2025-08-01",
+      "source": "NEW",
+      "destination": "MUMBAI",
+      "carrierName": "Cross - Border",
+      "driverName": "John Smith",
+      "vehicleId": "VH001",
+      "vehicleType": "10W Cabinet",
+      "mode": "Road",
+      "weight": "5000 kg",
+      "volume": "100 m³",
+      "units": "50",
+      "pickUp": "2025-07-29 09:00"
+    },
+    {
+      "id": "2",
+      "shipmentId": "TRIP002",
+      "startDate": "2025-07-30",
+      "endDate": "2025-08-02",
+      "source": "DELHI",
+      "destination": "BANGALORE",
+      "carrierName": "Express Logistics",
+      "driverName": "Mike Johnson",
+      "vehicleId": "VH002",
+      "vehicleType": "20W Container",
+      "mode": "Road",
+      "weight": "8000 kg",
+      "volume": "150 m³",
+      "units": "75",
+      "pickUp": "2025-07-30 10:30"
+    },
+    {
+      "id": "3",
+      "shipmentId": "TRIP003",
+      "startDate": "2025-07-31",
+      "endDate": "2025-08-03",
+      "source": "CHENNAI",
+      "destination": "HYDERABAD",
+      "carrierName": "Fast Track",
+      "driverName": "Sarah Wilson",
+      "vehicleId": "VH003",
+      "vehicleType": "15W Truck",
+      "mode": "Road",
+      "weight": "6000 kg",
+      "volume": "120 m³",
+      "units": "60",
+      "pickUp": "2025-07-31 08:15"
+    },
+    {
+      "id": "4",
+      "shipmentId": "TRIP004",
+      "startDate": "2025-08-01",
+      "endDate": "2025-08-04",
+      "source": "KOLKATA",
+      "destination": "PUNE",
+      "carrierName": "Reliable Transport",
+      "driverName": "David Brown",
+      "vehicleId": "VH004",
+      "vehicleType": "25W Trailer",
+      "mode": "Road",
+      "weight": "12000 kg",
+      "volume": "200 m³",
+      "units": "100",
+      "pickUp": "2025-08-01 11:45"
+    },
+    {
+      "id": "5",
+      "shipmentId": "TRIP005",
+      "startDate": "2025-08-02",
+      "endDate": "2025-08-05",
+      "source": "AHMEDABAD",
+      "destination": "JAIPUR",
+      "carrierName": "Speed Cargo",
+      "driverName": "Lisa Davis",
+      "vehicleId": "VH005",
+      "vehicleType": "12W Van",
+      "mode": "Road",
+      "weight": "3000 kg",
+      "volume": "60 m³",
+      "units": "30",
+      "pickUp": "2025-08-02 07:30"
+    },
+    {
+      "id": "6",
+      "shipmentId": "TRIP006",
+      "startDate": "2025-08-03",
+      "endDate": "2025-08-06",
+      "source": "LUCKNOW",
+      "destination": "KANPUR",
+      "carrierName": "Premium Logistics",
+      "driverName": "Robert Taylor",
+      "vehicleId": "VH006",
+      "vehicleType": "18W Container",
+      "mode": "Road",
+      "weight": "9000 kg",
+      "volume": "180 m³",
+      "units": "90",
+      "pickUp": "2025-08-03 09:20"
+    },
+    {
+      "id": "7",
+      "shipmentId": "TRIP007",
+      "startDate": "2025-08-04",
+      "endDate": "2025-08-07",
+      "source": "INDORE",
+      "destination": "BHOPAL",
+      "carrierName": "Swift Transport",
+      "driverName": "Emma White",
+      "vehicleId": "VH007",
+      "vehicleType": "8W Pickup",
+      "mode": "Road",
+      "weight": "2000 kg",
+      "volume": "40 m³",
+      "units": "20",
+      "pickUp": "2025-08-04 06:45"
+    },
+    {
+      "id": "8",
+      "shipmentId": "TRIP008",
+      "startDate": "2025-08-05",
+      "endDate": "2025-08-08",
+      "source": "NAGPUR",
+      "destination": "AURANGABAD",
+      "carrierName": "Elite Cargo",
+      "driverName": "James Miller",
+      "vehicleId": "VH008",
+      "vehicleType": "30W Trailer",
+      "mode": "Road",
+      "weight": "15000 kg",
+      "volume": "250 m³",
+      "units": "125",
+      "pickUp": "2025-08-05 10:00"
+    }
+  ]
+} 
