@@ -1,111 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function CustomerDailyStatusPage() {
   const [customerData, setCustomerData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the customer daily status report structure
-  const columns = [
-    {
-      accessorKey: "bookingId",
-      header: "Booking ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "product",
-      header: "Product",
-      sortable: true,
-    },
-    {
-      accessorKey: "customer",
-      header: "Customer",
-      sortable: true,
-    },
-    {
-      accessorKey: "estimatedEarlyPickup",
-      header: "Estimated Early Pickup",
-      sortable: true,
-    },
-    {
-      accessorKey: "estimatedLatePickup",
-      header: "Estimated Late Pickup",
-      sortable: true,
-    },
-    {
-      accessorKey: "estimatedEarlyDelivery",
-      header: "Estimated Early Delivery",
-      sortable: true,
-    },
-    {
-      accessorKey: "estimatedLateDelivery",
-      header: "Estimated Late Delivery",
-      sortable: true,
-    },
-    {
-      accessorKey: "pickupAddress",
-      header: "PickUp Address",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryAddress",
-      header: "Delivery Address",
-      sortable: true,
-    },
-    {
-      accessorKey: "truckNumber",
-      header: "Truck Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "vehicleType",
-      header: "Vehicle Type",
-      sortable: true,
-    },
-    {
-      accessorKey: "driverName",
-      header: "Driver Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryNote",
-      header: "Delivery Note",
-      sortable: true,
-    },
-    {
-      accessorKey: "tripId",
-      header: "Trip ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperName",
-      header: "Shipper Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeName",
-      header: "Consignee Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "podStatus",
-      header: "POD Status",
-      sortable: true,
-    },
-    {
-      accessorKey: "lastStatus",
-      header: "Last Status",
-      sortable: true,
-    },
-    {
-      accessorKey: "lastStatusCreatedDate",
-      header: "Last Status Created Date",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the images
   const filterFields = [
@@ -131,17 +37,32 @@ export default function CustomerDailyStatusPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadCustomerData = async () => {
       try {
-        const response = await fetch("/reports/customerDailyStatus.json");
-        const data = await response.json();
-        setCustomerData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/customerDailyStatus.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setCustomerData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading customer data:", error);
+      } finally {
         setLoading(false);
       }
     };

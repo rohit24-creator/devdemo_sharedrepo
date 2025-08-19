@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function TripReportsPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
 
 
   const filterFields = [
@@ -34,27 +36,42 @@ export default function TripReportsPage() {
     { label: "Export Excel", onClick: () => console.log("Excel Export") },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/reports/tripReports.json");
-        const data = await res.json();
+        setLoading(true);
+        const { data } = await api.get("/reports/tripReports.json");
 
-
-        const formattedColumns = data.headers.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
-        const formattedRows = formatRowsWithId(data.rows);
+        const formattedRows = formatRowsWithId(data?.rows || []);
         setColumns(formattedColumns);
         setRows(formattedRows);
       } catch (err) {
         console.error("Error fetching trip reports data:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading trip reports...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">

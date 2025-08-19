@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function TruckerVolumeReport() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Filter fields for trucker volume report
   const filterFields = [
@@ -41,27 +43,43 @@ export default function TruckerVolumeReport() {
     console.log("Search with values:", formValues);
   };
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/reports/operationalReport/truckerVolume.json");
-        const data = await res.json();
+        setLoading(true);
+        const { data } = await api.get("/reports/operationalReport/truckerVolume.json");
 
-        const formattedColumns = data.headers.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
-        const formattedRows = formatRowsWithId(data.rows);
+        const formattedRows = formatRowsWithId(data?.rows || []);
         setColumns(formattedColumns);
         setRows(formattedRows);
       } catch (error) {
         console.error("Error fetching trucker volume report data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading trucker volume report...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">

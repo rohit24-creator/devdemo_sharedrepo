@@ -1,126 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function AllRoundBigReportPage() {
   const [reportData, setReportData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the all round big report structure
-  const columns = [
-    {
-      accessorKey: "orderId",
-      header: "Order ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryOrderNo",
-      header: "Delivery Order No.",
-      sortable: true,
-    },
-    {
-      accessorKey: "purchaseOrderNo",
-      header: "Purchase Order No.",
-      sortable: true,
-    },
-    {
-      accessorKey: "orderCreatedDate",
-      header: "Order Created Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "orderPickupDate",
-      header: "Order Pick-up Date and Time",
-      sortable: true,
-    },
-    {
-      accessorKey: "orderDeliveryDate",
-      header: "Order Delivery Date and Time",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperId",
-      header: "Shipper ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperCid",
-      header: "Shipper CID",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperAconDebitorCode",
-      header: "Shipper ACON Debitor Code",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperShLoginAccount",
-      header: "Shipper Sh Login Account",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperVatRegistrationNumber",
-      header: "Shipper VAT Registration Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperTaxPayerId",
-      header: "Shipper Tax Payer ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperName",
-      header: "Shipper Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperStreetAndHouseNumber",
-      header: "Shipper Street and House Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperPostalCode",
-      header: "Shipper Postal Code",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperCountryName",
-      header: "Shipper Country Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperPhone",
-      header: "Shipper Phone",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperEmail",
-      header: "Shipper Email",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeId",
-      header: "Consignee ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeCid",
-      header: "Consignee CID",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeAconDebitorCode",
-      header: "Consignee ACON Debitor Code",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeShLoginAccount",
-      header: "Consignee Sh Login Account",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the images
   const filterFields = [
@@ -154,17 +45,32 @@ export default function AllRoundBigReportPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadReportData = async () => {
       try {
-        const response = await fetch("/reports/allRoundBigReport.json");
-        const data = await response.json();
-        setReportData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/allRoundBigReport.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setReportData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading report data:", error);
+      } finally {
         setLoading(false);
       }
     };

@@ -1,76 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function MisReportPage() {
   const [misData, setMisData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the MIS report structure
-  const columns = [
-    {
-      accessorKey: "serialNo",
-      header: "S.No",
-      sortable: true,
-    },
-    {
-      accessorKey: "docketNumber",
-      header: "Docket Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "origin",
-      header: "Origin",
-      sortable: true,
-    },
-    {
-      accessorKey: "yearMonth",
-      header: "YEAR & MONTH",
-      sortable: true,
-    },
-    {
-      accessorKey: "orderNumber",
-      header: "Order Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "sid",
-      header: "SID",
-      sortable: true,
-    },
-    {
-      accessorKey: "orderDate",
-      header: "Order Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "manifestDate",
-      header: "Manifest Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "pickupDate",
-      header: "Pickup Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "currentStatus",
-      header: "Current Status",
-      sortable: true,
-    },
-    {
-      accessorKey: "statusType",
-      header: "Status Type",
-      sortable: true,
-    },
-    {
-      accessorKey: "destination",
-      header: "Desti",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the image
   const filterFields = [
@@ -115,17 +56,32 @@ export default function MisReportPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadMisData = async () => {
       try {
-        const response = await fetch("/reports/misReport.json");
-        const data = await response.json();
-        setMisData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/misReport.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setMisData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading MIS data:", error);
+      } finally {
         setLoading(false);
       }
     };

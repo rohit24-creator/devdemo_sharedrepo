@@ -1,86 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function TrackReportPage() {
   const [trackData, setTrackData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the track report structure
-  const columns = [
-    {
-      accessorKey: "bookingId",
-      header: "Booking ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryNote",
-      header: "Delivery Note",
-      sortable: true,
-    },
-    {
-      accessorKey: "pickupDate",
-      header: "Pickup Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "pickupCity",
-      header: "PickUp City",
-      sortable: true,
-    },
-    {
-      accessorKey: "pickupAddress",
-      header: "Pickup Address",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryCity",
-      header: "Delivery City",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryAddress",
-      header: "Delivery Address",
-      sortable: true,
-    },
-    {
-      accessorKey: "vehicleNumber",
-      header: "Vehicle Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "vehicleType",
-      header: "Vehicle Type",
-      sortable: true,
-    },
-    {
-      accessorKey: "total",
-      header: "Total",
-      sortable: true,
-    },
-    {
-      accessorKey: "travelledKm",
-      header: "Travelled KM",
-      sortable: true,
-    },
-    {
-      accessorKey: "pendingKms",
-      header: "Pending KMs",
-      sortable: true,
-    },
-    {
-      accessorKey: "etaApprox",
-      header: "ETA Approx.",
-      sortable: true,
-    },
-    {
-      accessorKey: "createdDate",
-      header: "Created Date",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the image
   const filterFields = [
@@ -101,17 +32,32 @@ export default function TrackReportPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadTrackData = async () => {
       try {
-        const response = await fetch("/reports/trackReport.json");
-        const data = await response.json();
-        setTrackData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/trackReport.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setTrackData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading track data:", error);
+      } finally {
         setLoading(false);
       }
     };
