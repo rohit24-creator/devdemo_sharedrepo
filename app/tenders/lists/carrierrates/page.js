@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-
-const ReusableTable = dynamic(() => import("@/components/ui/reusableComponent/viewtable"), { ssr: false });
+import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 
 export default function CarrierRatesListPage() {
   const [columns, setColumns] = useState([]);
