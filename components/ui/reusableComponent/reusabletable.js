@@ -148,11 +148,12 @@ export default function ReusableTable({ fields, defaultValues = [], modalData, f
                   type="text"
                   value={controllerField.value || ''}
                   onChange={e => controllerField.onChange(e.target.value)}
-                  className="w-full pr-20"
+                  className="w-full pr-24 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0.00"
                 />
               )}
             />
-            <div className="absolute right-0 h-full bg-[#E7ECFD] flex items-center px-2 pl-4 min-w-20 rounded-r-md">
+            <div className="absolute right-0 h-full bg-[#E7ECFD] flex items-center px-3 min-w-24 rounded-r-md border-l border-gray-200">
               <Controller
                 control={form.control}
                 name={`rows.${rowIdx}.${field.unitKey}`}
@@ -161,10 +162,10 @@ export default function ReusableTable({ fields, defaultValues = [], modalData, f
                     value={controllerField.value ?? ""}
                     onValueChange={val => controllerField.onChange(val)}
                   >
-                    <SelectTrigger className="border-0 bg-transparent px-0 py-0 h-6 min-w-16 text-xs">
-                      <span>{controllerField.value || "Select"}</span>
+                    <SelectTrigger className="border-0 bg-transparent px-2 py-1 h-6 min-w-20 text-xs font-medium text-gray-700 hover:text-gray-900 focus:outline-none shadow-none ring-0 data-[state=open]:bg-transparent">
+                      {controllerField.value || "Select"}
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-50">
                       {field.unitOptions?.map(opt => (
                         <SelectItem key={opt} value={opt}>{opt}</SelectItem>
                       ))}
@@ -261,69 +262,69 @@ export default function ReusableTable({ fields, defaultValues = [], modalData, f
   return (
     <>
       <div className="overflow-x-auto w-full">
-        <Table className="min-w-max">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-center align-middle border-l-0">
-                <ChevronDown size={18} className="text-[#006397]" />
-              </TableHead>
-              {fields.map(field => {
-                if (!field.label) return null;
-                const Icon = field.icon || iconMap[field.key];
-                return (
-                  <TableHead key={field.key} className="text-center align-middle border-l border-[#e0e0e0]">
-                    <span className="inline-flex items-center justify-center gap-1">
-                      {Icon && React.createElement(Icon, { size: 18, className: "text-[#006397]" })}
-                      <span className="text-xs font-semibold">{field.label}</span>
-                    </span>
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+              <Table className="min-w-max">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-center align-middle border-l-0">
+                      <ChevronDown size={18} className="text-[#006397]" />
+                    </TableHead>
+                    {fields.map(field => {
+                      if (!field.label) return null;
+                      const Icon = field.icon || iconMap[field.key];
+                      return (
+                        <TableHead key={field.key} className="text-center align-middle border-l border-[#e0e0e0]">
+                          <span className="inline-flex items-center justify-center gap-1">
+                            {Icon && React.createElement(Icon, { size: 18, className: "text-[#006397]" })}
+                            <span className="text-xs font-semibold">{field.label}</span>
+                          </span>
+                        </TableHead>
+                      );
+                    })}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
             {formFields.map((row, rowIdx) => (
               <TableRow key={row.id}>
-                <TableCell className="text-center align-middle">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical size={18} />
-                      </Button>
-                    </DropdownMenuTrigger>
-                     <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => {/* Save logic here */}}>
-                          ✓ Save
-                        </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleRemoveRow(rowIdx)} className="text-red-600">
-                        🗑 Remove
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-                {fields.map(field => (
-                  <TableCell key={field.key}>
+                      <TableCell className="text-center align-middle">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreVertical size={18} />
+                            </Button>
+                          </DropdownMenuTrigger>
+                           <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => {/* Save logic here */}}>
+                                ✓ Save
+                              </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRemoveRow(rowIdx)} className="text-red-600">
+                              🗑 Remove
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                      {fields.map(field => (
+                        <TableCell key={field.key}>
                     {renderField(field, rowIdx)}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-            <TableRow>
-              <TableCell colSpan={fields.length + 1}>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                  <TableRow>
+                    <TableCell colSpan={fields.length + 1}>
                 <div className="pl-[10px] mt-4 mb-6">
-                  <Button
-                    type="button"
-                    onClick={handleAddRow}
+                      <Button
+                        type="button"
+                        onClick={handleAddRow}
                     className="rounded-full px-6 bg-[#006397] text-white"
-                  >
-                    Add Row
-                  </Button>
+                      >
+                        Add Row
+                      </Button>
                 </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
       {modalOpen && modalData && (
         <ReusableModal
           open={modalOpen}
