@@ -136,6 +136,29 @@ const navigationData = {
       },
     ],
   },
+  billing: {
+    label: 'Billing',
+    items: [
+      { href: '/billing/lists/vatMaster', label: 'VAT Master' },
+      {
+        label: 'Tiers',
+        items: [
+          { href: '/billing/lists/tiers/rateTier', label: 'Rate Tier' },
+          { href: '/billing/lists/tiers/geoTier', label: 'Geo Tier' },
+        ],
+      },
+      { href: '/billing/lists/rateService', label: 'Rate Service' },
+      { href: '/billing/lists/rateRecord', label: 'Rate Record' },
+      { href: '/billing/lists/ratePreference', label: 'Rate Preference' },
+      { href: '/billing/lists/rateOffering', label: 'Rate Offering' },
+      { href: '/billing/lists/rateCalendar', label: 'Rate Calendar' },
+      { href: '/billing/lists/fuelSurcharge', label: 'Fuel Surcharge' },
+      { href: '/billing/lists/exchangeRate', label: 'Exchange Rate' },
+      { href: '/billing/lists/conversionFactor', label: 'Conversion Factor' },
+      { href: '/billing/lists/consolidation', label: 'Consolidation' },
+      { href: '/billing/lists/billing', label: 'Billing' },
+    ],
+  },
 }
 
 export default function Navbar() {
