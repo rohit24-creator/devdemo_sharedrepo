@@ -38,8 +38,6 @@ export default function ClaimsPaymentsViewPage() {
           showFirstIcon={true}
           showSecondIcon={false}
           showThirdIcon={false}
-          showFourthIcon={false}
-          showFifthIcon={false}
           filterFields={[
             { name: "claimNumber", label: "Claim Number", type: "text" },
             { name: "carrierName", label: "Carrier Name", type: "text" }

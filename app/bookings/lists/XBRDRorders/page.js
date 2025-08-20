@@ -54,13 +54,15 @@ export default function XBRDRordersPage() {
         showActions={true}
         filterFields={filterFields}
         onSearch={(data) => console.log("Search:", data)}
-        showFirstIcon={false}   // Bell (notification) icon
-        showSecondIcon={true}  // Search icon
-        showThirdIcon={true}   // Wallet icon
-        showFourthIcon={false} // No document icon
-        showFifthIcon={true}   // Fifth bell icon
-        enabledActions={["edit", "view", "delete", "copyOrder", "reverseOrder", "generateTWB", "printLabel"]}
-        onActionClick={handleActionClick}
+        showFirstIcon={true}   // Search icon
+        showSecondIcon={false}   // Grid icon
+        showThirdIcon={true}    // File icon
+        showFourthIcon={true}   // Bell (notification) icon
+        fourthIconMenu={[
+          { label: "New Orders", onClick: () => console.log("New Orders") },
+          { label: "Pending Approvals", onClick: () => console.log("Pending Approvals") },
+          { label: "System Alerts", onClick: () => console.log("System Alerts") },
+        ]}
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
           { label: "Table View", onClick: () => console.log("Table View") },
@@ -68,9 +70,8 @@ export default function XBRDRordersPage() {
         thirdIconMenu={[
           { label: "Money View", onClick: () => console.log("Money View") },
         ]}
-        fifthIconMenu={[
-          { label: "Bell Action 1", onClick: () => console.log("Bell Action 1") },
-        ]}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
       />
     </div>
   );

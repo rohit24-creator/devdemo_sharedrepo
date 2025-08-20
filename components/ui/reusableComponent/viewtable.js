@@ -25,7 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, Search, LayoutGrid, FileText } from "lucide-react";
+import { ArrowUpDown, Search, LayoutGrid, FileText, Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -52,6 +52,8 @@ export default function ReusableTable({
   showFirstIcon = true,
   showSecondIcon = true,
   showThirdIcon = true,
+  showFourthIcon = false,
+  fourthIconMenu = [],
   secondIconMenu = [],
   thirdIconMenu = [],
   enabledActions = ["edit", "view", "delete", "tripHistory"], // <-- use prop, not hardcoded
@@ -259,6 +261,20 @@ const filterTab = (
       </div>
 
       <div className="flex items-end gap-6 pr-2">
+        {showFourthIcon && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Bell size={18} className="cursor-pointer text-gray-600 mb-1" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {fourthIconMenu.map((item, idx) => (
+                <DropdownMenuItem key={idx} onClick={item.onClick}>
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         {showFirstIcon && (
           <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
         )}

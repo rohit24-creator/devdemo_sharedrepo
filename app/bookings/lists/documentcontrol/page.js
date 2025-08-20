@@ -57,9 +57,7 @@ export default function DocumentControlPage() {
         showFirstIcon={false}
         showSecondIcon={true}
         showThirdIcon={true}
-        showFourthIcon={false}
-        showFifthIcon={false}
-        enabledActions={["edit", "view", "delete", "copyOrder", "reverseOrder", "generateTWB", "printLabel"]}
+        enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
         secondIconMenu={[
           { label: "Grid View", onClick: () => console.log("Grid View") },
