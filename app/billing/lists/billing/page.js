@@ -1,14 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function BillingListPage() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const secondIconMenu = [
+    {
+      label: "+ Add New",
+      onClick: () => router.push('/billing/billing')
+    }
+  ];
 
   const filterFields = [
     { name: "billingParty", label: "Billing Party", type: "text" },
@@ -103,7 +112,7 @@ export default function BillingListPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={[]}
+        secondIconMenu={secondIconMenu}
         thirdIconMenu={[]}
         showActions={true}
         enabledActions={["edit", "view", "delete", "generateCreditNote"]}

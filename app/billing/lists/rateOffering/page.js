@@ -1,14 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function RateOfferingListPage() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const secondIconMenu = [
+    {
+      label: "+ Add New",
+      onClick: () => router.push('/billing/rateOffering')
+    }
+  ];
 
   // Filters: Offering ID (input), Offering Type (dropdown), Tariff Type (dropdown)
   const filterFields = [
@@ -99,7 +108,7 @@ export default function RateOfferingListPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={[]}
+        secondIconMenu={secondIconMenu}
         thirdIconMenu={[]}
         showActions={true}
         enabledActions={["edit", "view", "delete"]}

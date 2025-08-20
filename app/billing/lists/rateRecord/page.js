@@ -1,15 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function RateRecordListPage() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const secondIconMenu = [
+    {
+      label: "+ Add New",
+      onClick: () => router.push('/billing/rateRecord')
+    }
+  ];
 
   // Filters: From Date, To Date, Rate ID, Company Code
   const filterFields = [
@@ -80,7 +89,7 @@ export default function RateRecordListPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={[]}
+        secondIconMenu={secondIconMenu}
         thirdIconMenu={[]}
         showActions={true}
         enabledActions={["edit", "view", "delete"]}

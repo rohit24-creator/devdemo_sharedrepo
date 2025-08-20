@@ -1,15 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function RateTierListPage() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const secondIconMenu = [
+    {
+      label: "+ Add New",
+      onClick: () => router.push('/billing/tiers/rateTier')
+    }
+  ];
 
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
@@ -79,7 +88,7 @@ export default function RateTierListPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={[]}
+        secondIconMenu={secondIconMenu}
         thirdIconMenu={[]}
         showActions={true}
         enabledActions={["edit", "view", "delete"]}
