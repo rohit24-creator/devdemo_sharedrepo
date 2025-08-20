@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function VatMasterListPage() {
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Filters: VAT Id, Name, Customer Name
   const filterFields = [
@@ -15,6 +18,11 @@ export default function VatMasterListPage() {
   ];
 
   const [columns, setColumns] = useState([]);
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   const handleActionClick = (action, row) => {
     if (action === "delete") {
@@ -29,22 +37,35 @@ export default function VatMasterListPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/billing/vatMasterList.json");
-        const data = await res.json();
+        setLoading(true);
+        setError(null);
         
-        const formattedColumns = data.headers.map((header) => ({
+        const { data } = await api.get("/billing/vatMasterList.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
-        setRows(formatRowsWithId(data.rows || []));
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
+        setRows(formattedRows);
         setColumns(formattedColumns);
+        
       } catch (err) {
-        console.error("Error fetching VAT Master List data:", err);
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">
