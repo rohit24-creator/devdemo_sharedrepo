@@ -1,20 +1,31 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 
 export default function DeliveryOrdersPage() {
   const [deliveryOrders, setDeliveryOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   // Fetch data from JSON file
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/deliveryOrders.json');
-        const data = await response.json();
-        setDeliveryOrders(data);
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get('/deliveryOrders.json');
+        setDeliveryOrders(data || []);
+        
       } catch (error) {
+        setError(error.message || "Failed to fetch data");
         console.error('Error fetching delivery orders:', error);
         setDeliveryOrders([]);
       } finally {
@@ -128,13 +139,9 @@ export default function DeliveryOrdersPage() {
     { label: "Email Report", onClick: () => console.log("Email Report") },
   ];
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading delivery orders...</div>
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!deliveryOrders.length) return <div>No data available</div>;
 
   return (
     <div className=" p-6">
