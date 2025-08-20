@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
@@ -9,24 +10,40 @@ export default function ShipmentTypeViewPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [formValues, setFormValues] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/shipmentType.json");
-        const data = await res.json();
+        setLoading(true);
+        setError(null);
         
-      console.log("Fetched Data:", data);
+        const { data } = await api.get("/shipmentType.json");
+        
+        console.log("Fetched Data:", data);
 
-        const formattedColumns = data.headers.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
         setColumns(formattedColumns);
-        setRows(formatRowsWithId(data.rows));
+        setRows(formattedRows);
+        
       } catch (err) {
-        console.error("Error fetching shipment type data:", err);
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -51,6 +68,10 @@ export default function ShipmentTypeViewPage() {
       console.log("Unknown action", action, row);
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">

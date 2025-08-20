@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
@@ -9,6 +10,8 @@ export default function PartnerDetailsPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [formValues, setFormValues] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
@@ -59,32 +62,48 @@ export default function PartnerDetailsPage() {
     { label: "Export Excel", onClick: () => console.log("Excel Export") },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/partnerData.json");
-        const data = await res.json();
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/partnerData.json");
 
         // Format columns
-        const formattedColumns = data.headers.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
         // Add unique ID to each row 
-        const formattedRows = data.rows.map((row, index) => ({
+        const formattedRows = (data?.rows || []).map((row, index) => ({
           ...row,
           id: row.id || uuidv4() || `row-${index}`,
         }));
 
         setColumns(formattedColumns);
         setRows(formattedRows);
+        
       } catch (err) {
-        console.error("Error fetching partner data:", err);
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">
