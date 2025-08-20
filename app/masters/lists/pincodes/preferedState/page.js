@@ -24,7 +24,7 @@ export default function PreferredViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/preferedState.json");
+        const { data } = await api.get("/masters/preferedState.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

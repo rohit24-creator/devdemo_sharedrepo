@@ -24,7 +24,7 @@ export default function StatusViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/status-data.json");
+        const { data } = await api.get("/masters/status-data.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

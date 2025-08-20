@@ -23,7 +23,7 @@ export default function RulesViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/allocationRules.json");
+        const { data } = await api.get("/masters/allocationRules.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

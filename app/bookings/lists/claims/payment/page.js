@@ -22,7 +22,7 @@ export default function ClaimsPaymentsViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/claimsPaymentsView.json");
+        const { data } = await api.get("/bookings/claimsPaymentsView.json");
         
         const formattedColumns = data?.columns?.map((header) => ({
           accessorKey: header.accessorKey,

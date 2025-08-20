@@ -24,7 +24,7 @@ export default function TrafficViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/trafficCode.json");
+        const { data } = await api.get("/masters/trafficCode.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

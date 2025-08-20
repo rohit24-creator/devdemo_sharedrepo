@@ -24,7 +24,7 @@ export default function PincodeViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/pincode.json");
+        const { data } = await api.get("/masters/pincode.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

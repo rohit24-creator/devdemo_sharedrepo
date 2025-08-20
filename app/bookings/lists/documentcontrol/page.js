@@ -22,7 +22,7 @@ export default function DocumentControlPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/documentcontrol.json");
+        const { data } = await api.get("/bookings/documentcontrol.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

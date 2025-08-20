@@ -24,7 +24,7 @@ export default function CostCenterViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/costCenter.json");
+        const { data } = await api.get("/masters/costCenter.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

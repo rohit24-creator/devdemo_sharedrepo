@@ -22,7 +22,7 @@ export default function ContainersListPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/containersView.json");
+        const { data } = await api.get("/bookings/containersView.json");
         
         const formattedColumns = data?.columns?.map((header) => ({
           accessorKey: header.accessorKey,

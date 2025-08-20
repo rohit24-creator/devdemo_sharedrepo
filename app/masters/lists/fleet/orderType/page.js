@@ -24,7 +24,7 @@ export default function OrderTypeViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/orderType.json");
+        const { data } = await api.get("/masters/orderType.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

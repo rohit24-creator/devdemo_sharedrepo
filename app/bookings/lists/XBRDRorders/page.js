@@ -22,7 +22,7 @@ export default function XBRDRordersPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/XBRDRorders.json");
+        const { data } = await api.get("/bookings/XBRDRorders.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

@@ -73,7 +73,7 @@ export default function PartnerDetailsPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/partnerData.json");
+        const { data } = await api.get("/masters/partnerData.json");
 
         // Format columns
         const formattedColumns = data?.headers?.map((header) => ({

@@ -24,7 +24,7 @@ export default function TripViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/tripallocationRatio.json");
+        const { data } = await api.get("/masters/tripallocationRatio.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

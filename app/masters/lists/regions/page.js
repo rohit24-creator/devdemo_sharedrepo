@@ -24,7 +24,7 @@ export default function RegionViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/regionData.json");
+        const { data } = await api.get("/masters/regionData.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

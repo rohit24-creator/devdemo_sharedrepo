@@ -36,7 +36,7 @@ export default function ClaimsViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/claimsView.json");
+        const { data } = await api.get("/bookings/claimsView.json");
         
         const formattedColumns = data?.columns?.map((header) => ({
           accessorKey: header.accessorKey,

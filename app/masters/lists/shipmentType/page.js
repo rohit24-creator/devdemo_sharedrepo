@@ -24,7 +24,7 @@ export default function ShipmentTypeViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/shipmentType.json");
+        const { data } = await api.get("/masters/shipmentType.json");
         
         console.log("Fetched Data:", data);
 

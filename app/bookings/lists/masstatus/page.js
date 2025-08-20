@@ -29,7 +29,7 @@ export default function MassStatusPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/masstatusView.json");
+        const { data } = await api.get("/bookings/masstatusView.json");
         
         const formattedColumns = data?.columns?.map((header) => ({
           accessorKey: header.accessorKey,

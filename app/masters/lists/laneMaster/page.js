@@ -24,7 +24,7 @@ export default function LaneViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/laneData.json");
+        const { data } = await api.get("/masters/laneData.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

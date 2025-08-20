@@ -24,7 +24,7 @@ export default function DriverViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/Drivers.json");
+        const { data } = await api.get("/masters/Drivers.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

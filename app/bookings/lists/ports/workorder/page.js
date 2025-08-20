@@ -22,7 +22,7 @@ export default function WorkOrdersListPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/workOrdersView.json");
+        const { data } = await api.get("/bookings/workOrdersView.json");
         
         const formattedColumns = data?.columns?.map((header) => ({
           accessorKey: header.accessorKey,

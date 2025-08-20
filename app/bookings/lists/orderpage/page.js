@@ -135,7 +135,7 @@ export default function OrderPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/order.json");
+        const { data } = await api.get("/bookings/order.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

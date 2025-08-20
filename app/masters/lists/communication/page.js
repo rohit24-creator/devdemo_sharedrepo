@@ -24,7 +24,7 @@ export default function NotificationViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/communication.json");
+        const { data } = await api.get("/masters/communication.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

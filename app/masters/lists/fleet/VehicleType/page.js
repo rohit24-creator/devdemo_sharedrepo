@@ -24,7 +24,7 @@ export default function VehicleTypeViewPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/vehicleType.json");
+        const { data } = await api.get("/masters/vehicleType.json");
         
         const formattedColumns = data?.headers?.map(header => ({
           accessorKey: header.accessorKey,
