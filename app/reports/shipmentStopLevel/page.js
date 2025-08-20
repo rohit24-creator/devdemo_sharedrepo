@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function ShipmentStopLevelPage() {
   const [tabData, setTabData] = useState({});
   const [activeTab, setActiveTab] = useState("summary");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
 
   const filterFields = [
@@ -51,11 +54,18 @@ export default function ShipmentStopLevelPage() {
     { label: "Export Excel", onClick: () => console.log("Excel Export") },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/reports/shipmentStopLevel.json");
-        const data = await res.json();
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/reports/shipmentStopLevel.json");
 
         const processedData = {};
         Object.keys(data).forEach((tabKey) => {
@@ -66,8 +76,11 @@ export default function ShipmentStopLevelPage() {
         });
 
         setTabData(processedData);
-      } catch (err) {
-        console.error("Error fetching shipment stop level data:", err);
+      } catch (error) {
+        setError(error.message || "Failed to fetch data");
+        console.error("Fetch error:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -83,6 +96,10 @@ export default function ShipmentStopLevelPage() {
     activeTab: activeTab,
     onTabChange: setActiveTab
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!Object.keys(tabData).length) return <div>No data available</div>;
 
   return (
     <div className="p-4">

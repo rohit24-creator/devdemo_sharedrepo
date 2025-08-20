@@ -1,329 +1,282 @@
 "use client";
+import React from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { OrdersForm } from "@/components/ui/reusableComponent/orderForms";
+import { Card, CardContent } from "@/components/ui/card";
+import { Truck, Home } from "lucide-react";
 
-import { useState, useEffect } from "react";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+const shipperSchema = z.object({
+  shipperId: z.string().min(1, { message: "Shipper ID is required" }),
+  shipperName: z.string().min(1, { message: "Shipper Name is required" }),
+  street: z.string().min(1, { message: "Street is required" }),
+  estimatedEarlyPickup: z.string().min(1, { message: "Estimated Early Pickup is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  estimatedLatePickup: z.string().min(1, { message: "Estimated Late Pickup is required" }),
+  province: z.string().min(1, { message: "Province is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  zipcode: z.string().min(1, { message: "Zipcode is required" }),
+  phone: z.string().optional(),
+  fax: z.string().optional(),
+  email: z.string().optional(),
+});
 
-export default function DeliveryOrdersPage() {
-  const [deliveryOrders, setDeliveryOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [tripCreateDialogOpen, setTripCreateDialogOpen] = useState(false);
-  const [tripFormData, setTripFormData] = useState({
-    tripName: "",
-    tripType: "",
-    startDate: "",
-    endDate: "",
-    description: "",
+const consigneeSchema = z.object({
+  consigneeId: z.string().min(1, { message: "Consignee ID is required" }),
+  consigneeName: z.string().min(1, { message: "Consignee Name is required" }),
+  estimatedEarlyDelivery: z.string().min(1, { message: "Estimated Early Delivery is required" }),
+  street: z.string().min(1, { message: "Street is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  estimatedLateDelivery: z.string().min(1, { message: "Estimated Late Delivery is required" }),
+  province: z.string().min(1, { message: "Province is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  zipcode: z.string().min(1, { message: "Zipcode is required" }),
+  phone: z.string().optional(),
+  fax: z.string().optional(),
+  email: z.string().optional(),
+});
+
+const carrierDetailsSchema = z.object({
+  adviceNumber: z.string().optional(),
+  carrierName: z.string().optional(),
+  vesselName: z.string().optional(),
+  voyageNumber: z.string().optional(),
+  billOfLandingNo: z.string().optional(),
+});
+
+const portDetailsSchema = z.object({
+  loadingPort: z.string().optional(),
+  dischargePort: z.string().optional(),
+  finalDestination: z.string().optional(),
+  eta: z.string().optional(),
+});
+
+const deliveryContainersSchema = z.object({
+  addDeliveryContainers: z.boolean().default(false),
+  containerNumber: z.string().optional(),
+  sealNumber: z.string().optional(),
+  noOfPackages: z.string().optional(),
+  goodsDescription: z.string().optional(),
+  weight: z.string().optional(),
+  volume: z.string().optional(),
+});
+
+const shipperFields = [
+  { name: "shipperId", label: "Shipper ID *" },
+  { name: "shipperName", label: "Shipper Name *" },
+  { name: "street", label: "Street *" },
+  { name: "estimatedEarlyPickup", label: "Estimated Early Pickup *", type: "date" },
+  { name: "city", label: "City *" },
+  { name: "estimatedLatePickup", label: "Estimated Late Pickup *", type: "date" },
+  { name: "province", label: "Province *" },
+  { name: "country", label: "Country *" },
+  { name: "zipcode", label: "Zipcode *" },
+  { name: "phone", label: "Phone" },
+  { name: "fax", label: "Fax" },
+  { name: "email", label: "Email" },
+];
+const consigneeFields = [
+  { name: "consigneeId", label: "Consignee ID *" },
+  { name: "consigneeName", label: "Consignee Name *" },
+  { name: "estimatedEarlyDelivery", label: "Estimated Early Delivery *", type: "date" },
+  { name: "street", label: "Street *" },
+  { name: "city", label: "City *" },
+  { name: "estimatedLateDelivery", label: "Estimated Late Delivery *", type: "date" },
+  { name: "province", label: "Province *" },
+  { name: "country", label: "Country *" },
+  { name: "zipcode", label: "Zipcode *" },
+  { name: "phone", label: "Phone" },
+  { name: "fax", label: "Fax" },
+  { name: "email", label: "Email" },
+];
+
+const carrierDetailsFields = [
+  { name: "adviceNumber", label: "Advice number" },
+  { name: "carrierName", label: "Carrier name" },
+  { name: "vesselName", label: "Vessel Name" },
+  { name: "voyageNumber", label: "Voyage Number" },
+  { name: "billOfLandingNo", label: "Bill Of Landing No." },
+];
+
+
+const portDetailsFields = [
+  { name: "loadingPort", label: "Loading Port" },
+  { name: "dischargePort", label: "Discharge Port" },
+  { name: "finalDestination", label: "Final Destination" },
+  { name: "eta", label: "ETA", type: "date" },
+];
+
+const deliveryContainersFields = [
+  { name: "addDeliveryContainers", label: "Add Delivery Containers", type: "checkbox" },
+  { name: "containerNumber", label: "Container number" },
+  { name: "sealNumber", label: "Seal number" },
+  { name: "noOfPackages", label: "No. Of Packages" },
+  { name: "goodsDescription", label: "Goods Description" },
+  { name: "weight", label: "Weight", placeholder: "in tonnes" },
+  { name: "volume", label: "Volume", placeholder: "in cbm" },
+];
+
+export default function DeliveryPage() {
+  const shipperForm = useForm({
+    resolver: zodResolver(shipperSchema),
+    defaultValues: {
+      shipperId: "",
+      shipperName: "",
+      street: "",
+      estimatedEarlyPickup: "",
+      city: "",
+      estimatedLatePickup: "",
+      province: "",
+      country: "",
+      zipcode: "",
+      phone: "",
+      fax: "",
+      email: "",
+    },
   });
 
-  // Fetch data from JSON file
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/deliveryOrders.json');
-        const data = await response.json();
-        setDeliveryOrders(data);
-      } catch (error) {
-        console.error('Error fetching delivery orders:', error);
-        setDeliveryOrders([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const consigneeForm = useForm({
+    resolver: zodResolver(consigneeSchema),
+    defaultValues: {
+      consigneeId: "",
+      consigneeName: "",
+      estimatedEarlyDelivery: "",
+      street: "",
+      city: "",
+      estimatedLateDelivery: "",
+      province: "",
+      country: "",
+      zipcode: "",
+      phone: "",
+      fax: "",
+      email: "",
+    },
+  });
 
-    fetchData();
-  }, []);
+  const carrierDetailsForm = useForm({
+    resolver: zodResolver(carrierDetailsSchema),
+    defaultValues: {
+      adviceNumber: "",
+      carrierName: "",
+      vesselName: "",
+      voyageNumber: "",
+      billOfLandingNo: "",
+    },
+  });
 
-  // Column definitions based on the image
-  const columns = [
+  const portDetailsForm = useForm({
+    resolver: zodResolver(portDetailsSchema),
+    defaultValues: {
+      loadingPort: "",
+      dischargePort: "",
+      finalDestination: "",
+      eta: "",
+    },
+  });
+
+  const deliveryContainersForm = useForm({
+    resolver: zodResolver(deliveryContainersSchema),
+    defaultValues: {
+      addDeliveryContainers: false,
+      containerNumber: "",
+      sealNumber: "",
+      noOfPackages: "",
+      goodsDescription: "",
+      weight: "",
+      volume: "",
+    },
+  });
+
+  const dummyForm = useForm();
+
+  const sections = [
     {
-      accessorKey: "adviceNumber",
-      header: "Advice Number",
-      sortable: true,
+      title: "Routing Details",
+      type: "form",
+      form: dummyForm,
+      onSubmit: () => {},
+      onInvalid: () => {},
+      fields: [],
+      renderLayout: ({ renderField }) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Shipper Card */}
+          <Card className="shadow-lg border-t-4 border-[#0088d2]">
+            <CardContent className="pt-8">
+              <FormProvider {...shipperForm}>
+                <form>
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="bg-[#0088d2] rounded-full p-4 mb-2">
+                      <Truck size={32} color="white" />
+                    </div>
+                    <div className="text-[#0088d2] text-lg font-semibold">Shipper</div>
+                    <label className="flex items-center mt-2 text-sm">
+                      <input type="checkbox" className="mr-2" />
+                      Save to Party Master
+                    </label>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {shipperFields.map(field =>
+                      renderField(field, shipperForm, 0)
+                    )}
+                  </div>
+                </form>
+              </FormProvider>
+            </CardContent>
+          </Card>
+          {/* Consignee Card */}
+          <Card className="shadow-lg border-t-4 border-[#0088d2]">
+            <CardContent className="pt-8">
+              <FormProvider {...consigneeForm}>
+                <form>
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="bg-[#0088d2] rounded-full p-4 mb-2">
+                      <Home size={32} color="white" />
+                    </div>
+                    <div className="text-[#0088d2] text-lg font-semibold">Consignee</div>
+                    <label className="flex items-center mt-2 text-sm">
+                      <input type="checkbox" className="mr-2" />
+                      Save to Party Master
+                    </label>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {consigneeFields.map(field =>
+                      renderField(field, consigneeForm, 1)
+                    )}
+                  </div>
+                </form>
+              </FormProvider>
+            </CardContent>
+          </Card>
+        </div>
+      )
     },
     {
-      accessorKey: "shipperName",
-      header: "Shipper Name",
-      sortable: true,
+      title: "Carrier Details",
+      type: "form",
+      form: carrierDetailsForm,
+      fields: carrierDetailsFields,
+      disableAccordionToggle: true,
     },
     {
-      accessorKey: "shipperContact",
-      header: "Shipper Contact",
-      sortable: true,
+      title: "Port Details",
+      type: "form",
+      form: portDetailsForm,
+      fields: portDetailsFields,
+      disableAccordionToggle: true,
     },
     {
-      accessorKey: "consigneeName",
-      header: "Consignee Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeContact",
-      header: "Consignee Contact",
-      sortable: true,
-    },
-    {
-      accessorKey: "carrierName",
-      header: "Carrier Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "vesselName",
-      header: "Vessel Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "voyageNo",
-      header: "Voyage No",
-      sortable: true,
+      title: "Delivery Containers",
+      type: "form",
+      form: deliveryContainersForm,
+      fields: deliveryContainersFields,
+      disableAccordionToggle: true,
     },
   ];
-
-  // Filter fields based on the image
-  const filterFields = [
-    {
-      name: "adviceNumber",
-      label: "Advice Number",
-      type: "text",
-    },
-    {
-      name: "fromDate",
-      label: "From Date",
-      type: "date",
-    },
-    {
-      name: "toDate",
-      label: "To Date",
-      type: "date",
-    },
-  ];
-
-  // Action handlers
-  const handleActionClick = (action, row) => {
-    console.log(`${action} action clicked for:`, row);
-    // Handle different actions here
-    switch (action) {
-      case "edit":
-        // Handle edit
-        break;
-      case "view":
-        // Handle view
-        break;
-      case "delete":
-        // Handle delete
-        break;
-      case "tripHistory":
-        // Handle trip history
-        break;
-      default:
-        break;
-    }
-  };
-
-  // Search handler
-  const handleSearch = (formValues) => {
-    console.log("Search with values:", formValues);
-    // Implement search logic here
-  };
-
-  // Handle grid icon click for trip creation
-  const handleGridIconClick = () => {
-    if (selectedRows.length >= 2) {
-      setTripCreateDialogOpen(true);
-    } else {
-      alert("Please select at least 2 delivery orders to create a trip.");
-    }
-  };
-
-  // Handle trip form submission
-  const handleTripSubmit = () => {
-    console.log("Creating trip with selected orders:", selectedRows);
-    console.log("Trip form data:", tripFormData);
-    
-    // Here you would typically make an API call to create the trip
-    // For now, we'll just close the dialog and show a success message
-    setTripCreateDialogOpen(false);
-    setTripFormData({
-      tripName: "",
-      tripType: "",
-      startDate: "",
-      endDate: "",
-      description: "",
-    });
-    alert("Trip created successfully!");
-  };
-
-  // Handle trip form input changes
-  const handleTripFormChange = (field, value) => {
-    setTripFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  // Menu items for the icons
-  const secondIconMenu = [
-    { 
-      label: "Create Trip", 
-      onClick: handleGridIconClick 
-    },
-    { label: "Export to Excel", onClick: () => console.log("Export to Excel") },
-    { label: "Export to PDF", onClick: () => console.log("Export to PDF") },
-    { label: "Print", onClick: () => console.log("Print") },
-  ];
-
-  const thirdIconMenu = [
-    { label: "Download Report", onClick: () => console.log("Download Report") },
-    { label: "Email Report", onClick: () => console.log("Email Report") },
-  ];
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading delivery orders...</div>
-      </div>
-    );
-  }
 
   return (
-    <div className="container mx-auto p-6">
-   
-      <ReusableTable
-        title="Delivery Orders"
-        columns={columns}
-        rows={deliveryOrders}
-        filterFields={filterFields}
-        onSearch={handleSearch}
-        onActionClick={handleActionClick}
-        enabledActions={["edit", "view", "delete", "tripHistory"]}
-        showActions={true}
-        showFirstIcon={true}
-        showSecondIcon={true}
-        showThirdIcon={true}
-        secondIconMenu={secondIconMenu}
-        thirdIconMenu={thirdIconMenu}
-        selectedRows={selectedRows}
-        onSelectedRowsChange={setSelectedRows}
-      />
-
-      {/* Trip Creation Dialog */}
-      <Dialog open={tripCreateDialogOpen} onOpenChange={setTripCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Create Trip from Selected Orders</DialogTitle>
-            <DialogDescription>
-              Create a new trip with {selectedRows.length} selected delivery orders.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="tripName" className="text-right">
-                Trip Name
-              </Label>
-              <Input
-                id="tripName"
-                value={tripFormData.tripName}
-                onChange={(e) => handleTripFormChange("tripName", e.target.value)}
-                className="col-span-3"
-                placeholder="Enter trip name"
-              />
-            </div>
-            
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="tripType" className="text-right">
-                Trip Type
-              </Label>
-              <Select
-                value={tripFormData.tripType}
-                onValueChange={(value) => handleTripFormChange("tripType", value)}
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select trip type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="domestic">Domestic</SelectItem>
-                  <SelectItem value="international">International</SelectItem>
-                  <SelectItem value="express">Express</SelectItem>
-                  <SelectItem value="standard">Standard</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="startDate" className="text-right">
-                Start Date
-              </Label>
-              <Input
-                id="startDate"
-                type="date"
-                value={tripFormData.startDate}
-                onChange={(e) => handleTripFormChange("startDate", e.target.value)}
-                className="col-span-3"
-              />
-            </div>
-            
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="endDate" className="text-right">
-                End Date
-              </Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={tripFormData.endDate}
-                onChange={(e) => handleTripFormChange("endDate", e.target.value)}
-                className="col-span-3"
-              />
-            </div>
-            
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                Description
-              </Label>
-              <textarea
-                id="description"
-                value={tripFormData.description}
-                onChange={(e) => handleTripFormChange("description", e.target.value)}
-                className="col-span-3 p-2 border border-gray-300 rounded-md resize-none"
-                rows={3}
-                placeholder="Enter trip description"
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button 
-              variant="outline" 
-              onClick={() => setTripCreateDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleTripSubmit}
-              className="bg-[#006397] hover:bg-[#02abf5] text-white"
-            >
-              Create Trip
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+    <div className="p-6">
+      <OrdersForm sections={sections} useAccordion={true} />
     </div>
   );
-} 
+}

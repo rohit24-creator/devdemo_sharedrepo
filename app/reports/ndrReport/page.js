@@ -1,121 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function NdrReportPage() {
   const [ndrData, setNdrData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the NDR report structure
-  const columns = [
-    {
-      accessorKey: "serialNo",
-      header: "S.No",
-      sortable: true,
-    },
-    {
-      accessorKey: "docketNumber",
-      header: "Docket Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "clientName",
-      header: "Client Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "clientLocation",
-      header: "Client Location",
-      sortable: true,
-    },
-    {
-      accessorKey: "yearMonth",
-      header: "YEAR & MONTH",
-      sortable: true,
-    },
-    {
-      accessorKey: "number",
-      header: "number",
-      sortable: true,
-    },
-    {
-      accessorKey: "orderDate",
-      header: "Order Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "manifestDate",
-      header: "Manifest Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "pickupDate",
-      header: "Pickup Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "clientPickupDate",
-      header: "Client Pickup Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "clientCity",
-      header: "Ci",
-      sortable: true,
-    },
-    {
-      accessorKey: "destinationPin",
-      header: "Destination PIN",
-      sortable: true,
-    },
-    {
-      accessorKey: "destinationCity",
-      header: "Destination City",
-      sortable: true,
-    },
-    {
-      accessorKey: "destinationState",
-      header: "Destination STATE",
-      sortable: true,
-    },
-    {
-      accessorKey: "region",
-      header: "Region",
-      sortable: true,
-    },
-    {
-      accessorKey: "invoiceZone",
-      header: "Invoice Zone",
-      sortable: true,
-    },
-    {
-      accessorKey: "packageType",
-      header: "Package Type",
-      sortable: true,
-    },
-    {
-      accessorKey: "incomingDate",
-      header: "Incoming Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "dispatchCount",
-      header: "Dispatch Count",
-      sortable: true,
-    },
-    {
-      accessorKey: "firstPendingDate",
-      header: "First Pending Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "attempts",
-      header: "Attempts",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the image
   const filterFields = [
@@ -161,17 +57,32 @@ export default function NdrReportPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadNdrData = async () => {
       try {
-        const response = await fetch("/reports/ndrReport.json");
-        const data = await response.json();
-        setNdrData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/ndrReport.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setNdrData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading NDR data:", error);
+      } finally {
         setLoading(false);
       }
     };

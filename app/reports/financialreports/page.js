@@ -1,76 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function FinancialReportsPage() {
   const [financialData, setFinancialData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the financial report structure
-  const columns = [
-    {
-      accessorKey: "trackingNo",
-      header: "TrackingNo",
-      sortable: true,
-    },
-    {
-      accessorKey: "custRefNo",
-      header: "Cust.RefNo",
-      sortable: true,
-    },
-    {
-      accessorKey: "customerId",
-      header: "Customer ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "customerName",
-      header: "Customer Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "revenueLine",
-      header: "Revenue Line",
-      sortable: true,
-    },
-    {
-      accessorKey: "amount",
-      header: "Amount",
-      sortable: true,
-    },
-    {
-      accessorKey: "code",
-      header: "Code",
-      sortable: true,
-    },
-    {
-      accessorKey: "name",
-      header: "Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "bu",
-      header: "BU",
-      sortable: true,
-    },
-    {
-      accessorKey: "jobFileNumber",
-      header: "Job File Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "invoiceNo",
-      header: "Invoice No",
-      sortable: true,
-    },
-    {
-      accessorKey: "revenue",
-      header: "Revenue",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields
   const filterFields = [
@@ -116,17 +57,32 @@ export default function FinancialReportsPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadFinancialData = async () => {
       try {
-        const response = await fetch("/reports/financialreport.json");
-        const data = await response.json();
-        setFinancialData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/financialreport.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setFinancialData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading financial data:", error);
+      } finally {
         setLoading(false);
       }
     };

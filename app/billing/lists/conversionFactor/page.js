@@ -1,12 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function ConversionFactorListPage() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const secondIconMenu = [
+    {
+      label: "+ Add New",
+      onClick: () => router.push('/billing/conversionFactor')
+    }
+  ];
 
   const filterFields = [
     { name: "conversionId", label: "Conversion ID", type: "text" },
@@ -24,6 +36,11 @@ export default function ConversionFactorListPage() {
     { name: "baseUom", label: "Base UOM", type: "text" },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   const handleActionClick = (action, row) => {
     if (action === "delete") {
       setRows((prev) => prev.filter((r) => r.id !== row.id));
@@ -37,22 +54,35 @@ export default function ConversionFactorListPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/billing/conversionFactorList.json");
-        const data = await res.json();
+        setLoading(true);
+        setError(null);
         
-        const formattedColumns = data.headers.map((header) => ({
+        const { data } = await api.get("/billing/conversionFactorList.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
-        setRows(formatRowsWithId(data.rows || []));
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
+        setRows(formattedRows);
         setColumns(formattedColumns);
+        
       } catch (err) {
-        console.error("Error fetching Conversion Factor List data:", err);
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">
@@ -67,7 +97,7 @@ export default function ConversionFactorListPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={[]}
+        secondIconMenu={secondIconMenu}
         thirdIconMenu={[]}
         showActions={true}
         enabledActions={["edit", "view", "delete"]}

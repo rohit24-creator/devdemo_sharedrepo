@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
@@ -9,22 +10,38 @@ export default function RegionViewPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [formValues, setFormValues] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/regionData.json");
-        const data = await res.json();
-
-        const formattedColumns = data.headers.map((header) => ({
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/masters/regionData.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
         setColumns(formattedColumns);
-        setRows(formatRowsWithId(data.rows));
+        setRows(formattedRows);
+        
       } catch (err) {
-        console.error("Error fetching region data:", err);
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -49,6 +66,10 @@ export default function RegionViewPage() {
       console.log("Unknown action", action, row);
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">

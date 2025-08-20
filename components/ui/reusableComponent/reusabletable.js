@@ -1,12 +1,7 @@
 "use client"
 
 import React from 'react';
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,10 +18,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import ReusableModal from "../reusableComponent/bussinessParnterModal";
+import ReusableModal from "../reusableComponent/bussinessPartnerModal";
 import FormModal from "../reusableComponent/formmodal";
+import { useState } from 'react';
 
-export default function ReusableTable({ fields, data, onChange, accordionTitle, modalData, formFields }) {
+export default function ReusableTable({ fields, defaultValues = [], modalData, formFields: modalFormFields, onDataChange }) {
   const iconMap = {
     packageType: Truck,
     goodsDescription: FileText,
@@ -47,10 +43,31 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
     split: SplitSquare,
   };
 
+  const form = useForm({
+    defaultValues: {
+      rows: defaultValues.length > 0 ? defaultValues : [{}]
+    }
+  });
+
+  const { fields: formFields, append, remove, update } = useFieldArray({
+    control: form.control,
+    name: "rows",
+  });
+
   const [modalOpen, setModalOpen] = React.useState(false);
   const [modalRowIdx, setModalRowIdx] = React.useState(null);
-  const [modalFieldKey, setModalFieldKey] = React.useState(null);
+  const [modalFieldKey, setModalFieldKey] = useState(null);
   const [formModalOpen, setFormModalOpen] = React.useState(false);
+
+  // Watch for changes and notify parent
+  React.useEffect(() => {
+    const subscription = form.watch((value) => {
+      if (onDataChange) {
+        onDataChange(value.rows || []);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form, onDataChange]);
 
   const handleAddRow = () => {
     const newRow = {};
@@ -64,30 +81,187 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
         newRow[f.key] = '';
       }
     });
-    onChange([...data, newRow]);
+    append(newRow);
   };
 
   const handleRemoveRow = (idx) => {
-    const newData = data.filter((_, i) => i !== idx);
-    onChange(newData);
+    remove(idx);
   };
 
-  const handleCellChange = (rowIdx, key, value) => {
-    const newData = data.map((row, i) =>
-      i === rowIdx ? { ...row, [key]: value } : row
-    );
-    onChange(newData);
+  // Dynamic field renderer - no more hardcoding!
+  const renderField = (field, rowIdx) => {
+    const baseControllerProps = {
+      control: form.control,
+      name: `rows.${rowIdx}.${field.key}`,
+    };
+
+    switch (field.type) {
+      case 'text+icons':
+        return (
+          <div className="relative flex items-center">
+            <Controller
+              {...baseControllerProps}
+              render={({ field: controllerField }) => (
+                <Input
+                  value={controllerField.value || ''}
+                  onChange={e => controllerField.onChange(e.target.value)}
+                  className="w-full pr-14"
+                />
+              )}
+            />
+            <div className="absolute right-0 h-full bg-[#E7ECFD] flex items-center px-2 space-x-2 rounded-r-md">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="p-1 h-6 w-6" 
+                type="button"
+                onClick={() => {
+                  setModalOpen(true);
+                  setModalRowIdx(rowIdx);
+                  setModalFieldKey(field.key);
+                }}
+              >
+                <Search size={16} />
+              </Button>
+              {field.showPlus !== false && (
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="p-1 h-6 w-6" 
+                  type="button"
+                  onClick={() => setFormModalOpen(true)}
+                >
+                  <Plus size={16} />
+                </Button>
+              )}
+            </div>
+          </div>
+        );
+
+      case 'number+unit':
+        return (
+          <div className="relative flex items-center">
+            <Controller
+              {...baseControllerProps}
+              render={({ field: controllerField }) => (
+                <Input
+                  type="text"
+                  value={controllerField.value || ''}
+                  onChange={e => controllerField.onChange(e.target.value)}
+                  className="w-full pr-24 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0.00"
+                />
+              )}
+            />
+            <div className="absolute right-0 h-full bg-[#E7ECFD] flex items-center px-3 min-w-24 rounded-r-md border-l border-gray-200">
+              <Controller
+                control={form.control}
+                name={`rows.${rowIdx}.${field.unitKey}`}
+                render={({ field: controllerField }) => (
+                  <Select
+                    value={controllerField.value ?? ""}
+                    onValueChange={val => controllerField.onChange(val)}
+                  >
+                    <SelectTrigger className="border-0 bg-transparent px-2 py-1 h-6 min-w-20 text-xs font-medium text-gray-700 hover:text-gray-900 focus:outline-none shadow-none ring-0 data-[state=open]:bg-transparent">
+                      {controllerField.value || "Select"}
+                    </SelectTrigger>
+                    <SelectContent className="z-50">
+                      {field.unitOptions?.map(opt => (
+                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+          </div>
+        );
+
+      case 'text':
+        return (
+          <Controller
+            {...baseControllerProps}
+            render={({ field: controllerField }) => (
+              <Input
+                value={controllerField.value || ''}
+                onChange={e => controllerField.onChange(e.target.value)}
+              />
+            )}
+          />
+        );
+
+      case 'number':
+        return (
+          <Controller
+            {...baseControllerProps}
+            render={({ field: controllerField }) => (
+              <Input
+                type="number"
+                value={controllerField.value || ''}
+                onChange={e => controllerField.onChange(e.target.value)}
+              />
+            )}
+          />
+        );
+
+      case 'select':
+        return (
+          <Controller
+            {...baseControllerProps}
+            render={({ field: controllerField }) => (
+              <Select
+                value={controllerField.value || ''}
+                onValueChange={val => controllerField.onChange(val)}
+              >
+                <SelectTrigger className="w-full min-w-[200px] px-3 py-2 text-base h-11">
+                  {controllerField.value || "Select"}
+                </SelectTrigger>
+                <SelectContent className="w-full text-base">
+                  {field.options?.map(opt => (
+                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
+        );
+
+      case 'checkbox':
+        return (
+          <div className="flex items-center space-x-2">
+            <Controller
+              {...baseControllerProps}
+              render={({ field: controllerField }) => (
+                <Checkbox
+                  checked={!!controllerField.value}
+                  onCheckedChange={val => controllerField.onChange(val)}
+                />
+              )}
+            />
+            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              {field.label}
+            </label>
+          </div>
+        );
+
+      default:
+        return (
+          <Controller
+            {...baseControllerProps}
+            render={({ field: controllerField }) => (
+              <Input
+                value={controllerField.value || ''}
+                onChange={e => controllerField.onChange(e.target.value)}
+              />
+            )}
+          />
+        );
+    }
   };
 
   return (
     <>
-      <Accordion type="single" collapsible defaultValue="table-accordion">
-        <AccordionItem value="table-accordion">
-          <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
-            {accordionTitle}
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="overflow-x-auto w-full mt-5">
+      <div className="overflow-x-auto w-full">
               <Table className="min-w-max">
                 <TableHeader>
                   <TableRow>
@@ -109,8 +283,8 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.map((row, rowIdx) => (
-                    <TableRow key={rowIdx}>
+            {formFields.map((row, rowIdx) => (
+              <TableRow key={row.id}>
                       <TableCell className="text-center align-middle">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -130,126 +304,34 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
                       </TableCell>
                       {fields.map(field => (
                         <TableCell key={field.key}>
-                          {field.type === 'text+icons' ? (
-                            <div className="relative flex items-center">
-                              <Input
-                                value={row[field.key] || ''}
-                                onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
-                                className="w-full pr-14"
-                              />
-                              <div className="absolute right-0 h-full bg-[#E7ECFD] flex items-center px-2 space-x-2 rounded-r-md">
-                                <Button variant="ghost" size="icon" className="p-1 h-6 w-6" type="button"
-                                  onClick={() => {
-                                    setModalOpen(true);
-                                    setModalRowIdx(rowIdx);
-                                    setModalFieldKey(field.key);
-                                  }}
-                                >
-                                  <Search size={16} />
-                                </Button>
-                                {/* Only show plus button if showPlus is not false */}
-                                {field.showPlus !== false && (
-                                  <Button variant="ghost" size="icon" className="p-1 h-6 w-6" type="button"
-                                    onClick={() => setFormModalOpen(true)}
-                                  >
-                                    <Plus size={16} />
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          ) : field.type === 'number+unit' ? (
-                            <div className="relative flex items-center">
-                              <Input
-                                type="text"
-                                value={row[field.key] || ''}
-                                onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
-                                className="w-full pr-20"
-                              />
-                              <div className="absolute right-0 h-full bg-[#E7ECFD] flex items-center px-2 pl-4 min-w-20 rounded-r-md">
-                                <Select
-                                  value={row[field.unitKey] ?? ""}
-                                  onValueChange={val => handleCellChange(rowIdx, field.unitKey, val)}
-                                >
-                                  <SelectTrigger className="border-0 bg-transparent px-0 py-0 h-6 min-w-16 text-xs">
-                                    <span>{row[field.unitKey] || "Select"}</span>
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {field.unitOptions?.map(opt => (
-                                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-                          ) : field.type === 'text' ? (
-                            <div className="w-full">
-                              <Input
-                                value={row[field.key] || ''}
-                                onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
-                              />
-                            </div>
-                          ) : field.type === 'number' ? (
-                            <div className="w-full">
-                              <Input
-                                type="number"
-                                value={row[field.key] || ''}
-                                onChange={e => handleCellChange(rowIdx, field.key, e.target.value)}
-                              />
-                            </div>
-                          ) : field.type === 'select' ? (
-                            <div className="w-full">
-                              <Select
-                                value={row[field.key] || ''}
-                                onValueChange={val => handleCellChange(rowIdx, field.key, val)}
-                              >
-                                <SelectTrigger className="w-full min-w-[200px] px-3 py-2 text-base h-11">{row[field.key] || "Select"}</SelectTrigger>
-                                <SelectContent className="w-full text-base">
-                                  {field.options?.map(opt => (
-                                    <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          ) : field.type === 'checkbox' ? (
-                            <div className="flex items-center space-x-2">
-                              <Checkbox
-                                checked={!!row[field.key]}
-                                onCheckedChange={val => handleCellChange(rowIdx, field.key, val)}
-                              />
-                              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                {field.label}
-                              </label>
-                            </div>
-                          ) : null}
+                    {renderField(field, rowIdx)}
                         </TableCell>
                       ))}
                     </TableRow>
                   ))}
                   <TableRow>
                     <TableCell colSpan={fields.length + 1}>
+                <div className="pl-[10px] mt-4 mb-6">
                       <Button
                         type="button"
-                        className="bg-[#006397] text-white rounded-full px-6 py-2 text-base font-semibold hover:bg-[#02abf5] focus:bg-[#02abf5] active:bg-[#02abf5]"
                         onClick={handleAddRow}
+                    className="rounded-full px-6 bg-[#006397] text-white"
                       >
-                        <Plus size={20} className="text-white mr-2" />
                         Add Row
                       </Button>
+                </div>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
       {modalOpen && modalData && (
         <ReusableModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           onSelect={item => {
             if (modalRowIdx !== null && modalFieldKey) {
-              handleCellChange(modalRowIdx, modalFieldKey, item[modalData.columns[0]]);
+              update(modalRowIdx, { ...formFields[modalRowIdx], [modalFieldKey]: item[modalData.columns[0]] });
             }
             setModalOpen(false);
           }}
@@ -258,15 +340,15 @@ export default function ReusableTable({ fields, data, onChange, accordionTitle, 
           title={modalData.title}
         />
       )}
-      {formModalOpen && formFields && (
+      {formModalOpen && modalFormFields && (
         <FormModal
           open={formModalOpen}
           onClose={() => setFormModalOpen(false)}
           onSubmit={item => {
-            onChange([...data, item]);
+            append(item);
             setFormModalOpen(false);
           }}
-          formFields={formFields}
+          formFields={modalFormFields}
         />
       )}
     </>

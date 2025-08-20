@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 
 function buildZodSchema(fields = []) {
   const shape = {};
@@ -106,13 +107,18 @@ export default function FormModal({ open, onClose, title, formFields = [], onSub
                         placeholder={field.label}
                         className="flex-1 w-full px-3 py-1.5 text-sm"
                       />
-                      <select {...form.register(unitField)} className="border px-3 py-1.5 rounded min-w-[80px] text-sm w-auto">
-                        {field.unitOptions?.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
+                      <Select onValueChange={(value) => form.setValue(unitField, value)} value={form.watch(unitField) || ""}>
+                        <SelectTrigger className="border px-3 py-1.5 rounded min-w-[80px] text-sm w-auto">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {field.unitOptions?.map((opt) => (
+                            <SelectItem key={opt} value={opt}>
+                              {opt}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   ) : field.type === "checkbox" ? (
                     <input type="checkbox" {...form.register(field.name)} />

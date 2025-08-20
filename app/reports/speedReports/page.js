@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function SpeedReports() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
 
   const filterFields = [
@@ -41,27 +44,46 @@ export default function SpeedReports() {
     console.log("Search with values:", formValues);
   };
 
+  // Simple axios instance
+  const api = axios.create({
+  timeout: 30000,
+});
+
+  // Improved fetch function with axios
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const { data } = await api.get("/reports/speedReports.json");
+      
+      const formattedColumns = data?.headers?.map((header) => ({
+        accessorKey: header.accessorKey,
+        header: header.header,
+        sortable: true,
+      })) || [];
+
+      const formattedRows = formatRowsWithId(data?.rows || []);
+      
+      setColumns(formattedColumns);
+      setRows(formattedRows);
+      
+    } catch (err) {
+      setError(err.message || "Failed to fetch data");
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("/reports/speedReports.json");
-        const data = await res.json();
-
-        const formattedColumns = data.headers.map((header) => ({
-          accessorKey: header.accessorKey,
-          header: header.header,
-        }));
-
-        const formattedRows = formatRowsWithId(data.rows);
-        setColumns(formattedColumns);
-        setRows(formattedRows);
-      } catch (error) {
-        console.error("Error fetching speed reports data:", error);
-      }
-    };
-
     fetchData();
   }, []);
+
+  // Simple loading and error states
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">

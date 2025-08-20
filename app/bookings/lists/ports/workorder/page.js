@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
 
 export default function WorkOrdersListPage() {
@@ -8,16 +9,39 @@ export default function WorkOrdersListPage() {
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
-      const res = await fetch("/workOrdersView.json");
-      const data = await res.json();
-      setColumns(data.columns || []);
-      setRows(data.rows || []);
-      setFilteredRows(data.rows || []);
-      setLoading(false);
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/bookings/workOrdersView.json");
+        
+        const formattedColumns = data?.columns?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = data?.rows || [];
+        
+        setColumns(formattedColumns);
+        setRows(formattedRows);
+        setFilteredRows(formattedRows);
+        
+      } catch (err) {
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
@@ -47,6 +71,10 @@ export default function WorkOrdersListPage() {
     }
     setFilteredRows(filtered);
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">

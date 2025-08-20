@@ -576,7 +576,13 @@ export default function BillingList({
                     <DropdownMenuTrigger asChild>
                       <LayoutGrid size={18} className="cursor-pointer text-gray-600 mb-1" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent></DropdownMenuContent>
+                    <DropdownMenuContent>
+                      {secondIconMenu.map((item, index) => (
+                        <DropdownMenuItem key={index} onClick={item.onClick}>
+                          {item.label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
                   </DropdownMenu>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

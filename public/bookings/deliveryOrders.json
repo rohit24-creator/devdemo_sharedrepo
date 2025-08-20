@@ -1,0 +1,95 @@
+{
+  "headers": [
+    { "accessorKey": "check", "header": "Check" },
+    { "accessorKey": "adviceNumber", "header": "Advice Number" },
+    { "accessorKey": "shipperName", "header": "Shipper Name" },
+    { "accessorKey": "shipperContact", "header": "Shipper Contact" },
+    { "accessorKey": "consigneeName", "header": "Consignee Name" },
+    { "accessorKey": "consigneeContact", "header": "Consignee Contact" },
+    { "accessorKey": "carrierName", "header": "Carrier Name" },
+    { "accessorKey": "vesselName", "header": "Vessel Name" },
+    { "accessorKey": "voyageNo", "header": "Voyage No" }
+  ],
+  "rows": [
+    {
+      "adviceNumber": "ADV-001",
+      "shipperName": "ABC Shipping Co.",
+      "shipperContact": "+91-98765-43210",
+      "consigneeName": "XYZ Logistics Ltd.",
+      "consigneeContact": "+91-98765-43211",
+      "carrierName": "Global Carrier",
+      "vesselName": "Ocean Voyager",
+      "voyageNo": "VOY-2024-001"
+    },
+    {
+      "adviceNumber": "ADV-002",
+      "shipperName": "Maritime Exports",
+      "shipperContact": "+91-98765-43212",
+      "consigneeName": "International Freight",
+      "consigneeContact": "+91-98765-43213",
+      "carrierName": "Sea Express",
+      "vesselName": "Sea Explorer",
+      "voyageNo": "VOY-2024-002"
+    },
+    {
+      "adviceNumber": "ADV-003",
+      "shipperName": "Port Logistics",
+      "shipperContact": "+91-98765-43214",
+      "consigneeName": "Cargo Solutions",
+      "consigneeContact": "+91-98765-43215",
+      "carrierName": "Fast Freight",
+      "vesselName": "Speed Master",
+      "voyageNo": "VOY-2024-003"
+    },
+    {
+      "adviceNumber": "ADV-004",
+      "shipperName": "Trade Partners",
+      "shipperContact": "+91-98765-43216",
+      "consigneeName": "Global Trade Co.",
+      "consigneeContact": "+91-98765-43217",
+      "carrierName": "Premium Carrier",
+      "vesselName": "Luxury Liner",
+      "voyageNo": "VOY-2024-004"
+    },
+    {
+      "adviceNumber": "ADV-005",
+      "shipperName": "Export Solutions",
+      "shipperContact": "+91-98765-43218",
+      "consigneeName": "Import Specialists",
+      "consigneeContact": "+91-98765-43219",
+      "carrierName": "Economy Freight",
+      "vesselName": "Budget Carrier",
+      "voyageNo": "VOY-2024-005"
+    },
+    {
+      "adviceNumber": "ADV-006",
+      "shipperName": "Ocean Traders",
+      "shipperContact": "+91-98765-43220",
+      "consigneeName": "Marine Imports",
+      "consigneeContact": "+91-98765-43221",
+      "carrierName": "Maritime Express",
+      "vesselName": "Ocean Pioneer",
+      "voyageNo": "VOY-2024-006"
+    },
+    {
+      "adviceNumber": "ADV-007",
+      "shipperName": "Cargo Masters",
+      "shipperContact": "+91-98765-43222",
+      "consigneeName": "Freight Forwarders",
+      "consigneeContact": "+91-98765-43223",
+      "carrierName": "Express Logistics",
+      "vesselName": "Quick Ship",
+      "voyageNo": "VOY-2024-007"
+    },
+    {
+      "adviceNumber": "ADV-008",
+      "shipperName": "Trade Express",
+      "shipperContact": "+91-98765-43224",
+      "consigneeName": "Global Logistics",
+      "consigneeContact": "+91-98765-43225",
+      "carrierName": "World Carrier",
+      "vesselName": "Global Voyager",
+      "voyageNo": "VOY-2024-008"
+    }
+  ]
+}

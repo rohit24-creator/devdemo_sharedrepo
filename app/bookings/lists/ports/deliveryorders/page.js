@@ -1,158 +1,89 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import BillingList from "@/components/ui/reusableComponent/billingList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function DeliveryOrdersPage() {
-  const [deliveryOrders, setDeliveryOrders] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch data from JSON file
+  const filterFields = [
+    { name: "adviceNumber", label: "Advice Number", type: "text" },
+    { name: "fromDate", label: "From Date", type: "date" },
+    { name: "toDate", label: "To Date", type: "date" },
+  ];
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      setRows((prev) => prev.filter((r) => r.id !== row.id));
+    } else if (action === "edit") {
+      console.log("Edit row", row);
+    } else if (action === "view") {
+      console.log("View row", row);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/deliveryOrders.json');
-        const data = await response.json();
-        setDeliveryOrders(data);
-      } catch (error) {
-        console.error('Error fetching delivery orders:', error);
-        setDeliveryOrders([]);
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/bookings/deliveryOrders.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
+        setRows(formattedRows);
+        setColumns(formattedColumns);
+        
+      } catch (err) {
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  // Column definitions based on the image
-  const columns = [
-    {
-      accessorKey: "adviceNumber",
-      header: "Advice Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperName",
-      header: "Shipper Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperContact",
-      header: "Shipper Contact",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeName",
-      header: "Consignee Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeContact",
-      header: "Consignee Contact",
-      sortable: true,
-    },
-    {
-      accessorKey: "carrierName",
-      header: "Carrier Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "vesselName",
-      header: "Vessel Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "voyageNo",
-      header: "Voyage No",
-      sortable: true,
-    },
-  ];
-
-  // Filter fields based on the image
-  const filterFields = [
-    {
-      name: "adviceNumber",
-      label: "Advice Number",
-      type: "text",
-    },
-    {
-      name: "fromDate",
-      label: "From Date",
-      type: "date",
-    },
-    {
-      name: "toDate",
-      label: "To Date",
-      type: "date",
-    },
-  ];
-
-  // Action handlers
-  const handleActionClick = (action, row) => {
-    console.log(`${action} action clicked for:`, row);
-    // Handle different actions here
-    switch (action) {
-      case "edit":
-        // Handle edit
-        break;
-      case "view":
-        // Handle view
-        break;
-      case "delete":
-        // Handle delete
-        break;
-      case "tripHistory":
-        // Handle trip history
-        break;
-      default:
-        break;
-    }
-  };
-
-  // Search handler
-  const handleSearch = (formValues) => {
-    console.log("Search with values:", formValues);
-    // Implement search logic here
-  };
-
-  // Menu items for the icons
-  const secondIconMenu = [
-    { label: "Export to Excel", onClick: () => console.log("Export to Excel") },
-    { label: "Export to PDF", onClick: () => console.log("Export to PDF") },
-    { label: "Print", onClick: () => console.log("Print") },
-  ];
-
-  const thirdIconMenu = [
-    { label: "Download Report", onClick: () => console.log("Download Report") },
-    { label: "Email Report", onClick: () => console.log("Email Report") },
-  ];
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading delivery orders...</div>
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
-    <div className=" p-6">
-      <ReusableTable
+    <div className="p-4">
+      <BillingList
         title="Delivery Orders"
-        columns={columns}
-        rows={deliveryOrders}
         filterFields={filterFields}
-        onSearch={handleSearch}
-        onActionClick={handleActionClick}
-        enabledActions={["edit", "view", "delete", "tripHistory"]}
-        showActions={true}
+        columns={columns}
+        rows={rows}
+        onSearch={(values) => {
+          console.log("Delivery Orders search:", values);
+        }}
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={secondIconMenu}
-        thirdIconMenu={thirdIconMenu}
+        secondIconMenu={[]}
+        thirdIconMenu={[]}
+        showActions={true}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
       />
     </div>
   );
-}
+} 
