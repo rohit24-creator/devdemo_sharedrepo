@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function SlaOccupancyPage() {
   const [tabData, setTabData] = useState({});
   const [activeTab, setActiveTab] = useState("summary");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
@@ -43,11 +46,18 @@ export default function SlaOccupancyPage() {
     { label: "Export Excel", onClick: () => console.log("Excel Export") },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/reports/slaOccupancy.json");
-        const data = await res.json();
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/reports/slaOccupancy.json");
 
         const processedData = {};
         Object.keys(data).forEach((tabKey) => {
@@ -58,8 +68,11 @@ export default function SlaOccupancyPage() {
         });
 
         setTabData(processedData);
-      } catch (err) {
-        console.error("Error fetching SLA occupancy data:", err);
+      } catch (error) {
+        setError(error.message || "Failed to fetch data");
+        console.error("Fetch error:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -75,6 +88,10 @@ export default function SlaOccupancyPage() {
     activeTab: activeTab,
     onTabChange: setActiveTab
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!Object.keys(tabData).length) return <div>No data available</div>;
 
   return (
     <div className="p-4">
