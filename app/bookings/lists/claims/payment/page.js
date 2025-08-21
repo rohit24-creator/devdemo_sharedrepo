@@ -28,8 +28,7 @@ export default function ClaimsPaymentsViewPage() {
 
   return (
     <div className="p-4">
-     
-        <ReusableTable
+       <ReusableTable
           title="Claims Payments"
           columns={columns}
           rows={rows}

@@ -55,8 +55,6 @@ export default function ClaimsViewPage() {
           showFirstIcon={true}
           showSecondIcon={false}
           showThirdIcon={false}
-          showFourthIcon={false}
-          showFifthIcon={false}
           filterFields={[
             { name: "orderId", label: "Order ID", type: "text" }
           ]}
