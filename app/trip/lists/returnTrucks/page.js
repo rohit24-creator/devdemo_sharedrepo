@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/viewtable";
-import { Edit, Eye, Trash2, History } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
 
+
 export default function ReturnTrucksListingPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +78,12 @@ export default function ReturnTrucksListingPage() {
     console.log("Search filters:", searchData);
   };
 
+  const thirdIconMenu = [
+    { label: "Export Excel", onClick: () => console.log("Export Excel") },
+    { label: "Export PDF", onClick: () => console.log("Export PDF") },
+    { label: "Print Report", onClick: () => console.log("Print Report") },
+  ];
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!columns.length || !rows.length) return <div>No data available</div>;
@@ -89,21 +97,12 @@ export default function ReturnTrucksListingPage() {
         showActions={true}
         filterFields={filterFields}
         onSearch={handleSearch}
-        showFirstIcon={true}
-        showSecondIcon={true}
+        showFirstIcon={false}
+        showSecondIcon={false}
         showThirdIcon={true}
         enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
-        secondIconMenu={[
-          { label: "Grid View", onClick: () => console.log("Grid View") },
-          { label: "Table View", onClick: () => console.log("Table View") },
-          { label: "Card View", onClick: () => console.log("Card View") },
-        ]}
-        thirdIconMenu={[
-          { label: "Export Excel", onClick: () => console.log("Export Excel") },
-          { label: "Export PDF", onClick: () => console.log("Export PDF") },
-          { label: "Print Report", onClick: () => console.log("Print Report") },
-        ]}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );
