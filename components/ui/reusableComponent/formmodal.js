@@ -76,7 +76,8 @@ export default function FormModal({ open, onClose, title, formFields = [], onSub
 
   function handleSubmit(data) {
     onSubmit(data);
-    onClose();
+    // Don't automatically close - let parent component control this
+    // onClose();
   }
 
   return (
