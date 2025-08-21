@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 export default function FinancePage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);

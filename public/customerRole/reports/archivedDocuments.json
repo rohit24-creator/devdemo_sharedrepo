@@ -1,0 +1,49 @@
+{
+  "headers": [
+    { "accessorKey": "createdBy", "header": "Created By" },
+    { "accessorKey": "documents", "header": "Documents" },
+    { "accessorKey": "createdOn", "header": "Created On" }
+  ],
+  "rows": [
+    {
+      "createdBy": "John Doe",
+      "documents": "Invoice-001.pdf",
+      "createdOn": "2024-01-15"
+    },
+    {
+      "createdBy": "Jane Smith",
+      "documents": "Delivery Note DN-002.pdf",
+      "createdOn": "2024-01-16"
+    },
+    {
+      "createdBy": "Mike Johnson",
+      "documents": "LR Number LR-003.pdf",
+      "createdOn": "2024-01-17"
+    },
+    {
+      "createdBy": "Sarah Wilson",
+      "documents": "POD-004.pdf",
+      "createdOn": "2024-01-18"
+    },
+    {
+      "createdBy": "David Brown",
+      "documents": "Invoice-005.pdf",
+      "createdOn": "2024-01-19"
+    },
+    {
+      "createdBy": "Lisa Davis",
+      "documents": "Delivery Note DN-006.pdf",
+      "createdOn": "2024-01-20"
+    },
+    {
+      "createdBy": "Tom Miller",
+      "documents": "LR Number LR-007.pdf",
+      "createdOn": "2024-01-21"
+    },
+    {
+      "createdBy": "Emma Garcia",
+      "documents": "POD-008.pdf",
+      "createdOn": "2024-01-22"
+    }
+  ]
+}

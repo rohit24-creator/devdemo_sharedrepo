@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { MASTER_ROUTES } from "@/lib/masterRoutes";
 
 export default function PartnerDetailsPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [formValues, setFormValues] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const filterFields = [
     { name: "fromDate", label: "From Date", type: "date" },
@@ -49,42 +55,61 @@ export default function PartnerDetailsPage() {
     }
   };
 
+  // Menu configurations
   const secondIconMenu = [
-    { label: "View as Grid", onClick: () => console.log("Grid View") },
-    { label: "View as Table", onClick: () => console.log("Table View") },
+    { label: "+ Add New", onClick: () => router.push(MASTER_ROUTES.partnerDetails) },
+    { label: "Business Partner Template", onClick: () => console.log("Business Partner Template") },
+    { label: "Upload Excel", onClick: () => console.log("Upload Excel") },
   ];
 
   const thirdIconMenu = [
-    { label: "Export PDF", onClick: () => console.log("PDF Export") },
-    { label: "Export Excel", onClick: () => console.log("Excel Export") },
+    { label: "PDF", onClick: () => console.log("PDF") },
+    { label: "Excel", onClick: () => console.log("Excel") },
+    { label: "Print", onClick: () => console.log("Print") },
   ];
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/partnerData.json");
-        const data = await res.json();
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/masters/partnerData.json");
 
         // Format columns
-        const formattedColumns = data.headers.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
 
         // Add unique ID to each row 
-        const formattedRows = data.rows.map((row, index) => ({
+        const formattedRows = (data?.rows || []).map((row, index) => ({
           ...row,
           id: row.id || uuidv4() || `row-${index}`,
         }));
 
         setColumns(formattedColumns);
         setRows(formattedRows);
+        
       } catch (err) {
-        console.error("Error fetching partner data:", err);
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
   }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">
@@ -102,16 +127,10 @@ export default function PartnerDetailsPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        enabledActions={["edit", "view", "delete"]} // show only needed actions
-        onActionClick={handleActionClick} // trigger delete/edit/view
-        secondIconMenu={[
-          { label: "View as Grid", onClick: () => console.log("Grid View") },
-          { label: "View as Table", onClick: () => console.log("Table View") },
-        ]}
-        thirdIconMenu={[
-          { label: "Export PDF", onClick: () => console.log("PDF Export") },
-          { label: "Export Excel", onClick: () => console.log("Excel Export") },
-        ]}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );

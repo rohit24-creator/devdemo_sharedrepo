@@ -1,0 +1,126 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import { Edit, Eye, Trash2, History } from "lucide-react";
+import { formatRowsWithId } from "@/lib/utils";
+import { TRIP_ROUTES } from "@/lib/tripRoutes";
+
+export default function TripTemplateListingPage() {
+  const router = useRouter();
+  const [columns, setColumns] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/trips/tripTemplateData.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
+        setColumns(formattedColumns);
+        setRows(formattedRows);
+        
+      } catch (error) {
+        setError(error.message || "Failed to fetch data");
+        console.error("Fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const filterFields = [
+    { 
+      name: "fromDate", 
+      label: "From Date", 
+      type: "date" 
+    },
+    { 
+      name: "toDate", 
+      label: "To Date", 
+      type: "date" 
+    },
+    { 
+      name: "templateId", 
+      label: "Template ID", 
+      type: "text" 
+    },
+    { 
+      name: "templateName", 
+      label: "Template Name", 
+      type: "text" 
+    },
+  ];
+
+  // Central action handler
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      const updated = rows.filter((r) => r.id !== row.id);
+      setRows(updated);
+    } else if (action === "edit") {
+      console.log("Edit trip template", row);
+    } else if (action === "view") {
+      console.log("View trip template", row);
+    } 
+  };
+
+  const handleSearch = (searchData) => {
+    console.log("Search filters:", searchData);
+  };
+
+  // Menu configurations
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(TRIP_ROUTES.tripTemplate) },
+  ];
+
+  const thirdIconMenu = [
+    { label: "Export Excel", onClick: () => console.log("Export Excel") },
+    { label: "Export PDF", onClick: () => console.log("Export PDF") },
+    { label: "Print Report", onClick: () => console.log("Print Report") },
+  ];
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
+
+  return (
+    <div className="p-4">
+      <ReusableTable
+        title="Trip Template List"
+        columns={columns}
+        rows={rows}
+        showActions={true}
+        filterFields={filterFields}
+        onSearch={handleSearch}
+        showFirstIcon={true}
+        showSecondIcon={true}
+        showThirdIcon={true}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
+      />
+    </div>
+  );
+} 

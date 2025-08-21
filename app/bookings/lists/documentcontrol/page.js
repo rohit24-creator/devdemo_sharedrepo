@@ -1,26 +1,45 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import axios from "axios";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function DocumentControlPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/documentcontrol.json");
-        const data = await res.json();
-        const formattedColumns = data.headers.map((header) => ({
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/bookings/documentControl.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
-        }));
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
         setColumns(formattedColumns);
-        setRows(formatRowsWithId(data.rows));
+        setRows(formattedRows);
+        
       } catch (err) {
-        console.error("Error fetching document control data:", err);
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -44,6 +63,10 @@ export default function DocumentControlPage() {
       console.log("Unknown action", action, row);
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-4">

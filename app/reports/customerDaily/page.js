@@ -1,12 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function CustomerDailyStatusPage() {
   const [customerData, setCustomerData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the images
   const filterFields = [
@@ -32,17 +37,32 @@ export default function CustomerDailyStatusPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadCustomerData = async () => {
       try {
-        const response = await fetch("/reports/customerDailyStatus.json");
-        const data = await response.json();
-        setCustomerData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/customerDailyStatus.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setCustomerData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading customer data:", error);
+      } finally {
         setLoading(false);
       }
     };

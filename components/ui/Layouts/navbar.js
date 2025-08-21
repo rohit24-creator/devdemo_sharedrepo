@@ -2,125 +2,216 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
 import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from '@/components/ui/navigation-menu'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from '@/components/ui/dropdown-menu'
 
-const navGroups = [
-  {
-    label: 'Business Partner',
+const navigationData = {
+  master: {
+    label: 'Master',
     items: [
-      { href: '/businessPartner/partnerDetails', label: 'Partner Details' },
-      { href: '/businessPartner/additionalLocation', label: 'Additional Location' },
-      { href: '/businessPartner/financials', label: 'Financials' },
-      { href: '/businessPartner/EDIAPI', label: 'EDI-API' },
-      { href: '/businessPartner/switch', label: 'Switches' },
+      {
+        label: 'Business Partner',
+        items: [
+          { href: '/masters/lists/partnerDetails', label: 'Partner Details' },
+          { href: '/masters/lists/additionalLocation', label: 'Additional Location' },
+          { href: '/masters/lists/financials', label: 'Financials' },
+          { href: '/masters/lists/EDIAPI', label: 'EDI-API' },
+          { href: '/masters/lists/switch', label: 'Switches' },
+        ],
+      },
+      {
+        label: 'Profiles',
+        items: [
+          { href: '/masters/lists/profiles/customerProfile', label: 'Customer Profile' },
+          { href: '/masters/lists/profiles/vendorProfile', label: 'Vendor Profile' },
+          { href: '/masters/lists/profiles/vehicleProfile', label: 'Vehicle Profile' },
+        ],
+      },
+      {
+        label: 'Fleet',
+        items: [
+          { href: '/masters/lists/fleet/Drivers', label: 'Drivers' },
+          { href: '/masters/lists/fleet/vehicles', label: 'Vehicles' },
+          { href: '/masters/lists/fleet/Co2form', label: 'Co2form' },
+          { href: '/masters/lists/fleet/costCenter', label: 'Cost Center' },
+          { href: '/masters/lists/fleet/orderType', label: 'Order Type' },
+          { href: '/masters/lists/fleet/vehicleType', label: 'Vehicle Type' },
+        ],
+      },
+      {
+        label: 'PinCodes',
+        items: [
+          { href: '/masters/lists/pinCodes/pinCode', label: 'Pincode' },
+          { href: '/masters/lists/pinCodes/preferedState', label: 'Prefered State' },
+          { href: '/masters/lists/pinCodes/tripallocationRatio', label: 'Trip allocation Ratio' },
+        ],
+      },
+      {
+        label: 'General',
+        items: [
+          { href: '/masters/lists/statusMaster', label: 'Status Master' },
+          { href: '/masters/lists/laneMaster', label: 'Lanes Master' },
+          { href: '/masters/lists/regions', label: 'Regions' },
+          { href: '/masters/lists/shipmentType', label: 'Shipment Type' },
+          { href: '/masters/lists/trafficCode', label: 'Traffic Code' },
+          { href: '/masters/lists/allocationRules', label: 'Allocation Rules' },
+          { href: '/masters/lists/communication', label: 'Communication' },
+        ],
+      },
     ],
   },
-  {
-    label: 'Profiles',
+  bookings: {
+    label: 'Bookings',
     items: [
-      { href: '/profiles/customerProfile', label: 'Customer Profile' },
-      { href: '/profiles/vendorProfile', label: 'Vendor Profile' },
-      { href: '/profiles/vehicleProfile', label: 'Vehicle Profile' },
+      { href: '/bookings/newOrder', label: 'New Order' },
+      { href: '/bookings/list', label: 'Order view' },
+      { href: '/bookings/orderFinancials', label: 'Order Financials' },
+      { href: '/bookings/port/delivery', label: 'Port Delivery' },
     ],
   },
-  {
-    label: 'Fleet',
+  visibility: {
+    label: 'Visibility',
     items: [
-      { href: '/fleet/Drivers', label: 'Drivers' },
-      { href: '/fleet/vehicles', label: 'Vehicles' },
-      { href: '/fleet/Co2form', label: 'Co2form' },
-      { href: '/fleet/costCenter', label: 'Cost Center' },
-      { href: '/fleet/orderType', label: 'Order Type' },
-      { href: '/fleet/vehicleType', label: 'Vehicle Type' },
+      { href: '/visiblity/activeOrders', label: 'Active Orders' },
+      { href: '/visiblity/pendingOrders', label: 'Pending Orders' },
+      { href: '/visiblity/doneOrders', label: 'Done Orders' },
+      { href: '/visiblity/milestone', label: 'Milestone' },
     ],
   },
-  {
-    label: 'PinCodes',
+  reports: {
+    label: 'Reports',
     items: [
-      { href: '/pinCodes/pinCode', label: 'Pincode' },
-      { href: '/pinCodes/preferedState', label: 'Prefered State' },
-      { href: '/pinCodes/tripallocationRatio', label: 'Trip allocation Ratio' },
+      {
+        label: 'Operational Reports',
+        items: [
+          { href: '/reports/operationalReport/ecoTransitReport', label: 'Eco Transit Report' },
+          { href: '/reports/operationalReport/customerReport', label: 'Customer Report' },
+          { href: '/reports/operationalReport/truckerVolume', label: 'Trucker Volume' },
+          { href: '/reports/operationalReport/basicShipmentReport', label: 'Basic Shipment Report' },
+        ],
+      },
+      {
+        label: 'General',
+        items: [
+          { href: '/reports/speedometer', label: 'Speedometer' },
+          { href: '/reports/smsReports', label: 'SMS Reports' },
+          { href: '/reports/speedReports', label: 'Speed Reports' },
+          { href: '/reports/kmReports', label: 'KM Reports' },
+          { href: '/reports/shipmentStopLevel', label: 'Shipment Stop Level' },
+          { href: '/reports/slaOccupancy', label: 'SLA Occupancy' },
+          { href: '/reports/tripReports', label: 'Trip Reports' },
+          { href: '/reports/trackReport', label: 'Track Report' },
+          { href: '/reports/ndrReport', label: 'NDR Report' },
+          { href: '/reports/misReport', label: 'MIS Report' },
+          { href: '/reports/financialreports', label: 'Financial Reports' },
+          { href: '/reports/ediLogs', label: 'EDI Logs' },
+          { href: '/reports/customisedReport/customReport', label: 'Customised Report' },
+          { href: '/reports/customerDaily', label: 'Customer Daily' },
+          { href: '/reports/billingControl', label: 'Billing Control' },
+          { href: '/reports/allRoundBig', label: 'All Round Big' },
+        ],
+      },
     ],
   },
-]
-
-const navItems = [
-  { href: '/status', label: 'Status Master' },
-  { href: '/lanesMaster', label: 'Lanes Master' },
-  { href: '/regions', label: 'Regions' },
-  { href: '/shipmentType', label: 'Shipment Type' },
-  { href: '/trafficCode', label: 'Traffic Code' },
-  { href: '/allocationRules', label: 'Allocation Rules' },
-  { href: '/communication', label: 'Communication' },
-]
+  trips: {
+    label: 'Trips',
+    items: [
+      { href: '/trip/lists/trips', label: 'Trips' },
+      { href: '/trip/lists/tripExpense', label: 'Trip Expense' },
+      { href: '/trip/lists/tripTemplate', label: 'Trip Template' },
+      { href: '/trip/lists/returnTrucks', label: 'Return Trucks' },
+      { href: '/trip/lists/routing', label: 'Routing' },
+      { href: '/trip/shipmentplan', label: 'Shipment Plan' },
+    ],
+  },
+  billing: {
+    label: 'Billing',
+    items: [
+      { href: '/billing/lists/vatMaster', label: 'VAT Master' },
+      {
+        label: 'Tiers',
+        items: [
+          { href: '/billing/lists/tiers/rateTier', label: 'Rate Tier' },
+          { href: '/billing/lists/tiers/geoTier', label: 'Geo Tier' },
+        ],
+      },
+      { href: '/billing/lists/rateService', label: 'Rate Service' },
+      { href: '/billing/lists/rateRecord', label: 'Rate Record' },
+      { href: '/billing/lists/ratePreference', label: 'Rate Preference' },
+      { href: '/billing/lists/rateOffering', label: 'Rate Offering' },
+      { href: '/billing/lists/rateCalendar', label: 'Rate Calendar' },
+      { href: '/billing/lists/fuelSurcharge', label: 'Fuel Surcharge' },
+      { href: '/billing/lists/exchangeRate', label: 'Exchange Rate' },
+      { href: '/billing/lists/conversionFactor', label: 'Conversion Factor' },
+      { href: '/billing/lists/consolidation', label: 'Consolidation' },
+      { href: '/billing/lists/billing', label: 'Billing' },
+      { href: '/billing/quickRates', label: 'Quick Rates' },
+    ],
+  },
+}
 
 export default function Navbar() {
   const pathname = usePathname()
-  const [openDropdown, setOpenDropdown] = useState(null)
-
-  const handleDropdownToggle = (label) => {
-    setOpenDropdown(prev => (prev === label ? null : label))
-  }
-
-  const handleLinkClick = () => {
-    setOpenDropdown(null)
-  }
 
   return (
     <nav className="bg-[#006397] px-6 py-3 shadow-sm relative z-50">
-      <NavigationMenu>
-        <NavigationMenuList className="flex gap-4 relative">
-          {/* Dropdowns */}
-          {navGroups.map((group) => (
-            <NavigationMenuItem key={group.label} className="relative">
-              <button
-                onClick={() => handleDropdownToggle(group.label)}
-                className={`text-white px-3 py-2 rounded-md hover:bg-[#02abf5] transition ${openDropdown === group.label ? 'bg-[#02abf5]' : ''
-                  }`}
-              >
-                {group.label}
+      <div className="flex gap-4 relative">
+        {Object.entries(navigationData).map(([key, section]) => (
+          <DropdownMenu key={key}>
+            <DropdownMenuTrigger asChild>
+              <button className="text-white px-4 py-2 rounded-md transition font-medium hover:bg-[#02abf5] data-[state=open]:bg-[#02abf5]">
+                {section.label}
               </button>
-
-              {openDropdown === group.label && (
-                <div className="absolute top-full left-0 mt-2 bg-white rounded-md shadow-lg py-2 min-w-[200px]">
-                  {group.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={handleLinkClick}
-                      className={`block px-4 py-2 rounded-md transition hover:bg-[#f0f0f0] ${pathname === item.href ? 'bg-[#02abf5] text-white' : 'text-black'
-                        }`}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </NavigationMenuItem>
-          ))}
-
-          {/* Flat links */}
-          {navItems.map((item) => (
-            <NavigationMenuItem key={item.href}>
-              <NavigationMenuLink asChild>
-                <Link
-                  href={item.href}
-                  className={`text-white px-3 py-2 rounded-md hover:bg-[#02abf5] transition ${pathname === item.href ? 'bg-[#02abf5]' : ''
-                    }`}
-                >
-                  {item.label}
-                </Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          ))}
-        </NavigationMenuList>
-      </NavigationMenu>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent 
+              className="min-w-[250px] max-h-[450px] overflow-y-auto bg-white rounded-md shadow-lg py-2 border"
+              align="start"
+              sideOffset={4}
+            >
+              {section.items.map((item) => {
+                if (item.items) {
+                  // Nested section
+                  return (
+                    <div key={item.label}>
+                      <DropdownMenuLabel className="px-4 py-2 font-semibold text-gray-700 bg-gray-50 text-sm border-b border-gray-200">
+                        {item.label}
+                      </DropdownMenuLabel>
+                      {item.items.map((subItem) => (
+                        <DropdownMenuItem key={subItem.href} asChild>
+                          <Link
+                            href={subItem.href}
+                            className={`block px-6 py-2 text-sm transition hover:bg-[#f0f0f0] ${pathname === subItem.href ? 'bg-[#02abf5] text-white' : 'text-gray-700'}`}
+                          >
+                            {subItem.label}
+                          </Link>
+                        </DropdownMenuItem>
+                                              ))}
+                    </div>
+                  )
+                } else {
+                  // Direct link
+                  return (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link
+                        href={item.href}
+                        className={`block px-4 py-2 text-sm transition hover:bg-[#f0f0f0] ${pathname === item.href ? 'bg-[#02abf5] text-white' : 'text-gray-700'}`}
+                      >
+                        {item.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  )
+                }
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ))}
+      </div>
     </nav>
   )
 }

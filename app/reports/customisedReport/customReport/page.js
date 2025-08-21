@@ -1,76 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function CustomReportPage() {
   const [customReportData, setCustomReportData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the Customized Report structure
-  const columns = [
-    {
-      accessorKey: "orderId",
-      header: "Order ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryOrderNo",
-      header: "Delivery Order No.",
-      sortable: true,
-    },
-    {
-      accessorKey: "purchaseOrderNo",
-      header: "Purchase Order No.",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperName",
-      header: "Shipper Name",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperStreetAndHouseNumber",
-      header: "Shipper Street and House Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperCity",
-      header: "Shipper City",
-      sortable: true,
-    },
-    {
-      accessorKey: "shipperPostalCode",
-      header: "Shipper Postal Code",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeName",
-      header: "Consignee",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeStreetAndHouseNumber",
-      header: "Consignee Street and House Number",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneeCity",
-      header: "Consignee City",
-      sortable: true,
-    },
-    {
-      accessorKey: "consigneePostalCode",
-      header: "Consignee Postal Code",
-      sortable: true,
-    },
-    {
-      accessorKey: "product",
-      header: "Product",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the image
   const filterFields = [
@@ -103,17 +44,32 @@ export default function CustomReportPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadCustomReportData = async () => {
       try {
-        const response = await fetch("/reports/customReport.json");
-        const data = await response.json();
-        setCustomReportData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/customReport.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setCustomReportData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading custom report data:", error);
+      } finally {
         setLoading(false);
       }
     };

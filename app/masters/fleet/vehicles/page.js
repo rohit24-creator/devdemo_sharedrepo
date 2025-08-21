@@ -164,6 +164,7 @@ export default function Vehicles() {
             title: "Add Vehicle",
             form,
             fields: fieldConfig,
+            disableAccordionToggle: true,
             onSubmit: handleSubmit,
             children: (
                 <Button

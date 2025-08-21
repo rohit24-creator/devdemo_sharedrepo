@@ -1,0 +1,150 @@
+{
+  "headers": [
+    {
+      "accessorKey": "tripNo",
+      "header": "Trip No."
+    },
+    {
+      "accessorKey": "vehicleNumber",
+      "header": "Vehicle Number"
+    },
+    {
+      "accessorKey": "driverName",
+      "header": "Driver Name"
+    },
+    {
+      "accessorKey": "customerName",
+      "header": "Customer Name"
+    },
+    {
+      "accessorKey": "carrierName",
+      "header": "Carrier Name"
+    },
+    {
+      "accessorKey": "source",
+      "header": "Source"
+    },
+    {
+      "accessorKey": "destination",
+      "header": "Destination"
+    },
+    {
+      "accessorKey": "pickupDate",
+      "header": "Pickup Date"
+    },
+    {
+      "accessorKey": "companyCode",
+      "header": "Company Code"
+    },
+    {
+      "accessorKey": "branchCode",
+      "header": "Branch Code"
+    }
+  ],
+  "rows": [
+    {
+      "id": "1",
+      "tripNo": "RT001",
+      "vehicleNumber": "MH01AB1234",
+      "driverName": "Rajesh Kumar",
+      "customerName": "ABC Logistics",
+      "carrierName": "Express Transport",
+      "source": "MUMBAI",
+      "destination": "DELHI",
+      "pickupDate": "2025-07-29",
+      "companyCode": "COMP001",
+      "branchCode": "BR001"
+    },
+    {
+      "id": "2",
+      "tripNo": "RT002",
+      "vehicleNumber": "KA02CD5678",
+      "driverName": "Suresh Patel",
+      "customerName": "XYZ Cargo",
+      "carrierName": "Fast Track",
+      "source": "BANGALORE",
+      "destination": "CHENNAI",
+      "pickupDate": "2025-07-30",
+      "companyCode": "COMP002",
+      "branchCode": "BR002"
+    },
+    {
+      "id": "3",
+      "tripNo": "RT003",
+      "vehicleNumber": "TN03EF9012",
+      "driverName": "Amit Singh",
+      "customerName": "Premium Logistics",
+      "carrierName": "Reliable Transport",
+      "source": "HYDERABAD",
+      "destination": "PUNE",
+      "pickupDate": "2025-07-31",
+      "companyCode": "COMP003",
+      "branchCode": "BR003"
+    },
+    {
+      "id": "4",
+      "tripNo": "RT004",
+      "vehicleNumber": "GJ04GH3456",
+      "driverName": "Vikram Sharma",
+      "customerName": "Swift Cargo",
+      "carrierName": "Speed Cargo",
+      "source": "AHMEDABAD",
+      "destination": "JAIPUR",
+      "pickupDate": "2025-08-01",
+      "companyCode": "COMP004",
+      "branchCode": "BR004"
+    },
+    {
+      "id": "5",
+      "tripNo": "RT005",
+      "vehicleNumber": "UP05IJ7890",
+      "driverName": "Deepak Verma",
+      "customerName": "Elite Transport",
+      "carrierName": "Premium Logistics",
+      "source": "LUCKNOW",
+      "destination": "KANPUR",
+      "pickupDate": "2025-08-02",
+      "companyCode": "COMP005",
+      "branchCode": "BR005"
+    },
+    {
+      "id": "6",
+      "tripNo": "RT006",
+      "vehicleNumber": "MP06KL1234",
+      "driverName": "Rahul Gupta",
+      "customerName": "Cross Border",
+      "carrierName": "Swift Transport",
+      "source": "INDORE",
+      "destination": "BHOPAL",
+      "pickupDate": "2025-08-03",
+      "companyCode": "COMP006",
+      "branchCode": "BR006"
+    },
+    {
+      "id": "7",
+      "tripNo": "RT007",
+      "vehicleNumber": "MH07MN5678",
+      "driverName": "Sanjay Joshi",
+      "customerName": "Global Logistics",
+      "carrierName": "Elite Cargo",
+      "source": "NAGPUR",
+      "destination": "AURANGABAD",
+      "pickupDate": "2025-08-04",
+      "companyCode": "COMP007",
+      "branchCode": "BR007"
+    },
+    {
+      "id": "8",
+      "tripNo": "RT008",
+      "vehicleNumber": "DL08OP9012",
+      "driverName": "Manoj Tiwari",
+      "customerName": "International Cargo",
+      "carrierName": "Express Logistics",
+      "source": "KOLKATA",
+      "destination": "PATNA",
+      "pickupDate": "2025-08-05",
+      "companyCode": "COMP008",
+      "branchCode": "BR008"
+    }
+  ]
+} 

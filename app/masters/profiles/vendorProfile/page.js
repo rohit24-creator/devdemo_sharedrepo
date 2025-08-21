@@ -31,8 +31,6 @@ const tableColumns = [
 ]
 
 export default function VendorProfileForm() {
-  const [rows, setRows] = useState([])
-
   const form = useForm({
     resolver: zodResolver(vendorSchema),
     defaultValues: {
@@ -54,6 +52,7 @@ export default function VendorProfileForm() {
       title: "General Info",
       form,
       fields: fieldConfig,
+      disableAccordionToggle: true,
       onSubmit: handleSubmit,
       children: (
         <Button type="submit" className="bg-[#006397] hover:bg-[#02abf5] text-white rounded-full px-6">
@@ -64,8 +63,9 @@ export default function VendorProfileForm() {
     {
       type: "table",
       title: "Vendor List",
+      dynamicRows: true, 
       columns: tableColumns,
-      rows,
+      initialRows: [],
     },
   ]
 

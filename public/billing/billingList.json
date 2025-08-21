@@ -1,0 +1,58 @@
+{
+  "headers": [
+    { "accessorKey": "trackingNumber", "header": "Tracking Number" },
+    { "accessorKey": "invoiceNumber", "header": "Invoice Number" },
+    { "accessorKey": "billType", "header": "Bill Type" },
+    { "accessorKey": "billGroup", "header": "Bill Group" },
+    { "accessorKey": "revenue", "header": "Revenue" },
+    { "accessorKey": "recipientType", "header": "Recipient Type" },
+    { "accessorKey": "invoiceDate", "header": "Invoice Date" },
+    { "accessorKey": "invoiceStatus", "header": "Invoice Status" },
+    { "accessorKey": "aconStatus", "header": "ACON Status" },
+    { "accessorKey": "aconCode", "header": "ACON Code" },
+    { "accessorKey": "billingCurrency", "header": "Billing Currency" }
+  ],
+  "rows": [
+    {
+      "trackingNumber": "TRK-0001",
+      "invoiceNumber": "INV-10001",
+      "billType": "Freight",
+      "billGroup": "Group A",
+      "revenue": "1200.00",
+      "recipientType": "Customer",
+      "invoiceDate": "2025-07-01",
+      "invoiceStatus": "Pending",
+      "aconStatus": "Open",
+      "aconCode": "ACN-01",
+      "billingCurrency": "USD"
+    },
+    {
+      "trackingNumber": "TRK-0002",
+      "invoiceNumber": "INV-10002",
+      "billType": "Surcharge",
+      "billGroup": "Group B",
+      "revenue": "300.00",
+      "recipientType": "Vendor",
+      "invoiceDate": "2025-07-03",
+      "invoiceStatus": "Approved",
+      "aconStatus": "Closed",
+      "aconCode": "ACN-02",
+      "billingCurrency": "EUR"
+    },
+    {
+      "trackingNumber": "TRK-0003",
+      "invoiceNumber": "INV-10003",
+      "billType": "Tax",
+      "billGroup": "Group C",
+      "revenue": "75.50",
+      "recipientType": "Customer",
+      "invoiceDate": "2025-07-05",
+      "invoiceStatus": "Draft",
+      "aconStatus": "Open",
+      "aconCode": "ACN-03",
+      "billingCurrency": "INR"
+    }
+  ]
+}
+
+

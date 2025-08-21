@@ -37,7 +37,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import ReusableModal from '@/components/ui/reusableComponent/bussinessParnterModal'
+import ReusableModal from '@/components/ui/reusableComponent/bussinessPartnerModal'
 
 
 // is_customer

@@ -1,0 +1,36 @@
+{
+  "headers": [
+    { "accessorKey": "offeringName", "header": "Offering Name" },
+    { "accessorKey": "laneId", "header": "Lane ID" },
+    { "accessorKey": "rateService", "header": "Rate Service" },
+    { "accessorKey": "effectiveDate", "header": "Effective Date" },
+    { "accessorKey": "expiryDate", "header": "Expiry Date" },
+    { "accessorKey": "tariffType", "header": "Tariff Type" },
+    { "accessorKey": "offeringId", "header": "Offering ID" },
+    { "accessorKey": "offeringType", "header": "Offering Type" }
+  ],
+  "rows": [
+    {
+      "offeringName": "Contract 2025 North Line",
+      "laneId": "LANE-001",
+      "rateService": "Express Delivery",
+      "effectiveDate": "2025-01-01",
+      "expiryDate": "2025-12-31",
+      "tariffType": "Flat",
+      "offeringId": "OFF-0001",
+      "offeringType": "Contract"
+    },
+    {
+      "offeringName": "Spot Summer Promo",
+      "laneId": "LANE-002",
+      "rateService": "Standard Freight",
+      "effectiveDate": "2025-06-01",
+      "expiryDate": "2025-08-31",
+      "tariffType": "Tiered",
+      "offeringId": "OFF-0002",
+      "offeringType": "Spot"
+    }
+  ]
+}
+
+

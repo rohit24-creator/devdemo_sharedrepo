@@ -1,0 +1,52 @@
+{
+  "headers": [
+    { "accessorKey": "check", "header": "Check" },
+    { "accessorKey": "id", "header": "ID" },
+    { "accessorKey": "name", "header": "Name" },
+    { "accessorKey": "customerName", "header": "Customer Name" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "branchCode", "header": "Branch Code" }
+  ],
+  "rows": [
+    {
+      "check": true,
+      "id": "EXR-001",
+      "name": "USD to INR Rate",
+      "customerName": "Premium Customer",
+      "companyCode": "THKN",
+      "branchCode": "THBKK"
+    },
+    {
+      "check": false,
+      "id": "EXR-002",
+      "name": "EUR to INR Rate",
+      "customerName": "Standard Customer",
+      "companyCode": "TCS01",
+      "branchCode": "INCHN"
+    },
+    {
+      "check": true,
+      "id": "EXR-003",
+      "name": "GBP to INR Rate",
+      "customerName": "Economy Customer",
+      "companyCode": "WPR02",
+      "branchCode": "INPUN"
+    },
+    {
+      "check": false,
+      "id": "EXR-004",
+      "name": "JPY to INR Rate",
+      "customerName": "VIP Customer",
+      "companyCode": "INFY",
+      "branchCode": "INPUN"
+    },
+    {
+      "check": true,
+      "id": "EXR-005",
+      "name": "SGD to INR Rate",
+      "customerName": "Express Customer",
+      "companyCode": "HCL01",
+      "branchCode": "INCHN"
+    }
+  ]
+}

@@ -76,6 +76,7 @@ export default function Drivers() {
             title: "Add Driver",
             form,
             fields: fieldConfig,
+            disableAccordionToggle: true,
             onSubmit: handleSubmit,
             children: (
                 <Button

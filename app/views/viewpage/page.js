@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import ReusableViewAccordion from "@/components/ui/reusableComponent/reusableview"
+import ReusableViewAccordion from "@/components/ui/reusableComponent/reusableView"
 
 
 export default function ViewFormPage() {

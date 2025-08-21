@@ -1,0 +1,76 @@
+{
+  "headers": [
+    { "accessorKey": "trackingNumber", "header": "Tracking Number" },
+    { "accessorKey": "origin", "header": "Origin" },
+    { "accessorKey": "shipperCompany", "header": "Shipper Company" },
+    { "accessorKey": "recipientAddress", "header": "Recipient Address" },
+    { "accessorKey": "noOfCartons", "header": "No. of Cartons" },
+    { "accessorKey": "noOfPallet", "header": "No. of Pallet" },
+    { "accessorKey": "noOfCartonsShortlanded", "header": "No. of Cartons Shortlanded" },
+    { "accessorKey": "grossWtKgs", "header": "Gross Wt Kgs" },
+    { "accessorKey": "chargableWeight", "header": "Chargable Weight" },
+    { "accessorKey": "estimatedPickupDate", "header": "Estimated Pickup Date" }
+  ],
+  "rows": [
+    {
+      "trackingNumber": "TRK-001",
+      "origin": "Mumbai",
+      "shipperCompany": "ABC Corp",
+      "recipientAddress": "123 Main St, Delhi",
+      "noOfCartons": "25",
+      "noOfPallet": "2",
+      "noOfCartonsShortlanded": "0",
+      "grossWtKgs": "150",
+      "chargableWeight": "150",
+      "estimatedPickupDate": "2024-01-20"
+    },
+    {
+      "trackingNumber": "TRK-002",
+      "origin": "Bangalore",
+      "shipperCompany": "DEF Inc",
+      "recipientAddress": "456 Oak Ave, Chennai",
+      "noOfCartons": "40",
+      "noOfPallet": "3",
+      "noOfCartonsShortlanded": "2",
+      "grossWtKgs": "200",
+      "chargableWeight": "200",
+      "estimatedPickupDate": "2024-01-21"
+    },
+    {
+      "trackingNumber": "TRK-003",
+      "origin": "Pune",
+      "shipperCompany": "GHI Ltd",
+      "recipientAddress": "789 Pine Rd, Hyderabad",
+      "noOfCartons": "15",
+      "noOfPallet": "1",
+      "noOfCartonsShortlanded": "0",
+      "grossWtKgs": "75",
+      "chargableWeight": "75",
+      "estimatedPickupDate": "2024-01-22"
+    },
+    {
+      "trackingNumber": "TRK-004",
+      "origin": "Kolkata",
+      "shipperCompany": "JKL Co",
+      "recipientAddress": "321 Elm St, Ahmedabad",
+      "noOfCartons": "60",
+      "noOfPallet": "4",
+      "noOfCartonsShortlanded": "1",
+      "grossWtKgs": "300",
+      "chargableWeight": "300",
+      "estimatedPickupDate": "2024-01-23"
+    },
+    {
+      "trackingNumber": "TRK-005",
+      "origin": "Jaipur",
+      "shipperCompany": "MNO Corp",
+      "recipientAddress": "654 Maple Dr, Lucknow",
+      "noOfCartons": "35",
+      "noOfPallet": "2",
+      "noOfCartonsShortlanded": "0",
+      "grossWtKgs": "175",
+      "chargableWeight": "175",
+      "estimatedPickupDate": "2024-01-24"
+    }
+  ]
+} 

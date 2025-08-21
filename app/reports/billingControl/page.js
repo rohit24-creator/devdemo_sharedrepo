@@ -1,61 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import ReportsList from "@/components/ui/reusableComponent/reportsList";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function BillingControlReportPage() {
   const [billingData, setBillingData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Define columns based on the billing control report structure
-  const columns = [
-    {
-      accessorKey: "serialNo",
-      header: "S.No",
-      sortable: true,
-    },
-    {
-      accessorKey: "customerId",
-      header: "Customer ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "orderId",
-      header: "Order ID",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryStatus",
-      header: "Delivery Status",
-      sortable: true,
-    },
-    {
-      accessorKey: "pickupDate",
-      header: "Pickup Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "deliveryDate",
-      header: "Delivery Date",
-      sortable: true,
-    },
-    {
-      accessorKey: "originalDocumentsReceived",
-      header: "Original Documents Received",
-      sortable: true,
-    },
-    {
-      accessorKey: "originalDocumentsSent",
-      header: "Original Documents Sent",
-      sortable: true,
-    },
-    {
-      accessorKey: "invoicesToCustomerExist",
-      header: "Invoices To Customer Exist",
-      sortable: true,
-    },
-  ];
+  // Columns will be dynamically generated from API data
+  const [columns, setColumns] = useState([]);
 
   // Define filter fields based on the image
   const filterFields = [
@@ -81,17 +37,32 @@ export default function BillingControlReportPage() {
     },
   ];
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
   // Load data on component mount
   useEffect(() => {
     const loadBillingData = async () => {
       try {
-        const response = await fetch("/reports/billingControl.json");
-        const data = await response.json();
-        setBillingData(data);
-        setFilteredData(data);
-        setLoading(false);
+        setLoading(true);
+        const { data } = await api.get("/reports/billingControl.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || data) || [];
+        
+        setColumns(formattedColumns);
+        setBillingData(formattedRows);
+        setFilteredData(formattedRows);
       } catch (error) {
         console.error("Error loading billing data:", error);
+      } finally {
         setLoading(false);
       }
     };
