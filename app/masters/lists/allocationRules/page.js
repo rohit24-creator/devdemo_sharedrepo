@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
+import { MASTER_ROUTES } from "@/lib/masterRoutes";
 
 export default function RulesViewPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,6 +69,11 @@ export default function RulesViewPage() {
     }
   };
 
+  // Menu configurations
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(MASTER_ROUTES.allocationRules) },
+  ];
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!columns.length || !rows.length) return <div>No data available</div>;
@@ -79,15 +87,12 @@ export default function RulesViewPage() {
         showActions={true}
         filterFields={filterFields}
         onSearch={(data) => console.log("Search:", data)}
-        showFirstIcon={true}
+        showFirstIcon={false}
         showSecondIcon={true}
         showThirdIcon={false}
-        enabledActions={["edit", "view", "delete"]} // ✅ list of action keys
-        onActionClick={handleActionClick} // ✅ single function handles all
-        secondIconMenu={[
-          { label: "Grid View", onClick: () => console.log("Grid View") },
-          { label: "Table View", onClick: () => console.log("Table View") },
-        ]}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
+        secondIconMenu={secondIconMenu}
       />
     </div>
   );
