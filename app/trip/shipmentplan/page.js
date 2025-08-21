@@ -1183,7 +1183,7 @@ export default function ShipmentPlanningPage() {
                                 <div className="flex items-center gap-2 mb-4">
                                       <Button variant="outline" size="icon" onClick={() => setIsTripModalOpen(true)}>
                                         <Plus className="w-4 h-4" />
-                                    </Button>
+                                       </Button>
                                     <Select defaultValue="all">
                                         <SelectTrigger className="w-20 text-sm">
                                             <SelectValue placeholder="All" />
