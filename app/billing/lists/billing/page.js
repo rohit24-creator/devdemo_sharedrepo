@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
+import { BILLING_ROUTES } from "@/lib/billingRoutes";
 
 export default function BillingListPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function BillingListPage() {
   const secondIconMenu = [
     {
       label: "+ Add New",
-      onClick: () => router.push('/billing/billing')
+      onClick: () => router.push(BILLING_ROUTES.billing)
     }
   ];
 

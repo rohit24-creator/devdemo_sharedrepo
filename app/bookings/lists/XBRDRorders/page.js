@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function XBRDRordersPage() {

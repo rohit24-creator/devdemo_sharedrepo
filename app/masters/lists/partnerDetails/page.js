@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { MASTER_ROUTES } from "@/lib/masterRoutes";
 
 export default function PartnerDetailsPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [formValues, setFormValues] = useState({});
@@ -52,14 +55,17 @@ export default function PartnerDetailsPage() {
     }
   };
 
+  // Menu configurations
   const secondIconMenu = [
-    { label: "View as Grid", onClick: () => console.log("Grid View") },
-    { label: "View as Table", onClick: () => console.log("Table View") },
+    { label: "+ Add New", onClick: () => router.push(MASTER_ROUTES.partnerDetails) },
+    { label: "Business Partner Template", onClick: () => console.log("Business Partner Template") },
+    { label: "Upload Excel", onClick: () => console.log("Upload Excel") },
   ];
 
   const thirdIconMenu = [
-    { label: "Export PDF", onClick: () => console.log("PDF Export") },
-    { label: "Export Excel", onClick: () => console.log("Excel Export") },
+    { label: "PDF", onClick: () => console.log("PDF") },
+    { label: "Excel", onClick: () => console.log("Excel") },
+    { label: "Print", onClick: () => console.log("Print") },
   ];
 
   // Simple axios instance
@@ -121,16 +127,10 @@ export default function PartnerDetailsPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        enabledActions={["edit", "view", "delete"]} // show only needed actions
-        onActionClick={handleActionClick} // trigger delete/edit/view
-        secondIconMenu={[
-          { label: "View as Grid", onClick: () => console.log("Grid View") },
-          { label: "View as Table", onClick: () => console.log("Table View") },
-        ]}
-        thirdIconMenu={[
-          { label: "Export PDF", onClick: () => console.log("PDF Export") },
-          { label: "Export Excel", onClick: () => console.log("Excel Export") },
-        ]}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );

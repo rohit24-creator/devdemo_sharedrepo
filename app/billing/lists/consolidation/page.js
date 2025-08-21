@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
+import { BILLING_ROUTES } from "@/lib/billingRoutes";
 
 export default function ConsolidationListPage() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function ConsolidationListPage() {
   const secondIconMenu = [
     {
       label: "+ Add New",
-      onClick: () => router.push('/billing/consolidation')
+      onClick: () => router.push(BILLING_ROUTES.consolidation)
     }
   ];
 

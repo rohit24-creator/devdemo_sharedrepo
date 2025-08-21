@@ -74,15 +74,16 @@
 
 ## Orders
 - /orders/newOrder
-- /lists/newOrders
+- /lists/orders
 - /orders/view/id
 
 ## ports
 - /port/delivery
-- /ports/workOrders
+- /ports/deliveryOrders
+- /ports/workorder
 - /ports/containers
--/lists/delivery
--/lists/workOrders
+-/lists/deliveryOrders
+-/lists/workOrder
 -/lists/containers
 
 ## claims
@@ -90,13 +91,13 @@
 - /lists/claims
 
 ## document control 
-- /lists/documentcontrol
+- /lists/documentControl
 
 ## mass status
 -/lists/massStatus
 
 ## xbrd borders
-- /lists/xbrdBorders
+- /lists/xbrdrOrders
 
 
 

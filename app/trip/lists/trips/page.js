@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { Edit, Eye, Trash2, History } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
 import { useOrderFields } from "@/components/ui/reusableComponent/orderForms";
@@ -213,6 +213,17 @@ export default function TripsListingPage() {
     setIsNewShipmentModalOpen(false);
   };
 
+  // Menu configurations
+  const secondIconMenu = [
+    { label: "New Shipment", onClick: handleNewShipment },
+  ];
+
+  const thirdIconMenu = [
+    { label: "Export Excel", onClick: () => console.log("Export Excel") },
+    { label: "Export PDF", onClick: () => console.log("Export PDF") },
+    { label: "Print Report", onClick: () => console.log("Print Report") },
+  ];
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!columns.length || !rows.length) return <div>No data available</div>;
@@ -231,14 +242,8 @@ export default function TripsListingPage() {
         showThirdIcon={true}
         enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
-        secondIconMenu={[
-          { label: "New Shipment", onClick: handleNewShipment },
-        ]}
-        thirdIconMenu={[
-          { label: "Export Excel", onClick: () => console.log("Export Excel") },
-          { label: "Export PDF", onClick: () => console.log("Export PDF") },
-          { label: "Print Report", onClick: () => console.log("Print Report") },
-        ]}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
       />
       
       {/* New Shipment Modal */}

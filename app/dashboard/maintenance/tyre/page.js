@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { BillingForm } from "@/components/ui/reusableComponent/dashboardform";
+import { BillingForm } from "@/components/ui/reusableComponent/dashboardForm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, RotateCcw, X, Save, Plus } from "lucide-react";

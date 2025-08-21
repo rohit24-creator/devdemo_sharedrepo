@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { Edit, Eye, Trash2, History } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
+import { TRIP_ROUTES } from "@/lib/tripRoutes";
 
 export default function TripExpenseListingPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,6 +84,17 @@ export default function TripExpenseListingPage() {
     console.log("Search filters:", searchData);
   };
 
+  // Menu configurations
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(TRIP_ROUTES.tripExpense) },
+  ];
+
+  const thirdIconMenu = [
+    { label: "Export Excel", onClick: () => console.log("Export Excel") },
+    { label: "Export PDF", onClick: () => console.log("Export PDF") },
+    { label: "Print Report", onClick: () => console.log("Print Report") },
+  ];
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!columns.length || !rows.length) return <div>No data available</div>;
@@ -99,16 +113,8 @@ export default function TripExpenseListingPage() {
         showThirdIcon={true}
         enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
-        secondIconMenu={[
-          { label: "Grid View", onClick: () => console.log("Grid View") },
-          { label: "Table View", onClick: () => console.log("Table View") },
-          { label: "Card View", onClick: () => console.log("Card View") },
-        ]}
-        thirdIconMenu={[
-          { label: "Export Excel", onClick: () => console.log("Export Excel") },
-          { label: "Export PDF", onClick: () => console.log("Export PDF") },
-          { label: "Print Report", onClick: () => console.log("Print Report") },
-        ]}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );

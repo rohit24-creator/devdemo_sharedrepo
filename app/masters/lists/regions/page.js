@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
+import { MASTER_ROUTES } from "@/lib/masterRoutes";
 
 export default function RegionViewPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [formValues, setFormValues] = useState({});
@@ -67,6 +70,12 @@ export default function RegionViewPage() {
     }
   };
 
+  // Menu configurations
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(MASTER_ROUTES.regions) },
+  ];
+
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!columns.length || !rows.length) return <div>No data available</div>;
@@ -82,19 +91,12 @@ export default function RegionViewPage() {
         formValues={formValues}
         setFormValues={setFormValues}
         onSearch={(data) => console.log("Search:", data)}
-        showFirstIcon={true}
+        showFirstIcon={false}
         showSecondIcon={true}
-        showThirdIcon={true}
-        enabledActions={["edit", "view", "delete"]} // 👈 show only needed actions
-        onActionClick={handleActionClick} // 👈 trigger delete/edit/view
-        secondIconMenu={[
-          { label: "Grid View", onClick: () => console.log("Grid View") },
-          { label: "Table View", onClick: () => console.log("Table View") },
-        ]}
-        thirdIconMenu={[
-          { label: "Export PDF", onClick: () => console.log("Export PDF") },
-          { label: "Export Excel", onClick: () => console.log("Export Excel") },
-        ]}
+        showThirdIcon={false}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
+        secondIconMenu={secondIconMenu}
       />
     </div>
   );
