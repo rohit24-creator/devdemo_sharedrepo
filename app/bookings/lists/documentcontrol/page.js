@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function DocumentControlPage() {
@@ -22,7 +22,7 @@ export default function DocumentControlPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/bookings/documentcontrol.json");
+        const { data } = await api.get("/bookings/documentControl.json");
         
         const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,

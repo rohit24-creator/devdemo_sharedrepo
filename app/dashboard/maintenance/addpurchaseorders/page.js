@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { BillingForm } from "@/components/ui/reusableComponent/dashboardform";
+import { BillingForm } from "@/components/ui/reusableComponent/dashboardForm";
 import { Button } from "@/components/ui/button";
 import { Info, RotateCcw, X, Save } from "lucide-react";
 import FormModal from "@/components/ui/reusableComponent/formmodal";

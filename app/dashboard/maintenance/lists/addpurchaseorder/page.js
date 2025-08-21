@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 export default function AddPurchaseOrderPage() {
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
@@ -13,7 +13,7 @@ export default function AddPurchaseOrderPage() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const res = await fetch("/dashboard/maintenance/addpurchaseorder.json");
+      const res = await fetch("/dashboard/maintenance/addPurchaseOrder.json");
       const data = await res.json();
       setColumns(data.columns || []);
       setRows(data.rows || []);

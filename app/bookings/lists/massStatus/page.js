@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import dynamic from "next/dynamic";
 
-const ReusableMassStatus = dynamic(() => import("@/components/ui/reusableComponent/reusablemasstatus"), { ssr: false });
+const ReusableMassStatus = dynamic(() => import("@/components/ui/reusableComponent/reusableMassStatus"), { ssr: false });
 
 export default function MassStatusPage() {
   const [columns, setColumns] = useState([]);
@@ -29,7 +29,7 @@ export default function MassStatusPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/bookings/masstatusView.json");
+        const { data } = await api.get("/bookings/massStatusView.json");
         
         const formattedColumns = data?.columns?.map((header) => ({
           accessorKey: header.accessorKey,

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/viewtable";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { Edit, Eye, Trash2, History } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
 import { useOrderFields } from "@/components/ui/reusableComponent/orderForms";
