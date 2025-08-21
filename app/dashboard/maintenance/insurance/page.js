@@ -246,104 +246,126 @@ export default function VehicleInsurancePage() {
             {
               name: "financeCompanyName",
               label: "Finance Company Name *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-xs font-medium",
+              className: "col-span-1"
             },
             {
               name: "description",
               label: "Description *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-xs font-medium",
+              className: "col-span-1"
             }
           ] : modalField === "agent" ? [
             {
               name: "userName",
               label: "User Name *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "password",
               label: "Password *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "name",
               label: "Name *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "email",
               label: "Email *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "phone",
               label: "Phone",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "country",
               label: "Country *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "state",
               label: "State",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "city",
               label: "City *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "divisionName",
               label: "Division Name",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "street",
               label: "Street *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "zipCode",
               label: "Zip Code *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "street2",
               label: "Street 2",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "street3",
               label: "Street 3",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "houseNumber",
               label: "House Number",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "building",
               label: "Building",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "latitude",
               label: "Latitude *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             },
             {
               name: "longitude",
               label: "Longitude *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             }
           ] : [
             {
               name: "name",
               label: modalField === "vehicleId" ? "Enter Vehicle Name *" : "Enter Name *",
-              type: "text"
+              type: "text",
+              labelClassName: "whitespace-nowrap text-sm font-medium"
             }
           ]
         }
@@ -351,7 +373,7 @@ export default function VehicleInsurancePage() {
         footerType={modalField === "insuranceType" || modalField === "agent" ? "default" : "submitOnly"}
         submitLabel="Save"
         closeLabel="Cancel"
-        dialogClassName={modalField === "agent" ? "lg:max-w-[60rem] p-0" : "max-w-md p-0"}
+        dialogClassName={modalField === "agent" ? "lg:max-w-[60rem] p-0" : modalField === "insuranceType" ? "lg:max-w-[40rem] p-0" : "max-w-md p-0"}
       />
     </div>
   );
