@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
+import { BILLING_ROUTES } from "@/lib/billingRoutes";
 
 export default function VatMasterListPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function VatMasterListPage() {
   const secondIconMenu = [
     {
       label: "+ Add New",
-      onClick: () => router.push('/billing/vatMaster')
+      onClick: () => router.push(BILLING_ROUTES.vatMaster)
     }
   ];
 

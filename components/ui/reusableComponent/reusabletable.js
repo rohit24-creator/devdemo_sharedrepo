@@ -9,7 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import {
   Truck, FileText, ShoppingCart, UserSquare, ScanLine, Ruler, ArrowLeftRight,
-  ArrowUpDown, Weight, BarChart2, List, Layers, Square, SplitSquare,
+  ArrowUpDown, Weight, BarChart2, List, Layers, Square, Split,
   MoreVertical, ChevronDown, Search, Plus,
 } from "lucide-react";
 import {
@@ -40,7 +40,7 @@ export default function ReusableTable({ fields, defaultValues = [], modalData, f
     ldm: List,
     stackable: Layers,
     grounded: Square,
-    split: SplitSquare,
+    split: Split,
   };
 
   const form = useForm({

@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
+import { BILLING_ROUTES } from "@/lib/billingRoutes";
 
 export default function GeoTierListPage() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function GeoTierListPage() {
   const secondIconMenu = [
     {
       label: "+ Add New",
-      onClick: () => router.push('/billing/tiers/geoTier')
+      onClick: () => router.push(BILLING_ROUTES.geoTier)
     }
   ];
 
