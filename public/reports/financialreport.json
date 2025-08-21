@@ -1,5 +1,5 @@
 {
-  "columns": [
+  "headers": [
     { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "trackingNo", "header": "Tracking No" },
     { "accessorKey": "custRefNo", "header": "Customer Reference No" },
