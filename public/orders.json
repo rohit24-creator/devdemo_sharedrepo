@@ -1,0 +1,100 @@
+{
+  "totalOrders": [
+    {
+      "id": "125290009",
+      "source": "Cranford",
+      "destination": "Cincinnati",
+      "pickupTime": "2025-07-17 13:00:02",
+      "weight": "8.00KGS",
+      "volume": "8.00CUFT",
+      "quantity": "1.00",
+      "mode": "FTL",
+      "status": null
+    },
+    {
+      "id": "125060005",
+      "source": "Los Angeles",
+      "destination": "New York",
+      "pickupTime": "2025-01-17 22:00:00",
+      "weight": "25.00KGS",
+      "volume": "15.00CUFT",
+      "quantity": "2.00",
+      "mode": "FTL",
+      "status": null
+    },
+    {
+      "id": "125290005",
+      "source": "Walldorf",
+      "destination": "Cincinnati",
+      "pickupTime": "2025-07-15 16:34:10",
+      "weight": "11.00KGS",
+      "volume": "11.00CUFT",
+      "quantity": "1.00",
+      "mode": "Test Transport Mode",
+      "status": null
+    },
+    {
+      "id": "125040001",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickupTime": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": null
+    }
+  ],
+  "customerOrders": [
+    {
+      "id": "125290009",
+      "customer": "ABC Corp",
+      "source": "Cranford",
+      "destination": "Cincinnati",
+      "pickupTime": "2025-07-17 13:00:02",
+      "weight": "8.00KGS",
+      "volume": "8.00CUFT",
+      "quantity": "1.00",
+      "mode": "FTL",
+      "status": null
+    },
+    {
+      "id": "125060005",
+      "customer": "XYZ Ltd",
+      "source": "Los Angeles",
+      "destination": "New York",
+      "pickupTime": "2025-01-17 22:00:00",
+      "weight": "25.00KGS",
+      "volume": "15.00CUFT",
+      "quantity": "2.00",
+      "mode": "FTL",
+      "status": null
+    }
+  ],
+  "rangeOrders": [
+    {
+      "id": "125290005",
+      "source": "Walldorf",
+      "destination": "Cincinnati",
+      "pickupTime": "2025-07-15 16:34:10",
+      "weight": "11.00KGS",
+      "volume": "11.00CUFT",
+      "quantity": "1.00",
+      "mode": "Test Transport Mode",
+      "status": null,
+      "dateRange": "2025-07-15 to 2025-07-17"
+    },
+    {
+      "id": "125040001",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickupTime": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": null,
+      "dateRange": "2024-12-20 to 2024-12-25"
+    }
+  ]
+} 

@@ -1,0 +1,106 @@
+{
+  "columns": [
+    {
+      "accessorKey": "cid",
+      "header": "CID",
+      "sortable": true
+    },
+    {
+      "accessorKey": "name",
+      "header": "Name",
+      "sortable": true
+    },
+    {
+      "accessorKey": "emailId",
+      "header": "Email Id",
+      "sortable": true
+    },
+    {
+      "accessorKey": "phone",
+      "header": "Phone",
+      "sortable": true
+    },
+    {
+      "accessorKey": "street",
+      "header": "Street",
+      "sortable": true
+    },
+    {
+      "accessorKey": "country",
+      "header": "Country",
+      "sortable": true
+    },
+    {
+      "accessorKey": "zipcode",
+      "header": "Zipcode / Pincode",
+      "sortable": true
+    }
+  ],
+  "rows": [
+    {
+      "cid": "74373212",
+      "name": "SHINDEY",
+      "emailId": "",
+      "phone": "9797987586",
+      "street": "MG ROAD",
+      "country": "INDIA",
+      "zipcode": "400001"
+    },
+    {
+      "cid": "9869060",
+      "name": "SINGH",
+      "emailId": "",
+      "phone": "9070698682",
+      "street": "MG ROAD",
+      "country": "INDIA",
+      "zipcode": "110002"
+    },
+    {
+      "cid": "5484512",
+      "name": "SHAHRAJ",
+      "emailId": "",
+      "phone": "9797987586",
+      "street": "MG ROAD",
+      "country": "INDIA",
+      "zipcode": "440002"
+    },
+    {
+      "cid": "2532531",
+      "name": "SHIVAJI",
+      "emailId": "",
+      "phone": "9070698682",
+      "street": "NAG STREET",
+      "country": "INDIA",
+      "zipcode": "530068"
+    },
+    {
+      "cid": "8757578",
+      "name": "MAHADEV",
+      "emailId": "",
+      "phone": "9797987586",
+      "street": "NAIK STREET",
+      "country": "INDIA",
+      "zipcode": "700001"
+    },
+    {
+      "cid": "868696",
+      "name": "RAJU YADAV",
+      "emailId": "",
+      "phone": "9070698682",
+      "street": "MG ROAD",
+      "country": "INDIA",
+      "zipcode": "500001"
+    },
+    {
+      "cid": "979662",
+      "name": "SHINDEY",
+      "emailId": "",
+      "phone": "UK2429137394",
+      "street": "NAIK STREET",
+      "country": "INDIA",
+      "zipcode": "400001"
+    }
+  ]
+}
+
+
