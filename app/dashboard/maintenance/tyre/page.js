@@ -185,7 +185,6 @@ export default function AddVehicleTyrePage() {
       label: "Choose Vehicle *",
       type: "select",
       options: vehicleOptions,
-      plusAction: handlePlus("vehicle")
     },
     {
       name: "tyreNumber",
@@ -300,7 +299,6 @@ export default function AddVehicleTyrePage() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         title={modalField ? 
-          modalField === "vehicle" ? "Add New Vehicle" : 
           modalField === "tyreCategory" ? "Add New Tyre Category" :
           modalField === "tyreCompany" ? "Add New Tyre Company" :
           modalField === "tyreType" ? "Add New Tyre Type" :
