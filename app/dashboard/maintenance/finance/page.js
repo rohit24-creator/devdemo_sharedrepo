@@ -112,13 +112,37 @@ export default function VehicleFinancePage() {
 
   // Handle modal submit
   const handleModalSubmit = (data) => {
-    if (modalField && data && data.name) {
-      if (modalField === "vehicleId") {
-        setVehicleOptions((prev) => [...prev, data.name]);
-      } else if (modalField === "loanType") {
-        setLoanTypeOptions((prev) => [...prev, data.name]);
+    try {
+      if (modalField && data && data.name && data.name.trim()) {
+        const newValue = data.name.trim();
+        
+        if (modalField === "vehicleId") {
+          setVehicleOptions((prev) => [...prev, newValue]);
+          console.log("Added new vehicle:", newValue);
+        } else if (modalField === "loanType") {
+          setLoanTypeOptions((prev) => [...prev, newValue]);
+          console.log("Added new loan type:", newValue);
+        }
+        
+        // Success message
+        alert("New option added successfully!");
+      } else {
+        alert("Please enter a valid name");
+        return; // Don't close modal if validation fails
       }
+    } catch (error) {
+      console.error("Error in modal submit:", error);
+      alert("Error adding new option");
+      return; // Don't close modal if there's an error
     }
+    
+    // Close modal and reset state
+    setModalOpen(false);
+    setModalField(null);
+  };
+
+  // Handle modal close
+  const handleModalClose = () => {
     setModalOpen(false);
     setModalField(null);
   };
@@ -226,7 +250,7 @@ export default function VehicleFinancePage() {
       {/* Modal for adding new options */}
       <FormModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={handleModalClose}
         title={modalField ? 
           modalField === "vehicleId" ? "Add New Vehicle" : 
           modalField === "loanType" ? "Add New Loan Type" : 
