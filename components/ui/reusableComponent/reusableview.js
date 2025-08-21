@@ -1,100 +1,124 @@
 "use client"
 
 import React from "react"
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion"
 
-export default function ReusableViewAccordion({ sections = [] }) {
-    return (
-        <div className="min-h-screen bg-gray-50 py-10 px-4">
-            {/* Page Header */}
-            {/* <div className="max-w-6xl mx-auto mb-10">
-                <div className="bg-gradient-to-r from-blue-800 to-cyan-600 rounded-xl px-6 py-6 shadow-lg">
-                    <h1 className="text-4xl font-bold text-white">Driver Details</h1>
+export default function ReusableViewAccordion({ sections = [], config = {} }) {
+    // Default configuration
+    const defaultConfig = {
+        // Field type configurations
+        fieldTypes: {
+            status: {
+                field: 'status',
+                colors: {
+                    active: 'bg-green-100 text-green-800 border-green-200',
+                    inactive: 'bg-red-100 text-red-800 border-red-200',
+                    pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                    default: 'bg-gray-100 text-gray-800 border-gray-200'
+                }
+            }
+        },
+        // Layout configuration
+        layout: {
+            gridCols: 'md:grid-cols-1',
+            cardSpacing: 'gap-6',
+            fieldGridCols: 'grid-cols-4'
+        },
+        // Theme configuration
+        theme: {
+            background: 'bg-[#f5f7fc]',
+            headerBg: 'bg-white shadow-sm border-b border-gray-200',
+            cardBg: 'bg-white border shadow-sm'
+        }
+    }
+
+    // Merge with provided config
+    const finalConfig = { ...defaultConfig, ...config }
+
+    const getStatusColor = (status, statusConfig) => {
+        const colors = statusConfig?.colors || finalConfig.fieldTypes.status.colors
+        const statusLower = status?.toLowerCase()
+        return colors[statusLower] || colors.default
+    }
+
+    const renderField = (fieldConfig, data) => {
+        const { name, label, type, options } = fieldConfig
+        const value = data[name] || ""
+
+        return (
+            <div key={name} className="space-y-2">
+                <label className="text-sm font-semibold text-gray-700">
+                    {label}
+                </label>
+                <div className="text-sm text-gray-900 p-2 bg-gray-50 rounded border">
+                    {type === "select" && options ? (
+                        options.find(opt => opt.value === value)?.label || value || "-"
+                    ) : type === "textarea" ? (
+                        <div className="whitespace-pre-wrap">{value || "-"}</div>
+                    ) : (
+                        value || "-"
+                    )}
                 </div>
-            </div> */}
+            </div>
+        )
+    }
 
-            {/* Sections */}
-            <div className="max-w-6xl mx-auto space-y-12">
-                {[0, 1].map((index) => {
-                    const section = sections[index];
-                    if (!section) return null;
+    if (!sections || sections.length === 0) {
+        return (
+            <div className={`min-h-screen ${finalConfig.theme.background} flex items-center justify-center p-6`}>
+                <div className="text-center">
+                    <div className="text-6xl mb-4">📭</div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">No Data Available</h2>
+                    <p className="text-gray-600">There are no records to display at the moment.</p>
+                </div>
+            </div>
+        )
+    }
 
-                    const fields = section.fields || [];
-
-                    // Extract special fields
-                    const fromCountry = fields.find(f => f.label.toLowerCase() === "from country");
-                    const toCountry = fields.find(f => f.label.toLowerCase() === "to country");
-                    const statusField = fields.find(f => f.label.toLowerCase() === "status");
-
-                    // Filter out the ones already used
-                    const remainingFields = fields.filter(
-                        f =>
-                            f.label.toLowerCase() !== "from country" &&
-                            f.label.toLowerCase() !== "to country" &&
-                            f.label.toLowerCase() !== "status"
-                    );
-
+    return (
+        <div className={`min-h-screen ${finalConfig.theme.background} p-6`}>
+            <Accordion type="multiple">
+                {sections.map((section, index) => {
+                    const accordionValue = section.title?.toLowerCase().replace(/\s+/g, "-") || `section-${index}`
+                    
                     return (
-                        <div key={index} className="bg-white rounded-2xl shadow-sm border border-gray-200">
-                            {/* Section Title + Status badge */}
-                            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100  bg-[#006397] rounded-t-2xl">
-                                <h2 className="text-xl text-gray-800 font-semibold text-white">
-                                    {section.title || `Section ${index + 1}`}
-                                </h2>
-                                {statusField?.value && (
-                                    <span
-                                        className={`px-3 py-1 text-sm rounded-full font-medium ${
-                                            statusField.value.toLowerCase() === "active"
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-red-100 text-red-700"
-                                        }`}
-                                    >
-                                        {statusField.value}
-                                    </span>
-                                )}
-                            </div>
-
-                            {/* Section Body */}
-                            <div className="px-6 py-6 space-y-6">
-                                {/* Country Route */}
-                                {fromCountry && toCountry && (
-                                    <div className="flex flex-col sm:flex-row items-center justify-between rounded-md p-4">
-                                        <span className="text-sm text-gray-600 mb-2 sm:mb-0 font-medium">
-                                            
-                                        </span>
-                                        <div className="flex items-center gap-2 text-lg font-semibold text-gray-800">
-                                            <span>{fromCountry.value}</span>
-                                            <span className="text-xl text-blue-500">→</span>
-                                            <span>{toCountry.value}</span>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Remaining Fields Grid */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
-                                    {remainingFields.length > 0 ? (
-                                        remainingFields.map((field, idx) => (
-                                            <div key={idx} className="space-y-1">
-                                                <div className="text-sm text-gray-800 font-semibold font-medium">
-                                                    {field.label}
-                                                </div>
-                                                <div className="text-base text-gray-500 font-normal">
-                                                    {field.value || (
-                                                        <span className="text-gray-300 italic">N/A</span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="text-center text-gray-400 italic py-10 col-span-full">
-                                            No other data available
+                        <AccordionItem key={index} value={accordionValue}>
+                            <AccordionTrigger className="bg-[#006397] text-white px-4 py-2 rounded-md data-[state=open]:bg-[#02abf5] mt-2">
+                                {section.title}
+                            </AccordionTrigger>
+                            <AccordionContent className="bg-[#ffffff] p-6 rounded-b-md">
+                                <div className="pt-6">
+                                    {/* Form Fields Display */}
+                                    {section.type === "form" && section.fields && (
+                                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                            {section.fields.map((fieldConfig) =>
+                                                renderField(fieldConfig, section.data || {})
+                                            )}
                                         </div>
                                     )}
+
+                                    {/* Action Buttons */}
+                                    <div className="mt-6 pt-4 border-t border-gray-200">
+                                        <div className="flex gap-3">
+                                            <button className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors">
+                                                Cancel
+                                            </button>
+                                            <button className="bg-[#006397] hover:bg-[#005285] text-white text-sm font-medium py-2 px-4 rounded-md transition-colors">
+                                                Edit
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    );
+                            </AccordionContent>
+                        </AccordionItem>
+                    )
                 })}
-            </div>
+            </Accordion>
         </div>
-    );
+    )
 }
