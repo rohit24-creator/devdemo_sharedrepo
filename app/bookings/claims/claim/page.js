@@ -28,6 +28,102 @@ const carrierVendors = ["ANTHONY", "DHL", "FedEx", "Other"];
 const priorityLevels = ["Low", "Medium", "High"];
 const claimStatuses = ["Started", "In Review", "Approved", "Rejected"];
 
+// Separate field configuration array
+const claimFields = [
+  {
+    name: "claimNumber",
+    label: "Claim Number",
+    type: "text",
+    disabled: true,
+    placeholder: "",
+    subLabel: "Auto-generated unique claim number"
+  },
+  {
+    name: "claimType",
+    label: "Claim Type:*",
+    type: "select",
+    options: claimTypes
+  },
+  {
+    name: "incidentDate",
+    label: "Incident Date:*",
+    type: "date",
+    placeholder: "Incident Date"
+  },
+  {
+    name: "orderId",
+    label: "Order ID:*",
+    type: "text",
+    // placeholder: "Start typing Order ID..."
+  },
+  {
+    name: "carrierVendor",
+    label: "Carrier/Vendor Name:",
+    type: "select",
+    options: carrierVendors
+  },
+  {
+    name: "claimAmount",
+    label: "Claim Amount *",
+    type: "text",
+    // placeholder: "Claim Amount"
+  },
+  {
+    name: "location",
+    label: "Location of Incident",
+    type: "text",
+    placeholder: ""
+  },
+  {
+    name: "referencePolicy",
+    label: "Reference/Policy Number",
+    type: "text",
+    placeholder: ""
+  },
+  {
+    name: "priorityLevel",
+    label: "Priority Level",
+    type: "select",
+    options: priorityLevels
+  },
+  {
+    name: "email",
+    label: "Email",
+    type: "text",
+    // placeholder: "Email" 
+  },
+  {
+    name: "phone",
+    label: "Phone Number",
+    type: "text",
+    placeholder: ""
+  },
+  {
+    name: "claimStatus",
+    label: "Claim Status",
+    type: "select",
+    options: claimStatuses
+  },
+  {
+    name: "enableNotifications",
+    label: "Enable Notifications",
+    type: "checkbox",
+    placeholder: "Opt to send updates via SMS",
+    subLabel: "Opt to send updates via SMS"
+  },
+  {
+    name: "description",
+    label: "Description",
+    type: "textarea",
+    placeholder: ""
+  },
+  {
+    name: "supportingDocuments",
+    label: "Supporting Documents",
+    type: "file",
+  }
+];
+
 export default function ClaimFormPage() {
   const form = useForm({
     resolver: zodResolver(claimSchema),
@@ -60,100 +156,7 @@ export default function ClaimFormPage() {
       type: "form",
       form: form,
       onSubmit: onSubmit,
-      fields: [
-        {
-          name: "claimNumber",
-          label: "Claim Number",
-          type: "text",
-          disabled: true,
-          placeholder: "",
-          subLabel: "Auto-generated unique claim number"
-        },
-        {
-          name: "claimType",
-          label: "Claim Type:*",
-          type: "select",
-          options: claimTypes
-        },
-        {
-          name: "incidentDate",
-          label: "Incident Date:*",
-          type: "date",
-          placeholder: "Incident Date"
-        },
-        {
-          name: "orderId",
-          label: "Order ID:*",
-          type: "text",
-          // placeholder: "Start typing Order ID..."
-        },
-        {
-          name: "carrierVendor",
-          label: "Carrier/Vendor Name:",
-          type: "select",
-          options: carrierVendors
-        },
-        {
-          name: "claimAmount",
-          label: "Claim Amount *",
-          type: "text",
-          // placeholder: "Claim Amount"
-        },
-        {
-          name: "location",
-          label: "Location of Incident",
-          type: "text",
-          placeholder: ""
-        },
-        {
-          name: "referencePolicy",
-          label: "Reference/Policy Number",
-          type: "text",
-          placeholder: ""
-        },
-        {
-          name: "priorityLevel",
-          label: "Priority Level",
-          type: "select",
-          options: priorityLevels
-        },
-        {
-          name: "email",
-          label: "Email",
-          type: "text",
-          // placeholder: "Email" 
-        },
-        {
-          name: "phone",
-          label: "Phone Number",
-          type: "text",
-          placeholder: ""
-        },
-        {
-          name: "claimStatus",
-          label: "Claim Status",
-          type: "select",
-          options: claimStatuses
-        },
-        {
-          name: "enableNotifications",
-          label: "Enable Notifications",
-          type: "checkbox",
-          placeholder: "Opt to send updates via SMS",
-          subLabel: "Opt to send updates via SMS"
-        },
-        {
-          name: "description",
-          label: "Description",
-          type: "textarea",
-          placeholder: ""
-        },
-        {
-          name: "supportingDocuments",
-          label: "Supporting Documents",
-          type: "file",
-        }
-      ],
+      fields: claimFields,
     }
   ];
 
