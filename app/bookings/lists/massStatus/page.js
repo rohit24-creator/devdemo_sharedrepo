@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import dynamic from "next/dynamic";
-
+import { BOOKING_ROUTES } from "@/lib/bookingRoutes";
+import { formatRowsWithId } from "@/lib/utils";
 const ReusableMassStatus = dynamic(() => import("@/components/ui/reusableComponent/reusableMassStatus"), { ssr: false });
 
 export default function MassStatusPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,21 +26,34 @@ export default function MassStatusPage() {
     timeout: 30000,
   });
 
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(BOOKING_ROUTES.orders) },
+    { label: "Mass Status Template", onClick: () => console.log("Mass Status Template") },
+    { label: "Upload Excel", onClick: () => console.log("Upload Excel") },
+  ];
+
+  const thirdIconMenu = [
+    { label: "Excel", onClick: () => console.log("Excel") },
+    { label: "PDF", onClick: () => console.log("PDF") },
+    { label: "Print", onClick: () => console.log("Print") },
+  ];
+
+
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/bookings/massStatusView.json");
+        const { data } = await api.get("/bookings/massStatus.json");
         
-        const formattedColumns = data?.columns?.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
           sortable: true,
         })) || [];
 
-        const formattedRows = data?.rows || [];
+        const formattedRows = formatRowsWithId(data?.rows || []);
         
         setColumns(formattedColumns);
         setRows(formattedRows);
@@ -105,6 +121,8 @@ export default function MassStatusPage() {
           onActionClick={handleActionClick}
           enabledActions={["edit", "view", "delete"]}
           groupHeaders={["Origin", "Destination"]}
+          secondIconMenu={secondIconMenu}
+          thirdIconMenu={thirdIconMenu}
         />
       </div>
     );

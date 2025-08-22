@@ -1,0 +1,58 @@
+{
+    "headers": [
+      { "accessorKey": "paymentNumber","header": "Payment Number"},
+      { "accessorKey": "claimNumber","header": "Claim Number"},
+      { "accessorKey": "typeOfClaim","header": "Type of Claim"},
+      { "accessorKey": "originalAmount","header": "Original Amount"},
+      { "accessorKey": "currentAmount","header": "Current Amount"},
+      { "accessorKey": "claimant","header": "Claimant"},
+      { "accessorKey": "carrierName","header": "Carrier Name"},
+      { "accessorKey": "paymentStatus","header": "Payment Status"}
+    ],
+    "rows": [
+      {
+        "id": 1,
+        "paymentNumber": "PAY001",
+        "claimNumber": "CLAIM41",
+        "typeOfClaim": "Damage",
+        "originalAmount": "5600.00",
+        "currentAmount": "5600.00",
+        "claimant": "John Doe",
+        "carrierName": "DHL",
+        "paymentStatus": "Pending"
+      },
+      {
+        "id": 2,
+        "paymentNumber": "PAY002",
+        "claimNumber": "CLAIM40",
+        "typeOfClaim": "Cargo Pilferage",
+        "originalAmount": "5600.00",
+        "currentAmount": "5600.00",
+        "claimant": "Jane Smith",
+        "carrierName": "FedEx",
+        "paymentStatus": "Completed"
+      },
+      {
+        "id": 3,
+        "paymentNumber": "PAY003",
+        "claimNumber": "CLAIM37",
+        "typeOfClaim": "Vehicle Accident",
+        "originalAmount": "1576.00",
+        "currentAmount": "1576.00",
+        "claimant": "Alice Brown",
+        "carrierName": "ESTES",
+        "paymentStatus": "Pending"
+      },
+      {
+        "id": 4,
+        "paymentNumber": "PAY004",
+        "claimNumber": "CLAIM36",
+        "typeOfClaim": "Damage",
+        "originalAmount": "6736.00",
+        "currentAmount": "6736.00",
+        "claimant": "Bob Lee",
+        "carrierName": "FRED",
+        "paymentStatus": "Failed"
+      }
+    ]
+  } 

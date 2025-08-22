@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import ReusableTable from "@/components/ui/reusableComponent/bookingList";
+import { BOOKING_ROUTES } from "@/lib/bookingRoutes";
+import { formatRowsWithId } from "@/lib/utils";
 
 export default function WorkOrdersListPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
@@ -16,21 +20,31 @@ export default function WorkOrdersListPage() {
     timeout: 30000,
   });
 
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(BOOKING_ROUTES.workOrder) },
+  ];
+
+  const thirdIconMenu = [
+    { label: "Excel", onClick: () => console.log("Excel") },
+    { label: "PDF", onClick: () => console.log("PDF") },
+    { label: "Print", onClick: () => console.log("Print") },
+  ];
+
   useEffect(() => {
     async function fetchData() {
       try {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/bookings/workOrdersView.json");
+        const { data } = await api.get("/bookings/workOrders.json");
         
-        const formattedColumns = data?.columns?.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
           sortable: true,
         })) || [];
 
-        const formattedRows = data?.rows || [];
+        const formattedRows = formatRowsWithId(data?.rows || []);
         
         setColumns(formattedColumns);
         setRows(formattedRows);
@@ -86,6 +100,10 @@ export default function WorkOrdersListPage() {
         showActions={true}
         filterFields={filterFields}
         onSearch={onSearch}
+        showSecondIcon={true}
+        showFourthIcon={false}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );
