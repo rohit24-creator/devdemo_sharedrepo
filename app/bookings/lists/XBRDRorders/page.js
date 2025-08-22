@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import ReusableTable from "@/components/ui/reusableComponent/bookingList";
 import { formatRowsWithId } from "@/lib/utils";
+import { BOOKING_ROUTES } from "@/lib/bookingRoutes";
 
 export default function XBRDRordersPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +18,17 @@ export default function XBRDRordersPage() {
   const api = axios.create({
     timeout: 30000,
   });
+
+  const secondIconMenu = [
+    { label: "Modal", onClick: () => console.log("Modal") },
+  ];
+
+  const thirdIconMenu = [
+    {label:"Excel", onClick: () => console.log("Excel")},
+    {label:"PDF", onClick: () => console.log("PDF")},
+    {label:"Print", onClick: () => console.log("Print")},
+  ];
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,9 +60,10 @@ export default function XBRDRordersPage() {
   }, []);
 
   const filterFields = [
-    { name: "orderId", label: "Order ID" },
-    { name: "tripNo", label: "Trip No" },
-    { name: "status", label: "Status" },
+    { name: "fromDate", label: "From Date", type: "date" },
+    { name: "toDate", label: "To Date", type: "date" },
+    { name: "bookingId", label: "Booking ID", type: "text" },
+    { name: "status", label: "Status", type: "select", options: ["Active", "Inactive"] },
   ];
 
   const handleActionClick = (action, row) => {
@@ -77,23 +92,15 @@ export default function XBRDRordersPage() {
         showActions={true}
         filterFields={filterFields}
         onSearch={(data) => console.log("Search:", data)}
-        showFirstIcon={false}   // Bell (notification) icon
-        showSecondIcon={true}  // Search icon
-        showThirdIcon={true}   // Wallet icon
-        showFourthIcon={false} // No document icon
-        showFifthIcon={true}   // Fifth bell icon
-        enabledActions={["edit", "view", "delete", "copyOrder", "reverseOrder", "generateTWB", "printLabel"]}
+        showFirstIcon={true}
+        showSecondIcon={true}
+        showThirdIcon={true}
+        showFourthIcon={false}
+        showFifthIcon={true}
+        enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
-        secondIconMenu={[
-          { label: "Grid View", onClick: () => console.log("Grid View") },
-          { label: "Table View", onClick: () => console.log("Table View") },
-        ]}
-        thirdIconMenu={[
-          { label: "Money View", onClick: () => console.log("Money View") },
-        ]}
-        fifthIconMenu={[
-          { label: "Bell Action 1", onClick: () => console.log("Bell Action 1") },
-        ]}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );

@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import ReusableTable from "@/components/ui/reusableComponent/bookingList";
+import { BOOKING_ROUTES } from "@/lib/bookingRoutes";
+import { formatRowsWithId } from "@/lib/utils";
 
 const claimStatusOptions = [
   "Started",
@@ -20,11 +23,18 @@ const claimStatusOptions = [
 ];
 
 export default function ClaimsViewPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const secondIconMenu = [
+    {
+      label: "+ Add New",
+      onClick: () => router.push(BOOKING_ROUTES.claim)
+    }
+  ];
   // Simple axios instance
   const api = axios.create({
     timeout: 30000,
@@ -38,13 +48,13 @@ export default function ClaimsViewPage() {
         
         const { data } = await api.get("/bookings/claimsView.json");
         
-        const formattedColumns = data?.columns?.map((header) => ({
+        const formattedColumns = data?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
           sortable: true,
         })) || [];
 
-        const formattedRows = data?.rows || [];
+        const formattedRows = formatRowsWithId(data?.rows || []);
         
         setColumns(formattedColumns);
         setRows(formattedRows);
@@ -80,16 +90,16 @@ export default function ClaimsViewPage() {
           rows={rows}
           enabledActions={["edit", "view", "delete"]}
           showActions={true}
-          showFirstIcon={true}
-          showSecondIcon={false}
+          showFirstIcon={false}
+          showSecondIcon={true}
           showThirdIcon={false}
           showFourthIcon={false}
-          showFifthIcon={false}
           filterFields={[
             { name: "orderId", label: "Order ID", type: "text" }
           ]}
           claimStatusOptions={claimStatusOptions}
           onStatusChange={handleStatusChange}
+          secondIconMenu={secondIconMenu}
           onSearch={(filters) => {
             let filteredRows = rows;
             if (filters.orderId) {

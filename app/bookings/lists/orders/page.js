@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import ReusableTable from "@/components/ui/reusableComponent/bookingList";
 import { Edit, Eye, Trash2 } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BOOKING_ROUTES } from "@/lib/bookingRoutes";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +28,7 @@ import {
 import { toast, Toaster } from "sonner";
 
 export default function OrderPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -304,6 +307,7 @@ export default function OrderPage() {
         selectedRows={selectedRows}
         onSelectedRowsChange={setSelectedRows}
         secondIconMenu={[
+          { label: "+ Add New", onClick: () => router.push(BOOKING_ROUTES.orders) },
           { label: "Grid View", onClick: () => console.log("Grid View") },
           { label: "Table View", onClick: () => console.log("Table View") },
           { label: "Trip Create", onClick: handleGridIconClick },
