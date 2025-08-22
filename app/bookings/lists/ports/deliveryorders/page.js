@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import BillingList from "@/components/ui/reusableComponent/billingList";
 import { formatRowsWithId } from "@/lib/utils";
+import { BOOKING_ROUTES } from "@/lib/bookingRoutes";
 
 export default function DeliveryOrdersPage() {
+  const router = useRouter();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,7 +81,9 @@ export default function DeliveryOrdersPage() {
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        secondIconMenu={[]}
+        secondIconMenu={[
+          { label: "+ Add New", onClick: () => router.push(BOOKING_ROUTES.deliveryOrders) }
+        ]}
         thirdIconMenu={[]}
         showActions={true}
         enabledActions={["edit", "view", "delete"]}

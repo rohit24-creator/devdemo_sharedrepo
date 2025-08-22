@@ -69,10 +69,28 @@ const navigationData = {
   bookings: {
     label: 'Bookings',
     items: [
-      { href: '/bookings/newOrder', label: 'New Order' },
+
       { href: '/bookings/list', label: 'Order view' },
       { href: '/bookings/orderFinancials', label: 'Order Financials' },
-      { href: '/bookings/port/delivery', label: 'Port Delivery' },
+      { href: '/bookings/lists/orders', label: 'Orders' },
+      { href: '/bookings/lists/massStatus', label: 'Mass Status' },
+      { href: '/bookings/lists/documentControl', label: 'Document Control' },
+      {
+        label: 'Claims',
+        items: [
+          { href: '/bookings/lists/claims/payment', label: 'Payment' },
+          { href: '/bookings/lists/claims/claim', label: 'Claim' },
+        ],
+      },
+      { href: '/bookings/lists/xbrdrOrders', label: 'XBRDR Orders' },
+      {
+        label: 'Ports',
+        items: [
+          { href: '/bookings/lists/ports/workOrder', label: 'Work Order' },
+          { href: '/bookings/lists/ports/deliveryOrders', label: 'Delivery Orders' },
+          { href: '/bookings/lists/ports/containers', label: 'Containers' },
+        ],
+      },
     ],
   },
   visibility: {

@@ -6,7 +6,7 @@ import * as z from "zod";
 import { OrdersForm } from "@/components/ui/reusableComponent/orderForms";
 import { Card, CardContent } from "@/components/ui/card";
 import { Truck, Home, Package, Users } from "lucide-react";
-import ReusableTable from "@/components/ui/reusableComponent/reusabletable";
+import ReusableTable from "@/components/ui/reusableComponent/ordersReusableTable";
 
 const generalInfoSchema = z.object({
   bookingId: z.string(),

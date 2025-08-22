@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import ReusableTable from "@/components/ui/reusableComponent/bookingList";
 import { formatRowsWithId } from "@/lib/utils";
 
+
 export default function DocumentControlPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +18,12 @@ export default function DocumentControlPage() {
   const api = axios.create({
     timeout: 30000,
   });
+
+  const thirdIconMenu = [
+    { label: "PDF", onClick: () => console.log("PDF") },
+    { label: "Excel", onClick: () => console.log("Excel") },
+    { label: "Print", onClick: () => console.log("Print") },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,22 +86,13 @@ export default function DocumentControlPage() {
         showActions={true}
         filterFields={filterFields}
         onSearch={(data) => console.log("Search:", data)}
-        showFirstIcon={false}
-        showSecondIcon={true}
+        showFirstIcon={true}
+        showSecondIcon={false}
         showThirdIcon={true}
+        showFourthIcon={false}
         enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
-        secondIconMenu={[
-          { label: "Grid View", onClick: () => console.log("Grid View") },
-          { label: "Table View", onClick: () => console.log("Table View") },
-        ]}
-        thirdIconMenu={[
-          { label: "Money View", onClick: () => console.log("Money View") },
-        ]}
-        fifthIconMenu={[
-          { label: "Bell Action 1", onClick: () => console.log("Bell Action 1") },
-          { label: "Bell Action 2", onClick: () => console.log("Bell Action 2") },
-        ]}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );
