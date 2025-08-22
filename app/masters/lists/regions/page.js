@@ -53,7 +53,6 @@ export default function RegionViewPage() {
 
   const filterFields = [
     { name: "name", label: "Region Name" },
-    { name: "departmentCode", label: "Department Code" },
   ];
 
   // ✅ Action handler for actions like Edit, View, Delete

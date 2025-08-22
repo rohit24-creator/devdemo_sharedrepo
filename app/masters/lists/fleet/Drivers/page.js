@@ -52,9 +52,9 @@ export default function DriverViewPage() {
   }, []);
 
   const filterFields = [
-    { name: "name", label: "Driver Name" },
-    { name: "city", label: "City" },
-    { name: "driverType", label: "Driver Type" }
+    { name: "carrierName", label: "Carrier Name" },
+    { name: "DriverName", label: "Driver Name" },
+    { name: "vehicleID", label: "Vehicle ID" }
   ];
 
   // Action handler for actions like Edit, View, Delete

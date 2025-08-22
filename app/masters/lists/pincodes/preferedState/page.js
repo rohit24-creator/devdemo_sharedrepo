@@ -52,7 +52,9 @@ export default function PreferredViewPage() {
   }, []);
 
   const filterFields = [
-    { name: "carrierid", label: "Carrier ID" },
+     { name: "FromDate", label: "From Date" },
+    { name: "toDate", label: "To Date" },
+    { name: "carrier", label: "Carrier" },
     { name: "city", label: "City" },
     { name: "state", label: "State" }
   ];

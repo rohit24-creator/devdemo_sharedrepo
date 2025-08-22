@@ -54,8 +54,7 @@ export default function ShipmentTypeViewPage() {
   }, []);
 
   const filterFields = [
-    { name: "name", label: "Shipment Type Name" },
-    { name: "departmentCode", label: "Department Code" },
+    { name: "typename", label: "Type Name" },
   ];
 
   // Action handler for actions like Edit, View, Delete

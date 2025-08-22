@@ -52,9 +52,9 @@ export default function VehicleViewPage() {
   }, []);
 
   const filterFields = [
-    { name: "registerNumber", label: "Register Number" },
-    { name: "vehicleType", label: "Vehicle Type" },
-    { name: "contactName", label: "Contact Name" }
+    { name: "vehicleId", label: "Vehicle ID" },
+    { name: "contactPerson", label: "Contact Person" },
+    { name: "vendor", label: "Vendor" }
   ];
 
   // Action handler for actions like Edit, View, Delete

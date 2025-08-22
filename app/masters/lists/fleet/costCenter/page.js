@@ -53,8 +53,8 @@ export default function CostCenterViewPage() {
 
   const filterFields = [
     { name: "costcenter", label: "Cost Center" },
-    { name: "customerName", label: "Customer Name" },
-    { name: "companyCode", label: "Company Code" }
+    { name: "companyCode", label: "Company Code" },
+    { name: "branchCode", label: "Branch Code" },
   ];
 
   // Action handler for actions like Edit, View, Delete

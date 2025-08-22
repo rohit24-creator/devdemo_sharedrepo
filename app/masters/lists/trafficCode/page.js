@@ -53,9 +53,8 @@ export default function TrafficViewPage() {
 
   const filterFields = [
     { name: "trafficCode", label: "Traffic Code" },
-    { name: "customerName", label: "Customer Name" },
-    { name: "modeOfTransport", label: "Mode Of Transport" },
-    { name: "departmentCode", label: "Department Code" }
+    { name: "departmentCode", label: "Department Code" },
+    { name: "branchCode", label: "Branch Code" }
   ];
 
   // Action handler for actions like Edit, View, Delete

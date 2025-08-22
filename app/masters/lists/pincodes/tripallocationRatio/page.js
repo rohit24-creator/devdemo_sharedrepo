@@ -52,10 +52,10 @@ export default function TripViewPage() {
   }, []);
 
   const filterFields = [
-    { name: "carrierid", label: "Carrier ID" },
+     { name: "FromDate", label: "From Date" },
+    { name: "toDate", label: "To Date" },
     { name: "ordertype", label: "Order Type" },
-    { name: "startdate", label: "Start Date" },
-    { name: "enddate", label: "End Date" }
+    { name: "carrier", label: "Carrier" },
   ];
 
   // Action handler for actions like Edit, View, Delete

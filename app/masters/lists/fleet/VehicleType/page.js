@@ -65,7 +65,7 @@ export default function VehicleTypeViewPage() {
   const filterFields = [
     { name: "vechicletype", label: "Vehicle Type" },
     { name: "companyCode", label: "Company Code" },
-    { name: "departmentCode", label: "Department Code" }
+    { name: "branchCode", label: "Branch Code" }
   ];
 
   // Action handler for actions like Edit, View, Delete

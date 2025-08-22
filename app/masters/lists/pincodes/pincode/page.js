@@ -52,11 +52,11 @@ export default function PincodeViewPage() {
   }, []);
 
   const filterFields = [
-    { name: "origincity", label: "Origin City" },
-    { name: "destinationcity", label: "Destination City" },
-    { name: "customerid", label: "Customer ID" },
-    { name: "carrierid", label: "Carrier ID" },
-    { name: "destinationstate", label: "Destination State" }
+    { name: "FromDate", label: "From Date" },
+    { name: "toDate", label: "To Date" },
+    { name: "originPin", label: "Origin Pin" },
+    { name: "DestinationPin", label: "Destination Pin" },
+    { name: "carrier", label: "Carrier " }
   ];
 
   // Action handler for actions like Edit, View, Delete
