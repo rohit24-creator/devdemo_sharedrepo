@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import { DASHBOARD_ROUTES } from "@/lib/dashboardRoutes";
 export default function FinancePage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +50,10 @@ export default function FinancePage() {
           onSearch={handleSearch}
           onActionClick={handleActionClick}
           enabledActions={["edit", "view", "delete"]}
+          showSecondIcon={true}
+          secondIconMenu={[
+            { label: "+ Add New", onClick: () => router.push(DASHBOARD_ROUTES.finance) }
+          ]}
         />
       )}
     </div>

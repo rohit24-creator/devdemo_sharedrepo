@@ -148,6 +148,23 @@ const navigationData = {
       { href: '/trip/shipmentplan', label: 'Shipment Plan' },
     ],
   },
+  dashboard: {
+    label: 'Dashboard',
+    items: [
+      { href: '/dashboard/fleetView', label: 'Fleet View' },
+      {
+        label: 'Maintenance',
+        items: [
+          { href: '/dashboard/maintenance/lists/tyre', label: 'Tyre' },
+          { href: '/dashboard/maintenance/lists/regularMaintenance', label: 'Regular Maintenance' },
+          { href: '/dashboard/maintenance/lists/insurance', label: 'Insurance' },
+          { href: '/dashboard/maintenance/lists/battery', label: 'Battery' },
+          { href: '/dashboard/maintenance/lists/finance', label: 'Finance' },
+          { href: '/dashboard/maintenance/lists/addPurchaseOrder', label: 'Add Purchase Order' },
+        ],
+      },
+    ],
+  },
   billing: {
     label: 'Billing',
     items: [
