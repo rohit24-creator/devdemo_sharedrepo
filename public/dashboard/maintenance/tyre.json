@@ -1,34 +1,68 @@
 {
-  "columns": [
-    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
-    { "accessorKey": "number", "header": "Number" },
-    { "accessorKey": "size", "header": "Size" },
-    { "accessorKey": "nsd", "header": "NSD" },
-    { "accessorKey": "amount", "header": "Amount" },
-    { "accessorKey": "category", "header": "Category" },
-    { "accessorKey": "company", "header": "Company" },
-    { "accessorKey": "type", "header": "Type" },
-    { "accessorKey": "pattern", "header": "Pattern" },
-    { "accessorKey": "carrier", "header": "Carrier" },
-    { "accessorKey": "quantity", "header": "Quantity" },
-    { "accessorKey": "purchasedDate", "header": "Purchased Date" },
-    { "accessorKey": "warrantyFrom", "header": "Warranty From" }
+  "headers": [
+    {
+      "accessorKey": "vehicleNumber",
+      "header": "Vehicle Number"
+    },
+    {
+      "accessorKey": "tyreBrand",
+      "header": "Tyre Brand"
+    },
+    {
+      "accessorKey": "tyreSize",
+      "header": "Tyre Size"
+    },
+    {
+      "accessorKey": "purchaseDate",
+      "header": "Purchase Date"
+    },
+    {
+      "accessorKey": "tyreStatus",
+      "header": "Tyre Status"
+    },
+    {
+      "accessorKey": "lastRotation",
+      "header": "Last Rotation"
+    },
+    {
+      "accessorKey": "treadDepth",
+      "header": "Tread Depth (mm)"
+    },
+    {
+      "accessorKey": "cost",
+      "header": "Cost"
+    }
   ],
   "rows": [
     {
-      "vehicleNumber": "332002",
-      "number": "0022",
-      "size": "18",
-      "nsd": "NSD",
-      "amount": "100.00",
-      "category": "vehicle",
-      "company": "RT",
-      "type": "Pallets",
-      "pattern": "Order",
-      "carrier": "Shipmentx",
-      "quantity": "71.00",
-      "purchasedDate": "2025-01-09 00:00:00",
-      "warrantyFrom": "2025-04-10 00:00:00"
+      "vehicleNumber": "TN01AB1234",
+      "tyreBrand": "Michelin",
+      "tyreSize": "205/55R16",
+      "purchaseDate": "2024-01-15",
+      "tyreStatus": "Good",
+      "lastRotation": "2024-03-20",
+      "treadDepth": "6.5",
+      "cost": "₹8,500"
+    },
+    {
+      "vehicleNumber": "TN02CD5678",
+      "tyreBrand": "Bridgestone",
+      "tyreSize": "215/60R17",
+      "purchaseDate": "2024-02-10",
+      "tyreStatus": "Fair",
+      "lastRotation": "2024-04-15",
+      "treadDepth": "4.2",
+      "cost": "₹9,200"
+    },
+    {
+      "vehicleNumber": "TN03EF9012",
+      "tyreBrand": "Goodyear",
+      "tyreSize": "225/65R17",
+      "purchaseDate": "2023-12-05",
+      "tyreStatus": "Poor",
+      "lastRotation": "2024-02-28",
+      "treadDepth": "2.1",
+      "cost": "₹10,500"
     }
   ]
 }

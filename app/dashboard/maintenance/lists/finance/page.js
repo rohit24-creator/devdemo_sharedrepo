@@ -2,60 +2,109 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/masterList";
 import { DASHBOARD_ROUTES } from "@/lib/dashboardRoutes";
+import { formatRowsWithId } from "@/lib/utils";
+
 export default function FinancePage() {
   const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
+  const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState([
+  const [error, setError] = useState(null);
+
+  const filterFields = [
     { name: "vehicleNumber", label: "Vehicle No.", value: "" }
-  ]);
+  ];
+
+  // Action handler for actions like Edit, View, Delete
+  const handleActionClick = (action, row) => {
+    if (action === "delete") {
+      const updated = rows.filter((r) => r.id !== row.id);
+      setRows(updated);
+    } else if (action === "edit") {
+      console.log("Edit row", row);
+    } else if (action === "view") {
+      console.log("View row", row);
+    } else {
+      console.log("Unknown action", action, row);
+    }
+  };
+
+  // Menu configurations
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(DASHBOARD_ROUTES.finance) },
+    { label: "Finance Template", onClick: () => console.log("Finance Template") },
+    { label: "Upload Excel", onClick: () => console.log("Upload Excel") },
+  ];
+
+  const thirdIconMenu = [
+    { label: "PDF", onClick: () => console.log("PDF") },
+    { label: "Excel", onClick: () => console.log("Excel") },
+    { label: "Print", onClick: () => console.log("Print") },
+  ];
+
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      const res = await fetch("/dashboard/maintenance/finance.json");
-      const data = await res.json();
-      setColumns(data.columns || []);
-      setRows(data.rows || []);
-      setLoading(false);
-    }
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/dashboard/maintenance/finance.json");
+
+        // Format columns
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        // Add unique ID to each row 
+        const formattedRows = formatRowsWithId(data?.rows || []);
+
+        setColumns(formattedColumns);
+        setRows(formattedRows);
+        
+      } catch (err) {
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
   }, []);
 
-  const handleSearch = (formValues) => {
-    setRows((prevRows) =>
-      prevRows.filter((row) =>
-        row.vehicleNumber.toLowerCase().includes(formValues.vehicleNumber?.toLowerCase() || "")
-      )
-    );
-  };
-
-  const handleActionClick = (action, row) => {
-    alert(`${action} clicked for Vehicle Number: ${row.vehicleNumber}`);
-  };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
     <div className="p-6">
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <ReusableTable
-          title="Finance"
-          filterFields={filters}
-          columns={columns}
-          rows={rows}
-          onSearch={handleSearch}
-          onActionClick={handleActionClick}
-          enabledActions={["edit", "view", "delete"]}
-          showSecondIcon={true}
-          secondIconMenu={[
-            { label: "+ Add New", onClick: () => router.push(DASHBOARD_ROUTES.finance) }
-          ]}
-        />
-      )}
+      <ReusableTable
+        title="Finance"
+        filterFields={filterFields}
+        columns={columns}
+        rows={rows}
+        onSearch={(data) => console.log("Search:", data)}
+        showActions={true}
+        showFirstIcon={true}
+        showSecondIcon={true}
+        showThirdIcon={true}
+        showFourthIcon={false}
+        showFifthIcon={false}
+        enabledActions={["edit", "view", "delete"]}
+        onActionClick={handleActionClick}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
+      />
     </div>
   );
 }
