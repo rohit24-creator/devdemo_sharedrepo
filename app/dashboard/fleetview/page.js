@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +21,10 @@ import {
   Search,
   Filter,
   Eye,
-  X
+  X,
+  Battery,
+  BatteryCharging,
+  BatteryWarning
 } from "lucide-react";
 
 // Import Recharts components for distance chart
@@ -42,6 +45,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+
+// Battery color configuration
+const batteryColorConfig = [
+  { min: 90, max: 100, label: "Excellent", bgColor: "bg-green-100", textColor: "text-green-800", borderColor: "border-green-300", hoverColor: "hover:bg-green-200" },
+  { min: 80, max: 89, label: "Good", bgColor: "bg-emerald-100", textColor: "text-emerald-800", borderColor: "border-emerald-300", hoverColor: "hover:bg-emerald-200" },
+  { min: 70, max: 79, label: "Fair", bgColor: "bg-yellow-100", textColor: "text-yellow-800", borderColor: "border-yellow-300", hoverColor: "hover:bg-yellow-200" },
+  { min: 60, max: 69, label: "Low", bgColor: "bg-orange-100", textColor: "text-orange-800", borderColor: "border-orange-300", hoverColor: "hover:bg-orange-200" },
+  { min: 50, max: 59, label: "Critical", bgColor: "bg-red-100", textColor: "text-red-800", borderColor: "border-red-300", hoverColor: "hover:bg-red-200" },
+  { min: 0, max: 49, label: "Danger", bgColor: "bg-red-600", textColor: "text-white", borderColor: "border-red-700", hoverColor: "hover:bg-red-700" }
+];
 
 // Centralized data structure - can be replaced with API calls
 const dashboardData = {
@@ -384,6 +397,32 @@ const iconMap = {
   X
 };
 
+// Helper function to get battery color configuration
+const getBatteryColorConfig = (batteryLevel) => {
+  const level = parseInt(batteryLevel);
+  return batteryColorConfig.find(config => level >= config.min && level <= config.max) || batteryColorConfig[batteryColorConfig.length - 1];
+};
+
+// Table column configuration
+const tableColumns = [
+  { key: 'driver', label: 'Driver', sortable: true },
+  { key: 'vehicle', label: 'Vehicle', sortable: true },
+  { key: 'place', label: 'Place', sortable: true },
+  { key: 'speed', label: 'Speed', sortable: true },
+  { key: 'battery', label: 'Battery', sortable: true },
+  { key: 'shipment', label: 'Shipment', sortable: true },
+  { key: 'updatedOn', label: 'Updated On', sortable: true }
+];
+
+// Entries per page options
+const entriesPerPageOptions = [
+  { value: 10, label: '10 entries' },
+  { value: 25, label: '25 entries' },
+  { value: 50, label: '50 entries' }
+];
+
+
+
 export default function FleetView() {
   const [selectedCarrier, setSelectedCarrier] = useState("All Carriers");
   const [selectedDrivers, setSelectedDrivers] = useState([]);
@@ -526,6 +565,53 @@ export default function FleetView() {
     setOrderDetails(null);
   };
 
+  // Cell renderer function
+  const renderTableCell = (vehicle, column, handleDriverOrderSelection) => {
+    switch (column.key) {
+      case 'driver':
+        return (
+          <TableCell key={column.key} className="font-medium cursor-pointer hover:text-blue-600" onClick={() => handleDriverOrderSelection(vehicle.driver)}>
+            {vehicle[column.key]}
+          </TableCell>
+        );
+      case 'speed':
+        return (
+          <TableCell key={column.key}>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              {vehicle[column.key]}
+            </Badge>
+          </TableCell>
+        );
+      case 'battery':
+        return (
+          <TableCell key={column.key}>
+            <Badge 
+              className={`${(() => {
+                const config = getBatteryColorConfig(vehicle[column.key]);
+                return `${config.bgColor} ${config.textColor} ${config.borderColor} ${config.hoverColor}`;
+              })()}`}
+            >
+              {vehicle[column.key]}
+            </Badge>
+          </TableCell>
+        );
+      case 'shipment':
+        return (
+          <TableCell key={column.key} className="max-w-xs truncate">
+            {vehicle[column.key]}
+          </TableCell>
+        );
+      case 'updatedOn':
+        return (
+          <TableCell key={column.key} className="text-sm text-gray-500">
+            {vehicle[column.key]}
+          </TableCell>
+        );
+      default:
+        return <TableCell key={column.key}>{vehicle[column.key]}</TableCell>;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
@@ -568,16 +654,16 @@ export default function FleetView() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-blue-600 shadow-md">
-                    <Truck className="w-4 h-4 text-white" />
+                    <Truck className="w-4 h-4 text-white"/>
                   </div>
                   <div>
                     <p className="text-xl font-bold text-gray-900">Select Driver</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-medium text-green-600">ACTIVE</span>
-                </div>
+                    <div className="flex items-center gap-2">
+                   <div className="bg-green-500 rounded-full animate-pulse"></div>
+                   <span className="text-xs font-medium text-green-600">ACTIVE</span>
+                 </div>
               </div>
               
               <div className="space-y-4">
@@ -609,58 +695,56 @@ export default function FleetView() {
                     <span className="text-xs font-normal text-gray-500 ml-auto">({drivers.length} drivers)</span>
                   </label>
                   <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-lg p-3 space-y-2 bg-gray-50">
-                    <div className="flex items-center space-x-3 p-2 bg-blue-50 rounded-md border border-blue-200">
-                      <input
-                        type="radio"
-                        id="total-drivers"
-                        name="driver-selection"
-                        checked={selectedDriverForOrders === "Total Driver"}
-                        onChange={() => handleDriverOrderSelection("Total Driver")}
-                        className="text-blue-600 w-4 h-4"
-                      />
-                      <label htmlFor="total-drivers" className="text-sm font-semibold text-blue-800 cursor-pointer flex-1">
-                        Total Driver
-                      </label>
-                      <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
-                        {drivers.length} total
-                      </Badge>
-                    </div>
-                    {drivers.map((driver, index) => (
-                      <div key={driver} className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-md transition-colors">
-                        <input
-                          type="radio"
-                          id={driver}
-                          name="driver-selection"
-                          checked={selectedDriverForOrders === driver}
-                          onChange={() => handleDriverOrderSelection(driver)}
-                          className="text-blue-600 w-4 h-4"
-                        />
-                        <label htmlFor={driver} className="text-sm text-gray-700 cursor-pointer flex-1">
-                          {driver}
-                        </label>
-                        <Badge variant="outline" className="text-xs">
-                          #{index + 1}
-                        </Badge>
-                      </div>
-                    ))}
+                                         <div className="flex items-center space-x-3 p-2 bg-blue-50 rounded-md border border-blue-200">
+                       <input
+                         type="radio"
+                         id="total-drivers"
+                         name="driver-selection"
+                         checked={selectedDriverForOrders === "Total Driver"}
+                         onChange={() => handleDriverOrderSelection("Total Driver")}
+                         className="text-blue-600 w-3 h-3"
+                       />
+                       <label htmlFor="total-drivers" className="text-sm font-semibold text-blue-800 cursor-pointer flex-1">
+                         Total Driver
+                       </label>
+                       <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
+                         {drivers.length} total
+                       </Badge>
+                     </div>
+                     {drivers.map((driver, index) => (
+                       <div key={driver} className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded-md transition-colors">
+                         <input
+                           type="radio"
+                           id={driver}
+                           name="driver-selection"
+                           checked={selectedDriverForOrders === driver}
+                           onChange={() => handleDriverOrderSelection(driver)}
+                           className="text-blue-600 w-3 h-3"
+                         />
+                         <label htmlFor={driver} className="text-sm text-gray-700 cursor-pointer flex-1">
+                           {driver}
+                         </label>
+                       </div>
+                     ))}
                   </div>
                 </div>
 
+                
 
               </div>
             </div>
 
             {/* Distance Chart Card */}
             <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-4 border border-indigo-200 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-xl bg-indigo-600 shadow-md">
-                    <BarChart3 className="w-4 h-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold text-gray-900">Vendor Performance</p>
-                  </div>
-                </div>
+               <div className="flex items-center justify-between mb-4">
+                 <div className="flex items-center gap-3">
+                   <div className="p-2 rounded-lg bg-blue-600 shadow-md">
+                     <BarChart3 className="w-4 h-4 text-white"/>
+                   </div>
+                   <div>
+                     <p className="text-xl font-bold text-gray-900">Vendor Performance</p>
+                   </div>
+                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-xs font-medium text-green-600">LIVE</span>
@@ -826,22 +910,24 @@ export default function FleetView() {
                 <div className="flex items-center gap-4">
                   {currentView === "table" && (
                     <>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-700">Show:</span>
-                        <Select value={entriesPerPage.toString()} onValueChange={(value) => {
-                          setEntriesPerPage(parseInt(value));
-                          setCurrentPage(1);
-                        }}>
-                          <SelectTrigger className="w-32">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="10">10 entries</SelectItem>
-                            <SelectItem value="25">25 entries</SelectItem>
-                            <SelectItem value="50">50 entries</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                                             <div className="flex items-center gap-2">
+                         <span className="text-sm text-gray-700">Show:</span>
+                         <Select value={entriesPerPage.toString()} onValueChange={(value) => {
+                           setEntriesPerPage(parseInt(value));
+                           setCurrentPage(1);
+                         }}>
+                           <SelectTrigger className="w-32">
+                             <SelectValue />
+                           </SelectTrigger>
+                           <SelectContent>
+                             {entriesPerPageOptions.map((option) => (
+                               <SelectItem key={option.value} value={option.value.toString()}>
+                                 {option.label}
+                               </SelectItem>
+                             ))}
+                           </SelectContent>
+                         </Select>
+                       </div>
                       <div className="flex items-center gap-2">
                         <Search className="w-4 h-4 text-gray-400" />
                         <Input
@@ -869,126 +955,35 @@ export default function FleetView() {
                     <Table>
                       <TableHeader className="sticky top-0 bg-gray-50 z-10">
                         <TableRow>
-                          <TableHead
-                            className="font-semibold bg-gray-50 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort('driver')}
-                          >
-                            <div className="flex items-center gap-1">
-                              Driver
-                              {sortField === 'driver' && (
-                                <span className="text-xs">
-                                  {sortDirection === 'asc' ? '↑' : '↓'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead
-                            className="font-semibold bg-gray-50 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort('vehicle')}
-                          >
-                            <div className="flex items-center gap-1">
-                              Vehicle
-                              {sortField === 'vehicle' && (
-                                <span className="text-xs">
-                                  {sortDirection === 'asc' ? '↑' : '↓'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead
-                            className="font-semibold bg-gray-50 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort('place')}
-                          >
-                            <div className="flex items-center gap-1">
-                              Place
-                              {sortField === 'place' && (
-                                <span className="text-xs">
-                                  {sortDirection === 'asc' ? '↑' : '↓'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead
-                            className="font-semibold bg-gray-50 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort('speed')}
-                          >
-                            <div className="flex items-center gap-1">
-                              Speed
-                              {sortField === 'speed' && (
-                                <span className="text-xs">
-                                  {sortDirection === 'asc' ? '↑' : '↓'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead
-                            className="font-semibold bg-gray-50 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort('battery')}
-                          >
-                            <div className="flex items-center gap-1">
-                              Battery
-                              {sortField === 'battery' && (
-                                <span className="text-xs">
-                                  {sortDirection === 'asc' ? '↑' : '↓'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead
-                            className="font-semibold bg-gray-50 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort('shipment')}
-                          >
-                            <div className="flex items-center gap-1">
-                              Shipment
-                              {sortField === 'shipment' && (
-                                <span className="text-xs">
-                                  {sortDirection === 'asc' ? '↑' : '↓'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
-                          <TableHead
-                            className="font-semibold bg-gray-50 cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort('updatedOn')}
-                          >
-                            <div className="flex items-center gap-1">
-                              Updated On
-                              {sortField === 'updatedOn' && (
-                                <span className="text-xs">
-                                  {sortDirection === 'asc' ? '↑' : '↓'}
-                                </span>
-                              )}
-                            </div>
-                          </TableHead>
+                          {tableColumns.map((column) => (
+                            <TableHead
+                              key={column.key}
+                              className={`font-semibold bg-gray-50 ${column.sortable ? 'cursor-pointer hover:bg-gray-100' : ''}`}
+                              onClick={column.sortable ? () => handleSort(column.key) : undefined}
+                            >
+                              <div className="flex items-center gap-1">
+                                {column.label}
+                                {sortField === column.key && (
+                                  <span className="text-xs">
+                                    {sortDirection === 'asc' ? '↑' : '↓'}
+                                  </span>
+                                )}
+                              </div>
+                            </TableHead>
+                          ))}
                         </TableRow>
                       </TableHeader>
-                      <TableBody>
-                        {currentData.map((vehicle) => (
-                          <TableRow key={vehicle.id} className="hover:bg-gray-50">
-                            <TableCell className="font-medium cursor-pointer hover:text-blue-600" onClick={() => handleDriverOrderSelection(vehicle.driver)}>
-                              {vehicle.driver}
-                            </TableCell>
-                            <TableCell>{vehicle.vehicle}</TableCell>
-                            <TableCell>{vehicle.place}</TableCell>
-                            <TableCell>
-                              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                                {vehicle.speed}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={parseInt(vehicle.battery) > 80 ? "default" : "destructive"}>
-                                {vehicle.battery}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="max-w-xs truncate">
-                              {vehicle.shipment}
-                            </TableCell>
-                            <TableCell className="text-sm text-gray-500">
-                              {vehicle.updatedOn}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
+                                             <TableBody>
+                         {currentData.map((vehicle) => (
+                           <TableRow key={vehicle.id} className="hover:bg-gray-50">
+                             {tableColumns.map((column) => (
+                               <React.Fragment key={column.key}>
+                                 {renderTableCell(vehicle, column, handleDriverOrderSelection)}
+                               </React.Fragment>
+                             ))}
+                           </TableRow>
+                         ))}
+                       </TableBody>
                     </Table>
                   </div>
                 </div>
