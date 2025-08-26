@@ -51,10 +51,12 @@ export default function ReportsList({
     showFirstIcon = true,
     showSecondIcon = true,
     showThirdIcon = true,
+    firstIconMenu = [],
     secondIconMenu = [],
     thirdIconMenu = [],
     enabledActions = ["edit", "view", "delete", "tripHistory"],
     onActionClick = () => { },
+    onFirstIconClick = () => { },
 }) {
     const [formValues, setFormValues] = useState({});
     const [displayCount, setDisplayCount] = useState(30);
@@ -302,7 +304,15 @@ export default function ReportsList({
                         // Show individual icons when 5 or fewer filter fields
                         <>
                             {showFirstIcon && (
-                                <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+                                onFirstIconClick ? (
+                                    <Search 
+                                        size={18} 
+                                        className="cursor-pointer text-gray-600 mb-1" 
+                                        onClick={onFirstIconClick}
+                                    />
+                                ) : (
+                                    <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+                                )
                             )}
                             {showSecondIcon && (
                                 <DropdownMenu>
