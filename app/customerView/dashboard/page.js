@@ -398,26 +398,7 @@ export default function CustomerDashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Enhanced Header */}
-      <header className="bg-white border-b border-gray-200 px-8 py-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Badge variant="secondary" className="text-xs font-medium">
-              Customer Dashboard
-            </Badge>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-              <HelpCircle size={20} className="text-gray-600" />
-            </Button>
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-              <Mic size={20} className="text-gray-600" />
-            </Button>
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
-              <User size={20} className="text-gray-600" />
-            </Button>
-          </div>
-        </div>
-      </header>
+    
 
       <div className="p-6 space-y-5">
         {/* KPI Cards */}
