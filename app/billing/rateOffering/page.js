@@ -181,7 +181,7 @@ export default function RateOfferingPage() {
   const tabs = [
     {
       value: "main",
-      label: "Rate Offering",
+      label: "General Info",
       component: RateOfferingContent,
     },
     {
@@ -200,7 +200,7 @@ export default function RateOfferingPage() {
     <div className="p-6">
       {/* Heading */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#162d56]">Rate Offering Management</h2>
+        <h2 className="text-2xl font-bold text-[#006397]">Rate Offering</h2>
       </div>
 
       {/* Tabs Navigation */}

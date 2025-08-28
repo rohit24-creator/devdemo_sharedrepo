@@ -141,9 +141,6 @@ export default function RateRecordServicePage() {
   ];
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-[#006397] mb-4">Rate Record - Service</h1>
-      <BillingForm sections={sections} useAccordion={true} />
-    </div>
+    <BillingForm sections={sections} useAccordion={true} />
   );
 }
