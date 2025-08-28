@@ -71,7 +71,6 @@ const navigationData = {
     items: [
 
       { href: '/bookings/list', label: 'Order view' },
-      { href: '/bookings/orderFinancials', label: 'Order Financials' },
       { href: '/bookings/lists/orders', label: 'Orders' },
       { href: '/bookings/lists/massStatus', label: 'Mass Status' },
       { href: '/bookings/lists/documentControl', label: 'Document Control' },

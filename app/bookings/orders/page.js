@@ -7,6 +7,10 @@ import { OrdersForm } from "@/components/ui/reusableComponent/orderForms";
 import { Card, CardContent } from "@/components/ui/card";
 import { Truck, Home, Package, Users } from "lucide-react";
 import ReusableTable from "@/components/ui/reusableComponent/ordersReusableTable";
+import { TabsNavbar } from "@/components/ui/reusableComponent/tabsNavbar";
+
+// Import the orderFinancials page as component
+import OrderFinancialsPage from "./orderFinancials/page";
 
 const generalInfoSchema = z.object({
   bookingId: z.string(),
@@ -220,7 +224,7 @@ const partyList = [
 const packageTypeColumns = ["Package Type", "Length", "Width", "Height", "Actual Weight", "Weight", "Volumetric Weight", "Actual Volume", "Volume","Description"];
 const partyColumns = ["Party ID", "Party Name", "Role", "City", "Country"];
 
-export default function NewOrderPage() {
+function OrdersContent() {
   const [cargoData, setCargoData] = useState([]);
   const [partyData, setPartyData] = useState([]);
 
@@ -407,8 +411,35 @@ export default function NewOrderPage() {
   ];
 
   return (
+    <OrdersForm sections={sections} useAccordion={true} />
+  );
+}
+
+// Main Orders Page with Tabs
+export default function OrdersPage() {
+  // Define tabs configuration
+  const tabs = [
+    {
+      value: "orders",
+      label: "Orders",
+      component: OrdersContent,
+    },
+    {
+      value: "orderFinancials",
+      label: "Order Financials",
+      component: OrderFinancialsPage,
+    },
+  ];
+
+  return (
     <div className="p-6">
-      <OrdersForm sections={sections} useAccordion={true} />
+      {/* Heading */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-[#006397]">Orders</h2>
+      </div>
+
+      {/* Tabs Navigation */}
+      <TabsNavbar tabs={tabs} defaultTab="orders" />
     </div>
   );
 }
