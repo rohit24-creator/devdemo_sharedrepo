@@ -1,0 +1,32 @@
+{
+  "columns": [
+    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
+    { "accessorKey": "name", "header": "Name" },
+    { "accessorKey": "number", "header": "Number" },
+    { "accessorKey": "size", "header": "Size" },
+    { "accessorKey": "amount", "header": "Amount" },
+    { "accessorKey": "brand", "header": "Brand" },
+    { "accessorKey": "carrier", "header": "Carrier" },
+    { "accessorKey": "quantity", "header": "Quantity" },
+    { "accessorKey": "purchasedDate", "header": "Purchased Date" },
+    { "accessorKey": "warrantyFrom", "header": "Warranty From" },
+    { "accessorKey": "warrantyTo", "header": "Warranty To" },
+    { "accessorKey": "warrantyInfo", "header": "Warranty Info" }
+  ],
+  "rows": [
+    {
+      "vehicleNumber": "KN42602193",
+      "name": "sx001",
+      "number": "34343",
+      "size": "56",
+      "amount": "100.00",
+      "brand": "RT",
+      "carrier": "Speedy Freight Inc.",
+      "quantity": "66",
+      "purchasedDate": "2025-04-09 00:00:00",
+      "warrantyFrom": "2025-04-10 00:00:00",
+      "warrantyTo": "2025-04-11 00:00:00",
+      "warrantyInfo": ""
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "headers": [
+    { "accessorKey": "description", "header": "Description" },
+    { "accessorKey": "check", "header": "Check" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "customerName", "header": "Customer Name" },
+    { "accessorKey": "name", "header": "Name" },
+    { "accessorKey": "vat", "header": "VAT" },
+    { "accessorKey": "vendor", "header": "Vendor" }
+  ],
+  "rows": [
+    {
+      "description": "Standard VAT entry",
+      "check": "Yes",
+      "companyCode": "THKN",
+      "customerName": "John Doe Trading",
+      "name": "VAT-STD-01",
+      "vat": "7%",
+      "vendor": "Acme Supplies"
+    },
+    {
+      "description": "Reduced VAT rate",
+      "check": "No",
+      "companyCode": "TCS01",
+      "customerName": "Jane Logistics",
+      "name": "VAT-RED-02",
+      "vat": "5%",
+      "vendor": "Global Trade Co."
+    }
+  ]
+}
+
+

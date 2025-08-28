@@ -1,0 +1,34 @@
+{
+  "columns": [
+    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
+    { "accessorKey": "number", "header": "Number" },
+    { "accessorKey": "size", "header": "Size" },
+    { "accessorKey": "nsd", "header": "NSD" },
+    { "accessorKey": "amount", "header": "Amount" },
+    { "accessorKey": "category", "header": "Category" },
+    { "accessorKey": "company", "header": "Company" },
+    { "accessorKey": "type", "header": "Type" },
+    { "accessorKey": "pattern", "header": "Pattern" },
+    { "accessorKey": "carrier", "header": "Carrier" },
+    { "accessorKey": "quantity", "header": "Quantity" },
+    { "accessorKey": "purchasedDate", "header": "Purchased Date" },
+    { "accessorKey": "warrantyFrom", "header": "Warranty From" }
+  ],
+  "rows": [
+    {
+      "vehicleNumber": "332002",
+      "number": "0022",
+      "size": "18",
+      "nsd": "NSD",
+      "amount": "100.00",
+      "category": "vehicle",
+      "company": "RT",
+      "type": "Pallets",
+      "pattern": "Order",
+      "carrier": "Shipmentx",
+      "quantity": "71.00",
+      "purchasedDate": "2025-01-09 00:00:00",
+      "warrantyFrom": "2025-04-10 00:00:00"
+    }
+  ]
+}

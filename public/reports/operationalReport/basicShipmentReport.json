@@ -1,0 +1,82 @@
+{
+  "headers": [
+    { "accessorKey": "sNo", "header": "S.No" },
+    { "accessorKey": "trackingNumber", "header": "Tracking Number" },
+    { "accessorKey": "customer", "header": "Customer" },
+    { "accessorKey": "orderReferenceNumber", "header": "Order Reference Number" },
+    { "accessorKey": "lrNumber", "header": "LR Number" },
+    { "accessorKey": "goodsValue", "header": "Goods Value" },
+    { "accessorKey": "modeOfTransport", "header": "Mode of Transport" },
+    { "accessorKey": "shipperName", "header": "Shipper Name" },
+    { "accessorKey": "shipperCity", "header": "Shipper City" },
+    { "accessorKey": "consigneeName", "header": "Consignee Name" },
+    { "accessorKey": "consigneeCity", "header": "Consignee City" }
+  ],
+  "rows": [
+    {
+      "sNo": "1",
+      "trackingNumber": "TRK-001",
+      "customer": "ABC Corp",
+      "orderReferenceNumber": "ORD-001",
+      "lrNumber": "LR-001",
+      "goodsValue": "$1,500",
+      "modeOfTransport": "Road",
+      "shipperName": "ABC Corp",
+      "shipperCity": "Mumbai",
+      "consigneeName": "XYZ Ltd",
+      "consigneeCity": "Delhi"
+    },
+    {
+      "sNo": "2",
+      "trackingNumber": "TRK-002",
+      "customer": "DEF Inc",
+      "orderReferenceNumber": "ORD-002",
+      "lrNumber": "LR-002",
+      "goodsValue": "$2,300",
+      "modeOfTransport": "Rail",
+      "shipperName": "DEF Inc",
+      "shipperCity": "Bangalore",
+      "consigneeName": "PQR Co",
+      "consigneeCity": "Chennai"
+    },
+    {
+      "sNo": "3",
+      "trackingNumber": "TRK-003",
+      "customer": "GHI Ltd",
+      "orderReferenceNumber": "ORD-003",
+      "lrNumber": "LR-003",
+      "goodsValue": "$800",
+      "modeOfTransport": "Road",
+      "shipperName": "GHI Ltd",
+      "shipperCity": "Pune",
+      "consigneeName": "STU Corp",
+      "consigneeCity": "Hyderabad"
+    },
+    {
+      "sNo": "4",
+      "trackingNumber": "TRK-004",
+      "customer": "JKL Co",
+      "orderReferenceNumber": "ORD-004",
+      "lrNumber": "LR-004",
+      "goodsValue": "$3,200",
+      "modeOfTransport": "Air",
+      "shipperName": "JKL Co",
+      "shipperCity": "Kolkata",
+      "consigneeName": "VWX Inc",
+      "consigneeCity": "Ahmedabad"
+    },
+    {
+      "sNo": "5",
+      "trackingNumber": "TRK-005",
+      "customer": "MNO Corp",
+      "orderReferenceNumber": "ORD-005",
+      "lrNumber": "LR-005",
+      "goodsValue": "$1,800",
+      "modeOfTransport": "Road",
+      "shipperName": "MNO Corp",
+      "shipperCity": "Jaipur",
+      "consigneeName": "YZA Ltd",
+      "consigneeCity": "Lucknow"
+    }
+  ]
+} 

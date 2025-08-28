@@ -1,0 +1,37 @@
+{
+  "summary": {
+    "headers": [
+      { "accessorKey": "shipmentShop", "header": "Shipments/Shop" },
+      { "accessorKey": "delayed", "header": "Delayed" },
+      { "accessorKey": "trip", "header": "Trip" }
+    ],
+    "rows": [
+      { "shipmentShop": "Shop-001", "delayed": "2", "trip": "TRP-001" },
+      { "shipmentShop": "Shop-002", "delayed": "0", "trip": "TRP-002" },
+      { "shipmentShop": "Shop-003", "delayed": "1", "trip": "TRP-003" },
+      { "shipmentShop": "Shop-004", "delayed": "3", "trip": "TRP-004" },
+      { "shipmentShop": "Shop-005", "delayed": "0", "trip": "TRP-005" }
+    ]
+  },
+  "reportDetails": {
+    "headers": [
+      { "accessorKey": "tripRoute", "header": "Trip/Route" },
+      { "accessorKey": "driver", "header": "Driver" },
+      { "accessorKey": "volume", "header": "Volume" },
+      { "accessorKey": "dp", "header": "D/P?" },
+      { "accessorKey": "id", "header": "Id" },
+      { "accessorKey": "weight", "header": "Weight" },
+      { "accessorKey": "stop", "header": "Stop" },
+      { "accessorKey": "onTime", "header": "OnTime" },
+      { "accessorKey": "tripStart", "header": "TripStart" },
+      { "accessorKey": "tripEnd", "header": "TripEnd" }
+    ],
+    "rows": [
+      { "tripRoute": "TRP-001", "driver": "John Doe", "volume": "85%", "dp": "Yes", "id": "STOP-001", "weight": "2.5 tons", "stop": "Stop 1", "onTime": "Yes", "tripStart": "08:00", "tripEnd": "18:00" },
+      { "tripRoute": "TRP-002", "driver": "Jane Smith", "volume": "72%", "dp": "No", "id": "STOP-002", "weight": "1.8 tons", "stop": "Stop 2", "onTime": "No", "tripStart": "09:15", "tripEnd": "17:30" },
+      { "tripRoute": "TRP-003", "driver": "Mike Johnson", "volume": "90%", "dp": "Yes", "id": "STOP-003", "weight": "3.2 tons", "stop": "Stop 3", "onTime": "Yes", "tripStart": "07:30", "tripEnd": "19:45" },
+      { "tripRoute": "TRP-004", "driver": "Sarah Wilson", "volume": "65%", "dp": "No", "id": "STOP-004", "weight": "1.5 tons", "stop": "Stop 4", "onTime": "No", "tripStart": "10:00", "tripEnd": "16:00" },
+      { "tripRoute": "TRP-005", "driver": "David Brown", "volume": "78%", "dp": "Yes", "id": "STOP-005", "weight": "2.1 tons", "stop": "Stop 5", "onTime": "Yes", "tripStart": "08:45", "tripEnd": "17:15" }
+    ]
+  }
+} 

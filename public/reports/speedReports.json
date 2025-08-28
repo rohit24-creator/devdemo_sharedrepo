@@ -1,0 +1,120 @@
+{
+  "headers": [
+    {
+      "accessorKey": "sno",
+      "header": "S.No"
+    },
+    {
+      "accessorKey": "time",
+      "header": "Time"
+    },
+    {
+      "accessorKey": "latitude",
+      "header": "Latitude"
+    },
+    {
+      "accessorKey": "longitude",
+      "header": "Longitude"
+    },
+    {
+      "accessorKey": "speed",
+      "header": "Speed"
+    },
+    {
+      "accessorKey": "viewInMap",
+      "header": "View In Map"
+    }
+  ],
+  "rows": [
+    {
+      "id": "speed-1",
+      "sno": "1",
+      "time": "2024-01-15 08:30:00",
+      "latitude": "17.3850",
+      "longitude": "78.4867",
+      "speed": "65 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-2",
+      "sno": "2",
+      "time": "2024-01-15 09:15:00",
+      "latitude": "17.3950",
+      "longitude": "78.4967",
+      "speed": "72 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-3",
+      "sno": "3",
+      "time": "2024-01-15 10:00:00",
+      "latitude": "17.4050",
+      "longitude": "78.5067",
+      "speed": "58 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-4",
+      "sno": "4",
+      "time": "2024-01-15 10:45:00",
+      "latitude": "17.4150",
+      "longitude": "78.5167",
+      "speed": "80 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-5",
+      "sno": "5",
+      "time": "2024-01-15 11:30:00",
+      "latitude": "17.4250",
+      "longitude": "78.5267",
+      "speed": "45 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-6",
+      "sno": "6",
+      "time": "2024-01-15 12:15:00",
+      "latitude": "17.4350",
+      "longitude": "78.5367",
+      "speed": "70 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-7",
+      "sno": "7",
+      "time": "2024-01-15 13:00:00",
+      "latitude": "17.4450",
+      "longitude": "78.5467",
+      "speed": "85 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-8",
+      "sno": "8",
+      "time": "2024-01-15 13:45:00",
+      "latitude": "17.4550",
+      "longitude": "78.5567",
+      "speed": "62 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-9",
+      "sno": "9",
+      "time": "2024-01-15 14:30:00",
+      "latitude": "17.4650",
+      "longitude": "78.5667",
+      "speed": "75 km/h",
+      "viewInMap": "View"
+    },
+    {
+      "id": "speed-10",
+      "sno": "10",
+      "time": "2024-01-15 15:15:00",
+      "latitude": "17.4750",
+      "longitude": "78.5767",
+      "speed": "68 km/h",
+      "viewInMap": "View"
+    }
+  ]
+} 

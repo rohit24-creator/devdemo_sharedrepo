@@ -1,0 +1,45 @@
+{
+    "headers": [
+      { "accessorKey": "workOrderId", "header": "Work OrderId" },
+      { "accessorKey": "fromLocation", "header": "From Location" },
+      { "accessorKey": "toLocation", "header": "To Location" },
+      { "accessorKey": "noOfTrips", "header": "No. Of Trips" },
+      { "accessorKey": "customer", "header": "Customer" },
+      { "accessorKey": "totalAmount", "header": "Total Amount" },
+      { "accessorKey": "date", "header": "Date" },
+      { "accessorKey": "tripsDone", "header": "Trips Done" },
+      { "accessorKey": "tripsAmount", "header": "Trips Amount" },
+      { "accessorKey": "status", "header": "Status" },
+      { "accessorKey": "branch", "header": "Branch" }
+    ],
+    "rows": [
+      {
+        "id": 1,
+        "workOrderId": 1,
+        "fromLocation": "USA",
+        "toLocation": "USA",
+        "noOfTrips": 5,
+        "customer": "John Doe",
+        "totalAmount": "12765.00",
+        "date": "2025-03-12",
+        "tripsDone": 0,
+        "tripsAmount": 0,
+        "status": "Active",
+        "branch": "THBKK"
+      },
+      {
+        "id": 2,
+        "workOrderId": 2,
+        "fromLocation": "INDIA",
+        "toLocation": "USA",
+        "noOfTrips": 10,
+        "customer": "CUEL LIMITED",
+        "totalAmount": "23765.00",
+        "date": "2025-03-12",
+        "tripsDone": 0,
+        "tripsAmount": 0,
+        "status": "Active",
+        "branch": "THBKK"
+      }
+    ]
+  } 

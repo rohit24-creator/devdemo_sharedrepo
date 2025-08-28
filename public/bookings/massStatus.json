@@ -1,0 +1,48 @@
+{
+  "headers": [
+    { "accessorKey": "orderId", "header": "Order ID" },
+    { "accessorKey": "tripId", "header": "Trip ID" },
+    { "accessorKey": "referenceId", "header": "Reference ID" },
+    { "accessorKey": "accept", "header": "Accept" },
+    { "accessorKey": "gateIn", "header": "Gate IN" },
+    { "accessorKey": "pickup", "header": "Pickup" },
+    { "accessorKey": "gateOut", "header": "Gate Out" },
+    { "accessorKey": "inTransit", "header": "In Transit" },
+    { "accessorKey": "destGateIn", "header": "Gate IN" },
+    { "accessorKey": "delivery", "header": "Delivery" },
+    { "accessorKey": "destGateOut", "header": "Gate Out" },
+    { "accessorKey": "close", "header": "Close" }
+  ],
+  "rows": [
+    {
+      "id": 1,
+      "orderId": "125280001",
+      "tripId": "TUSA282580001",
+      "referenceId": "a2222222222222",
+      "accept": "",
+      "gateIn": "",
+      "pickup": "",
+      "gateOut": "",
+      "inTransit": "",
+      "destGateIn": "",
+      "delivery": "",
+      "destGateOut": "",
+      "close": ""
+    },
+    {
+      "id": 2,
+      "orderId": "125270004",
+      "tripId": "TUSA2725270004",
+      "referenceId": "0482424672, SX1751476858",
+      "accept": "06-01-2025 03:03:07",
+      "gateIn": "14-07-2025 10:58:08",
+      "pickup": "",
+      "gateOut": "",
+      "inTransit": "",
+      "destGateIn": "",
+      "delivery": "",
+      "destGateOut": "",
+      "close": ""
+    }
+  ]
+} 

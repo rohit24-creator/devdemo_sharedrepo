@@ -1,0 +1,46 @@
+{
+  "headers": [
+    { "accessorKey": "tierName", "header": "Tier Name" },
+    { "accessorKey": "branchCode", "header": "Branch Code" },
+    { "accessorKey": "currency", "header": "Currency" },
+    { "accessorKey": "companyCode", "header": "Company Code" },
+    { "accessorKey": "tierId", "header": "Tier ID" }
+  ],
+  "rows": [
+    {
+      "tierName": "Premium Tier",
+      "branchCode": "THBKK",
+      "currency": "THB",
+      "companyCode": "THKN",
+      "tierId": "TIER-001"
+    },
+    {
+      "tierName": "Standard Tier",
+      "branchCode": "INCHN",
+      "currency": "INR",
+      "companyCode": "TCS01",
+      "tierId": "TIER-002"
+    },
+    {
+      "tierName": "Economy Tier",
+      "branchCode": "INPUN",
+      "currency": "INR",
+      "companyCode": "WPR02",
+      "tierId": "TIER-003"
+    },
+    {
+      "tierName": "Express Tier",
+      "branchCode": "INPUN",
+      "currency": "INR",
+      "companyCode": "INFY",
+      "tierId": "TIER-004"
+    },
+    {
+      "tierName": "Fast Track Tier",
+      "branchCode": "INCHN",
+      "currency": "INR",
+      "companyCode": "HCL01",
+      "tierId": "TIER-005"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "headers": [
+    { "accessorKey": "shipperCountry", "header": "Shipper Country" },
+    { "accessorKey": "vehicleEmission", "header": "Vehicle Emission" },
+    { "accessorKey": "shipperZipCode", "header": "Shipper Zip Code" },
+    { "accessorKey": "fuelType", "header": "Fuel Type" },
+    { "accessorKey": "modeOfTransport", "header": "Mode of Transport" },
+    { "accessorKey": "consigneeZipCode", "header": "Consignee Zip Code" },
+    { "accessorKey": "consigneeCountry", "header": "Consignee Country" },
+    { "accessorKey": "cargoWeight", "header": "Cargo Weight" },
+    { "accessorKey": "cargoWeightUOM", "header": "Cargo Weight UOM" }
+  ],
+  "rows": [
+    {
+      "shipperCountry": "India",
+      "vehicleEmission": "Euro 6",
+      "shipperZipCode": "400001",
+      "fuelType": "Diesel",
+      "modeOfTransport": "Road",
+      "consigneeZipCode": "110001",
+      "consigneeCountry": "India",
+      "cargoWeight": "500",
+      "cargoWeightUOM": "Kgs"
+    },
+    {
+      "shipperCountry": "India",
+      "vehicleEmission": "Euro 5",
+      "shipperZipCode": "560001",
+      "fuelType": "Petrol",
+      "modeOfTransport": "Rail",
+      "consigneeZipCode": "600001",
+      "consigneeCountry": "India",
+      "cargoWeight": "750",
+      "cargoWeightUOM": "Kgs"
+    },
+    {
+      "shipperCountry": "India",
+      "vehicleEmission": "Euro 6",
+      "shipperZipCode": "411001",
+      "fuelType": "Electric",
+      "modeOfTransport": "Road",
+      "consigneeZipCode": "500001",
+      "consigneeCountry": "India",
+      "cargoWeight": "300",
+      "cargoWeightUOM": "Kgs"
+    },
+    {
+      "shipperCountry": "India",
+      "vehicleEmission": "Euro 4",
+      "shipperZipCode": "700001",
+      "fuelType": "CNG",
+      "modeOfTransport": "Air",
+      "consigneeZipCode": "380001",
+      "consigneeCountry": "India",
+      "cargoWeight": "200",
+      "cargoWeightUOM": "Kgs"
+    },
+    {
+      "shipperCountry": "India",
+      "vehicleEmission": "Euro 6",
+      "shipperZipCode": "302001",
+      "fuelType": "Hybrid",
+      "modeOfTransport": "Road",
+      "consigneeZipCode": "226001",
+      "consigneeCountry": "India",
+      "cargoWeight": "400",
+      "cargoWeightUOM": "Kgs"
+    }
+  ]
+} 

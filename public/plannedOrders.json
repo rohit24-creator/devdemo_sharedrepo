@@ -1,0 +1,48 @@
+{
+  "plannedOrders": [
+    {
+      "id": "125290005",
+      "source": "Walldorf",
+      "destination": "Cincinnati",
+      "pickupTime": "2025-07-15 16:34:10",
+      "weight": "11.00KGS",
+      "volume": "11.00CUFT",
+      "quantity": "1.00",
+      "mode": "Test Transport Mode",
+      "status": null
+    },
+    {
+      "id": "125040001",
+      "source": "Fiskdale",
+      "destination": "Fiskdale",
+      "pickupTime": "2024-12-20 04:08:38",
+      "weight": "284.00KGS",
+      "volume": "2.50CUFT",
+      "quantity": "10.00",
+      "mode": "FTL",
+      "status": null
+    },
+    {
+      "id": "125290006",
+      "source": "Chicago",
+      "destination": "Miami",
+      "pickupTime": "2025-07-18 09:15:30",
+      "weight": "150.00KGS",
+      "volume": "25.00CUFT",
+      "quantity": "5.00",
+      "mode": "FTL",
+      "status": "Planned"
+    },
+    {
+      "id": "125290007",
+      "source": "Seattle",
+      "destination": "Portland",
+      "pickupTime": "2025-07-19 14:20:45",
+      "weight": "75.00KGS",
+      "volume": "12.00CUFT",
+      "quantity": "3.00",
+      "mode": "LTL",
+      "status": "Planned"
+    }
+  ]
+} 

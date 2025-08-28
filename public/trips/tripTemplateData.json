@@ -1,0 +1,174 @@
+{
+  "headers": [
+    {
+      "accessorKey": "templateId",
+      "header": "Template ID"
+    },
+    {
+      "accessorKey": "templateName",
+      "header": "Template Name"
+    },
+    {
+      "accessorKey": "active",
+      "header": "Active"
+    },
+    {
+      "accessorKey": "description",
+      "header": "Description"
+    },
+    {
+      "accessorKey": "product",
+      "header": "Product"
+    },
+    {
+      "accessorKey": "service",
+      "header": "Service"
+    },
+    {
+      "accessorKey": "customerId",
+      "header": "Customer ID"
+    },
+    {
+      "accessorKey": "orderType",
+      "header": "Order Type"
+    },
+    {
+      "accessorKey": "carrierType",
+      "header": "Carrier Type"
+    },
+    {
+      "accessorKey": "shipmentType",
+      "header": "Shipment Type"
+    },
+    {
+      "accessorKey": "minimumDistance",
+      "header": "Minimum Distance"
+    },
+    {
+      "accessorKey": "maximumDistance",
+      "header": "Maximum Distance"
+    }
+  ],
+  "rows": [
+    {
+      "id": "1",
+      "templateId": "TT001",
+      "templateName": "Express Delivery Template",
+      "active": "Yes",
+      "description": "Template for express delivery services",
+      "product": "Premium Chain",
+      "service": "Express Delivery",
+      "customerId": "CUST001",
+      "orderType": "Express",
+      "carrierType": "Air Freight",
+      "shipmentType": "Same Day",
+      "minimumDistance": "0",
+      "maximumDistance": "500"
+    },
+    {
+      "id": "2",
+      "templateId": "TT002",
+      "templateName": "Standard Delivery Template",
+      "active": "Yes",
+      "description": "Template for standard delivery services",
+      "product": "Standard",
+      "service": "Standard Delivery",
+      "customerId": "CUST002",
+      "orderType": "Standard",
+      "carrierType": "Road Transport",
+      "shipmentType": "Next Day",
+      "minimumDistance": "0",
+      "maximumDistance": "1000"
+    },
+    {
+      "id": "3",
+      "templateId": "TT003",
+      "templateName": "Bulk Transport Template",
+      "active": "No",
+      "description": "Template for bulk transport services",
+      "product": "Bulk Chain",
+      "service": "Bulk Transport",
+      "customerId": "CUST003",
+      "orderType": "Bulk",
+      "carrierType": "Rail Transport",
+      "shipmentType": "Economy",
+      "minimumDistance": "100",
+      "maximumDistance": "2000"
+    },
+    {
+      "id": "4",
+      "templateId": "TT004",
+      "templateName": "International Template",
+      "active": "Yes",
+      "description": "Template for international shipping",
+      "product": "International",
+      "service": "Sea Freight",
+      "customerId": "CUST004",
+      "orderType": "International",
+      "carrierType": "Sea Freight",
+      "shipmentType": "Economy",
+      "minimumDistance": "0",
+      "maximumDistance": "10000"
+    },
+    {
+      "id": "5",
+      "templateId": "TT005",
+      "templateName": "Same Day Template",
+      "active": "Yes",
+      "description": "Template for same day delivery",
+      "product": "Express",
+      "service": "Same Day",
+      "customerId": "CUST005",
+      "orderType": "Express",
+      "carrierType": "Air Freight",
+      "shipmentType": "Same Day",
+      "minimumDistance": "0",
+      "maximumDistance": "200"
+    },
+    {
+      "id": "6",
+      "templateId": "TT006",
+      "templateName": "FTL Template",
+      "active": "Yes",
+      "description": "Template for Full Truck Load",
+      "product": "FTL Chain",
+      "service": "FTL Service",
+      "customerId": "CUST006",
+      "orderType": "FTL",
+      "carrierType": "Road Transport",
+      "shipmentType": "FTL",
+      "minimumDistance": "50",
+      "maximumDistance": "1500"
+    },
+    {
+      "id": "7",
+      "templateId": "TT007",
+      "templateName": "LTL Template",
+      "active": "Yes",
+      "description": "Template for Less Than Truck Load",
+      "product": "LTL Chain",
+      "service": "LTL Service",
+      "customerId": "CUST007",
+      "orderType": "LTL",
+      "carrierType": "Road Transport",
+      "shipmentType": "LTL",
+      "minimumDistance": "0",
+      "maximumDistance": "800"
+    },
+    {
+      "id": "8",
+      "templateId": "TT008",
+      "templateName": "Rail Template",
+      "active": "No",
+      "description": "Template for rail transport",
+      "product": "Rail Chain",
+      "service": "Rail Transport",
+      "customerId": "CUST008",
+      "orderType": "Bulk",
+      "carrierType": "Rail Transport",
+      "shipmentType": "Economy",
+      "minimumDistance": "200",
+      "maximumDistance": "3000"
+    }
+  ]
+} 
