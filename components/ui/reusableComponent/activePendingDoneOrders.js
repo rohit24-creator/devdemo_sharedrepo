@@ -417,12 +417,6 @@ const OrderCard = React.memo(({
       icon: null,
     },
     {
-      key: 'customer',
-      value: order.customerName || "not found",
-      label: 'Customer',
-      icon: null,
-    },
-    {
       key: 'orderStatus',
       value: order.orderStatus || "Gate In",
       label: 'Order Status',
@@ -453,28 +447,59 @@ const OrderCard = React.memo(({
             </div>
             <span className={["flex items-center px-3 py-1 rounded-full text-xs font-semibold text-white flex-shrink-0 ml-4", statusColor].join(" ")}>{statusIcon}{order.status}</span>
           </div>
-          <div className="flex flex-row items-start gap-10 sm:gap-12 lg:gap-14 mt-1">
-            <div className="flex flex-row items-start gap-3 sm:gap-4 flex-shrink-0">
-              {/* From, Arrow, To */}
-              {infoBlocks.slice(0, 2).map((block, idx) => (
-                <React.Fragment key={block.key}>
-                  <div className="flex flex-col w-20 sm:w-24 lg:w-28 flex-shrink-0">
-                    <span className="text-base font-semibold text-gray-700 flex items-center gap-1 whitespace-nowrap">{block.icon}{block.value}</span>
-                    <span className="text-xs text-gray-400 pt-1 whitespace-nowrap">{block.label}</span>
-                  </div>
-                  {idx === 0 && (
-                    <span className="flex items-center pt-0.5 flex-shrink-0"><ArrowRight className="w-6 sm:w-7 h-6 sm:h-7 text-[#006397]" /></span>
-                  )}
-                </React.Fragment>
-              ))}
+          
+          {/* Main Information Row */}
+          <div className="flex items-center">
+            {/* From */}
+            <div className="flex flex-col">
+              <span className="text-base font-semibold text-gray-700 flex items-center gap-1 whitespace-nowrap">
+                {infoBlocks[0].icon}{infoBlocks[0].value}
+              </span>
+              <span className="text-xs text-gray-400 pt-1 whitespace-nowrap">{infoBlocks[0].label}</span>
             </div>
-            {/* Date and Cust Ref */}
-            {infoBlocks.slice(2).map((block) => (
-              <div key={block.key} className="flex flex-col w-20 sm:w-24 lg:w-28 flex-shrink-0">
-                <span className="text-lg font-bold text-gray-700 flex items-center gap-1 whitespace-nowrap">{block.icon}{block.value}</span>
-                <span className="text-xs text-gray-500 pt-1 whitespace-nowrap">{block.label}</span>
+            
+            {/* Arrow with smaller gap */}
+            <div className="flex justify-center mx-1 sm:mx-2">
+              <ArrowRight className="w-6 sm:w-7 h-6 sm:h-7 text-[#006397] flex-shrink-0" />
+            </div>
+            
+            {/* To */}
+            <div className="flex flex-col">
+              <span className="text-base font-semibold text-gray-700 flex items-center gap-1 whitespace-nowrap">
+                {infoBlocks[1].icon}{infoBlocks[1].value}
+              </span>
+              <span className="text-xs text-gray-400 pt-1 whitespace-nowrap">{infoBlocks[1].label}</span>
+            </div>
+            
+            {/* Reasonable gap to other fields */}
+            <div className="mx-4 sm:mx-5 lg:mx-6 xl:mx-7"></div>
+            
+            {/* Other fields with equal flex distribution for perfect alignment */}
+            <div className="flex items-center gap-4 sm:gap-5 lg:gap-6 xl:gap-7 flex-1">
+              {/* Date */}
+              <div className="flex flex-col flex-1 text-left">
+                <span className="text-lg font-bold text-gray-700 whitespace-nowrap">
+                  {infoBlocks[2].value}
+                </span>
+                <span className="text-xs text-gray-500 pt-1 whitespace-nowrap">{infoBlocks[2].label}</span>
               </div>
-            ))}
+              
+              {/* Cust Ref */}
+              <div className="flex flex-col flex-1 text-left">
+                <span className="text-lg font-bold text-gray-700 whitespace-nowrap">
+                  {infoBlocks[3].value}
+                </span>
+                <span className="text-xs text-gray-500 pt-1 whitespace-nowrap">{infoBlocks[3].label}</span>
+              </div>
+              
+              {/* Order Status */}
+              <div className="flex flex-col flex-1 text-left">
+                <span className="text-lg font-bold text-gray-700 whitespace-nowrap">
+                  {infoBlocks[4].value}
+                </span>
+                <span className="text-xs text-gray-500 pt-1 whitespace-nowrap">{infoBlocks[4].label}</span>
+              </div>
+            </div>
           </div>
         </div>
 

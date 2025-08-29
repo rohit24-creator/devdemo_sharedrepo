@@ -87,7 +87,7 @@ const useBookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await fetch('/bookings/bookingList.json');
+        const response = await fetch('/bookingList.json');
         const data = await response.json();
         setBookings(data.bookings);
         setPagination(data.pagination);

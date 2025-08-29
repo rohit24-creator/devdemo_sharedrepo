@@ -1,0 +1,332 @@
+{
+  "orders": [
+    {
+      "id": "ORD-D001",
+      "bookingId": "9125170004",
+      "from": "Ankleshwar",
+      "to": "Rotterdam",
+      "fromDate": "2024-05-08",
+      "toDate": "2024-05-15",
+      "deliveryDate": "15 May 2025 7:25",
+      "eta": "2024-05-15 07:25",
+      "shipmentId": "PBX1745439858",
+      "status": "Delivered",
+      "distance": "4,200 miles",
+      "duration": "7 days",
+      "customerName": "not found",
+      "orderStatus": "Gate In",
+      "statusHistory": [
+        {
+          "status": "Order Created",
+          "location": "Ankleshwar, Gujarat, India",
+          "stopId": "0",
+          "stopType": "",
+          "comments": "",
+          "time": "08 May,25"
+        },
+        {
+          "status": "Accepted by Driver",
+          "location": "Ankleshwar, Gujarat, India",
+          "stopId": "0",
+          "stopType": "",
+          "comments": "",
+          "time": "08 May,25"
+        },
+        {
+          "status": "Gate In",
+          "location": "Ankleshwar, Gujarat, India",
+          "stopId": "487873",
+          "stopType": "P",
+          "comments": "",
+          "time": "08 May,25"
+        },
+        {
+          "status": "Pickup Or Drop",
+          "location": "Ankleshwar, Gujarat, India",
+          "stopId": "487873",
+          "stopType": "P",
+          "comments": "PickUp",
+          "time": "08 May,25"
+        },
+        {
+          "status": "Gate Out",
+          "location": "Ankleshwar, Gujarat, India",
+          "stopId": "487873",
+          "stopType": "P",
+          "comments": "",
+          "time": "08 May,25"
+        },
+        {
+          "status": "Gate In",
+          "location": "Rotterdam, Netherlands",
+          "stopId": "487874",
+          "stopType": "D",
+          "comments": "",
+          "time": "15 May,25"
+        },
+        {
+          "status": "Pickup Or Drop",
+          "location": "Rotterdam, Netherlands",
+          "stopId": "487874",
+          "stopType": "D",
+          "comments": "Deliver",
+          "time": "15 May,25"
+        },
+        {
+          "status": "Delivered",
+          "location": "Rotterdam, Netherlands",
+          "stopId": "487874",
+          "stopType": "D",
+          "comments": "Successfully Delivered",
+          "time": "15 May,25"
+        }
+      ],
+      "bookingInfo": {
+        "Company": "SXIN",
+        "Branch": "SXINHYD",
+        "Total Weight": "0 kg",
+        "Mode Of Transport": "FTL",
+        "Freight Terms": "FOB",
+        "Service Type": "FTL",
+        "Total Volume": "0 m³",
+        "Type Name": "Xpress",
+        "Product": "AsiaDirect",
+        "No of Packages": "0.00",
+        "Customer Name": "not found"
+      },
+      "referenceDetails": [
+        {
+          "Reference ID": "DQ",
+          "Reference Name": "Delivery Note",
+          "Value": "PBX1745439858"
+        }
+      ],
+      "routingDetails": {
+        "Pickup": {
+          "Party Identifier": "SX317524",
+          "Name": "Ankleshwar",
+          "City": "Ankleshwar",
+          "Zipcode": "393002",
+          "Pickup Date": "08 May, 2025",
+          "Customer Identifier": "SX317524",
+          "Street": "Plot No - 6102/03, 6117-19 & 5809/10, GIDC",
+          "Country": "India",
+          "Province": "Gujarat",
+          "Pickup Time": "16:00 PM"
+        },
+        "Delivery": {
+          "Party Identifier": "SX317525",
+          "Name": "Rotterdam Port",
+          "City": "Rotterdam",
+          "Zipcode": "3000",
+          "Delivery Date": "15 May, 2025",
+          "Customer Identifier": "SX317525",
+          "Street": "Port of Rotterdam",
+          "Country": "Netherlands",
+          "Province": "South Holland",
+          "Delivery Time": "07:25 AM"
+        }
+      },
+      "cargoDetails": [
+        {
+          "Number": "0.00",
+          "Type": "FTL",
+          "Description": "AsiaDirect",
+          "Weight": "0 kg",
+          "Volume": "0 m³",
+          "Length": "",
+          "Width": "",
+          "Height": ""
+        }
+      ],
+      "involvedParties": [
+        {
+          "Party Type": "Shipper",
+          "Party Identifier": "SX317524",
+          "Customer Identifier": "",
+          "Name": "Ankleshwar",
+          "Street": "Plot No - 6102/03, 6117-19 & 5809/10, GIDC",
+          "City": "Ankleshwar",
+          "State": "Gujarat",
+          "Country Code": "India",
+          "Zipcode": "393002"
+        },
+        {
+          "Party Type": "Consignee",
+          "Party Identifier": "SX317525",
+          "Customer Identifier": "",
+          "Name": "Rotterdam Port",
+          "Street": "Port of Rotterdam",
+          "City": "Rotterdam",
+          "State": "South Holland",
+          "Country Code": "Netherlands",
+          "Zipcode": "3000"
+        }
+      ]
+    },
+    {
+      "id": "ORD-D002",
+      "bookingId": "9125170005",
+      "from": "Mumbai",
+      "to": "Hamburg",
+      "fromDate": "2024-05-10",
+      "toDate": "2024-05-17",
+      "deliveryDate": "17 May 2025 11:30",
+      "eta": "2024-05-17 11:30",
+      "shipmentId": "PBX1745439859",
+      "status": "Delivered",
+      "distance": "4,800 miles",
+      "duration": "7 days",
+      "customerName": "techcorp",
+      "orderStatus": "Delivered",
+      "statusHistory": [
+        {
+          "status": "Order Created",
+          "location": "Mumbai, Maharashtra, India",
+          "stopId": "0",
+          "stopType": "",
+          "comments": "",
+          "time": "10 May,25"
+        },
+        {
+          "status": "Accepted by Driver",
+          "location": "Mumbai, Maharashtra, India",
+          "stopId": "0",
+          "stopType": "",
+          "comments": "",
+          "time": "10 May,25"
+        },
+        {
+          "status": "Gate In",
+          "location": "Mumbai, Maharashtra, India",
+          "stopId": "123456",
+          "stopType": "P",
+          "comments": "",
+          "time": "10 May,25"
+        },
+        {
+          "status": "Pickup Or Drop",
+          "location": "Mumbai, Maharashtra, India",
+          "stopId": "123456",
+          "stopType": "P",
+          "comments": "PickUp",
+          "time": "10 May,25"
+        },
+        {
+          "status": "Gate Out",
+          "location": "Mumbai, Maharashtra, India",
+          "stopId": "123456",
+          "stopType": "P",
+          "comments": "",
+          "time": "10 May,25"
+        },
+        {
+          "status": "Gate In",
+          "location": "Hamburg, Germany",
+          "stopId": "654321",
+          "stopType": "D",
+          "comments": "",
+          "time": "17 May,25"
+        },
+        {
+          "status": "Pickup Or Drop",
+          "location": "Hamburg, Germany",
+          "stopId": "654321",
+          "stopType": "D",
+          "comments": "Deliver",
+          "time": "17 May,25"
+        },
+        {
+          "status": "Delivered",
+          "location": "Hamburg, Germany",
+          "stopId": "654321",
+          "stopType": "D",
+          "comments": "Successfully Delivered",
+          "time": "17 May,25"
+        }
+      ],
+      "bookingInfo": {
+        "Company": "SXIN",
+        "Branch": "SXINMUM",
+        "Total Weight": "500 kg",
+        "Mode Of Transport": "FTL",
+        "Freight Terms": "CIF",
+        "Service Type": "FTL",
+        "Total Volume": "2.5 m³",
+        "Type Name": "Express",
+        "Product": "Electronics",
+        "No of Packages": "25.00",
+        "Customer Name": "techcorp"
+      },
+      "referenceDetails": [
+        {
+          "Reference ID": "PO",
+          "Reference Name": "Purchase Order",
+          "Value": "PO-12347"
+        }
+      ],
+      "routingDetails": {
+        "Pickup": {
+          "Party Identifier": "SX317526",
+          "Name": "Mumbai Warehouse",
+          "City": "Mumbai",
+          "Zipcode": "400001",
+          "Pickup Date": "10 May, 2025",
+          "Customer Identifier": "SX317526",
+          "Street": "123 Industrial Area, Andheri East",
+          "Country": "India",
+          "Province": "Maharashtra",
+          "Pickup Time": "09:00 AM"
+        },
+        "Delivery": {
+          "Party Identifier": "SX317527",
+          "Name": "Hamburg Port",
+          "City": "Hamburg",
+          "Zipcode": "20095",
+          "Delivery Date": "17 May, 2025",
+          "Customer Identifier": "SX317527",
+          "Street": "Port of Hamburg",
+          "Country": "Germany",
+          "Province": "Hamburg",
+          "Delivery Time": "11:30 AM"
+        }
+      },
+      "cargoDetails": [
+        {
+          "Number": "1.00",
+          "Type": "FTL",
+          "Description": "Electronics Components",
+          "Weight": "500 kg",
+          "Volume": "2.5 m³",
+          "Length": "2.0 m",
+          "Width": "1.5 m",
+          "Height": "1.0 m"
+        }
+      ],
+      "involvedParties": [
+        {
+          "Party Type": "Shipper",
+          "Party Identifier": "SX317526",
+          "Customer Identifier": "",
+          "Name": "Mumbai Warehouse",
+          "Street": "123 Industrial Area, Andheri East",
+          "City": "Mumbai",
+          "State": "Maharashtra",
+          "Country Code": "India",
+          "Zipcode": "400001"
+        },
+        {
+          "Party Type": "Consignee",
+          "Party Identifier": "SX317527",
+          "Customer Identifier": "",
+          "Name": "Hamburg Port",
+          "Street": "Port of Hamburg",
+          "City": "Hamburg",
+          "State": "Hamburg",
+          "Country Code": "Germany",
+          "Zipcode": "20095"
+        }
+      ]
+    }
+  ]
+}
