@@ -1,0 +1,155 @@
+{
+  "bookings": [
+    {
+      "id": "6624490036",
+      "dq": "SX1733464331",
+      "sourceCity": "BOSTON",
+      "destinationCity": "NEW YORK",
+      "status": "ACCEPTED BY DRIVER",
+      "pickupDate": "2024-12-06",
+      "deliveryDate": "2024-12-07",
+      "weight": "800 Lbs",
+      "volume": "13000 Cbm",
+      "bookingType": "Temperature Control",
+      "orderReference": "DQ: SX1733464331",
+      "po": "-",
+      "origin": {
+        "name": "JOHN",
+        "address": "150 SAINT BOTOLPH ST APT 22",
+        "deadline": "2024-12-06 04:00 AM"
+      },
+      "destination": {
+        "name": "JOHNS",
+        "address": "UNION STREET",
+        "deadline": "2024-12-07 08:00 AM"
+      },
+      "eta": "2024-12-07 09:00:35",
+      "distance": "348 miles",
+      "vehicleType": "10W Cabinet (Temperature Control)",
+      "vehicleId": "test-1",
+      "driverStatus": "ACCEPTED BY DRIVER"
+    },
+    {
+      "id": "6624490035",
+      "dq": "SX1733463734",
+      "sourceCity": "VIJAYAWADA",
+      "destinationCity": "NEW YORK",
+      "status": "ACCEPTED BY DRIVER",
+      "pickupDate": "2024-12-06",
+      "deliveryDate": "2024-12-07",
+      "weight": "8 Lbs",
+      "volume": "8 Cbm",
+      "bookingType": "Standard",
+      "orderReference": "DQ: SX1733463734",
+      "po": "PO-2024-001",
+      "origin": {
+        "name": "VIJAYAWADA WAREHOUSE",
+        "address": "123 INDUSTRIAL PARK ROAD",
+        "deadline": "2024-12-06 06:00 AM"
+      },
+      "destination": {
+        "name": "NEW YORK DISTRIBUTION",
+        "address": "456 COMMERCE AVENUE",
+        "deadline": "2024-12-07 10:00 AM"
+      },
+      "eta": "2024-12-07 11:30:00",
+      "distance": "1250 miles",
+      "vehicleType": "Standard Truck",
+      "vehicleId": "truck-002",
+      "driverStatus": "ACCEPTED BY DRIVER"
+    },
+    {
+      "id": "6624490034",
+      "dq": "SX1733462987",
+      "sourceCity": "CHICAGO",
+      "destinationCity": "LOS ANGELES",
+      "status": "IN TRANSIT",
+      "pickupDate": "2024-12-05",
+      "deliveryDate": "2024-12-08",
+      "weight": "1200 Lbs",
+      "volume": "18000 Cbm",
+      "bookingType": "Express",
+      "orderReference": "DQ: SX1733462987",
+      "po": "PO-2024-002",
+      "origin": {
+        "name": "CHICAGO LOGISTICS",
+        "address": "789 FREIGHT WAY",
+        "deadline": "2024-12-05 08:00 AM"
+      },
+      "destination": {
+        "name": "LA DISTRIBUTION CENTER",
+        "address": "321 CARGO STREET",
+        "deadline": "2024-12-08 02:00 PM"
+      },
+      "eta": "2024-12-08 14:30:00",
+      "distance": "2100 miles",
+      "vehicleType": "Express Truck",
+      "vehicleId": "express-003",
+      "driverStatus": "IN TRANSIT"
+    },
+    {
+      "id": "6624490033",
+      "dq": "SX1733462156",
+      "sourceCity": "MIAMI",
+      "destinationCity": "ATLANTA",
+      "status": "PENDING",
+      "pickupDate": "2024-12-07",
+      "deliveryDate": "2024-12-08",
+      "weight": "500 Lbs",
+      "volume": "7500 Cbm",
+      "bookingType": "Standard",
+      "orderReference": "DQ: SX1733462156",
+      "po": "PO-2024-003",
+      "origin": {
+        "name": "MIAMI PORT",
+        "address": "456 HARBOR DRIVE",
+        "deadline": "2024-12-07 09:00 AM"
+      },
+      "destination": {
+        "name": "ATLANTA WAREHOUSE",
+        "address": "789 STORAGE LANE",
+        "deadline": "2024-12-08 03:00 PM"
+      },
+      "eta": "2024-12-08 15:45:00",
+      "distance": "660 miles",
+      "vehicleType": "Standard Truck",
+      "vehicleId": "truck-004",
+      "driverStatus": "PENDING"
+    },
+    {
+      "id": "6624490032",
+      "dq": "SX1733461345",
+      "sourceCity": "SEATTLE",
+      "destinationCity": "PORTLAND",
+      "status": "COMPLETED",
+      "pickupDate": "2024-12-04",
+      "deliveryDate": "2024-12-05",
+      "weight": "300 Lbs",
+      "volume": "4500 Cbm",
+      "bookingType": "Local",
+      "orderReference": "DQ: SX1733461345",
+      "po": "PO-2024-004",
+      "origin": {
+        "name": "SEATTLE DISTRIBUTION",
+        "address": "123 PUGET SOUND WAY",
+        "deadline": "2024-12-04 10:00 AM"
+      },
+      "destination": {
+        "name": "PORTLAND WAREHOUSE",
+        "address": "456 COLUMBIA RIVER ROAD",
+        "deadline": "2024-12-05 11:00 AM"
+      },
+      "eta": "2024-12-05 10:30:00",
+      "distance": "175 miles",
+      "vehicleType": "Local Truck",
+      "vehicleId": "local-005",
+      "driverStatus": "COMPLETED"
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 5,
+    "totalItems": 25,
+    "itemsPerPage": 10
+  }
+}
