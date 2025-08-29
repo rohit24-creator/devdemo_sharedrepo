@@ -248,6 +248,7 @@ export default function ReportsList({
   thirdIconMenu = [],
   enabledActions = ["edit", "view", "delete"],
   onActionClick = () => {},
+  onFirstIconClick = () => {},
   hasTabs = false,
 }) {
   // State management
@@ -619,7 +620,7 @@ export default function ReportsList({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     {showFirstIcon && (
-                      <DropdownMenuItem onClick={() => console.log("Search action")}>
+                      <DropdownMenuItem onClick={onFirstIconClick}>
                         <Search size={16} className="mr-2" />
                         Search
                       </DropdownMenuItem>
@@ -644,7 +645,11 @@ export default function ReportsList({
             {filterFields.length <= 5 && (
               <>
                 {showFirstIcon && (
-                  <Search size={18} className="cursor-pointer text-gray-600 mb-1" />
+                  <Search 
+                    size={18} 
+                    className="cursor-pointer text-gray-600 mb-1" 
+                    onClick={onFirstIconClick}
+                  />
                 )}
                 {showSecondIcon && (
                   <DropdownMenu>
