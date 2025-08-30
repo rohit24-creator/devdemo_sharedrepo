@@ -6,6 +6,10 @@ import * as z from "zod";
 import { BillingForm } from "@/components/ui/reusableComponent/billingForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { Truck, Home } from "lucide-react";
+import { TabsNavbar } from "@/components/ui/reusableComponent/tabsNavbar";
+
+// Import the tender round page as component
+import TenderRoundPage from "../tenderRound/page";
 
 // Zod schema for general info
 const generalInfoSchema = z.object({
@@ -61,8 +65,8 @@ const cargoDetailsRowSchema = z.object({
   quantity: z.string().min(1, "Quantity is required"),
 });
 
-export default function ShipmentTenderPage() {
-
+// Main Shipment Tender Content Component
+function ShipmentTenderContent() {
   // Form for general info
   const generalInfoForm = useForm({
     resolver: zodResolver(generalInfoSchema),
@@ -404,20 +408,35 @@ export default function ShipmentTenderPage() {
   ];
 
   return (
-    <div className="px-4 md:px-8 py-6">
+    <BillingForm sections={sections} useAccordion={true} />
+  );
+}
+
+// Main Shipment Tender Page with Tabs
+export default function ShipmentTenderPage() {
+  // Define tabs configuration
+  const tabs = [
+    {
+      value: "shipmentTender",
+      label: "Shipment Tender",
+      component: ShipmentTenderContent,
+    },
+    {
+      value: "tenderRound",
+      label: "Tender Round",
+      component: TenderRoundPage,
+    },
+  ];
+
+  return (
+    <div className="p-6">
       {/* Heading */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#162d56]">Shipment Tender</h2>
-        <button
-          onClick={handleOverallSubmit}
-          className="px-6 py-2 bg-[#006397] text-white rounded-full hover:bg-[#004d7a] transition-colors"
-        >
-          Submit Tender
-        </button>
+        <h2 className="text-2xl font-bold text-[#006397]">Tender Management</h2>
       </div>
 
-      {/* Form */}
-      <BillingForm sections={sections} useAccordion={true} />
+      {/* Tabs Navigation */}
+      <TabsNavbar tabs={tabs} defaultTab="shipmentTender" />
     </div>
   );
 }

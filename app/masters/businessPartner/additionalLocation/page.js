@@ -82,8 +82,6 @@ export default function AdditionalLocationForm() {
   ];
 
   return (
-    <div className="p-6">
-      <ReusableForm sections={sections} />
-    </div>
+    <ReusableForm sections={sections} />
   );
 }

@@ -164,6 +164,12 @@ const navigationData = {
       },
     ],
   },
+  tenders: {
+    label: 'Tenders',
+    items: [
+      { href: '/tenders/lists/shipmentTender', label: 'Shipment Tender' },
+    ],
+  },
   billing: {
     label: 'Billing',
     items: [

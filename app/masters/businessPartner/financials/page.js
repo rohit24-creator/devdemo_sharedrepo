@@ -145,8 +145,6 @@ export default function FinancialsForm() {
   ];
 
   return (
-    <div className="p-6">
-      <ReusableForm sections={sections} />
-    </div>
+    <ReusableForm sections={sections} />
   );
 }

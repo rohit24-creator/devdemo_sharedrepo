@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
-import BillingList from "@/components/ui/reusableComponent/billingList";
+import ReusableTable from "@/components/ui/reusableComponent/masterList";
+import { TENDER_ROUTES } from "@/lib/tenderRoutes";
 import { formatRowsWithId } from "@/lib/utils";
 
 export default function ShipmentTenderPage() {
+  const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +55,7 @@ export default function ShipmentTenderPage() {
   ];
 
   const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(TENDER_ROUTES.shipmentTender) },
     { label: "Grid View", onClick: () => console.log("Grid View") },
     { label: "Table View", onClick: () => console.log("Table View") },
   ];
@@ -81,17 +85,19 @@ export default function ShipmentTenderPage() {
   if (!columns.length || !rows.length) return <div>No data available</div>;
 
   return (
-    <div className="p-4">
-      <BillingList
-        title="Shipment Tender List"
+    <div className="p-6">
+      <ReusableTable
+        title="Shipment Tender"
+        filterFields={filterFields}
         columns={columns}
         rows={rows}
-        showActions={true}
-        filterFields={filterFields}
         onSearch={(data) => console.log("Search:", data)}
-        showFirstIcon={false}
+        showActions={true}
+        showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
+        showFourthIcon={false}
+        showFifthIcon={false}
         enabledActions={["edit", "view", "delete"]}
         onActionClick={handleActionClick}
         secondIconMenu={secondIconMenu}

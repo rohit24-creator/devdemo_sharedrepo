@@ -238,20 +238,6 @@ export default function TenderRoundPage() {
   ];
 
   return (
-    <div className="px-4 md:px-8 py-6">
-      {/* Heading */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-[#162d56]">Tender Round</h2>
-        <button
-          onClick={handleOverallSubmit}
-          className="px-6 py-2 bg-[#006397] text-white rounded-full hover:bg-[#004d7a] transition-colors"
-        >
-          Submit Tender Round
-        </button>
-      </div>
-
-      {/* Form */}
-      <BillingForm sections={sections} useAccordion={true} />
-    </div>
+    <BillingForm sections={sections} useAccordion={true} />
   );
 }
