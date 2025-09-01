@@ -1,26 +1,68 @@
 {
-  "columns": [
-    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
-    { "accessorKey": "policyNumber", "header": "Policy Number" },
-    { "accessorKey": "companyName", "header": "Company Name" },
-    { "accessorKey": "userName", "header": "User Name" },
-    { "accessorKey": "insuranceType", "header": "Insurance Type" },
-    { "accessorKey": "amount", "header": "Amount" },
-    { "accessorKey": "startDate", "header": "Start Date" },
-    { "accessorKey": "expiryDate", "header": "Expiry Date" },
-    { "accessorKey": "agent", "header": "Agent" }
+  "headers": [
+    {
+      "accessorKey": "vehicleNumber",
+      "header": "Vehicle Number"
+    },
+    {
+      "accessorKey": "insuranceType",
+      "header": "Insurance Type"
+    },
+    {
+      "accessorKey": "policyNumber",
+      "header": "Policy Number"
+    },
+    {
+      "accessorKey": "startDate",
+      "header": "Start Date"
+    },
+    {
+      "accessorKey": "endDate",
+      "header": "End Date"
+    },
+    {
+      "accessorKey": "insuranceCompany",
+      "header": "Insurance Company"
+    },
+    {
+      "accessorKey": "premiumAmount",
+      "header": "Premium Amount"
+    },
+    {
+      "accessorKey": "status",
+      "header": "Status"
+    }
   ],
   "rows": [
     {
-      "vehicleNumber": "ap402420",
-      "policyNumber": "46456645",
-      "companyName": "sx0001",
-      "userName": "sx000",
-      "insuranceType": "Vehicle Insurance",
-      "amount": "66.00",
-      "startDate": "2025-04-22 00:00:00",
-      "expiryDate": "2025-04-24 00:00:00",
-      "agent": "SXBKKADM-ADMIN"
+      "vehicleNumber": "TN01AB1234",
+      "insuranceType": "Comprehensive",
+      "policyNumber": "INS001234",
+      "startDate": "2024-01-01",
+      "endDate": "2024-12-31",
+      "insuranceCompany": "ICICI Lombard",
+      "premiumAmount": "₹12,500",
+      "status": "Active"
+    },
+    {
+      "vehicleNumber": "TN02CD5678",
+      "insuranceType": "Third Party",
+      "policyNumber": "INS005678",
+      "startDate": "2024-03-01",
+      "endDate": "2025-02-28",
+      "insuranceCompany": "Bajaj Allianz",
+      "premiumAmount": "₹8,200",
+      "status": "Active"
+    },
+    {
+      "vehicleNumber": "TN03EF9012",
+      "insuranceType": "Liability",
+      "policyNumber": "INS009012",
+      "startDate": "2024-02-01",
+      "endDate": "2025-01-31",
+      "insuranceCompany": "HDFC Ergo",
+      "premiumAmount": "₹6,800",
+      "status": "Expired"
     }
   ]
 }

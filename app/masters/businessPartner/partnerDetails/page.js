@@ -10,6 +10,13 @@ import { ReusableForm } from "@/components/ui/reusableComponent/profilesForm";
 import PartnerDetailsForm from "../partner/page";
 import { toast } from "sonner";
 import { formatRowsWithId } from "@/lib/utils";
+import { TabsNavbar } from "@/components/ui/reusableComponent/tabsNavbar";
+
+// Import the other business partner pages as components
+import AdditionalLocationPage from "../additionalLocation/page";
+import FinancialsPage from "../financials/page";
+import EDIApiPage from "../EDIAPI/page";
+import SwitchesPage from "../switch/page";
 
 const addressSchema = z.object({
   name: z.string().min(1, "Name is required").regex(/^[a-zA-Z\s]+$/, "Only letters allowed"),
@@ -126,7 +133,8 @@ const referenceFields = [
   { name: "gstin", label: "GSTIN", type: "text" },
 ];
 
-export default function PartnerDetailsForms() {
+// Main Partner Details Content Component
+function PartnerDetailsContent() {
   const [referenceRows, setReferenceRows] = useState([]);
   const [addressRows, setAddressRows] = useState([]);
 
@@ -243,9 +251,53 @@ export default function PartnerDetailsForms() {
   };
 
   return (
-    <div className="p-4 sm:p-6">
+    <div>
       <PartnerDetailsForm />
       <ReusableForm sections={[addressSection, referenceSection]} />
+    </div>
+  );
+}
+
+// Main Business Partner Page with Tabs
+export default function PartnerDetailsForms() {
+  // Define tabs configuration
+  const tabs = [
+    {
+      value: "partnerDetails",
+      label: "Partner Details",
+      component: PartnerDetailsContent,
+    },
+    {
+      value: "additionalLocation",
+      label: "Additional Location",
+      component: AdditionalLocationPage,
+    },
+    {
+      value: "financials",
+      label: "Financials",
+      component: FinancialsPage,
+    },
+    {
+      value: "ediApi",
+      label: "EDI/API",
+      component: EDIApiPage,
+    },
+    {
+      value: "switches",
+      label: "Switches",
+      component: SwitchesPage,
+    },
+  ];
+
+  return (
+    <div className="p-6">
+      {/* Heading */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-[#006397]">Business Partner</h2>
+      </div>
+
+      {/* Tabs Navigation */}
+      <TabsNavbar tabs={tabs} defaultTab="partnerDetails" />
     </div>
   );
 }

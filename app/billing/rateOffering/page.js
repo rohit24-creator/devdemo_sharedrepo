@@ -4,6 +4,11 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { BillingForm } from "@/components/ui/reusableComponent/billingForm";
+import { TabsNavbar } from "@/components/ui/reusableComponent/tabsNavbar";
+
+// Import the other pages as components
+import DefaultServicesPage from "./defaultServices/page";
+import ReferenceInfoPage from "./referenceInfo/page";
 
 const generalInfoSchema = z.object({
   offeringId: z.string().min(1, "Offering ID is required"),
@@ -87,7 +92,8 @@ const handleSubmit = (data) => {
     console.log("Billing Form Submitted:", data)
   }
 
-export default function RateOfferingPage() {
+// Main Rate Offering Content Component
+function RateOfferingContent() {
   const form = useForm({
     resolver: zodResolver(generalInfoSchema),
     defaultValues: {
@@ -166,9 +172,39 @@ export default function RateOfferingPage() {
   ];
 
   return (
+    <BillingForm sections={sections} />
+  );
+}
+
+export default function RateOfferingPage() {
+  // Define tabs configuration
+  const tabs = [
+    {
+      value: "main",
+      label: "General Info",
+      component: RateOfferingContent,
+    },
+    {
+      value: "defaultServices",
+      label: "Default Services",
+      component: DefaultServicesPage,
+    },
+    {
+      value: "referenceInfo",
+      label: "Reference Info",
+      component: ReferenceInfoPage,
+    },
+  ];
+
+  return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-[#006397] mb-4">Rate Offering</h1>
-      <BillingForm sections={sections} />
+      {/* Heading */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-[#006397]">Rate Offering</h2>
+      </div>
+
+      {/* Tabs Navigation */}
+      <TabsNavbar tabs={tabs} defaultTab="main" />
     </div>
   );
 }

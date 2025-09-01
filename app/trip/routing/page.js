@@ -5,6 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { OrdersForm } from "@/components/ui/reusableComponent/orderForms";
 import { Card, CardContent } from "@/components/ui/card";
+import { TabsNavbar } from "@/components/ui/reusableComponent/tabsNavbar";
+
+// Import the additionalDetails page as component
+import AdditionalDetailsPage from "./addtionalDetails/page";
 
 
 const generalInfoSchema = z.object({
@@ -61,7 +65,7 @@ const deliveryFields = [
   { name: "deliveryValue", label: "Delivery Value *" },
 ];
 
-export default function TripsRoutingPage() {
+function RoutingContent() {
   const generalInfoForm = useForm({
     resolver: zodResolver(generalInfoSchema),
     defaultValues: {
@@ -156,8 +160,35 @@ export default function TripsRoutingPage() {
   ];
 
   return (
+    <OrdersForm sections={sections} useAccordion={true} />
+  );
+}
+
+// Main Routing Page with Tabs
+export default function TripsRoutingPage() {
+  // Define tabs configuration
+  const tabs = [
+    {
+      value: "routing",
+      label: "Routing",
+      component: RoutingContent,
+    },
+    {
+      value: "additionalDetails",
+      label: "Additional Details",
+      component: AdditionalDetailsPage,
+    },
+  ];
+
+  return (
     <div className="p-6">
-      <OrdersForm sections={sections} useAccordion={true} />
+      {/* Heading */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-[#006397]">Trip Routing</h2>
+      </div>
+
+      {/* Tabs Navigation */}
+      <TabsNavbar tabs={tabs} defaultTab="routing" />
     </div>
   );
 }

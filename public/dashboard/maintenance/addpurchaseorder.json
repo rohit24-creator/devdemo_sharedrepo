@@ -1,56 +1,75 @@
 {
-  "columns": [
-    { "accessorKey": "poId", "header": "PO ID" },
-    { "accessorKey": "productName", "header": "Product Name" },
-    { "accessorKey": "purchaseQty", "header": "Purchase Qty" },
-    { "accessorKey": "usedQty", "header": "Used Qty" },
-    { "accessorKey": "ratePer", "header": "Rate Per" },
-    { "accessorKey": "taxAmt", "header": "Tax Amt" },
-    { "accessorKey": "totalAmount", "header": "Total Amount" },
-    { "accessorKey": "purchasedDate", "header": "Purchased Date" },
-    { "accessorKey": "deliveryDate", "header": "Delivery Date" },
-    { "accessorKey": "vendor", "header": "Vendor" },
-    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" }
+  "headers": [
+    {
+      "accessorKey": "vehicleNumber",
+      "header": "Vehicle Number"
+    },
+    {
+      "accessorKey": "orderNumber",
+      "header": "Order Number"
+    },
+    {
+      "accessorKey": "orderDate",
+      "header": "Order Date"
+    },
+    {
+      "accessorKey": "supplierName",
+      "header": "Supplier Name"
+    },
+    {
+      "accessorKey": "itemDescription",
+      "header": "Item Description"
+    },
+    {
+      "accessorKey": "quantity",
+      "header": "Quantity"
+    },
+    {
+      "accessorKey": "unitPrice",
+      "header": "Unit Price"
+    },
+    {
+      "accessorKey": "totalAmount",
+      "header": "Total Amount"
+    },
+    {
+      "accessorKey": "orderStatus",
+      "header": "Order Status"
+    }
   ],
   "rows": [
     {
-      "poId": "SHX1",
-      "productName": "route",
-      "purchaseQty": "23.00",
-      "usedQty": "23.00",
-      "ratePer": "23",
-      "taxAmt": "23.00",
-      "totalAmount": "233.00",
-      "purchasedDate": "2025-04-11 16:00:52",
-      "deliveryDate": "2025-04-12 00:00:00",
-      "vendor": "1704227",
-      "vehicleNumber": "ap402420"
+      "vehicleNumber": "TN01AB1234",
+      "orderNumber": "PO001234",
+      "orderDate": "2024-04-15",
+      "supplierName": "ABC Spares",
+      "itemDescription": "Brake Pads Set",
+      "quantity": "2",
+      "unitPrice": "₹1,200",
+      "totalAmount": "₹2,400",
+      "orderStatus": "Pending"
     },
     {
-      "poId": "SHX1",
-      "productName": "Light",
-      "purchaseQty": "12.00",
-      "usedQty": "12.00",
-      "ratePer": "12",
-      "taxAmt": "12.00",
-      "totalAmount": "122.00",
-      "purchasedDate": "2025-04-10 14:00:56",
-      "deliveryDate": "2025-04-11 00:00:00",
-      "vendor": "Speedy Freight Inc.",
-      "vehicleNumber": "73-2539"
+      "vehicleNumber": "TN02CD5678",
+      "orderNumber": "PO005678",
+      "orderDate": "2024-04-20",
+      "supplierName": "XYZ Motors",
+      "itemDescription": "Air Filter",
+      "quantity": "1",
+      "unitPrice": "₹800",
+      "totalAmount": "₹800",
+      "orderStatus": "Approved"
     },
     {
-      "poId": "SHX1",
-      "productName": "Light",
-      "purchaseQty": "11.00",
-      "usedQty": "11.00",
-      "ratePer": "11",
-      "taxAmt": "11.00",
-      "totalAmount": "11.00",
-      "purchasedDate": "2025-04-09 11:00:10",
-      "deliveryDate": "2025-04-09 00:00:00",
-      "vendor": "1704227",
-      "vehicleNumber": "2 ผข 9138"
+      "vehicleNumber": "TN03EF9012",
+      "orderNumber": "PO009012",
+      "orderDate": "2024-04-25",
+      "supplierName": "Quick Parts",
+      "itemDescription": "Oil Filter",
+      "quantity": "3",
+      "unitPrice": "₹450",
+      "totalAmount": "₹1,350",
+      "orderStatus": "Completed"
     }
   ]
 }
