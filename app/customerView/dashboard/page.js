@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Truck, 
-  Clock, 
-  CheckCircle, 
-  MapPin, 
-  RefreshCw, 
-  Maximize2, 
+import {
+  Truck,
+  Clock,
+  CheckCircle,
+  MapPin,
+  RefreshCw,
+  Maximize2,
   Search,
   HelpCircle,
   Mic,
@@ -27,7 +27,7 @@ import {
   Car
 } from "lucide-react";
 
-// Field arrays for dynamic configuration - no hardcoding
+// Data: Dynamic field arrays for KPIs and filters
 const kpiFields = [
   {
     id: "activeBookings",
@@ -42,7 +42,7 @@ const kpiFields = [
     maxScore: 100
   },
   {
-    id: "pendingBookings", 
+    id: "pendingBookings",
     icon: Truck,
     value: "2",
     label: "Pending Booking",
@@ -56,7 +56,7 @@ const kpiFields = [
   {
     id: "completedBookings",
     icon: Truck,
-    value: "4", 
+    value: "4",
     label: "Completed",
     color: "text-green-600",
     bgColor: "bg-gradient-to-br from-green-50 to-green-100",
@@ -77,7 +77,7 @@ const filterFields = [
   },
   {
     id: "month",
-    label: "Month", 
+    label: "Month",
     type: "select",
     options: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     defaultValue: "Aug"
@@ -85,7 +85,7 @@ const filterFields = [
   {
     id: "week",
     label: "Week",
-    type: "select", 
+    type: "select",
     options: ["Week 1", "Week 2", "Week 3", "Week 4"],
     defaultValue: "Week 3"
   }
@@ -120,7 +120,7 @@ const dashboardWidgets = [
     type: "chart",
     size: "col-span-1",
     chartData: [
-      { label: "Iding", value: 0, percentage: "0.00%", color: "bg-blue-500" },
+      { label: "Idling", value: 0, percentage: "0.00%", color: "bg-blue-500" },
       { label: "Active", value: 0, percentage: "0.00%", color: "bg-green-500" }
     ]
   },
@@ -155,7 +155,7 @@ export default function CustomerDashboardPage() {
   const [mapView, setMapView] = useState("map");
 
   useEffect(() => {
-    // Initialize filter values from field arrays
+    // Initialize filter values from filterFields
     const initialFilters = {};
     filterFields.forEach(field => {
       initialFilters[field.id] = field.defaultValue || "";
@@ -164,10 +164,7 @@ export default function CustomerDashboardPage() {
   }, []);
 
   const handleFilterChange = (fieldId, value) => {
-    setFilterValues(prev => ({
-      ...prev,
-      [fieldId]: value
-    }));
+    setFilterValues(prev => ({ ...prev, [fieldId]: value }));
   };
 
   const handleMapViewChange = (view) => {
@@ -175,25 +172,26 @@ export default function CustomerDashboardPage() {
   };
 
   const handleMenuAction = (action) => {
-    switch(action) {
+    switch (action) {
       case "navigateToBookings":
-        alert("Navigate to Bookings");
+        alert("Navigating to Bookings");
         break;
       case "navigateToReports":
-        alert("Navigate to Reports");
+        alert("Navigating to Reports");
         break;
       default:
         console.log("Action:", action);
     }
   };
 
+  // Render a KPI card
   const renderKPI = (kpi) => {
     const IconComponent = kpi.icon;
     const percentage = (kpi.score / kpi.maxScore) * 100;
-    const circumference = 2 * Math.PI * 16; // radius = 16
+    const circumference = 2 * Math.PI * 16;
     const strokeDasharray = circumference;
     const strokeDashoffset = circumference - (percentage / 100) * circumference;
-    
+
     return (
       <Card key={kpi.id} className={`${kpi.bgColor} border ${kpi.borderColor} shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden`}>
         <CardContent className="p-3">
@@ -203,18 +201,12 @@ export default function CustomerDashboardPage() {
                 <IconComponent size={20} />
               </div>
               <div className="ml-2">
-                <div className={`text-xl font-bold ${kpi.color} mb-1`}>
-                  {kpi.value}
-                </div>
-                <div className="text-xs font-medium text-gray-600">
-                  {kpi.label}
-                </div>
+                <div className={`text-xl font-bold ${kpi.color} mb-1`}>{kpi.value}</div>
+                <div className="text-xs font-medium text-gray-600">{kpi.label}</div>
               </div>
             </div>
-            {/* Circular Progress Indicator - No gap */}
             <div className="relative">
               <svg className="w-10 h-10 transform -rotate-90" viewBox="0 0 32 32">
-                {/* Background circle */}
                 <circle
                   cx="16"
                   cy="16"
@@ -224,28 +216,22 @@ export default function CustomerDashboardPage() {
                   className="text-gray-200"
                   strokeWidth="3"
                 />
-                {/* Progress circle */}
                 <circle
                   cx="16"
                   cy="16"
                   r="14"
                   fill="none"
                   stroke="currentColor"
-                  className={`${kpi.color.replace('text-', 'text-')}`}
+                  className={`${kpi.color}`}
                   strokeWidth="3"
                   strokeLinecap="round"
                   strokeDasharray={strokeDasharray}
                   strokeDashoffset={strokeDashoffset}
-                  style={{
-                    transition: 'stroke-dashoffset 0.5s ease-in-out'
-                  }}
+                  style={{ transition: 'stroke-dashoffset 0.5s ease-in-out' }}
                 />
               </svg>
-              {/* Score text in center */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className={`text-xs font-bold ${kpi.color}`}>
-                  {kpi.score}%
-                </span>
+                <span className={`text-xs font-bold ${kpi.color}`}>{kpi.score}%</span>
               </div>
             </div>
           </div>
@@ -254,13 +240,12 @@ export default function CustomerDashboardPage() {
     );
   };
 
+  // Render each filter control dynamically.
   const renderFilterField = (field) => {
     if (field.type === "select") {
       return (
         <div key={field.id} className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-700">
-            {field.label}
-          </label>
+          <label className="text-sm font-semibold text-gray-700">{field.label}</label>
           <Select
             value={filterValues[field.id] || ""}
             onValueChange={(value) => handleFilterChange(field.id, value)}
@@ -269,7 +254,7 @@ export default function CustomerDashboardPage() {
               <SelectValue placeholder={field.label} />
             </SelectTrigger>
             <SelectContent>
-              {field.options.map((option) => (
+              {field.options.map(option => (
                 <SelectItem key={option} value={option}>
                   {option}
                 </SelectItem>
@@ -282,10 +267,11 @@ export default function CustomerDashboardPage() {
     return null;
   };
 
+  // Render a dashboard widget based on its type.
   const renderWidget = (widget) => {
     const IconComponent = widget.icon;
-    
-    switch (widget.type) {
+
+    switch(widget.type) {
       case "empty":
         return (
           <Card key={widget.id} className={`${widget.size} bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 hover:border-gray-400 transition-all duration-300`}>
@@ -299,7 +285,6 @@ export default function CustomerDashboardPage() {
             </CardContent>
           </Card>
         );
-
       case "gauge":
         return (
           <Card key={widget.id} className={`${widget.size} shadow-sm hover:shadow-md transition-all duration-300`}>
@@ -309,29 +294,22 @@ export default function CustomerDashboardPage() {
             </CardHeader>
             <CardContent className="text-center">
               <div className="relative w-24 h-24 mx-auto mb-2">
-                {/* Enhanced Gauge visualization */}
                 <div className="w-full h-full rounded-full border-6 border-gray-200 relative shadow-inner">
                   <div className="absolute inset-0 rounded-full border-6 border-blue-500 transform rotate-45 shadow-lg"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-2xl font-bold text-blue-600">
-                      {widget.gaugeData.current}
-                    </div>
+                    <div className="text-2xl font-bold text-blue-600">{widget.gaugeData.current}</div>
                   </div>
                 </div>
-                {/* Scale markers */}
                 <div className="absolute inset-0 flex justify-between items-center px-1">
                   {widget.gaugeData.scale.map((value, index) => (
-                    <div key={index} className="text-xs text-gray-600 font-medium">
-                      {value}
-                    </div>
+                    <div key={index} className="text-xs text-gray-600 font-medium">{value}</div>
                   ))}
                 </div>
               </div>
-              <div className="text-xs text-gray-500">Scale: 0 - 500</div>
+              <div className="text-xs text-gray-500">Scale: {widget.gaugeData.min} - {widget.gaugeData.max}</div>
             </CardContent>
           </Card>
         );
-
       case "chart":
         return (
           <Card key={widget.id} className={`${widget.size} shadow-sm hover:shadow-md transition-all duration-300`}>
@@ -356,7 +334,6 @@ export default function CustomerDashboardPage() {
             </CardContent>
           </Card>
         );
-
       case "navigation":
         return (
           <Card key={widget.id} className={`${widget.size} shadow-sm hover:shadow-md transition-all duration-300`}>
@@ -389,7 +366,6 @@ export default function CustomerDashboardPage() {
             </CardContent>
           </Card>
         );
-
       default:
         return null;
     }
@@ -397,107 +373,108 @@ export default function CustomerDashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Enhanced Header */}
-    
-
-      <div className="p-6 space-y-5">
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {kpiFields.map(renderKPI)}
+      {/* Header */}
+      <header className="bg-white shadow">
+        <div className="container mx-auto px-4 py-4">
+          <h1 className="text-2xl font-bold text-gray-800">Customer Dashboard</h1>
         </div>
-
+      </header>
+      
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-6 space-y-8">
+        
+        {/* KPI Cards */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {kpiFields.map(renderKPI)}
+        </section>
+        
         {/* Filter Controls */}
-        <Card className="shadow-sm border-gray-200">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-6">
+        <section>
+          <Card className="shadow-sm border-gray-200">
+            <CardContent className="p-4 flex flex-wrap items-center gap-6">
               <div className="flex items-center gap-2">
                 <Activity size={18} className="text-gray-600" />
                 <span className="text-sm font-semibold text-gray-700">Filters</span>
               </div>
               {filterFields.map(renderFilterField)}
-            </div>
-          </CardContent>
-        </Card>
-
+            </CardContent>
+          </Card>
+        </section>
+        
         {/* Dashboard Widgets */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {dashboardWidgets.map(renderWidget)}
-        </div>
-
+        </section>
+        
         {/* Fleet View */}
-        <Card className="shadow-sm border-gray-200">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                  <MapPin size={20} className="text-blue-600" />
-                  {fleetViewConfig.title}
-                </CardTitle>
-                <p className="text-sm text-gray-600 mt-1">{fleetViewConfig.subtitle}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                {fleetViewConfig.mapControls.map((control) => (
-                  <Button
-                    key={control.id}
-                    variant={control.active ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleMapViewChange(control.id)}
-                    className={`${control.active ? 'bg-blue-600 hover:bg-blue-700' : 'hover:bg-gray-50'} transition-all duration-200`}
-                  >
-                    {control.label}
+        <section>
+          <Card className="shadow-sm border-gray-200">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <MapPin size={20} className="text-blue-600" />
+                    {fleetViewConfig.title}
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 mt-1">{fleetViewConfig.subtitle}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {fleetViewConfig.mapControls.map((control) => (
+                    <Button
+                      key={control.id}
+                      variant={control.active ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleMapViewChange(control.id)}
+                      className={`${control.active ? 'bg-blue-600 hover:bg-blue-700' : 'hover:bg-gray-50'} transition-all duration-200`}
+                    >
+                      {control.label}
+                    </Button>
+                  ))}
+                  <Button variant="outline" size="icon" className="hover:bg-gray-50">
+                    <RefreshCw size={14} />
                   </Button>
-                ))}
-                <Button variant="outline" size="icon" className="hover:bg-gray-50">
-                  <RefreshCw size={14} />
-                </Button>
-                <Button variant="outline" size="icon" className="hover:bg-gray-50">
-                  <Maximize2 size={14} />
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-dashed border-gray-300 h-80 overflow-hidden">
-              {/* Enhanced Map placeholder */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <div className="text-6xl mb-3">🗺️</div>
-                  <div className="text-lg font-semibold mb-1">Interactive Map View</div>
-                  <div className="text-sm mb-3">Currently displaying: <span className="font-medium text-blue-600">{mapView}</span></div>
-                  <div className="text-xs text-gray-400">Map integration ready</div>
+                  <Button variant="outline" size="icon" className="hover:bg-gray-50">
+                    <Maximize2 size={14} />
+                  </Button>
                 </div>
               </div>
-              
-              {/* Enhanced Map regions overlay */}
-              <div className="absolute top-4 left-4 space-y-1">
-                {fleetViewConfig.mapRegions.map((region, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs font-medium bg-white/90 border border-gray-200 shadow-sm">
-                    {region}
-                  </Badge>
-                ))}
-              </div>
-
-              {/* Enhanced Search bar */}
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                  <Input
-                    placeholder={fleetViewConfig.searchPlaceholder}
-                    className="pl-10 h-10 bg-white/95 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 shadow-lg"
-                  />
+            </CardHeader>
+            <CardContent>
+              <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-dashed border-gray-300 h-80 overflow-hidden">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <div className="text-6xl mb-3">🗺️</div>
+                    <div className="text-lg font-semibold mb-1">Interactive Map View</div>
+                    <div className="text-sm mb-3">Currently displaying: <span className="font-medium text-blue-600">{mapView}</span></div>
+                    <div className="text-xs text-gray-400">Map integration ready</div>
+                  </div>
+                </div>
+                <div className="absolute top-4 left-4 space-y-1">
+                  {fleetViewConfig.mapRegions.map((region, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs font-medium bg-white/90 border border-gray-200 shadow-sm">
+                      {region}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                    <Input
+                      placeholder={fleetViewConfig.searchPlaceholder}
+                      className="pl-10 h-10 bg-white/95 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 shadow-lg"
+                    />
+                  </div>
+                </div>
+                <div className="absolute top-4 right-4 flex flex-col gap-1">
+                  <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white shadow-sm">
+                    ⋯
+                  </Button>
                 </div>
               </div>
-
-              {/* Enhanced Map controls */}
-              <div className="absolute top-4 right-4 flex flex-col gap-1">
-                <Button variant="ghost" size="icon" className="bg-white/90 hover:bg-white shadow-sm">
-                  ⋯
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </section>
+      </main>
     </div>
   );
 }

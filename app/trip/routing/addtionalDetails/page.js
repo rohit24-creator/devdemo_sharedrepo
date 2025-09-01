@@ -181,6 +181,6 @@ export default function AdditionalDetailsPage() {
   return (
     <div className="p-6">
       <OrdersForm sections={sections} useAccordion={true} />
-    </div>
+g    </div>
   );
 }
