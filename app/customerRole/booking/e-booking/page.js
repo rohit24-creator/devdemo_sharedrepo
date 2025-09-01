@@ -31,7 +31,14 @@ import {
   AlertCircle,
   CheckSquare,
   Search,
-  Filter
+  Filter,
+  X,
+  Phone,
+  FileIcon,
+  Download,
+  Upload,
+  PlayCircle,
+  PauseCircle
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -46,6 +53,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 // Constants to avoid hardcoding
 const STATUS_CONFIG = {
@@ -297,109 +316,267 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
 
 BookingCard.displayName = 'BookingCard';
 
-const DetailedBookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
-  <Card className="mb-6">
-    <CardHeader className="bg-blue-50 border-b">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-blue-100 rounded-lg">
-            <Truck className="w-6 h-6 text-blue-600" />
+// Info Tab Component
+const InfoTab = memo(({ booking }) => (
+  <div className="space-y-6">
+    {/* Pickup and Delivery Cards */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Pickup Card */}
+      <Card>
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Truck className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <CardTitle className="text-lg text-blue-600">PICK UP</CardTitle>
+              <p className="text-sm text-gray-600 font-medium">{booking.origin.name}</p>
+            </div>
           </div>
+        </CardHeader>
+        <CardContent className="space-y-3">
           <div>
-            <CardTitle className="text-xl text-blue-600">{booking.id}</CardTitle>
-            <p className="text-sm text-gray-600">{booking.orderReference}</p>
+            <p className="font-medium text-gray-800">{booking.sourceCity}, {booking.origin.country}</p>
+            <p className="text-sm text-gray-600">{booking.origin.name}, {booking.origin.address}</p>
+            <p className="text-xs text-gray-500">Phone: {booking.origin.phone} , Fax: {booking.origin.fax}</p>
           </div>
-        </div>
-        <StatusBadge status={booking.status} />
-      </div>
-    </CardHeader>
-    <CardContent className="p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Origin and Destination */}
-        <div className="lg:col-span-2">
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-800 mb-2">{booking.origin.name}</h4>
-              <p className="text-sm text-gray-600 mb-1">{booking.origin.address}</p>
-              <p className="text-xs text-gray-500">By {booking.origin.deadline}</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <ArrowRight className="w-4 h-4 text-blue-600" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-800 mb-2">{booking.destination.name}</h4>
-              <p className="text-sm text-gray-600 mb-1">{booking.destination.address}</p>
-              <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
-            </div>
-          </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Key Metrics */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Scale className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">Weight</p>
-              <p className="font-semibold text-blue-600">{booking.weight}</p>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Package className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">Volume</p>
-              <p className="font-semibold text-blue-600">{booking.volume}</p>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Clock className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">ETA</p>
-              <p className="font-semibold text-blue-600">{booking.eta}</p>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Navigation className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">Distance</p>
-              <p className="font-semibold text-blue-600">{booking.distance}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Vehicle Details */}
-      <div className="mt-6 pt-6 border-t">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Delivery Card */}
+      <Card>
+        <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
-            <Truck className="w-5 h-5 text-gray-500" />
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Truck className="w-5 h-5 text-blue-600" />
+            </div>
             <div>
-              <p className="text-sm font-medium">Vehicle Type</p>
-              <p className="text-sm text-gray-600">{booking.vehicleType}</p>
+              <CardTitle className="text-lg text-blue-600">DELIVERY</CardTitle>
+              <p className="text-sm text-gray-600 font-medium">{booking.destination.name}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Truck className="w-5 h-5 text-gray-500" />
-            <div>
-              <p className="text-sm font-medium">Vehicle ID</p>
-              <p className="text-sm text-gray-600">{booking.vehicleId}</p>
-            </div>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div>
+            <p className="font-medium text-gray-800">{booking.destinationCity}, {booking.destination.country}</p>
+            <p className="text-sm text-gray-600">{booking.destination.name}, {booking.destination.address}</p>
+            <p className="text-xs text-gray-500">Phone: {booking.destination.phone} , Fax: {booking.destination.fax}</p>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
+    </div>
 
-      {/* Action Buttons */}
-      <div className="mt-6 pt-6 border-t flex justify-between items-center">
-        <Badge className="bg-green-100 text-green-800 border-green-200">
-          {booking.driverStatus}
-        </Badge>
-        <ActionButtons 
-          booking={booking}
-          onView={onView}
-          onEdit={onEdit}
-          onGenerateLabel={onGenerateLabel}
-        />
-      </div>
-    </CardContent>
-  </Card>
+    {/* Cargo and Reference Details */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Cargo Details */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg text-blue-600">CARGO DETAILS</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-blue-600 font-semibold">Package Type</TableHead>
+                <TableHead className="text-blue-600 font-semibold">Actual Weight</TableHead>
+                <TableHead className="text-blue-600 font-semibold">Actual Volume</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">{booking.cargoDetails.packageType}</TableCell>
+                <TableCell>{booking.cargoDetails.actualWeight}</TableCell>
+                <TableCell>{booking.cargoDetails.actualVolume}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <p className="text-xs text-gray-500 mt-2">Showing 1 to 1 of 1 entries</p>
+        </CardContent>
+      </Card>
+
+      {/* Reference Details */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg text-blue-600">REFERENCE DETAILS</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-blue-600 font-semibold">Reference ID</TableHead>
+                <TableHead className="text-blue-600 font-semibold">Reference Name</TableHead>
+                <TableHead className="text-blue-600 font-semibold">Value</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">{booking.referenceDetails.referenceId}</TableCell>
+                <TableCell>{booking.referenceDetails.referenceName}</TableCell>
+                <TableCell>{booking.referenceDetails.value}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  </div>
 ));
 
-DetailedBookingCard.displayName = 'DetailedBookingCard';
+InfoTab.displayName = 'InfoTab';
+
+// Status Tab Component
+const StatusTab = memo(({ booking }) => {
+  const statusTimeline = useMemo(() => {
+    if (!booking.statusHistory || booking.statusHistory.length === 0) {
+      return [];
+    }
+    
+    return booking.statusHistory.map((statusItem, index) => ({
+      status: statusItem.status,
+      timestamp: statusItem.timestamp,
+      icon: statusItem.status.includes('Accepted') ? CheckCircle : 
+            statusItem.status.includes('Gate') ? PlayCircle :
+            statusItem.status.includes('Completed') ? CheckSquare :
+            statusItem.status.includes('Delivered') ? CheckSquare :
+            ClockIcon,
+      isActive: statusItem.isActive
+    }));
+  }, [booking.statusHistory]);
+
+  return (
+    <div className="space-y-6">
+      {statusTimeline.length > 0 ? (
+        <div className="relative">
+          {/* Vertical Timeline Line */}
+          <div className="absolute left-8 top-16 bottom-0 w-0.5 bg-blue-200"></div>
+          
+          <div className="space-y-8">
+            {statusTimeline.map((item, index) => (
+              <div key={index} className="flex items-start gap-6">
+                <div className="flex flex-col items-center">
+                  <div className={`p-3 rounded-lg ${item.isActive ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                    <item.icon className={`w-6 h-6 ${item.isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                  </div>
+                  {index < statusTimeline.length - 1 && (
+                    <div className="w-0.5 h-8 bg-blue-200 mt-2"></div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-4">
+                    <h3 className={`font-medium ${item.isActive ? 'text-blue-600' : 'text-gray-600'}`}>
+                      {item.status}
+                    </h3>
+                    <span className="text-sm text-gray-500">Created Date: {item.timestamp}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="text-center py-8">
+          <ClockIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No status updates</h3>
+          <p className="text-gray-600">Status history will appear here as the order progresses.</p>
+        </div>
+      )}
+    </div>
+  );
+});
+
+StatusTab.displayName = 'StatusTab';
+
+// Attachments Tab Component
+const AttachmentsTab = memo(({ booking }) => (
+  <div className="space-y-4">
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-blue-600 font-semibold">Location</TableHead>
+          <TableHead className="text-blue-600 font-semibold">Doc Type</TableHead>
+          <TableHead className="text-blue-600 font-semibold">Document</TableHead>
+          <TableHead className="text-blue-600 font-semibold">Stop ID</TableHead>
+          <TableHead className="text-blue-600 font-semibold">Stop Type</TableHead>
+          <TableHead className="text-blue-600 font-semibold">Created By</TableHead>
+          <TableHead className="text-blue-600 font-semibold">Time</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+            No data available in table
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  </div>
+));
+
+AttachmentsTab.displayName = 'AttachmentsTab';
+
+// Main Modal Component
+const BookingDetailsModal = memo(({ booking, isOpen, onClose, onEdit, onGenerateLabel }) => {
+  const [activeTab, setActiveTab] = useState('info');
+
+  if (!booking) return null;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="lg:max-w-[80rem] w-[95vw] max-h-[90vh] overflow-hidden p-0">
+        <DialogHeader className="px-6 py-4 border-b pr-12">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Truck className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <DialogTitle className="text-xl text-blue-600">{booking.id}</DialogTitle>
+                <p className="text-sm text-gray-600">{booking.orderReference}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <StatusBadge status={booking.status} />
+            </div>
+          </div>
+        </DialogHeader>
+
+        <div className="flex-1 overflow-hidden">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
+            <div className="px-6 border-b">
+              <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+                <TabsTrigger value="info" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                  Info
+                </TabsTrigger>
+                <TabsTrigger value="status" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                  Status
+                </TabsTrigger>
+                <TabsTrigger value="attachments" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
+                  Attachment
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+              <TabsContent value="info" className="mt-0">
+                <InfoTab booking={booking} />
+              </TabsContent>
+
+              <TabsContent value="status" className="mt-0">
+                <StatusTab booking={booking} />
+              </TabsContent>
+
+              <TabsContent value="attachments" className="mt-0">
+                <AttachmentsTab booking={booking} />
+              </TabsContent>
+            </div>
+          </Tabs>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+});
+
+BookingDetailsModal.displayName = 'BookingDetailsModal';
 
 const LoadingSpinner = memo(() => (
   <div className="flex items-center justify-center min-h-screen">
@@ -425,6 +602,7 @@ NoResultsMessage.displayName = 'NoResultsMessage';
 export default function EBookingPage() {
   const [viewMode, setViewMode] = useState(VIEW_MODES.TABLE);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { bookings, setBookings, pagination, loading } = useBookings();
   const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings } = useBookingFilters(bookings);
@@ -432,6 +610,7 @@ export default function EBookingPage() {
   // Memoized callbacks for event handlers
   const handleViewDetails = useCallback((booking) => {
     setSelectedBooking(booking);
+    setIsModalOpen(true);
   }, []);
 
   const handleEdit = useCallback((booking) => {
@@ -446,6 +625,7 @@ export default function EBookingPage() {
 
   const handleCloseModal = useCallback(() => {
     setSelectedBooking(null);
+    setIsModalOpen(false);
   }, []);
 
   const handleViewModeChange = useCallback((mode) => {
@@ -659,30 +839,14 @@ export default function EBookingPage() {
       {/* No results message */}
       {filteredBookings.length === 0 && <NoResultsMessage />}
 
-      {/* Detailed View Modal */}
-      {selectedBooking && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Booking Details</h2>
-                <Button
-                  variant="ghost"
-                  onClick={handleCloseModal}
-                >
-                  ×
-                </Button>
-              </div>
-              <DetailedBookingCard 
-                booking={selectedBooking}
-                onView={handleViewDetails}
-                onEdit={handleEdit}
-                onGenerateLabel={handleGenerateLabel}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Booking Details Modal */}
+      <BookingDetailsModal
+        booking={selectedBooking}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onEdit={handleEdit}
+        onGenerateLabel={handleGenerateLabel}
+      />
     </div>
   );
 }

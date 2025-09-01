@@ -16,13 +16,41 @@
       "origin": {
         "name": "JOHN",
         "address": "150 SAINT BOTOLPH ST APT 22",
-        "deadline": "2024-12-06 04:00 AM"
+        "deadline": "2024-12-06 04:00 AM",
+        "phone": "8079798977",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
       "destination": {
         "name": "JOHNS",
         "address": "UNION STREET",
-        "deadline": "2024-12-07 08:00 AM"
+        "deadline": "2024-12-07 08:00 AM",
+        "phone": "8079798796",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
+      "cargoDetails": {
+        "packageType": "BOXES",
+        "actualWeight": "800 Lbs",
+        "actualVolume": "13000 Cbm"
+      },
+      "referenceDetails": {
+        "referenceId": "DQ",
+        "referenceName": "Delivery Note",
+        "value": "SX1733464331"
+      },
+      "statusHistory": [
+        {
+          "status": "Accepted by Driver",
+          "timestamp": "2024-11-29 05:25:48",
+          "isActive": true
+        },
+        {
+          "status": "Gate In",
+          "timestamp": "2024-11-29 05:25:10",
+          "isActive": false
+        }
+      ],
       "eta": "2024-12-07 09:00:35",
       "distance": "348 miles",
       "vehicleType": "10W Cabinet (Temperature Control)",
@@ -45,13 +73,36 @@
       "origin": {
         "name": "VIJAYAWADA WAREHOUSE",
         "address": "123 INDUSTRIAL PARK ROAD",
-        "deadline": "2024-12-06 06:00 AM"
+        "deadline": "2024-12-06 06:00 AM",
+        "phone": "8079798978",
+        "fax": "-",
+        "country": "INDIA"
       },
       "destination": {
         "name": "NEW YORK DISTRIBUTION",
         "address": "456 COMMERCE AVENUE",
-        "deadline": "2024-12-07 10:00 AM"
+        "deadline": "2024-12-07 10:00 AM",
+        "phone": "8079798797",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
+      "cargoDetails": {
+        "packageType": "PALLETS",
+        "actualWeight": "8 Lbs",
+        "actualVolume": "8 Cbm"
+      },
+      "referenceDetails": {
+        "referenceId": "DQ",
+        "referenceName": "Delivery Note",
+        "value": "SX1733463734"
+      },
+      "statusHistory": [
+        {
+          "status": "Accepted by Driver",
+          "timestamp": "2024-11-29 05:25:48",
+          "isActive": true
+        }
+      ],
       "eta": "2024-12-07 11:30:00",
       "distance": "1250 miles",
       "vehicleType": "Standard Truck",
@@ -74,13 +125,41 @@
       "origin": {
         "name": "CHICAGO LOGISTICS",
         "address": "789 FREIGHT WAY",
-        "deadline": "2024-12-05 08:00 AM"
+        "deadline": "2024-12-05 08:00 AM",
+        "phone": "8079798979",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
       "destination": {
         "name": "LA DISTRIBUTION CENTER",
         "address": "321 CARGO STREET",
-        "deadline": "2024-12-08 02:00 PM"
+        "deadline": "2024-12-08 02:00 PM",
+        "phone": "8079798798",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
+      "cargoDetails": {
+        "packageType": "CONTAINERS",
+        "actualWeight": "1200 Lbs",
+        "actualVolume": "18000 Cbm"
+      },
+      "referenceDetails": {
+        "referenceId": "DQ",
+        "referenceName": "Delivery Note",
+        "value": "SX1733462987"
+      },
+      "statusHistory": [
+        {
+          "status": "Gate In",
+          "timestamp": "2024-11-29 05:25:10",
+          "isActive": true
+        },
+        {
+          "status": "Accepted by Driver",
+          "timestamp": "2024-11-29 05:25:48",
+          "isActive": false
+        }
+      ],
       "eta": "2024-12-08 14:30:00",
       "distance": "2100 miles",
       "vehicleType": "Express Truck",
@@ -103,13 +182,36 @@
       "origin": {
         "name": "MIAMI PORT",
         "address": "456 HARBOR DRIVE",
-        "deadline": "2024-12-07 09:00 AM"
+        "deadline": "2024-12-07 09:00 AM",
+        "phone": "8079798980",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
       "destination": {
         "name": "ATLANTA WAREHOUSE",
         "address": "789 STORAGE LANE",
-        "deadline": "2024-12-08 03:00 PM"
+        "deadline": "2024-12-08 03:00 PM",
+        "phone": "8079798799",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
+      "cargoDetails": {
+        "packageType": "CRATES",
+        "actualWeight": "500 Lbs",
+        "actualVolume": "7500 Cbm"
+      },
+      "referenceDetails": {
+        "referenceId": "DQ",
+        "referenceName": "Delivery Note",
+        "value": "SX1733462156"
+      },
+      "statusHistory": [
+        {
+          "status": "Pending",
+          "timestamp": "2024-11-29 05:25:00",
+          "isActive": true
+        }
+      ],
       "eta": "2024-12-08 15:45:00",
       "distance": "660 miles",
       "vehicleType": "Standard Truck",
@@ -132,13 +234,41 @@
       "origin": {
         "name": "SEATTLE DISTRIBUTION",
         "address": "123 PUGET SOUND WAY",
-        "deadline": "2024-12-04 10:00 AM"
+        "deadline": "2024-12-04 10:00 AM",
+        "phone": "8079798981",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
       "destination": {
         "name": "PORTLAND WAREHOUSE",
         "address": "456 COLUMBIA RIVER ROAD",
-        "deadline": "2024-12-05 11:00 AM"
+        "deadline": "2024-12-05 11:00 AM",
+        "phone": "8079798800",
+        "fax": "-",
+        "country": "UNITED STATES OF AMERICA"
       },
+      "cargoDetails": {
+        "packageType": "BAGS",
+        "actualWeight": "300 Lbs",
+        "actualVolume": "4500 Cbm"
+      },
+      "referenceDetails": {
+        "referenceId": "DQ",
+        "referenceName": "Delivery Note",
+        "value": "SX1733461345"
+      },
+      "statusHistory": [
+        {
+          "status": "Completed",
+          "timestamp": "2024-11-29 05:25:00",
+          "isActive": true
+        },
+        {
+          "status": "Delivered",
+          "timestamp": "2024-11-29 05:24:30",
+          "isActive": false
+        }
+      ],
       "eta": "2024-12-05 10:30:00",
       "distance": "175 miles",
       "vehicleType": "Local Truck",
