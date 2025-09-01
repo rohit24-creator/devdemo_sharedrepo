@@ -161,30 +161,7 @@ const StatusBadge = memo(({ status }) => {
 
 StatusBadge.displayName = 'StatusBadge';
 
-const MetricsGrid = memo(({ booking }) => {
-  const metrics = [
-    { icon: Scale, label: 'Weight', value: booking.weight },
-    { icon: Package, label: 'Volume', value: booking.volume },
-    { icon: Clock, label: 'ETA', value: booking.eta },
-    { icon: Navigation, label: 'Distance', value: booking.distance }
-  ];
 
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {metrics.map(({ icon: Icon, label, value }) => (
-        <div key={label} className="flex items-center gap-2">
-          <Icon className="w-4 h-4 text-gray-500" />
-          <div>
-            <p className="text-xs text-gray-500">{label}</p>
-            <p className="text-sm font-medium text-gray-800">{value}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-});
-
-MetricsGrid.displayName = 'MetricsGrid';
 
 const ActionButtons = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
   <div className="flex gap-2">
@@ -223,7 +200,8 @@ ActionButtons.displayName = 'ActionButtons';
 const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
   <Card className="mb-4 hover:shadow-lg transition-shadow cursor-pointer">
     <CardContent className="p-5">
-      <div className="flex items-start justify-between mb-4">
+      {/* Top Row: Booking ID, DQ, and Status */}
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-100 rounded-lg">
             <Truck className="w-5 h-5 text-blue-600" />
@@ -233,10 +211,32 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
             <p className="text-sm text-gray-600">{booking.orderReference}</p>
           </div>
         </div>
-        
-        {/* Origin and Destination Flow */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="text-left">
+        <StatusBadge status={booking.status} />
+      </div>
+
+      {/* Main Content Grid: 3 columns layout */}
+      <div className="grid grid-cols-3 gap-6 mb-4">
+        {/* Left Column: Weight and Volume */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">Weight</p>
+              <p className="text-sm font-medium text-gray-800">{booking.weight}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Package className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">Volume</p>
+              <p className="text-sm font-medium text-gray-800">{booking.volume}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Middle Column: Origin and Destination Flow */}
+        <div className="flex items-center gap-4">
+          <div className="flex-1 text-left">
             <h4 className="font-semibold text-gray-800 text-sm">{booking.origin.name}</h4>
             <p className="text-xs text-gray-600">{booking.origin.address}</p>
             <p className="text-xs text-gray-500">By {booking.origin.deadline}</p>
@@ -246,22 +246,33 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
               <ArrowRight className="w-3 h-3 text-blue-600" />
             </div>
           </div>
-          <div className="text-left">
+          <div className="flex-1 text-left">
             <h4 className="font-semibold text-gray-800 text-sm">{booking.destination.name}</h4>
             <p className="text-xs text-gray-600">{booking.destination.address}</p>
             <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
           </div>
-          <div></div>
         </div>
-        
-        <StatusBadge status={booking.status} />
+
+        {/* Right Column: ETA and Distance */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">ETA</p>
+              <p className="text-sm font-medium text-gray-800">{booking.eta}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Navigation className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">Distance</p>
+              <p className="text-sm font-medium text-gray-800">{booking.distance}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Metrics Section */}
-      <div className="mb-3">
-        <MetricsGrid booking={booking} />
-      </div>
-
+      {/* Bottom Row: Vehicle Details and Actions */}
       <div className="flex items-center justify-between pt-4 border-t">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
