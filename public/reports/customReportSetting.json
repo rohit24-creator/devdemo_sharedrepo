@@ -1,6 +1,5 @@
 {
   "headers": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "name", "header": "Name" },
     { "accessorKey": "companyCode", "header": "Company Code" },
     { "accessorKey": "branchCode", "header": "Branch Code" },

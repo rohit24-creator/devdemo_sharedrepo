@@ -1,6 +1,5 @@
 {
   "headers": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "orderId", "header": "Order ID" },
     { "accessorKey": "deliveryOrderNo", "header": "Delivery Order No" },
     { "accessorKey": "purchaseOrderNo", "header": "Purchase Order No" },
@@ -26,7 +25,6 @@
   ],
   "rows": [
     {
-      "id": 1,
       "orderId": "ORD001234",
       "deliveryOrderNo": "DO001234",
       "purchaseOrderNo": "PO001234",
@@ -51,7 +49,6 @@
       "consigneeShLoginAccount": "CSLA001"
     },
     {
-      "id": 2,
       "orderId": "ORD001235",
       "deliveryOrderNo": "DO001235",
       "purchaseOrderNo": "PO001235",

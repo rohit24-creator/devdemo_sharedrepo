@@ -1,6 +1,5 @@
 {
   "columns": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "serialNo", "header": "Serial No" },
     { "accessorKey": "docketNumber", "header": "Docket Number" },
     { "accessorKey": "clientName", "header": "Client Name" },

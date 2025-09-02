@@ -1,6 +1,5 @@
 {
   "columns": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "bookingId", "header": "Booking ID" },
     { "accessorKey": "deliveryNote", "header": "Delivery Note" },
     { "accessorKey": "pickupDate", "header": "Pickup Date" },

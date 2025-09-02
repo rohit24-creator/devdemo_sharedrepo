@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/masterList";
-import { Edit, Eye, Trash2 } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
 import { MASTER_ROUTES } from "@/lib/masterRoutes";
 

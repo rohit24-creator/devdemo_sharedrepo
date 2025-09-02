@@ -1,6 +1,5 @@
 {
   "headers": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "orderId", "header": "Order ID" },
     { "accessorKey": "deliveryOrderNo", "header": "Delivery Order No" },
     { "accessorKey": "purchaseOrderNo", "header": "Purchase Order No" },

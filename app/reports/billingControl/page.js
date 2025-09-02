@@ -70,75 +70,10 @@ export default function BillingControlReportPage() {
     loadBillingData();
   }, []);
 
-  // Handle search functionality
-  const handleSearch = (formValues) => {
-    let filtered = [...billingData];
 
-    // Filter by date range (pickup dates)
-    if (formValues.startDate || formValues.endDate) {
-      if (formValues.startDate) {
-        const startDate = new Date(formValues.startDate);
-        filtered = filtered.filter(item => {
-          const pickupDate = new Date(item.pickupDate);
-          return pickupDate >= startDate;
-        });
-      }
-      if (formValues.endDate) {
-        const endDate = new Date(formValues.endDate);
-        filtered = filtered.filter(item => {
-          const pickupDate = new Date(item.pickupDate);
-          return pickupDate <= endDate;
-        });
-      }
-    }
+ 
 
-    // Filter by delivery date range
-    if (formValues.deliveryFromDate || formValues.deliveryToDate) {
-      if (formValues.deliveryFromDate) {
-        const deliveryFromDate = new Date(formValues.deliveryFromDate);
-        filtered = filtered.filter(item => {
-          const deliveryDate = new Date(item.deliveryDate);
-          return deliveryDate >= deliveryFromDate;
-        });
-      }
-      if (formValues.deliveryToDate) {
-        const deliveryToDate = new Date(formValues.deliveryToDate);
-        filtered = filtered.filter(item => {
-          const deliveryDate = new Date(item.deliveryDate);
-          return deliveryDate <= deliveryToDate;
-        });
-      }
-    }
 
-    setFilteredData(filtered);
-  };
-
-  // Handle export functionality
-  const handleExport = () => {
-    const csvContent = [
-      // CSV header
-      columns.map(col => col.header).join(','),
-      // CSV data
-      ...filteredData.map(row => 
-        columns.map(col => `"${row[col.accessorKey] || ''}"`).join(',')
-      )
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'billing_control_report.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-
-  // Handle view report functionality
-  const handleViewReport = (row) => {
-    console.log("Viewing report for:", row);
-    // You can implement detailed view logic here
-    alert(`Viewing detailed billing report for ${row.customerId} - ${row.orderId}`);
-  };
 
   // Handle action clicks
   const handleActionClick = (action, row) => {
@@ -157,39 +92,14 @@ export default function BillingControlReportPage() {
     }
   };
 
-  // Handle advanced search functionality
-  const handleAdvancedSearch = () => {
-    console.log("Opening advanced search dialog");
-    // You can implement a modal or dialog for advanced search here
-    alert("Advanced Search - This would open a detailed search form with more options");
-  };
-
-  // Define menu items for icons
-  const filterIconMenu = [
-    { label: "Advanced Search", onClick: handleAdvancedSearch },
-    { label: "Clear Filters", onClick: () => setFilteredData(billingData) },
+   const secondIconMenu = [
+    { label: "View as Grid", onClick: () => console.log("Grid View") },
+    { label: "View as Table", onClick: () => console.log("Table View") },
   ];
 
-  // Handle different export formats
-  const handleExportToExcel = () => {
-    console.log("Exporting to Excel");
-    alert("Export to Excel - This would generate an Excel file");
-  };
-
-  const handleExportToPDF = () => {
-    console.log("Exporting to PDF");
-    alert("Export to PDF - This would generate a PDF report");
-  };
-
-  const exportIconMenu = [
-    { label: "Export to CSV", onClick: handleExport },
-    { label: "Export to Excel", onClick: handleExportToExcel },
-    { label: "Export to PDF", onClick: handleExportToPDF },
-  ];
-
-  const viewIconMenu = [
-    { label: "View Details", onClick: () => console.log("View details") },
-    { label: "Print Report", onClick: () => console.log("Print report") },
+  const thirdIconMenu = [
+    { label: "Export PDF", onClick: () => console.log("PDF Export") },
+    { label: "Export Excel", onClick: () => console.log("Excel Export") },
   ];
 
   if (loading) {
@@ -207,17 +117,14 @@ export default function BillingControlReportPage() {
         columns={columns}
         rows={filteredData}
         filterFields={filterFields}
-        onSearch={handleSearch}
-        onExport={handleExport}
-        onViewReport={handleViewReport}
+      onSearch={(data) => {
+          console.log("Search Triggered with values:", data);
+        }}
         showFirstIcon={true}
         showSecondIcon={true}
         showThirdIcon={true}
-        filterIconMenu={filterIconMenu}
-        exportIconMenu={exportIconMenu}
-        viewIconMenu={viewIconMenu}
-        enabledActions={["view", "export", "filter"]}
-        onActionClick={handleActionClick}
+        secondIconMenu={secondIconMenu}
+        thirdIconMenu={thirdIconMenu}
       />
     </div>
   );

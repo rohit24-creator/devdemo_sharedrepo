@@ -1,6 +1,5 @@
 {
   "headers": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "module", "header": "Module" },
     { "accessorKey": "sentTo", "header": "Sent To" },
     { "accessorKey": "message", "header": "Message" },

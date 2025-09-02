@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/bookingList";
-import { Edit, Eye, Trash2 } from "lucide-react";
 import { formatRowsWithId } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

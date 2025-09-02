@@ -1,6 +1,5 @@
 {
   "headers": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "serialNo", "header": "Serial No" },
     { "accessorKey": "customerId", "header": "Customer ID" },
     { "accessorKey": "orderId", "header": "Order ID" },

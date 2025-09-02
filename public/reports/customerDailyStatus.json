@@ -1,6 +1,5 @@
 {
   "headers": [
-    { "accessorKey": "id", "header": "ID" },
     { "accessorKey": "bookingId", "header": "Booking ID" },
     { "accessorKey": "product", "header": "Product" },
     { "accessorKey": "customer", "header": "Customer" },
