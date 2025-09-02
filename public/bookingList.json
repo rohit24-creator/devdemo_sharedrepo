@@ -14,20 +14,30 @@
       "orderReference": "DQ: SX1733464331",
       "po": "-",
       "origin": {
+        "id": "477457",
         "name": "JOHN",
         "address": "150 SAINT BOTOLPH ST APT 22",
         "deadline": "2024-12-06 04:00 AM",
         "phone": "8079798977",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "150 SAINT BOTOLPH ST",
+        "suburb": "APT 22",
+        "postalCode": "10005",
+        "email": "john@gmail.com"
       },
       "destination": {
+        "id": "23525",
         "name": "JOHNS",
         "address": "UNION STREET",
         "deadline": "2024-12-07 08:00 AM",
         "phone": "8079798796",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "UNION STREET",
+        "suburb": "",
+        "postalCode": "10001",
+        "email": "johns@gmail.com"
       },
       "cargoDetails": {
         "packageType": "BOXES",
@@ -38,6 +48,22 @@
         "referenceId": "DQ",
         "referenceName": "Delivery Note",
         "value": "SX1733464331"
+      },
+      "orderAttributes": {
+        "orderType": "Standard",
+        "service": "Express",
+        "modeOfTransport": "Road",
+        "pickupInstructions": "Handle with care"
+      },
+      "additionalDetails": {
+        "paymentMethod": "Credit Card",
+        "namedPlace": "Boston Port",
+        "equipmentGroup": "Standard",
+        "otherLocation": "Warehouse A",
+        "trailerNumber": "TR-001",
+        "nmfcClass": "Class 70",
+        "hazmat": "No",
+        "commodityCode": "CC-001"
       },
       "statusHistory": [
         {
@@ -71,20 +97,30 @@
       "orderReference": "DQ: SX1733463734",
       "po": "PO-2024-001",
       "origin": {
+        "id": "477458",
         "name": "VIJAYAWADA WAREHOUSE",
         "address": "123 INDUSTRIAL PARK ROAD",
         "deadline": "2024-12-06 06:00 AM",
         "phone": "8079798978",
         "fax": "-",
-        "country": "INDIA"
+        "country": "INDIA",
+        "street": "123 INDUSTRIAL PARK ROAD",
+        "suburb": "Industrial Area",
+        "postalCode": "520001",
+        "email": "vijayawada@warehouse.com"
       },
       "destination": {
+        "id": "23526",
         "name": "NEW YORK DISTRIBUTION",
         "address": "456 COMMERCE AVENUE",
         "deadline": "2024-12-07 10:00 AM",
         "phone": "8079798797",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "456 COMMERCE AVENUE",
+        "suburb": "Commerce District",
+        "postalCode": "10001",
+        "email": "ny@distribution.com"
       },
       "cargoDetails": {
         "packageType": "PALLETS",
@@ -95,6 +131,22 @@
         "referenceId": "DQ",
         "referenceName": "Delivery Note",
         "value": "SX1733463734"
+      },
+      "orderAttributes": {
+        "orderType": "Standard",
+        "service": "Economy",
+        "modeOfTransport": "Road",
+        "pickupInstructions": "Standard handling"
+      },
+      "additionalDetails": {
+        "paymentMethod": "Bank Transfer",
+        "namedPlace": "Vijayawada Port",
+        "equipmentGroup": "Standard",
+        "otherLocation": "Warehouse B",
+        "trailerNumber": "TR-002",
+        "nmfcClass": "Class 50",
+        "hazmat": "No",
+        "commodityCode": "CC-002"
       },
       "statusHistory": [
         {
@@ -123,20 +175,30 @@
       "orderReference": "DQ: SX1733462987",
       "po": "PO-2024-002",
       "origin": {
+        "id": "477459",
         "name": "CHICAGO LOGISTICS",
         "address": "789 FREIGHT WAY",
         "deadline": "2024-12-05 08:00 AM",
         "phone": "8079798979",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "789 FREIGHT WAY",
+        "suburb": "Freight District",
+        "postalCode": "60601",
+        "email": "chicago@logistics.com"
       },
       "destination": {
+        "id": "23527",
         "name": "LA DISTRIBUTION CENTER",
         "address": "321 CARGO STREET",
         "deadline": "2024-12-08 02:00 PM",
         "phone": "8079798798",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "321 CARGO STREET",
+        "suburb": "Cargo District",
+        "postalCode": "90001",
+        "email": "la@distribution.com"
       },
       "cargoDetails": {
         "packageType": "CONTAINERS",
@@ -147,6 +209,22 @@
         "referenceId": "DQ",
         "referenceName": "Delivery Note",
         "value": "SX1733462987"
+      },
+      "orderAttributes": {
+        "orderType": "Express",
+        "service": "Express",
+        "modeOfTransport": "Road",
+        "pickupInstructions": "Express handling required"
+      },
+      "additionalDetails": {
+        "paymentMethod": "Credit Card",
+        "namedPlace": "Chicago Port",
+        "equipmentGroup": "Express",
+        "otherLocation": "Express Hub",
+        "trailerNumber": "TR-003",
+        "nmfcClass": "Class 80",
+        "hazmat": "No",
+        "commodityCode": "CC-003"
       },
       "statusHistory": [
         {
@@ -180,20 +258,30 @@
       "orderReference": "DQ: SX1733462156",
       "po": "PO-2024-003",
       "origin": {
+        "id": "477460",
         "name": "MIAMI PORT",
         "address": "456 HARBOR DRIVE",
         "deadline": "2024-12-07 09:00 AM",
         "phone": "8079798980",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "456 HARBOR DRIVE",
+        "suburb": "Harbor District",
+        "postalCode": "33101",
+        "email": "miami@port.com"
       },
       "destination": {
+        "id": "23528",
         "name": "ATLANTA WAREHOUSE",
         "address": "789 STORAGE LANE",
         "deadline": "2024-12-08 03:00 PM",
         "phone": "8079798799",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "789 STORAGE LANE",
+        "suburb": "Storage District",
+        "postalCode": "30301",
+        "email": "atlanta@warehouse.com"
       },
       "cargoDetails": {
         "packageType": "CRATES",
@@ -205,11 +293,42 @@
         "referenceName": "Delivery Note",
         "value": "SX1733462156"
       },
+      "orderAttributes": {
+        "orderType": "Standard",
+        "service": "Standard",
+        "modeOfTransport": "Road",
+        "pickupInstructions": "Standard handling"
+      },
+      "additionalDetails": {
+        "paymentMethod": "Cash",
+        "namedPlace": "Miami Port",
+        "equipmentGroup": "Standard",
+        "otherLocation": "Warehouse C",
+        "trailerNumber": "TR-004",
+        "nmfcClass": "Class 60",
+        "hazmat": "No",
+        "commodityCode": "CC-004"
+      },
       "statusHistory": [
         {
-          "status": "Pending",
-          "timestamp": "2024-11-29 05:25:00",
+          "status": "Gate In",
+          "timestamp": "2024-11-29 05:25:10",
           "isActive": true
+        },
+        {
+          "status": "In Transit",
+          "timestamp": "2024-11-29 05:25:48",
+          "isActive": false
+        },
+        {
+          "status": "Accepted by Driver",
+          "timestamp": "2024-11-29 05:26:15",
+          "isActive": false
+        },
+        {
+          "status": "Out for Delivery",
+          "timestamp": "2024-11-29 05:27:30",
+          "isActive": false
         }
       ],
       "eta": "2024-12-08 15:45:00",
@@ -232,20 +351,30 @@
       "orderReference": "DQ: SX1733461345",
       "po": "PO-2024-004",
       "origin": {
+        "id": "477461",
         "name": "SEATTLE DISTRIBUTION",
         "address": "123 PUGET SOUND WAY",
         "deadline": "2024-12-04 10:00 AM",
         "phone": "8079798981",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "123 PUGET SOUND WAY",
+        "suburb": "Puget Sound District",
+        "postalCode": "98101",
+        "email": "seattle@distribution.com"
       },
       "destination": {
+        "id": "23529",
         "name": "PORTLAND WAREHOUSE",
         "address": "456 COLUMBIA RIVER ROAD",
         "deadline": "2024-12-05 11:00 AM",
         "phone": "8079798800",
         "fax": "-",
-        "country": "UNITED STATES OF AMERICA"
+        "country": "UNITED STATES OF AMERICA",
+        "street": "456 COLUMBIA RIVER ROAD",
+        "suburb": "Columbia District",
+        "postalCode": "97201",
+        "email": "portland@warehouse.com"
       },
       "cargoDetails": {
         "packageType": "BAGS",
@@ -256,6 +385,22 @@
         "referenceId": "DQ",
         "referenceName": "Delivery Note",
         "value": "SX1733461345"
+      },
+      "orderAttributes": {
+        "orderType": "Local",
+        "service": "Local",
+        "modeOfTransport": "Road",
+        "pickupInstructions": "Local delivery"
+      },
+      "additionalDetails": {
+        "paymentMethod": "Cash",
+        "namedPlace": "Seattle Port",
+        "equipmentGroup": "Local",
+        "otherLocation": "Local Hub",
+        "trailerNumber": "TR-005",
+        "nmfcClass": "Class 40",
+        "hazmat": "No",
+        "commodityCode": "CC-005"
       },
       "statusHistory": [
         {
