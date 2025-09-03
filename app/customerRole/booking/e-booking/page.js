@@ -17,7 +17,6 @@ import {
   FileText, 
   Truck, 
   Calendar, 
-  MapPin, 
   Scale, 
   Package, 
   Clock, 
@@ -46,6 +45,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+// Import modal components from separate file
+import {
+  BookingDetailsModal,
+  EditBookingModal
+} from "./e-booking-modals";
 
 // Constants to avoid hardcoding
 const STATUS_CONFIG = {
@@ -147,7 +152,8 @@ const formatDate = (dateString) => {
 };
 
 // Memoized components
-const StatusBadge = memo(({ status }) => {
+// Export StatusBadge for use in modals file
+export const StatusBadge = memo(({ status }) => {
   const config = getStatusConfig(status);
   const IconComponent = config.icon;
   
@@ -160,31 +166,6 @@ const StatusBadge = memo(({ status }) => {
 });
 
 StatusBadge.displayName = 'StatusBadge';
-
-const MetricsGrid = memo(({ booking }) => {
-  const metrics = [
-    { icon: Scale, label: 'Weight', value: booking.weight },
-    { icon: Package, label: 'Volume', value: booking.volume },
-    { icon: Clock, label: 'ETA', value: booking.eta },
-    { icon: Navigation, label: 'Distance', value: booking.distance }
-  ];
-
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {metrics.map(({ icon: Icon, label, value }) => (
-        <div key={label} className="flex items-center gap-2">
-          <Icon className="w-4 h-4 text-gray-500" />
-          <div>
-            <p className="text-xs text-gray-500">{label}</p>
-            <p className="text-sm font-medium text-gray-800">{value}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-});
-
-MetricsGrid.displayName = 'MetricsGrid';
 
 const ActionButtons = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
   <div className="flex gap-2">
@@ -223,7 +204,8 @@ ActionButtons.displayName = 'ActionButtons';
 const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
   <Card className="mb-4 hover:shadow-lg transition-shadow cursor-pointer">
     <CardContent className="p-5">
-      <div className="flex items-start justify-between mb-4">
+      {/* Top Row: Booking ID, DQ, and Status */}
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-100 rounded-lg">
             <Truck className="w-5 h-5 text-blue-600" />
@@ -233,10 +215,32 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
             <p className="text-sm text-gray-600">{booking.orderReference}</p>
           </div>
         </div>
-        
-        {/* Origin and Destination Flow */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="text-left">
+        <StatusBadge status={booking.status} />
+      </div>
+
+      {/* Main Content Grid: 3 columns layout */}
+      <div className="grid grid-cols-3 gap-6 mb-4">
+        {/* Left Column: Weight and Volume */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">Weight</p>
+              <p className="text-sm font-medium text-gray-800">{booking.weight}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Package className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">Volume</p>
+              <p className="text-sm font-medium text-gray-800">{booking.volume}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Middle Column: Origin and Destination Flow */}
+        <div className="flex items-center gap-4">
+          <div className="flex-1 text-left">
             <h4 className="font-semibold text-gray-800 text-sm">{booking.origin.name}</h4>
             <p className="text-xs text-gray-600">{booking.origin.address}</p>
             <p className="text-xs text-gray-500">By {booking.origin.deadline}</p>
@@ -246,22 +250,33 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
               <ArrowRight className="w-3 h-3 text-blue-600" />
             </div>
           </div>
-          <div className="text-left">
+          <div className="flex-1 text-left">
             <h4 className="font-semibold text-gray-800 text-sm">{booking.destination.name}</h4>
             <p className="text-xs text-gray-600">{booking.destination.address}</p>
             <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
           </div>
-          <div></div>
         </div>
-        
-        <StatusBadge status={booking.status} />
+
+        {/* Right Column: ETA and Distance */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">ETA</p>
+              <p className="text-sm font-medium text-gray-800">{booking.eta}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Navigation className="w-4 h-4 text-gray-500" />
+            <div>
+              <p className="text-xs text-gray-500">Distance</p>
+              <p className="text-sm font-medium text-gray-800">{booking.distance}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Metrics Section */}
-      <div className="mb-3">
-        <MetricsGrid booking={booking} />
-      </div>
-
+      {/* Bottom Row: Vehicle Details and Actions */}
       <div className="flex items-center justify-between pt-4 border-t">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -286,110 +301,7 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
 
 BookingCard.displayName = 'BookingCard';
 
-const DetailedBookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
-  <Card className="mb-6">
-    <CardHeader className="bg-blue-50 border-b">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-3 bg-blue-100 rounded-lg">
-            <Truck className="w-6 h-6 text-blue-600" />
-          </div>
-          <div>
-            <CardTitle className="text-xl text-blue-600">{booking.id}</CardTitle>
-            <p className="text-sm text-gray-600">{booking.orderReference}</p>
-          </div>
-        </div>
-        <StatusBadge status={booking.status} />
-      </div>
-    </CardHeader>
-    <CardContent className="p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Origin and Destination */}
-        <div className="lg:col-span-2">
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-800 mb-2">{booking.origin.name}</h4>
-              <p className="text-sm text-gray-600 mb-1">{booking.origin.address}</p>
-              <p className="text-xs text-gray-500">By {booking.origin.deadline}</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                <ArrowRight className="w-4 h-4 text-blue-600" />
-              </div>
-            </div>
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-800 mb-2">{booking.destination.name}</h4>
-              <p className="text-sm text-gray-600 mb-1">{booking.destination.address}</p>
-              <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Key Metrics */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Scale className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">Weight</p>
-              <p className="font-semibold text-blue-600">{booking.weight}</p>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Package className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">Volume</p>
-              <p className="font-semibold text-blue-600">{booking.volume}</p>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Clock className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">ETA</p>
-              <p className="font-semibold text-blue-600">{booking.eta}</p>
-            </div>
-            <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <Navigation className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-              <p className="text-xs text-gray-500">Distance</p>
-              <p className="font-semibold text-blue-600">{booking.distance}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Vehicle Details */}
-      <div className="mt-6 pt-6 border-t">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3">
-            <Truck className="w-5 h-5 text-gray-500" />
-            <div>
-              <p className="text-sm font-medium">Vehicle Type</p>
-              <p className="text-sm text-gray-600">{booking.vehicleType}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Truck className="w-5 h-5 text-gray-500" />
-            <div>
-              <p className="text-sm font-medium">Vehicle ID</p>
-              <p className="text-sm text-gray-600">{booking.vehicleId}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="mt-6 pt-6 border-t flex justify-between items-center">
-        <Badge className="bg-green-100 text-green-800 border-green-200">
-          {booking.driverStatus}
-        </Badge>
-        <ActionButtons 
-          booking={booking}
-          onView={onView}
-          onEdit={onEdit}
-          onGenerateLabel={onGenerateLabel}
-        />
-      </div>
-    </CardContent>
-  </Card>
-));
-
-DetailedBookingCard.displayName = 'DetailedBookingCard';
-
+// Loading and utility components  
 const LoadingSpinner = memo(() => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="text-center">
@@ -414,6 +326,8 @@ NoResultsMessage.displayName = 'NoResultsMessage';
 export default function EBookingPage() {
   const [viewMode, setViewMode] = useState(VIEW_MODES.TABLE);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { bookings, setBookings, pagination, loading } = useBookings();
   const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings } = useBookingFilters(bookings);
@@ -421,11 +335,12 @@ export default function EBookingPage() {
   // Memoized callbacks for event handlers
   const handleViewDetails = useCallback((booking) => {
     setSelectedBooking(booking);
+    setIsModalOpen(true);
   }, []);
 
   const handleEdit = useCallback((booking) => {
-    console.log('Edit booking:', booking.id);
-    // Add edit functionality
+    setSelectedBooking(booking);
+    setIsEditModalOpen(true);
   }, []);
 
   const handleGenerateLabel = useCallback((booking) => {
@@ -435,6 +350,12 @@ export default function EBookingPage() {
 
   const handleCloseModal = useCallback(() => {
     setSelectedBooking(null);
+    setIsModalOpen(false);
+  }, []);
+
+  const handleCloseEditModal = useCallback(() => {
+    setSelectedBooking(null);
+    setIsEditModalOpen(false);
   }, []);
 
   const handleViewModeChange = useCallback((mode) => {
@@ -648,30 +569,21 @@ export default function EBookingPage() {
       {/* No results message */}
       {filteredBookings.length === 0 && <NoResultsMessage />}
 
-      {/* Detailed View Modal */}
-      {selectedBooking && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Booking Details</h2>
-                <Button
-                  variant="ghost"
-                  onClick={handleCloseModal}
-                >
-                  ×
-                </Button>
-              </div>
-              <DetailedBookingCard 
-                booking={selectedBooking}
-                onView={handleViewDetails}
-                onEdit={handleEdit}
-                onGenerateLabel={handleGenerateLabel}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Booking Details Modal */}
+      <BookingDetailsModal
+        booking={selectedBooking}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onEdit={handleEdit}
+        onGenerateLabel={handleGenerateLabel}
+      />
+
+      {/* Edit Booking Modal */}
+      <EditBookingModal
+        booking={selectedBooking}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+      />
     </div>
   );
 }
