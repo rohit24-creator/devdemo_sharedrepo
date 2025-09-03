@@ -11,6 +11,31 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Plus, Trash2 } from "lucide-react";
 
+// Minimal scrollbar styles
+const Scrollbar = `
+  .minimal-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db #f3f4f6;
+  }
+  
+  .minimal-scrollbar::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .minimal-scrollbar::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 2px;
+  }
+  
+  .minimal-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 2px;
+  }
+  
+  .minimal-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+`;
 
 const routeTemplateSchema = z.object({
   templateId: z.string(),
@@ -264,37 +289,37 @@ export default function TripTemplatePage() {
                </Button>
              </div>
            </CardHeader>
-                       <CardContent>
+                       <CardContent className="p-6">
               <FormProvider {...routeLegsForm}>
-                <div className="overflow-x-auto">
-                  <Table>
+                <div className="overflow-x-auto minimal-scrollbar">
+                  <Table className="min-w-full xl:min-w-max">
                     <TableHeader>
                       <TableRow className="bg-gray-50">
-                        <TableHead className="font-semibold">Leg ID</TableHead>
-                        <TableHead className="font-semibold">Origin Location</TableHead>
-                        <TableHead className="font-semibold">Destination Location</TableHead>
-                        <TableHead className="font-semibold">Way Points</TableHead>
-                        <TableHead className="font-semibold">Vessel Number</TableHead>
-                        <TableHead className="font-semibold">Carrier Name</TableHead>
-                        <TableHead className="font-semibold">Mode of Transport</TableHead>
-                        <TableHead className="font-semibold">Vehicle Type</TableHead>
-                        <TableHead className="font-semibold">Vehicle ID</TableHead>
-                        <TableHead className="font-semibold">Driver Name</TableHead>
-                        <TableHead className="font-semibold">Actions</TableHead>
+                        <TableHead className="font-semibold w-24 sm:w-28 lg:w-32 px-3 py-3">Leg ID</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Origin Location</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Destination Location</TableHead>
+                        <TableHead className="font-semibold w-24 sm:w-28 lg:w-32 px-3 py-3">Way Points</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Vessel Number</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Carrier Name</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Mode of Transport</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Vehicle Type</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Vehicle ID</TableHead>
+                        <TableHead className="font-semibold w-32 sm:w-36 lg:w-40 px-3 py-3">Driver Name</TableHead>
+                        <TableHead className="font-semibold w-20 sm:w-24 lg:w-28 px-3 py-3">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                        {fields.map((leg, index) => (
                          <TableRow key={leg.id} className="hover:bg-gray-50">
-                           <TableCell>
+                           <TableCell className="w-24 sm:w-28 lg:w-32 px-3 py-3">
                              <Input
                                value={leg.legId}
                                disabled
-                               className="bg-gray-100"
+                               className="bg-gray-100 w-full h-9"
                              />
                            </TableCell>
                               {routeLegsFields.slice(0, 2).map((field, fieldIndex) => (
-                              <TableCell key={fieldIndex}>
+                              <TableCell key={fieldIndex} className="w-32 sm:w-36 lg:w-40 px-3 py-3">
                                 {renderField(
                                   { 
                                     ...field, 
@@ -306,8 +331,8 @@ export default function TripTemplatePage() {
                                 )}
                               </TableCell>
                             ))}
-                           <TableCell>
-                             <div className="flex items-center space-x-2">
+                           <TableCell className="w-24 sm:w-28 lg:w-32 px-3 py-3">
+                             <div className="flex items-center justify-center">
                                <Button
                                  variant="outline"
                                  size="sm"
@@ -319,7 +344,7 @@ export default function TripTemplatePage() {
                              </div>
                            </TableCell>
                               {routeLegsFields.slice(2).map((field, fieldIndex) => (
-                              <TableCell key={fieldIndex + 2}>
+                              <TableCell key={fieldIndex + 2} className="w-32 sm:w-36 lg:w-40 px-3 py-3">
                                 {renderField(
                                   { 
                                     ...field, 
@@ -331,7 +356,7 @@ export default function TripTemplatePage() {
                                 )}
                               </TableCell>
                             ))}
-                           <TableCell>
+                           <TableCell className="w-20 sm:w-24 lg:w-28 px-3 py-3">
                              <Button
                                variant="outline"
                                size="sm"
@@ -356,6 +381,7 @@ export default function TripTemplatePage() {
 
   return (
     <div className="p-6">
+      <style dangerouslySetInnerHTML={{ __html: Scrollbar}} />
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Trip Template</h1>
       </div>
