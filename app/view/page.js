@@ -4,60 +4,138 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 export default function ViewFormPage() {
-  // Simple array of label-value pairs
-  const allFields = [
-    { label: "Register Number", value: "BKL309" },
-    { label: "Vehicle Type", value: "22 WHEELER" },
-    { label: "Truck Brand", value: "WESTERN STAR" },
-    { label: "Fuel Type", value: "Diesel" },
-    { label: "Status", value: "Active" },
-    { label: "Owner Name", value: "ALBERT" },
-    { label: "Vehicle Color", value: "Blue" },
-    { label: "Purchase Year", value: "2022" },
-    { label: "Length", value: "8.00 (M)" },
-    { label: "Width", value: "3.00 (M)" },
-    { label: "Height", value: "4.00 (M)" },
-    { label: "Weight(Kgs)", value: "1300.00 (Kg)" },
-    { label: "Volume", value: "5.00 (cbm)" },
-    { label: "Contact Name", value: "ALBERT" },
-    { label: "Contact Number", value: "8706586545" },
-    { label: "Vehicle Owner", value: "ALBERT" },
-    { label: "Insured By", value: "ALBERT" },
-    { label: "Insurance Start Date", value: "2024-11-28" },
-    { label: "Insurance Exp. Date", value: "2030-11-15" },
-    { label: "Description", value: "GOODS AND SERVICES" }
-  ]
+  const vehicleData = {
+    leftCard: [
+      { label: "Register Number", value: "AP39K7007" },
+      { label: "Contact Name", value: "Mac" },
+      { label: "Contact Number", value: "7878667564" },
+      { label: "Vehicle Type", value: "Full Truck Load" }
+    ],
+    rightTopCard: [
+      { label: "Length", value: "89.00 (M)" },
+      { label: "Width", value: "89.00 (M)" },
+      { label: "Height", value: "89.00 (M)" },
+      { label: "Weight(Kgs)", value: "80.00 (Kg)" },
+      { label: "Volume", value: "704969.00 (cbm)" }
+    ],
+    rightBottomCard: [
+      { label: "Insured By", value: "Zxcvbnm" },
+      { label: "Insurance Start Date", value: "2025-06-24" },
+      { label: "Insurance Exp. Date", value: "2025-06-30" },
+      { label: "Truck Brand", value: "BMW" },
+      { label: "Fuel Type", value: "petrol" }
+    ]
+  }
 
+  const handleCancel = () => {
+    console.log("Cancel clicked")
+  }
 
+  const hasData = vehicleData.leftCard.length > 0 || vehicleData.rightTopCard.length > 0 || vehicleData.rightBottomCard.length > 0
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white sticky top-0 z-10 shadow-sm border-b border-slate-200 w-full">
-        <div className="w-full px-4 sm:px-6 py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900">
-            Vehicles View
-          </h1>
-          <Button variant="destructive" size="lg">Cancel</Button>
-        </div>
-      </header>
-
-      <main className="w-full px-4 sm:px-6 py-6">
-        <Card className="w-full border border-slate-200 shadow-sm">
-          <CardHeader className="bg-slate-100 py-4 px-5">
-            <CardTitle className="text-xl font-semibold text-slate-900">Vehicle Information</CardTitle>
+    <div className="min-h-screen bg-slate-150">
+      <div className="w-full max-w-7xl mx-auto p-8 space-y-8">
+        {/* Header Card */}
+        <Card className="relative overflow-hidden bg-gradient-to-r from-white to-slate-50">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full -translate-y-16 translate-x-16" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-indigo-400/10 to-blue-400/10 rounded-full translate-y-16 -translate-x-16" />
+          <CardHeader className="flex flex-row items-center justify-between relative py-2">
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
+              Vehicle Information
+            </CardTitle>
+            <Button onClick={handleCancel} variant="outline">
+              Cancel
+            </Button>
           </CardHeader>
-          <CardContent className="p-5 pt-0 pb-0">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
-              {allFields.map((field, idx) => (
-                <div key={idx} className="grid grid-cols-2 gap-0 items-center">
-                  <span className="text-base font-medium text-slate-600">{field.label} : </span>
-                  <span className="text-base font-semibold text-slate-900">{field.value}</span>
-          </div>
-              ))}
-          </div>
-          </CardContent>
         </Card>
-      </main>
+        
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 h-full">
+          {/* Left Card */}
+          <div className="lg:col-span-1 flex">
+            <Card className="relative overflow-hidden w-full">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full -translate-y-16 translate-x-16" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-indigo-400/10 to-blue-400/10 rounded-full translate-y-16 -translate-x-16" />
+              <CardContent className="px-6 pt-2 pb-2 flex items-center justify-center relative h-full">
+                {hasData && vehicleData.leftCard.length > 0 ? (
+                  <div className="space-y-6">
+                    {vehicleData.leftCard.map((item, index) => (
+                      <div key={index} className="text-left">
+                        <p className="text-base font-medium text-gray-500 uppercase tracking-wide mb-1">
+                          {item.label}
+                        </p>
+                        <p className="text-base font-medium text-gray-900">
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center text-gray-400">
+                    <p className="text-lg font-medium">No Data Available</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Right Cards */}
+          <div className="lg:col-span-3 flex flex-col gap-8 h-full">
+            {/* Top Right Card */}
+            <Card className="relative overflow-hidden flex-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full -translate-y-16 translate-x-16" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-indigo-400/10 to-blue-400/10 rounded-full translate-y-16 -translate-x-16" />
+              <CardContent className="px-6 pt-2 pb-2 relative h-full flex items-center">
+                {hasData && vehicleData.rightTopCard.length > 0 ? (
+                  <div className="grid grid-cols-5 gap-15 w-full">
+                    {vehicleData.rightTopCard.map((item, index) => (
+                      <div key={index} className="text-left space-y-2">
+                        <p className="text-base font-medium text-gray-500 uppercase tracking-wide">
+                          {item.label}
+                        </p>
+                        <p className="text-base font-medium text-gray-900">
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center text-gray-400 w-full">
+                    <p className="text-lg font-medium">No Data Available</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            {/* Bottom Right Card */}
+            <Card className="relative overflow-hidden flex-1">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full -translate-y-16 translate-x-16" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-indigo-400/10 to-blue-400/10 rounded-full translate-y-16 -translate-x-16" />
+              <CardContent className="px-6 pt-2 pb-2 relative h-full flex items-center">
+                {hasData && vehicleData.rightBottomCard.length > 0 ? (
+                  <div className="grid grid-cols-5 gap-15 w-full">
+                    {vehicleData.rightBottomCard.map((item, index) => (
+                      <div key={index} className="text-left space-y-2">
+                        <p className="text-base font-medium text-gray-500 uppercase tracking-wide">
+                          {item.label}
+                        </p>
+                        <p className="text-base font-medium text-gray-900">
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center text-gray-400 w-full">
+                    <p className="text-lg font-medium">No Data Available</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
