@@ -1,54 +1,76 @@
-[
+{
+  "headers": [
+    { "accessorKey": "serialNo", "header": "S.No" },
+    { "accessorKey": "docketNumber", "header": "Docket Number" },
+    { "accessorKey": "clientName", "header": "Client Name" },
+    { "accessorKey": "clientLocation", "header": "Client Location" },
+    { "accessorKey": "yearMonth", "header": "Year Month" },
+    { "accessorKey": "number", "header": "NDR Number" },
+    { "accessorKey": "orderDate", "header": "Order Date" },
+    { "accessorKey": "manifestDate", "header": "Manifest Date" },
+    { "accessorKey": "pickupDate", "header": "Pickup Date" },
+    { "accessorKey": "clientPickupDate", "header": "Client Pickup Date" },
+    { "accessorKey": "clientCity", "header": "Client City" },
+    { "accessorKey": "destinationPin", "header": "Destination Pin" },
+    { "accessorKey": "destinationCity", "header": "Destination City" },
+    { "accessorKey": "destinationState", "header": "Destination State" },
+    { "accessorKey": "region", "header": "Region" },
+    { "accessorKey": "invoiceZone", "header": "Invoice Zone" },
+    { "accessorKey": "packageType", "header": "Package Type" },
+    { "accessorKey": "incomingDate", "header": "Incoming Date" },
+    { "accessorKey": "dispatchCount", "header": "Dispatch Count" },
+    { "accessorKey": "firstPendingDate", "header": "First Pending Date" },
+    { "accessorKey": "attempts", "header": "Attempts" }
+  ],
+  "rows": [
+    {
+      "serialNo": 1,
+      "docketNumber": "DOC001234",
+      "clientName": "ABC Logistics Ltd",
+      "clientLocation": "Mumbai",
+      "yearMonth": "2025-07",
+      "number": "NDR001",
+      "orderDate": "2025-07-14 09:30",
+      "manifestDate": "2025-07-14 15:00",
+      "pickupDate": "2025-07-15 08:00",
+      "clientPickupDate": "2025-07-15 10:00",
+      "clientCity": "Mumbai",
+      "destinationPin": "400001",
+      "destinationCity": "Delhi",
+      "destinationState": "Delhi",
+      "region": "North",
+      "invoiceZone": "Zone A",
+      "packageType": "Standard",
+      "incomingDate": "2025-07-14 12:00",
+      "dispatchCount": 3,
+      "firstPendingDate": "2025-07-16 09:00",
+      "attempts": 2
+    },
+    {
+      "serialNo": 2,
+      "docketNumber": "DOC001235",
+      "clientName": "Tech Solutions Corp",
+      "clientLocation": "Bangalore",
+      "yearMonth": "2025-07",
+      "number": "NDR002",
+      "orderDate": "2025-07-15 10:15",
+      "manifestDate": "2025-07-15 16:30",
+      "pickupDate": "2025-07-16 07:30",
+      "clientPickupDate": "2025-07-16 09:15",
+      "clientCity": "Bangalore",
+      "destinationPin": "600001",
+      "destinationCity": "Chennai",
+      "destinationState": "Tamil Nadu",
+      "region": "South",
+      "invoiceZone": "Zone B",
+      "packageType": "Express",
+      "incomingDate": "2025-07-15 14:30",
+      "dispatchCount": 2,
+      "firstPendingDate": "2025-07-17 11:00",
+      "attempts": 1
+    },
   {
-    "id": 1,
-    "serialNo": 1,
-    "docketNumber": "DOC001234",
-    "clientName": "ABC Logistics Ltd",
-    "clientLocation": "Mumbai",
-    "yearMonth": "2025-07",
-    "number": "NDR001",
-    "orderDate": "2025-07-14 09:30",
-    "manifestDate": "2025-07-14 15:00",
-    "pickupDate": "2025-07-15 08:00",
-    "clientPickupDate": "2025-07-15 10:00",
-    "clientCity": "Mumbai",
-    "destinationPin": "400001",
-    "destinationCity": "Delhi",
-    "destinationState": "Delhi",
-    "region": "North",
-    "invoiceZone": "Zone A",
-    "packageType": "Standard",
-    "incomingDate": "2025-07-14 12:00",
-    "dispatchCount": 3,
-    "firstPendingDate": "2025-07-16 09:00",
-    "attempts": 2
-  },
-  {
-    "id": 2,
-    "serialNo": 2,
-    "docketNumber": "DOC001235",
-    "clientName": "Tech Solutions Corp",
-    "clientLocation": "Bangalore",
-    "yearMonth": "2025-07",
-    "number": "NDR002",
-    "orderDate": "2025-07-15 10:15",
-    "manifestDate": "2025-07-15 16:30",
-    "pickupDate": "2025-07-16 07:30",
-    "clientPickupDate": "2025-07-16 09:15",
-    "clientCity": "Bangalore",
-    "destinationPin": "600001",
-    "destinationCity": "Chennai",
-    "destinationState": "Tamil Nadu",
-    "region": "South",
-    "invoiceZone": "Zone B",
-    "packageType": "Express",
-    "incomingDate": "2025-07-15 14:30",
-    "dispatchCount": 2,
-    "firstPendingDate": "2025-07-17 11:00",
-    "attempts": 1
-  },
-  {
-    "id": 3,
+
     "serialNo": 3,
     "docketNumber": "DOC001236",
     "clientName": "Global Industries",
@@ -72,7 +94,7 @@
     "attempts": 3
   },
   {
-    "id": 4,
+
     "serialNo": 4,
     "docketNumber": "DOC001237",
     "clientName": "Digital Electronics",
@@ -96,7 +118,7 @@
     "attempts": 1
   },
   {
-    "id": 5,
+
     "serialNo": 5,
     "docketNumber": "DOC001238",
     "clientName": "Pharma Solutions",
@@ -120,7 +142,7 @@
     "attempts": 2
   },
   {
-    "id": 6,
+
     "serialNo": 6,
     "docketNumber": "DOC001239",
     "clientName": "Auto Parts Ltd",
@@ -144,7 +166,7 @@
     "attempts": 2
   },
   {
-    "id": 7,
+
     "serialNo": 7,
     "docketNumber": "DOC001240",
     "clientName": "Textile Traders",
@@ -168,7 +190,7 @@
     "attempts": 1
   },
   {
-    "id": 8,
+
     "serialNo": 8,
     "docketNumber": "DOC001241",
     "clientName": "IT Services Corp",
@@ -192,7 +214,7 @@
     "attempts": 2
   },
   {
-    "id": 9,
+
     "serialNo": 9,
     "docketNumber": "DOC001242",
     "clientName": "Manufacturing Co",
@@ -216,7 +238,7 @@
     "attempts": 1
   },
   {
-    "id": 10,
+
     "serialNo": 10,
     "docketNumber": "DOC001243",
     "clientName": "Shipping Solutions",
@@ -240,7 +262,7 @@
     "attempts": 2
   },
   {
-    "id": 11,
+
     "serialNo": 11,
     "docketNumber": "DOC001244",
     "clientName": "Retail Chain Ltd",
@@ -264,7 +286,7 @@
     "attempts": 1
   },
   {
-    "id": 12,
+
     "serialNo": 12,
     "docketNumber": "DOC001245",
     "clientName": "Food Products Inc",
@@ -288,7 +310,7 @@
     "attempts": 2
   },
   {
-    "id": 13,
+
     "serialNo": 13,
     "docketNumber": "DOC001246",
     "clientName": "Construction Materials",
@@ -312,7 +334,7 @@
     "attempts": 2
   },
   {
-    "id": 14,
+
     "serialNo": 14,
     "docketNumber": "DOC001247",
     "clientName": "Electronics Store",
@@ -336,7 +358,7 @@
     "attempts": 1
   },
   {
-    "id": 15,
+
     "serialNo": 15,
     "docketNumber": "DOC001248",
     "clientName": "Agricultural Products",
@@ -358,5 +380,6 @@
     "dispatchCount": 2,
     "firstPendingDate": "2025-07-30 14:15",
     "attempts": 2
-  }
-] 
+    }
+  ]
+} 

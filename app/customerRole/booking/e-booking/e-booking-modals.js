@@ -87,6 +87,371 @@ import {
 // Import StatusBadge from main page file
 import { StatusBadge } from "./page";
 
+// Configuration constants for dropdown options
+const COUNTRY_OPTIONS = [
+  { value: "UNITED STATES OF AMERICA", label: "UNITED STATES OF AMERICA" },
+  { value: "UNITED KINGDOM", label: "UNITED KINGDOM" },
+  { value: "INDIA", label: "INDIA" },
+  { value: "CANADA", label: "CANADA" },
+  { value: "AUSTRALIA", label: "AUSTRALIA" }
+];
+
+const ORDER_TYPE_OPTIONS = [
+  { value: "Standard", label: "Standard" },
+  { value: "Express", label: "Express" },
+  { value: "Temperature Control", label: "Temperature Control" },
+  { value: "Local", label: "Local" }
+];
+
+const SERVICE_OPTIONS = [
+  { value: "Express", label: "Express" },
+  { value: "Standard", label: "Standard" },
+  { value: "Economy", label: "Economy" }
+];
+
+const TRANSPORT_MODE_OPTIONS = [
+  { value: "Road", label: "Road" },
+  { value: "Rail", label: "Rail" },
+  { value: "Air", label: "Air" },
+  { value: "Sea", label: "Sea" }
+];
+
+const CARGO_ITEM_OPTIONS = [
+  { value: "BOXES", label: "BOXES" },
+  { value: "PALLETS", label: "PALLETS" },
+  { value: "CONTAINERS", label: "CONTAINERS" }
+];
+
+const CARGO_TYPE_OPTIONS = [
+  { value: "General", label: "General" },
+  { value: "Fragile", label: "Fragile" },
+  { value: "Hazardous", label: "Hazardous" }
+];
+
+// Form field configuration arrays
+const PICKUP_FIELDS = [
+  { 
+    name: 'shipperId', 
+    label: 'Shipper ID', 
+    type: 'text', 
+    hasIcons: true,
+    className: 'flex-1 h-8 text-sm'
+  },
+  { 
+    name: 'shipperName', 
+    label: 'Shipper Name', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'contactPerson', 
+    label: 'Contact person', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'estimatedPickupDate', 
+    label: 'Estimated Pickup Date', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'shipperAddress', 
+    label: 'Shipper Address', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'country', 
+    label: 'Country', 
+    type: 'select',
+    options: COUNTRY_OPTIONS,
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'street', 
+    label: 'Street', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'suburb', 
+    label: 'Suburb', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'city', 
+    label: 'City / Town', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'postalCode', 
+    label: 'Postal Code', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'phone', 
+    label: 'Phone', 
+    type: 'tel',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'email', 
+    label: 'Email', 
+    type: 'email',
+    className: 'h-8 text-sm'
+  }
+];
+
+const DELIVERY_FIELDS = [
+  { 
+    name: 'consigneeId', 
+    label: 'Consignee ID', 
+    type: 'text', 
+    hasIcons: true,
+    className: 'flex-1 h-8 text-sm'
+  },
+  { 
+    name: 'consigneeName', 
+    label: 'Consignee Name', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'consigneeContactPerson', 
+    label: 'Contact person', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'estimatedDeliveryDate', 
+    label: 'Estimated Delivery Date', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'consigneeAddress', 
+    label: 'Consignee Address', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliveryCountry', 
+    label: 'Country', 
+    type: 'select',
+    options: COUNTRY_OPTIONS,
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliveryStreet', 
+    label: 'Street', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliverySuburb', 
+    label: 'Suburb', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliveryCity', 
+    label: 'City / Town', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliveryPostalCode', 
+    label: 'Postal Code', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliveryPhone', 
+    label: 'Phone', 
+    type: 'tel',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliveryEmail', 
+    label: 'Email', 
+    type: 'email',
+    className: 'h-8 text-sm'
+  }
+];
+
+const ORDER_ATTRIBUTES_FIELDS = [
+  { 
+    name: 'orderType', 
+    label: 'Select Order Type', 
+    type: 'select',
+    options: ORDER_TYPE_OPTIONS,
+    className: 'h-8 w-full'
+  },
+  { 
+    name: 'service', 
+    label: 'Select Service', 
+    type: 'select',
+    options: SERVICE_OPTIONS,
+    className: 'h-8 w-full'
+  },
+  { 
+    name: 'modeOfTransport', 
+    label: 'Mode Of Transport', 
+    type: 'select',
+    options: TRANSPORT_MODE_OPTIONS,
+    className: 'h-8 w-full'
+  },
+  { 
+    name: 'pickupInstructions', 
+    label: 'Pick Up Instructions', 
+    type: 'textarea',
+    rows: 3,
+    className: 'resize-none text-sm'
+  }
+];
+
+const REFERENCES_FIELDS = [
+  { 
+    name: 'customerReference', 
+    label: 'DQ/Customer reference', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'purchaseOrder', 
+    label: 'Purchase Order', 
+    type: 'text',
+    className: 'h-8 text-sm'
+  },
+  { 
+    name: 'deliveryInstructions', 
+    label: 'Delivery Instructions', 
+    type: 'textarea',
+    rows: 3,
+    className: 'resize-none text-sm'
+  }
+];
+
+const ADDITIONAL_DETAILS_FIELDS = [
+  { 
+    name: 'paymentMethod', 
+    label: 'Payment Method', 
+    type: 'text',
+    className: 'h-9'
+  },
+  { 
+    name: 'namedPlace', 
+    label: 'Named Place', 
+    type: 'text',
+    className: 'h-9'
+  },
+  { 
+    name: 'equipmentGroup', 
+    label: 'Equipment Group', 
+    type: 'text',
+    className: 'h-9'
+  },
+  { 
+    name: 'otherLocation', 
+    label: 'Other Location', 
+    type: 'text',
+    className: 'h-9'
+  },
+  { 
+    name: 'trailerNumber', 
+    label: 'Trailer Number', 
+    type: 'text',
+    className: 'h-9'
+  },
+  { 
+    name: 'nmfcClass', 
+    label: 'NMFC Class', 
+    type: 'text',
+    className: 'h-9'
+  },
+  { 
+    name: 'hazmat', 
+    label: 'Hazmat', 
+    type: 'text',
+    className: 'h-9'
+  },
+  { 
+    name: 'commodityCode', 
+    label: 'Commodity Code', 
+    type: 'text',
+    className: 'h-9'
+  }
+];
+
+// Reusable renderField function following project patterns
+const renderField = (field, formData, handleInputChange) => {
+  const { name, label, type, options, hasIcons, className, rows, ...props } = field;
+  
+  return (
+    <div key={name}>
+      <Label htmlFor={name} className="text-sm font-medium text-gray-700 mb-1 block">
+        {label}
+      </Label>
+      
+      {type === 'text' || type === 'tel' || type === 'email' ? (
+        hasIcons ? (
+          <div className="flex gap-1">
+            <Input
+              id={name}
+              type={type}
+              value={formData[name] || ''}
+              onChange={(e) => handleInputChange(name, e.target.value)}
+              className={className}
+              {...props}
+            />
+            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+              <SearchIcon className="w-3 h-3" />
+            </Button>
+            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+              <FileIcon className="w-3 h-3" />
+            </Button>
+          </div>
+        ) : (
+          <Input
+            id={name}
+            type={type}
+            value={formData[name] || ''}
+            onChange={(e) => handleInputChange(name, e.target.value)}
+            className={className}
+            {...props}
+          />
+        )
+      ) : type === 'select' ? (
+        <Select value={formData[name] || ''} onValueChange={(value) => handleInputChange(name, value)}>
+          <SelectTrigger className={className}>
+            <SelectValue placeholder={`Select ${label}`} />
+          </SelectTrigger>
+          <SelectContent>
+            {options?.map(option => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      ) : type === 'textarea' ? (
+        <Textarea
+          id={name}
+          value={formData[name] || ''}
+          onChange={(e) => handleInputChange(name, e.target.value)}
+          rows={rows || 3}
+          className={className}
+          {...props}
+        />
+      ) : null}
+    </div>
+  );
+};
+
 // Info Tab Component
 const InfoTab = memo(({ booking }) => (
   <div className="space-y-6">
@@ -405,7 +770,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
         // References
         customerReference: booking.dq,
         purchaseOrder: booking.po,
-        deliveryInstructions: '',
+        deliveryInstructions: booking.referenceDetails?.deliveryInstructions || '',
         
         // Additional Details
         paymentMethod: booking.additionalDetails?.paymentMethod,
@@ -418,19 +783,20 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
         commodityCode: booking.additionalDetails?.commodityCode
       });
       
-      // Initialize cargo items with field array
-      setValue('cargoItems', [{
-        item: 'BOXES',
-        packageType: 'BOXES',
-        goodsDescription: '',
-        quantity: 1,
-        weight: 800,
-        length: 300,
-        width: 300,
-        height: 300,
-        actualVolume: 13000,
-        cargoType: 'General'
-      }]);
+      // Initialize cargo items with field array from booking data
+      const initialCargoItem = {
+        item: booking.cargoDetails?.packageType || 'BOXES',
+        packageType: booking.cargoDetails?.packageType || 'BOXES',
+        goodsDescription: booking.cargoDetails?.goodsDescription || '',
+        quantity: booking.cargoDetails?.quantity || 1,
+        weight: booking.cargoDetails?.weight || 0,
+        length: booking.cargoDetails?.length || 0,
+        width: booking.cargoDetails?.width || 0,
+        height: booking.cargoDetails?.height || 0,
+        actualVolume: booking.cargoDetails?.actualVolume || 0,
+        cargoType: booking.cargoDetails?.cargoType || 'General'
+      };
+      setValue('cargoItems', [initialCargoItem]);
       
       // Initialize new cargo item form
       setValue('newCargoItem', {
@@ -543,8 +909,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                     <Scale className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">800</p>
-                    <p className="text-xs text-gray-600">Actual Volume 13000</p>
+                    <p className="text-sm font-medium text-gray-900">{booking.cargoDetails?.actualWeight || 'N/A'}</p>
+                    <p className="text-xs text-gray-600">Actual Volume {booking.cargoDetails?.actualVolume || 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -568,127 +934,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                 </CardHeader>
                 <CardContent className="space-y-3 px-0">
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="shipperId" className="text-sm font-medium text-gray-700 mb-1 block">Shipper ID</Label>
-                      <div className="flex gap-1">
-                        <Input
-                          id="shipperId"
-                          value={formData.shipperId || ''}
-                          onChange={(e) => handleInputChange('shipperId', e.target.value)}
-                          className="flex-1 h-8 text-sm"
-                        />
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                          <SearchIcon className="w-3 h-3" />
-                        </Button>
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                          <FileIcon className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="shipperName" className="text-sm font-medium text-gray-700 mb-1 block">Shipper Name</Label>
-                      <Input
-                        id="shipperName"
-                        value={formData.shipperName || ''}
-                        onChange={(e) => handleInputChange('shipperName', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="contactPerson" className="text-sm font-medium text-gray-700 mb-1 block">Contact person</Label>
-                      <Input
-                        id="contactPerson"
-                        value={formData.contactPerson || ''}
-                        onChange={(e) => handleInputChange('contactPerson', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="estimatedPickupDate" className="text-sm font-medium text-gray-700 mb-1 block">Estimated Pickup Date</Label>
-                      <Input
-                        id="estimatedPickupDate"
-                        value={formData.estimatedPickupDate || ''}
-                        onChange={(e) => handleInputChange('estimatedPickupDate', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="shipperAddress" className="text-sm font-medium text-gray-700 mb-1 block">Shipper Address</Label>
-                      <Input
-                        id="shipperAddress"
-                        value={formData.shipperAddress || ''}
-                        onChange={(e) => handleInputChange('shipperAddress', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="country" className="text-sm font-medium text-gray-700 mb-1 block">Country</Label>
-                      <Select value={formData.country || ''} onValueChange={(value) => handleInputChange('country', value)}>
-                        <SelectTrigger className="h-8 text-sm">
-                          <SelectValue placeholder="Select Country" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="UNITED STATES OF AMERICA">UNITED STATES OF AMERICA</SelectItem>
-                          <SelectItem value="UNITED KINGDOM">UNITED KINGDOM</SelectItem>
-                          <SelectItem value="INDIA">INDIA</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="street" className="text-sm font-medium text-gray-700 mb-1 block">Street</Label>
-                      <Input
-                        id="street"
-                        value={formData.street || ''}
-                        onChange={(e) => handleInputChange('street', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="suburb" className="text-sm font-medium text-gray-700 mb-1 block">Suburb</Label>
-                      <Input
-                        id="suburb"
-                        value={formData.suburb || ''}
-                        onChange={(e) => handleInputChange('suburb', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="city" className="text-sm font-medium text-gray-700 mb-1 block">City / Town</Label>
-                      <Input
-                        id="city"
-                        value={formData.city || ''}
-                        onChange={(e) => handleInputChange('city', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="postalCode" className="text-sm font-medium text-gray-700 mb-1 block">Postal Code</Label>
-                      <Input
-                        id="postalCode"
-                        value={formData.postalCode || ''}
-                        onChange={(e) => handleInputChange('postalCode', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-1 block">Phone</Label>
-                      <Input
-                        id="phone"
-                        value={formData.phone || ''}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-1 block">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email || ''}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
+                    {PICKUP_FIELDS.map(field => renderField(field, formData, handleInputChange))}
                   </div>
                 </CardContent>
               </Card>
@@ -700,127 +946,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                 </CardHeader>
                 <CardContent className="space-y-3 px-0">
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="consigneeId" className="text-sm font-medium text-gray-700 mb-1 block">Consignee ID</Label>
-                      <div className="flex gap-1">
-                        <Input
-                          id="consigneeId"
-                          value={formData.consigneeId || ''}
-                          onChange={(e) => handleInputChange('consigneeId', e.target.value)}
-                          className="flex-1 h-8 text-sm"
-                        />
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                          <SearchIcon className="w-3 h-3" />
-                        </Button>
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                          <FileIcon className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="consigneeName" className="text-sm font-medium text-gray-700 mb-1 block">Consignee Name</Label>
-                      <Input
-                        id="consigneeName"
-                        value={formData.consigneeName || ''}
-                        onChange={(e) => handleInputChange('consigneeName', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="consigneeContactPerson" className="text-sm font-medium text-gray-700 mb-1 block">Contact person</Label>
-                      <Input
-                        id="consigneeContactPerson"
-                        value={formData.consigneeContactPerson || ''}
-                        onChange={(e) => handleInputChange('consigneeContactPerson', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="estimatedDeliveryDate" className="text-sm font-medium text-gray-700 mb-1 block">Estimated Delivery Date</Label>
-                      <Input
-                        id="estimatedDeliveryDate"
-                        value={formData.estimatedDeliveryDate || ''}
-                        onChange={(e) => handleInputChange('estimatedDeliveryDate', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="consigneeAddress" className="text-sm font-medium text-gray-700 mb-1 block">Consignee Address</Label>
-                      <Input
-                        id="consigneeAddress"
-                        value={formData.consigneeAddress || ''}
-                        onChange={(e) => handleInputChange('consigneeAddress', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="deliveryCountry" className="text-sm font-medium text-gray-700 mb-1 block">Country</Label>
-                      <Select value={formData.deliveryCountry || ''} onValueChange={(value) => handleInputChange('deliveryCountry', value)}>
-                        <SelectTrigger className="h-8 text-sm">
-                          <SelectValue placeholder="Select Country" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="UNITED STATES OF AMERICA">UNITED STATES OF AMERICA</SelectItem>
-                          <SelectItem value="UNITED KINGDOM">UNITED KINGDOM</SelectItem>
-                          <SelectItem value="INDIA">INDIA</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="deliveryStreet" className="text-sm font-medium text-gray-700 mb-1 block">Street</Label>
-                      <Input
-                        id="deliveryStreet"
-                        value={formData.deliveryStreet || ''}
-                        onChange={(e) => handleInputChange('deliveryStreet', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="deliverySuburb" className="text-sm font-medium text-gray-700 mb-1 block">Suburb</Label>
-                      <Input
-                        id="deliverySuburb"
-                        value={formData.deliverySuburb || ''}
-                        onChange={(e) => handleInputChange('deliverySuburb', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="deliveryCity" className="text-sm font-medium text-gray-700 mb-1 block">City / Town</Label>
-                      <Input
-                        id="deliveryCity"
-                        value={formData.deliveryCity || ''}
-                        onChange={(e) => handleInputChange('deliveryCity', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="deliveryPostalCode" className="text-sm font-medium text-gray-700 mb-1 block">Postal Code</Label>
-                      <Input
-                        id="deliveryPostalCode"
-                        value={formData.deliveryPostalCode || ''}
-                        onChange={(e) => handleInputChange('deliveryPostalCode', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="deliveryPhone" className="text-sm font-medium text-gray-700 mb-1 block">Phone</Label>
-                      <Input
-                        id="deliveryPhone"
-                        value={formData.deliveryPhone || ''}
-                        onChange={(e) => handleInputChange('deliveryPhone', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="deliveryEmail" className="text-sm font-medium text-gray-700 mb-1 block">Email</Label>
-                      <Input
-                        id="deliveryEmail"
-                        type="email"
-                        value={formData.deliveryEmail || ''}
-                        onChange={(e) => handleInputChange('deliveryEmail', e.target.value)}
-                        className="h-8 text-sm"
-                      />
-                    </div>
+                    {DELIVERY_FIELDS.map(field => renderField(field, formData, handleInputChange))}
                   </div>
                 </CardContent>
               </Card>
@@ -837,57 +963,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                       <CardTitle className="text-lg text-blue-600">Order Attributes</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 px-0">
-                      <div>
-                        <Label htmlFor="orderType" className="text-sm font-medium text-gray-700 mb-1 block">Select Order Type</Label>
-                        <Select value={formData.orderType || ''} onValueChange={(value) => handleInputChange('orderType', value)}>
-                          <SelectTrigger className="h-8 w-full">
-                            <SelectValue placeholder="Select Order Type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Standard">Standard</SelectItem>
-                            <SelectItem value="Express">Express</SelectItem>
-                            <SelectItem value="Temperature Control">Temperature Control</SelectItem>
-                            <SelectItem value="Local">Local</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="service" className="text-sm font-medium text-gray-700 mb-1 block">Select Service</Label>
-                        <Select value={formData.service || ''} onValueChange={(value) => handleInputChange('service', value)}>
-                          <SelectTrigger className="h-8 w-full">
-                            <SelectValue placeholder="Select Service" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Express">Express</SelectItem>
-                            <SelectItem value="Standard">Standard</SelectItem>
-                            <SelectItem value="Economy">Economy</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="modeOfTransport" className="text-sm font-medium text-gray-700 mb-1 block">Mode Of Transport</Label>
-                        <Select value={formData.modeOfTransport || ''} onValueChange={(value) => handleInputChange('modeOfTransport', value)}>
-                          <SelectTrigger className="h-8 w-full">
-                            <SelectValue placeholder="Select Mode" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Road">Road</SelectItem>
-                            <SelectItem value="Rail">Rail</SelectItem>
-                            <SelectItem value="Air">Air</SelectItem>
-                            <SelectItem value="Sea">Sea</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="pickupInstructions" className="text-sm font-medium text-gray-700 mb-1 block">Pick Up Instructions</Label>
-                        <Textarea
-                          id="pickupInstructions"
-                          value={formData.pickupInstructions || ''}
-                          onChange={(e) => handleInputChange('pickupInstructions', e.target.value)}
-                          rows={3}
-                          className="resize-none text-sm"
-                        />
-                      </div>
+                      {ORDER_ATTRIBUTES_FIELDS.map(field => renderField(field, formData, handleInputChange))}
                     </CardContent>
                   </Card>
 
@@ -897,34 +973,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                       <CardTitle className="text-lg text-blue-600">References</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 px-0">
-                      <div>
-                        <Label htmlFor="customerReference" className="text-sm font-medium text-gray-700 mb-1 block">DQ/Customer reference</Label>
-                        <Input
-                          id="customerReference"
-                          value={formData.customerReference || ''}
-                          onChange={(e) => handleInputChange('customerReference', e.target.value)}
-                          className="h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="purchaseOrder" className="text-sm font-medium text-gray-700 mb-1 block">Purchase Order</Label>
-                        <Input
-                          id="purchaseOrder"
-                          value={formData.purchaseOrder || ''}
-                          onChange={(e) => handleInputChange('purchaseOrder', e.target.value)}
-                          className="h-8 text-sm"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="deliveryInstructions" className="text-sm font-medium text-gray-700 mb-1 block">Delivery Instructions</Label>
-                        <Textarea
-                          id="deliveryInstructions"
-                          value={formData.deliveryInstructions || ''}
-                          onChange={(e) => handleInputChange('deliveryInstructions', e.target.value)}
-                          rows={3}
-                          className="resize-none text-sm"
-                        />
-                      </div>
+                      {REFERENCES_FIELDS.map(field => renderField(field, formData, handleInputChange))}
                     </CardContent>
                   </Card>
                 </div>
@@ -974,9 +1023,11 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="BOXES">BOXES</SelectItem>
-                        <SelectItem value="PALLETS">PALLETS</SelectItem>
-                        <SelectItem value="CONTAINERS">CONTAINERS</SelectItem>
+                        {CARGO_ITEM_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -987,9 +1038,11 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                         <SelectValue placeholder="Select Package" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="BOXES">BOXES</SelectItem>
-                        <SelectItem value="PALLETS">PALLETS</SelectItem>
-                        <SelectItem value="CONTAINERS">CONTAINERS</SelectItem>
+                        {CARGO_ITEM_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -1018,7 +1071,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                     <Label className="text-sm font-medium text-gray-700 mb-2 block">Weight (Lbs)</Label>
                     <Input 
                       type="number" 
-                      placeholder="800" 
+                      placeholder="Enter weight" 
                       className="h-9 w-full"
                       {...register('newCargoItem.weight', { valueAsNumber: true })}
                     />
@@ -1047,7 +1100,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                     <Label className="text-sm font-medium text-gray-700 mb-2 block">Actual Volume (cbm)</Label>
                     <Input 
                       type="number" 
-                      placeholder="13000" 
+                      placeholder="Enter volume" 
                       className="h-9 w-full"
                       {...register('newCargoItem.actualVolume', { valueAsNumber: true })}
                     />
@@ -1059,9 +1112,11 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                         <SelectValue placeholder="Select Cargo Type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="General">General</SelectItem>
-                        <SelectItem value="Fragile">Fragile</SelectItem>
-                        <SelectItem value="Hazardous">Hazardous</SelectItem>
+                        {CARGO_TYPE_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -1129,83 +1184,12 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Additional Details */}
+                        {/* Additional Details */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-blue-600">Additional Details</h2>
               <div className="p-4 border border-gray-200 rounded-lg bg-white">
                 <div className="grid grid-cols-4 gap-4">
-                  <div>
-                    <Label htmlFor="paymentMethod" className="text-sm font-medium text-gray-700 mb-1 block">Payment Method</Label>
-                    <Input
-                      id="paymentMethod"
-                      value={formData.paymentMethod || ''}
-                      onChange={(e) => handleInputChange('paymentMethod', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="namedPlace" className="text-sm font-medium text-gray-700 mb-1 block">Named Place</Label>
-                    <Input
-                      id="namedPlace"
-                      value={formData.namedPlace || ''}
-                      onChange={(e) => handleInputChange('namedPlace', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="equipmentGroup" className="text-sm font-medium text-gray-700 mb-1 block">Equipment Group</Label>
-                    <Input
-                      id="equipmentGroup"
-                      value={formData.equipmentGroup || ''}
-                      onChange={(e) => handleInputChange('equipmentGroup', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="otherLocation" className="text-sm font-medium text-gray-700 mb-1 block">Other Location</Label>
-                    <Input
-                      id="otherLocation"
-                      value={formData.otherLocation || ''}
-                      onChange={(e) => handleInputChange('otherLocation', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="trailerNumber" className="text-sm font-medium text-gray-700 mb-1 block">Trailer Number</Label>
-                    <Input
-                      id="trailerNumber"
-                      value={formData.trailerNumber || ''}
-                      onChange={(e) => handleInputChange('trailerNumber', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="nmfcClass" className="text-sm font-medium text-gray-700 mb-1 block">NMFC Class</Label>
-                    <Input
-                      id="nmfcClass"
-                      value={formData.nmfcClass || ''}
-                      onChange={(e) => handleInputChange('nmfcClass', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="hazmat" className="text-sm font-medium text-gray-700 mb-1 block">Hazmat</Label>
-                    <Input
-                      id="hazmat"
-                      value={formData.hazmat || ''}
-                      onChange={(e) => handleInputChange('hazmat', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="commodityCode" className="text-sm font-medium text-gray-700 mb-1 block">Commodity Code</Label>
-                    <Input
-                      id="commodityCode"
-                      value={formData.commodityCode || ''}
-                      onChange={(e) => handleInputChange('commodityCode', e.target.value)}
-                      className="h-9"
-                    />
-                  </div>
+                  {ADDITIONAL_DETAILS_FIELDS.map(field => renderField(field, formData, handleInputChange))}
                 </div>
               </div>
             </div>
