@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Truck } from "lucide-react";
 
 export default function Viewpages() {
   const data = [
@@ -23,55 +24,44 @@ export default function Viewpages() {
     { label: "Description", value: "Goods and Services" },
   ];
 
-
-  const midIndex = Math.ceil(data.length / 2);
-  const firstcard = data.slice(0, midIndex);
-  const secondcard = data.slice(midIndex);
-
   return (
     <div className="min-h-screen bg-slate-150 p-8 space-y-6">
 
-      <Card className="bg-gradient-to-r from-white to-blue-100">
+      <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle className="text-3xl font-medium text-blue-700">
-            View Pages
+          <CardTitle className="text-3xl font-semibold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
+            Vehicle Details
           </CardTitle>
           <Button variant="destructive">Cancel</Button>
         </CardHeader>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <Card>
+        <CardHeader className="flex itme-center space-x-2">
+          <div className="bg-green-600 rounded-md p-2">
+            <Truck className="text-white" />
+          </div>
+          <CardTitle className="text-xl font-semibold text-blue-700">
+            Vehicle Information
+          </CardTitle>
+        </CardHeader>
 
-              {firstcard.map((item, index) => (
-                <div key={index} className="flex flex-col">
-                  <span className="font-semibold text-gray-900">{item.label}</span>
-                  <span className="font-medium text-gray-500">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-
-        <Card>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
-              {secondcard.map((item, index) => (
-                <div key={index} className="flex flex-col">
-                  <span className="font-semibold text-gray-900">{item.label}</span>
-                  <span className="font-medium text-gray-500">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {data.map((item, index) => (
+              <div key={index} className="flex flex-col">
+                < span className="text-base font-semibold text-gray-700" >
+                  {item.label}:
+                </span>
+                <span className="text-lg font-medium text-gray-900">
+                  {item.value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </CardContent >
+      </Card >
+    </div >
   );
-
 }
 //
