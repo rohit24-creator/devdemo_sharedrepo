@@ -49,12 +49,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
+// Import modal components from separate file
 import {
   BookingDetailsModal,
   EditBookingModal
 } from "./e-booking-modals";
 
+// Constants to avoid hardcoding
 const STATUS_CONFIG = {
   'ACCEPTED BY DRIVER': {
     color: 'bg-green-100 text-green-800 border-green-200',
@@ -69,14 +70,6 @@ const STATUS_CONFIG = {
     icon: ClockIcon
   },
   'COMPLETED': {
-    color: 'bg-gray-100 text-gray-800 border-gray-200',
-    icon: CheckSquare
-  },
-  'DELIVERED': {
-    color: 'bg-green-100 text-green-800 border-green-200',
-    icon: CheckCircle
-  },
-  'CLOSED': {
     color: 'bg-gray-100 text-gray-800 border-gray-200',
     icon: CheckSquare
   }
@@ -152,20 +145,6 @@ const getStatusConfig = (status) => {
   return STATUS_CONFIG[status] || DEFAULT_STATUS;
 };
 
-// Dynamic status icon component
-const StatusIcon = memo(({ status }) => {
-  const config = getStatusConfig(status);
-  const IconComponent = config.icon;
-  
-  return (
-    <div className="p-2 bg-blue-100 rounded-lg">
-      <IconComponent className="w-5 h-5 text-blue-600" />
-    </div>
-  );
-});
-
-StatusIcon.displayName = 'StatusIcon';
-
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', { 
@@ -236,7 +215,7 @@ ActionButtons.displayName = 'ActionButtons';
 
 const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }) => (
   <Card className="mb-3 hover:shadow-lg transition-shadow">
-    <CardContent className="px-4 py-3">
+    <CardContent className="p-4">
       {/* Main Content Row */}
       <div className="flex">
          {/* Left Section: Order Info and Addresses */}
@@ -279,9 +258,11 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
              </div>
              
-             {/* Status Icon - Dynamic based on status */}
+             {/* Status Icon - Added to match PHP reference */}
              <div className="w-2/12 flex items-center justify-center">
-               <StatusIcon status={booking.status} />
+               <div className="p-2 bg-blue-100 rounded-lg">
+                 <CheckCircle className="w-5 h-5 text-blue-600" />
+               </div>
              </div>
            </div>
          </div>
