@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
+import { useSearchParams, useRouter } from 'next/navigation';
 import { 
   Table, 
   TableBody, 
@@ -48,6 +49,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 import {
@@ -175,8 +177,7 @@ const formatDate = (dateString) => {
   });
 };
 
-// Memoized components
-// Export StatusBadge for use in modals file
+
 export const StatusBadge = memo(({ status }) => {
   const config = getStatusConfig(status);
   const IconComponent = config.icon;
@@ -400,7 +401,12 @@ const NoResultsMessage = memo(() => (
 NoResultsMessage.displayName = 'NoResultsMessage';
 
 export default function EBookingPage() {
-  const [viewMode, setViewMode] = useState(VIEW_MODES.TABLE);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  // Get view mode from URL parameters
+  const viewMode = searchParams.get('view') === 'card' ? VIEW_MODES.CARD : VIEW_MODES.TABLE;
+  
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -440,8 +446,10 @@ export default function EBookingPage() {
   }, []);
 
   const handleViewModeChange = useCallback((mode) => {
-    setViewMode(mode);
-  }, []);
+    const params = new URLSearchParams(searchParams);
+    params.set('view', mode);
+    router.push(`?${params.toString()}`);
+  }, [searchParams, router]);
 
   // Memoized status options
   const statusOptions = useMemo(() => [
@@ -466,24 +474,26 @@ export default function EBookingPage() {
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="flex bg-gray-100 rounded-lg p-1">
-            <Button
-              variant={viewMode === VIEW_MODES.TABLE ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => handleViewModeChange(VIEW_MODES.TABLE)}
-              className="text-xs"
-            >
-              Table View
-            </Button>
-            <Button
-              variant={viewMode === VIEW_MODES.CARD ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => handleViewModeChange(VIEW_MODES.CARD)}
-              className="text-xs"
-            >
-              Card View
-            </Button>
-          </div>
+          <Tabs 
+            value={viewMode} 
+            onValueChange={handleViewModeChange}
+            className="w-auto"
+          >
+            <TabsList className="flex bg-gray-100 rounded-lg p-1 h-auto">
+              <TabsTrigger 
+                value={VIEW_MODES.TABLE}
+                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
+              >
+                Table View
+              </TabsTrigger>
+              <TabsTrigger 
+                value={VIEW_MODES.CARD}
+                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
+              >
+                Card View
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
 
@@ -557,96 +567,107 @@ export default function EBookingPage() {
       </div>
 
       {/* Content */}
-      {viewMode === VIEW_MODES.TABLE ? (
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <Table>
-            <TableHeader className="bg-gray-50">
-              <TableRow>
-                <TableHead className="w-12"></TableHead>
-                <TableHead>ORDER ID</TableHead>
-                <TableHead>DQ</TableHead>
-                <TableHead>SOURCE CITY</TableHead>
-                <TableHead>DESTINATION CITY</TableHead>
-                <TableHead>STATUS</TableHead>
-                <TableHead>PICKUP DATE</TableHead>
-                <TableHead>DELIVERY DATE</TableHead>
-                <TableHead>WEIGHT</TableHead>
-                <TableHead>VOLUME</TableHead>
-                <TableHead>BOOKING TYPE</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredBookings.map((booking) => (
-                <TableRow key={booking.id} className="hover:bg-gray-50">
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleViewDetails(booking)}>
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEdit(booking)}>
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleGenerateLabel(booking)}>
-                          <FileText className="w-4 h-4 mr-2" />
-                          Generate Label
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                  <TableCell className="font-medium text-blue-600">{booking.id}</TableCell>
-                  <TableCell>{booking.dq}</TableCell>
-                  <TableCell>{booking.sourceCity}</TableCell>
-                  <TableCell>{booking.destinationCity}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={booking.status} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-gray-500" />
-                      {formatDate(booking.pickupDate)}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-gray-500" />
-                      {formatDate(booking.deliveryDate)}
-                    </div>
-                  </TableCell>
-                  <TableCell>{booking.weight}</TableCell>
-                  <TableCell>{booking.volume}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Truck className="w-4 h-4 text-gray-500" />
-                      {booking.bookingType}
-                    </div>
-                  </TableCell>
+      <Tabs value={viewMode} onValueChange={handleViewModeChange}>
+        <TabsContent value={VIEW_MODES.TABLE}>
+          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <Table>
+              <TableHeader className="bg-gray-50">
+                <TableRow>
+                  <TableHead className="w-12"></TableHead>
+                  <TableHead>ORDER ID</TableHead>
+                  <TableHead>DQ</TableHead>
+                  <TableHead>SOURCE CITY</TableHead>
+                  <TableHead>DESTINATION CITY</TableHead>
+                  <TableHead>STATUS</TableHead>
+                  <TableHead>PICKUP DATE</TableHead>
+                  <TableHead>DELIVERY DATE</TableHead>
+                  <TableHead>WEIGHT</TableHead>
+                  <TableHead>VOLUME</TableHead>
+                  <TableHead>BOOKING TYPE</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredBookings.map((booking) => (
-            <BookingCard 
-              key={booking.id} 
-              booking={booking}
-              onView={handleViewDetails}
-              onEdit={handleEdit}
-              onGenerateLabel={handleGenerateLabel}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      )}
+              </TableHeader>
+              <TableBody>
+                {filteredBookings.map((booking) => (
+                  <TableRow key={booking.id} className="hover:bg-gray-50">
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleViewDetails(booking)}>
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEdit(booking)}>
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleGenerateLabel(booking)}>
+                            <FileText className="w-4 h-4 mr-2" />
+                            Generate Label
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleDelete(booking)}
+                            className="text-red-600 focus:text-red-700 focus:bg-red-50"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                    <TableCell className="font-medium text-blue-600">{booking.id}</TableCell>
+                    <TableCell>{booking.dq}</TableCell>
+                    <TableCell>{booking.sourceCity}</TableCell>
+                    <TableCell>{booking.destinationCity}</TableCell>
+                    <TableCell>
+                      <StatusBadge status={booking.status} />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        {formatDate(booking.pickupDate)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        {formatDate(booking.deliveryDate)}
+                      </div>
+                    </TableCell>
+                    <TableCell>{booking.weight}</TableCell>
+                    <TableCell>{booking.volume}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Truck className="w-4 h-4 text-gray-500" />
+                        {booking.bookingType}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value={VIEW_MODES.CARD}>
+          <div className="space-y-4">
+            {filteredBookings.map((booking) => (
+              <BookingCard 
+                key={booking.id} 
+                booking={booking}
+                onView={handleViewDetails}
+                onEdit={handleEdit}
+                onGenerateLabel={handleGenerateLabel}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* No results message */}
       {filteredBookings.length === 0 && <NoResultsMessage />}
