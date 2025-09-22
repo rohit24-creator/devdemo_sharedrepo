@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { 
   Eye, 
   Edit, 
@@ -95,7 +96,17 @@ const VIEW_MODES = {
   CARD: 'card'
 };
 
-// Custom hook for booking data management - following milestone pattern
+
+const useDebounce = (value, delay) => {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
+};
+
+
 const useBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -125,27 +136,38 @@ const useBookings = () => {
 const useBookingFilters = (bookings) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [searchError, setSearchError] = useState('');
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const filteredBookings = useMemo(() => {
-    return bookings.filter(booking => {
-      const matchesSearch = 
-        booking.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.dq.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.sourceCity.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.destinationCity.toLowerCase().includes(searchTerm.toLowerCase());
+    try {
+      setSearchError(''); 
       
-      const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
-      
-      return matchesSearch && matchesStatus;
-    });
-  }, [bookings, searchTerm, statusFilter]);
+      return bookings.filter(booking => {
+        const matchesSearch = 
+          booking.id.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          booking.dq.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          booking.sourceCity.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          booking.destinationCity.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+        
+        const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
+        
+        return matchesSearch && matchesStatus;
+      });
+    } catch (error) {
+      setSearchError('Error occurred while filtering results');
+      return bookings; 
+    }
+  }, [bookings, debouncedSearchTerm, statusFilter]);
 
   return {
     searchTerm,
     setSearchTerm,
     statusFilter,
     setStatusFilter,
-    filteredBookings
+    filteredBookings,
+    searchError
   };
 };
 
@@ -404,7 +426,6 @@ export default function EBookingPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
-  // Get view mode from URL parameters
   const viewMode = searchParams.get('view') === 'card' ? VIEW_MODES.CARD : VIEW_MODES.TABLE;
   
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -412,7 +433,7 @@ export default function EBookingPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { bookings, setBookings, pagination, loading } = useBookings();
-  const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings } = useBookingFilters(bookings);
+  const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings, searchError } = useBookingFilters(bookings);
 
   // Memoized callbacks for event handlers
   const handleViewDetails = useCallback((booking) => {
@@ -502,14 +523,17 @@ export default function EBookingPage() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 z-10" />
+              <Input
                 type="text"
                 placeholder="Search by Order ID, DQ, Source, or Destination..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="pl-10"
               />
+              {searchError && (
+                <p className="text-red-500 text-sm mt-1">{searchError}</p>
+              )}
             </div>
           </div>
           <div className="flex gap-2">
