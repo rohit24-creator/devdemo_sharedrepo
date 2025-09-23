@@ -431,9 +431,28 @@ export default function EBookingPage() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [displayCount, setDisplayCount] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { bookings, setBookings, pagination, loading } = useBookings();
   const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings, searchError } = useBookingFilters(bookings);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredBookings.length / displayCount) || 1;
+  const paginatedBookings = filteredBookings.slice(
+    (currentPage - 1) * displayCount,
+    currentPage * displayCount
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   // Memoized callbacks for event handlers
   const handleViewDetails = useCallback((booking) => {
@@ -561,7 +580,13 @@ export default function EBookingPage() {
       <div className="flex items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-sm border">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">Showing</span>
-          <Select defaultValue="10">
+          <Select 
+            value={displayCount.toString()} 
+            onValueChange={(value) => {
+              setDisplayCount(Number(value));
+              setCurrentPage(1);
+            }}
+          >
             <SelectTrigger className="w-[70px] h-8">
               <SelectValue />
             </SelectTrigger>
@@ -573,18 +598,28 @@ export default function EBookingPage() {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm text-gray-600">entries</span>
+          <span className="text-sm text-gray-600">records</span>
           <span className="text-sm text-gray-600 ml-4">
-            ({filteredBookings.length} of {bookings.length} bookings)
+            ({paginatedBookings.length} of {filteredBookings.length} bookings)
           </span>
         </div>
         
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          >
             <ChevronLeft className="w-4 h-4" />
           </Button>
-          <span className="text-sm text-gray-600">Page {pagination.currentPage} of {pagination.totalPages}</span>
-          <Button variant="outline" size="sm">
+          <span className="text-sm text-gray-600">Page {currentPage} of {totalPages}</span>
+          <Button 
+            variant="outline" 
+            size="sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          >
             <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
@@ -611,7 +646,7 @@ export default function EBookingPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredBookings.map((booking) => (
+                {paginatedBookings.map((booking) => (
                   <TableRow key={booking.id} className="hover:bg-gray-50">
                     <TableCell>
                       <DropdownMenu>
@@ -679,7 +714,7 @@ export default function EBookingPage() {
         
         <TabsContent value={VIEW_MODES.CARD}>
           <div className="space-y-4">
-            {filteredBookings.map((booking) => (
+            {paginatedBookings.map((booking) => (
               <BookingCard 
                 key={booking.id} 
                 booking={booking}
