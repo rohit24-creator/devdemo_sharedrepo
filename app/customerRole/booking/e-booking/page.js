@@ -35,7 +35,11 @@ import {
   Filter,
   Info,
   Trash2,
-  Fuel
+  Fuel,
+  Plus,
+  Download,
+  Upload,
+  ArrowUpDown
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -500,6 +504,45 @@ export default function EBookingPage() {
     { value: 'COMPLETED', label: 'Completed' }
   ], []);
 
+  // Toolbar buttons configuration
+  const toolbarButtons = useMemo(() => [
+    {
+      id: 'add',
+      label: 'Add',
+      icon: Plus,
+      variant: 'outline',
+      hasText: true,
+      onClick: () => console.log('Add clicked')
+    },
+    {
+      id: 'download',
+      label: 'Download',
+      icon: Download,
+      variant: 'outline',
+      hasText: false,
+      title: 'Download',
+      onClick: () => console.log('Download clicked')
+    },
+    {
+      id: 'upload',
+      label: 'Upload',
+      icon: Upload,
+      variant: 'outline',
+      hasText: false,
+      title: 'Upload',
+      onClick: () => console.log('Upload clicked')
+    },
+    {
+      id: 'sort-toggle',
+      label: 'Sort',
+      icon: ArrowUpDown,
+      variant: 'outline',
+      hasText: false,
+      title: 'Toggle Sort Order',
+      onClick: () => console.log('Sort toggle clicked')
+    }
+  ], []);
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -556,6 +599,22 @@ export default function EBookingPage() {
             </div>
           </div>
           <div className="flex gap-2">
+            {toolbarButtons.map((button) => {
+              const IconComponent = button.icon;
+              return (
+                <Button
+                  key={button.id}
+                  variant={button.variant}
+                  size={button.hasText ? "default" : "icon"}
+                  title={button.title}
+                  onClick={button.onClick}
+                  className={button.hasText ? "flex items-center gap-2" : ""}
+                >
+                  <IconComponent className="w-4 h-4" />
+                  {button.hasText && button.label}
+                </Button>
+              );
+            })}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="All Status" />
