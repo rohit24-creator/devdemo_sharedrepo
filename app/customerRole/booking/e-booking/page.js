@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
+import { useSearchParams, useRouter } from 'next/navigation';
 import { 
   Table, 
   TableBody, 
@@ -11,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { 
   Eye, 
   Edit, 
@@ -30,7 +32,10 @@ import {
   AlertCircle,
   CheckSquare,
   Search,
-  Filter
+  Filter,
+  Info,
+  Trash2,
+  Fuel
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -45,14 +50,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Import modal components from separate file
+
 import {
   BookingDetailsModal,
   EditBookingModal
 } from "./e-booking-modals";
 
-// Constants to avoid hardcoding
 const STATUS_CONFIG = {
   'ACCEPTED BY DRIVER': {
     color: 'bg-green-100 text-green-800 border-green-200',
@@ -69,6 +74,14 @@ const STATUS_CONFIG = {
   'COMPLETED': {
     color: 'bg-gray-100 text-gray-800 border-gray-200',
     icon: CheckSquare
+  },
+  'DELIVERED': {
+    color: 'bg-green-100 text-green-800 border-green-200',
+    icon: CheckCircle
+  },
+  'CLOSED': {
+    color: 'bg-gray-100 text-gray-800 border-gray-200',
+    icon: CheckSquare
   }
 };
 
@@ -83,7 +96,17 @@ const VIEW_MODES = {
   CARD: 'card'
 };
 
-// Custom hook for booking data management - following milestone pattern
+
+const useDebounce = (value, delay) => {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
+};
+
+
 const useBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -113,27 +136,38 @@ const useBookings = () => {
 const useBookingFilters = (bookings) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [searchError, setSearchError] = useState('');
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const filteredBookings = useMemo(() => {
-    return bookings.filter(booking => {
-      const matchesSearch = 
-        booking.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.dq.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.sourceCity.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.destinationCity.toLowerCase().includes(searchTerm.toLowerCase());
+    try {
+      setSearchError(''); 
       
-      const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
-      
-      return matchesSearch && matchesStatus;
-    });
-  }, [bookings, searchTerm, statusFilter]);
+      return bookings.filter(booking => {
+        const matchesSearch = 
+          booking.id.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          booking.dq.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          booking.sourceCity.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          booking.destinationCity.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+        
+        const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
+        
+        return matchesSearch && matchesStatus;
+      });
+    } catch (error) {
+      setSearchError('Error occurred while filtering results');
+      return bookings; 
+    }
+  }, [bookings, debouncedSearchTerm, statusFilter]);
 
   return {
     searchTerm,
     setSearchTerm,
     statusFilter,
     setStatusFilter,
-    filteredBookings
+    filteredBookings,
+    searchError
   };
 };
 
@@ -141,6 +175,20 @@ const useBookingFilters = (bookings) => {
 const getStatusConfig = (status) => {
   return STATUS_CONFIG[status] || DEFAULT_STATUS;
 };
+
+// Dynamic status icon component
+const StatusIcon = memo(({ status }) => {
+  const config = getStatusConfig(status);
+  const IconComponent = config.icon;
+  
+  return (
+    <div className="p-2 bg-blue-100 rounded-lg">
+      <IconComponent className="w-5 h-5 text-blue-600" />
+    </div>
+  );
+});
+
+StatusIcon.displayName = 'StatusIcon';
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -151,8 +199,7 @@ const formatDate = (dateString) => {
   });
 };
 
-// Memoized components
-// Export StatusBadge for use in modals file
+
 export const StatusBadge = memo(({ status }) => {
   const config = getStatusConfig(status);
   const IconComponent = config.icon;
@@ -167,7 +214,7 @@ export const StatusBadge = memo(({ status }) => {
 
 StatusBadge.displayName = 'StatusBadge';
 
-const ActionButtons = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
+const ActionButtons = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }) => (
   <div className="flex gap-2">
     <Button
       variant="outline"
@@ -196,104 +243,156 @@ const ActionButtons = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
       <FileText className="w-4 h-4" />
       Label
     </Button>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={() => onDelete(booking)}
+      className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+    >
+      <Trash2 className="w-4 h-4" />
+      Delete
+    </Button>
   </div>
 ));
 
 ActionButtons.displayName = 'ActionButtons';
 
-const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel }) => (
-  <Card className="mb-4 hover:shadow-lg transition-shadow cursor-pointer">
-    <CardContent className="p-5">
-      {/* Top Row: Booking ID, DQ, and Status */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Truck className="w-5 h-5 text-blue-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-lg text-blue-600">{booking.id}</h3>
-            <p className="text-sm text-gray-600">{booking.orderReference}</p>
-          </div>
-        </div>
-        <StatusBadge status={booking.status} />
+const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }) => (
+  <Card className="mb-3 hover:shadow-lg transition-shadow">
+    <CardContent className="px-4 py-3">
+      {/* Main Content Row */}
+      <div className="flex">
+         {/* Left Section: Order Info and Addresses */}
+         <div className="flex-1">
+           <div className="flex">
+             {/* Order ID and Reference */}
+             <div className="w-3/12">
+               <div className="flex items-start">
+                 <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                   <Truck className="w-5 h-5 text-blue-600" />
+                 </div>
+                 <div>
+                   <h3 className="font-bold text-lg text-blue-600 mb-1">{booking.id}</h3>
+                   <p className="text-sm text-gray-600 mb-1">
+                     Order Reference 
+                     <span className="text-gray-800 ml-1">DQ: {booking.dq}</span>
+                     <Info className="w-3 h-3 text-blue-600 ml-1 inline" />
+                   </p>
+                   <p className="text-sm text-gray-600">PO: {booking.po}</p>
+                 </div>
+               </div>
+             </div>
+             
+             {/* Pickup Information */}
+             <div className="w-3/12 pr-1">
+               <h4 className="font-semibold text-sm text-gray-800 mb-1">{booking.origin.name}</h4>
+               <p className="text-xs text-gray-600 mb-1">{booking.origin.address}</p>
+               <p className="text-xs text-gray-500">By {booking.origin.deadline}</p>
+             </div>
+             
+             {/* Arrow - Properly centered with more space */}
+             <div className="w-1/12 flex items-center justify-center">
+               <ArrowRight className="w-5 h-5 text-blue-600" />
+             </div>
+             
+             {/* Delivery Information */}
+             <div className="w-3/12 pl-1">
+               <h4 className="font-semibold text-sm text-gray-800 mb-1">{booking.destination.name}</h4>
+               <p className="text-xs text-gray-600 mb-1">{booking.destination.address}</p>
+               <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
+             </div>
+             
+             {/* Status Icon - Dynamic based on status */}
+             <div className="w-2/12 flex items-center justify-center">
+               <StatusIcon status={booking.status} />
+             </div>
+           </div>
+         </div>
+        
+         {/* Right Section: Metrics in 3 columns */}
+         <div className="w-1/3 ml-4">
+           <div className="grid grid-cols-3 gap-2">
+             {/* Column 1 - Weight & Volume */}
+             <div className="space-y-2">
+               <div className="metric-item">
+                 <div className="flex items-center mb-1">
+                   <Scale className="w-4 h-4 text-gray-500 mr-2" />
+                   <span className="text-xs text-gray-500">Weight</span>
+                 </div>
+                 <div className="text-blue-600 font-bold text-sm">{booking.weight}</div>
+               </div>
+               <div className="metric-item">
+                 <div className="flex items-center mb-1">
+                   <Package className="w-4 h-4 text-gray-500 mr-2" />
+                   <span className="text-xs text-gray-500">Volume</span>
+                 </div>
+                 <div className="text-blue-600 font-bold text-sm">{booking.volume}</div>
+               </div>
+             </div>
+             
+             {/* Column 2 - ETA & Distance */}
+             <div className="space-y-2">
+               <div className="metric-item">
+                 <div className="flex items-center mb-1">
+                   <Clock className="w-4 h-4 text-gray-500 mr-2" />
+                   <span className="text-xs text-gray-500">ETA</span>
+                 </div>
+                 <div className="text-blue-600 font-bold text-xs">{booking.eta}</div>
+               </div>
+               <div className="metric-item">
+                 <div className="flex items-center mb-1">
+                   <Navigation className="w-4 h-4 text-gray-500 mr-2" />
+                   <span className="text-xs text-gray-500">Distance</span>
+                 </div>
+                 <div className="text-blue-600 font-bold text-sm">{booking.distance}</div>
+               </div>
+             </div>
+             
+             {/* Column 3 - Vehicle Type & Vehicle ID */}
+             <div className="space-y-2">
+               <div className="metric-item">
+                 <div className="flex items-center mb-1">
+                   <Truck className="w-4 h-4 text-gray-500 mr-2" />
+                   <span className="text-xs text-gray-500">Vehicle Type</span>
+                 </div>
+                 <div className="text-blue-600 font-bold text-sm">{booking.vehicleType}</div>
+               </div>
+               <div className="metric-item">
+                 <div className="flex items-center mb-1">
+                   <Truck className="w-4 h-4 text-gray-500 mr-2" />
+                   <span className="text-xs text-gray-500">Vehicle ID</span>
+                 </div>
+                 <div className="text-blue-600 font-bold text-sm">{booking.vehicleId}</div>
+               </div>
+             </div>
+           </div>
+         </div>
       </div>
-
-      {/* Main Content Grid: 3 columns layout */}
-      <div className="grid grid-cols-3 gap-6 mb-4">
-        {/* Left Column: Weight and Volume */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Scale className="w-4 h-4 text-gray-500" />
-            <div>
-              <p className="text-xs text-gray-500">Weight</p>
-              <p className="text-sm font-medium text-gray-800">{booking.weight}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Package className="w-4 h-4 text-gray-500" />
-            <div>
-              <p className="text-xs text-gray-500">Volume</p>
-              <p className="text-sm font-medium text-gray-800">{booking.volume}</p>
-            </div>
-          </div>
+      
+      {/* Bottom Section: Action Buttons, Status, and CO2 */}
+      <hr className="my-3" />
+      <div className="flex items-center justify-between">
+        {/* Action Buttons */}
+        <div className="flex-1">
+          <ActionButtons 
+            booking={booking}
+            onView={onView}
+            onEdit={onEdit}
+            onGenerateLabel={onGenerateLabel}
+            onDelete={onDelete}
+          />
         </div>
-
-        {/* Middle Column: Origin and Destination Flow */}
-        <div className="flex items-center gap-4">
-          <div className="flex-1 text-left">
-            <h4 className="font-semibold text-gray-800 text-sm">{booking.origin.name}</h4>
-            <p className="text-xs text-gray-600">{booking.origin.address}</p>
-            <p className="text-xs text-gray-500">By {booking.origin.deadline}</p>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-              <ArrowRight className="w-3 h-3 text-blue-600" />
-            </div>
-          </div>
-          <div className="flex-1 text-left">
-            <h4 className="font-semibold text-gray-800 text-sm">{booking.destination.name}</h4>
-            <p className="text-xs text-gray-600">{booking.destination.address}</p>
-            <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
-          </div>
+        
+        {/* Status */}
+        <div className="flex-1 flex justify-center">
+          <StatusBadge status={booking.status} />
         </div>
-
-        {/* Right Column: ETA and Distance */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-gray-500" />
-            <div>
-              <p className="text-xs text-gray-500">ETA</p>
-              <p className="text-sm font-medium text-gray-800">{booking.eta}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Navigation className="w-4 h-4 text-gray-500" />
-            <div>
-              <p className="text-xs text-gray-500">Distance</p>
-              <p className="text-sm font-medium text-gray-800">{booking.distance}</p>
-            </div>
-          </div>
+        
+        {/* CO2 Emissions */}
+        <div className="flex-1 flex justify-end items-center">
+          <Fuel className="w-4 h-4 text-gray-500 mr-2" />
+          <span className="text-sm text-gray-600">{booking.co2}</span>
         </div>
-      </div>
-
-      {/* Bottom Row: Vehicle Details and Actions */}
-      <div className="flex items-center justify-between pt-4 border-t">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Truck className="w-4 h-4 text-gray-500" />
-            <span className="text-sm text-gray-600">{booking.vehicleType}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Truck className="w-4 h-4 text-gray-500" />
-            <span className="text-sm text-gray-600">{booking.vehicleId}</span>
-          </div>
-        </div>
-        <ActionButtons 
-          booking={booking}
-          onView={onView}
-          onEdit={onEdit}
-          onGenerateLabel={onGenerateLabel}
-        />
       </div>
     </CardContent>
   </Card>
@@ -324,13 +423,36 @@ const NoResultsMessage = memo(() => (
 NoResultsMessage.displayName = 'NoResultsMessage';
 
 export default function EBookingPage() {
-  const [viewMode, setViewMode] = useState(VIEW_MODES.TABLE);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  const viewMode = searchParams.get('view') === 'card' ? VIEW_MODES.CARD : VIEW_MODES.TABLE;
+  
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [displayCount, setDisplayCount] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { bookings, setBookings, pagination, loading } = useBookings();
-  const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings } = useBookingFilters(bookings);
+  const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings, searchError } = useBookingFilters(bookings);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredBookings.length / displayCount) || 1;
+  const paginatedBookings = filteredBookings.slice(
+    (currentPage - 1) * displayCount,
+    currentPage * displayCount
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter]);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   // Memoized callbacks for event handlers
   const handleViewDetails = useCallback((booking) => {
@@ -348,6 +470,11 @@ export default function EBookingPage() {
     // Add label generation functionality
   }, []);
 
+  const handleDelete = useCallback((booking) => {
+    console.log('Delete booking:', booking.id);
+    // Add delete functionality
+  }, []);
+
   const handleCloseModal = useCallback(() => {
     setSelectedBooking(null);
     setIsModalOpen(false);
@@ -359,8 +486,10 @@ export default function EBookingPage() {
   }, []);
 
   const handleViewModeChange = useCallback((mode) => {
-    setViewMode(mode);
-  }, []);
+    const params = new URLSearchParams(searchParams);
+    params.set('view', mode);
+    router.push(`?${params.toString()}`);
+  }, [searchParams, router]);
 
   // Memoized status options
   const statusOptions = useMemo(() => [
@@ -385,24 +514,26 @@ export default function EBookingPage() {
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="flex bg-gray-100 rounded-lg p-1">
-            <Button
-              variant={viewMode === VIEW_MODES.TABLE ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => handleViewModeChange(VIEW_MODES.TABLE)}
-              className="text-xs"
-            >
-              Table View
-            </Button>
-            <Button
-              variant={viewMode === VIEW_MODES.CARD ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => handleViewModeChange(VIEW_MODES.CARD)}
-              className="text-xs"
-            >
-              Card View
-            </Button>
-          </div>
+          <Tabs 
+            value={viewMode} 
+            onValueChange={handleViewModeChange}
+            className="w-auto"
+          >
+            <TabsList className="flex bg-gray-100 rounded-lg p-1 h-auto">
+              <TabsTrigger 
+                value={VIEW_MODES.TABLE}
+                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
+              >
+                Table View
+              </TabsTrigger>
+              <TabsTrigger 
+                value={VIEW_MODES.CARD}
+                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
+              >
+                Card View
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
 
@@ -411,14 +542,17 @@ export default function EBookingPage() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 z-10" />
+              <Input
                 type="text"
                 placeholder="Search by Order ID, DQ, Source, or Destination..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="pl-10"
               />
+              {searchError && (
+                <p className="text-red-500 text-sm mt-1">{searchError}</p>
+              )}
             </div>
           </div>
           <div className="flex gap-2">
@@ -446,7 +580,13 @@ export default function EBookingPage() {
       <div className="flex items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-sm border">
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">Showing</span>
-          <Select defaultValue="10">
+          <Select 
+            value={displayCount.toString()} 
+            onValueChange={(value) => {
+              setDisplayCount(Number(value));
+              setCurrentPage(1);
+            }}
+          >
             <SelectTrigger className="w-[70px] h-8">
               <SelectValue />
             </SelectTrigger>
@@ -458,113 +598,135 @@ export default function EBookingPage() {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm text-gray-600">entries</span>
+          <span className="text-sm text-gray-600">records</span>
           <span className="text-sm text-gray-600 ml-4">
-            ({filteredBookings.length} of {bookings.length} bookings)
+            ({paginatedBookings.length} of {filteredBookings.length} bookings)
           </span>
         </div>
         
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          >
             <ChevronLeft className="w-4 h-4" />
           </Button>
-          <span className="text-sm text-gray-600">Page {pagination.currentPage} of {pagination.totalPages}</span>
-          <Button variant="outline" size="sm">
+          <span className="text-sm text-gray-600">Page {currentPage} of {totalPages}</span>
+          <Button 
+            variant="outline" 
+            size="sm"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          >
             <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
       </div>
 
       {/* Content */}
-      {viewMode === VIEW_MODES.TABLE ? (
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          <Table>
-            <TableHeader className="bg-gray-50">
-              <TableRow>
-                <TableHead className="w-12"></TableHead>
-                <TableHead>ORDER ID</TableHead>
-                <TableHead>DQ</TableHead>
-                <TableHead>SOURCE CITY</TableHead>
-                <TableHead>DESTINATION CITY</TableHead>
-                <TableHead>STATUS</TableHead>
-                <TableHead>PICKUP DATE</TableHead>
-                <TableHead>DELIVERY DATE</TableHead>
-                <TableHead>WEIGHT</TableHead>
-                <TableHead>VOLUME</TableHead>
-                <TableHead>BOOKING TYPE</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredBookings.map((booking) => (
-                <TableRow key={booking.id} className="hover:bg-gray-50">
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleViewDetails(booking)}>
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEdit(booking)}>
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleGenerateLabel(booking)}>
-                          <FileText className="w-4 h-4 mr-2" />
-                          Generate Label
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                  <TableCell className="font-medium text-blue-600">{booking.id}</TableCell>
-                  <TableCell>{booking.dq}</TableCell>
-                  <TableCell>{booking.sourceCity}</TableCell>
-                  <TableCell>{booking.destinationCity}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={booking.status} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-gray-500" />
-                      {formatDate(booking.pickupDate)}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-gray-500" />
-                      {formatDate(booking.deliveryDate)}
-                    </div>
-                  </TableCell>
-                  <TableCell>{booking.weight}</TableCell>
-                  <TableCell>{booking.volume}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Truck className="w-4 h-4 text-gray-500" />
-                      {booking.bookingType}
-                    </div>
-                  </TableCell>
+      <Tabs value={viewMode} onValueChange={handleViewModeChange}>
+        <TabsContent value={VIEW_MODES.TABLE}>
+          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <Table>
+              <TableHeader className="bg-gray-50">
+                <TableRow>
+                  <TableHead className="w-12"></TableHead>
+                  <TableHead>ORDER ID</TableHead>
+                  <TableHead>DQ</TableHead>
+                  <TableHead>SOURCE CITY</TableHead>
+                  <TableHead>DESTINATION CITY</TableHead>
+                  <TableHead>STATUS</TableHead>
+                  <TableHead>PICKUP DATE</TableHead>
+                  <TableHead>DELIVERY DATE</TableHead>
+                  <TableHead>WEIGHT</TableHead>
+                  <TableHead>VOLUME</TableHead>
+                  <TableHead>BOOKING TYPE</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredBookings.map((booking) => (
-            <BookingCard 
-              key={booking.id} 
-              booking={booking}
-              onView={handleViewDetails}
-              onEdit={handleEdit}
-              onGenerateLabel={handleGenerateLabel}
-            />
-          ))}
-        </div>
-      )}
+              </TableHeader>
+              <TableBody>
+                {paginatedBookings.map((booking) => (
+                  <TableRow key={booking.id} className="hover:bg-gray-50">
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleViewDetails(booking)}>
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleEdit(booking)}>
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleGenerateLabel(booking)}>
+                            <FileText className="w-4 h-4 mr-2" />
+                            Generate Label
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handleDelete(booking)}
+                            className="text-red-600 focus:text-red-700 focus:bg-red-50"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                    <TableCell className="font-medium text-blue-600">{booking.id}</TableCell>
+                    <TableCell>{booking.dq}</TableCell>
+                    <TableCell>{booking.sourceCity}</TableCell>
+                    <TableCell>{booking.destinationCity}</TableCell>
+                    <TableCell>
+                      <StatusBadge status={booking.status} />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        {formatDate(booking.pickupDate)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        {formatDate(booking.deliveryDate)}
+                      </div>
+                    </TableCell>
+                    <TableCell>{booking.weight}</TableCell>
+                    <TableCell>{booking.volume}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Truck className="w-4 h-4 text-gray-500" />
+                        {booking.bookingType}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value={VIEW_MODES.CARD}>
+          <div className="space-y-4">
+            {paginatedBookings.map((booking) => (
+              <BookingCard 
+                key={booking.id} 
+                booking={booking}
+                onView={handleViewDetails}
+                onEdit={handleEdit}
+                onGenerateLabel={handleGenerateLabel}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* No results message */}
       {filteredBookings.length === 0 && <NoResultsMessage />}

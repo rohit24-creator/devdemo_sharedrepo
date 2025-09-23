@@ -81,7 +81,8 @@
       "distance": "348 miles",
       "vehicleType": "10W Cabinet (Temperature Control)",
       "vehicleId": "test-1",
-      "driverStatus": "ACCEPTED BY DRIVER"
+      "driverStatus": "ACCEPTED BY DRIVER",
+      "co2": "85 kg CO2e"
     },
     {
       "id": "6624490035",
@@ -159,7 +160,8 @@
       "distance": "1250 miles",
       "vehicleType": "Standard Truck",
       "vehicleId": "truck-002",
-      "driverStatus": "ACCEPTED BY DRIVER"
+      "driverStatus": "ACCEPTED BY DRIVER",
+      "co2": "62 kg CO2e"
     },
     {
       "id": "6624490034",
@@ -242,7 +244,8 @@
       "distance": "2100 miles",
       "vehicleType": "Express Truck",
       "vehicleId": "express-003",
-      "driverStatus": "IN TRANSIT"
+      "driverStatus": "IN TRANSIT",
+      "co2": "125 kg CO2e"
     },
     {
       "id": "6624490033",
@@ -335,7 +338,8 @@
       "distance": "660 miles",
       "vehicleType": "Standard Truck",
       "vehicleId": "truck-004",
-      "driverStatus": "PENDING"
+      "driverStatus": "PENDING",
+      "co2": "45 kg CO2e"
     },
     {
       "id": "6624490032",
@@ -418,7 +422,8 @@
       "distance": "175 miles",
       "vehicleType": "Local Truck",
       "vehicleId": "local-005",
-      "driverStatus": "COMPLETED"
+      "driverStatus": "COMPLETED",
+      "co2": "40 kg CO2e"
     }
   ],
   "pagination": {
