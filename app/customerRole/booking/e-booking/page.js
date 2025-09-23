@@ -437,13 +437,58 @@ export default function EBookingPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [displayCount, setDisplayCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortConfig, setSortConfig] = useState({
+    field: null,
+    direction: 'asc' // 'asc' or 'desc'
+  });
 
   const { bookings, setBookings, pagination, loading } = useBookings();
   const { searchTerm, setSearchTerm, statusFilter, setStatusFilter, filteredBookings, searchError } = useBookingFilters(bookings);
 
+  // Sorting logic
+  const sortedBookings = useMemo(() => {
+    if (!sortConfig.field) return filteredBookings;
+
+    return [...filteredBookings].sort((a, b) => {
+      const aValue = a[sortConfig.field];
+      const bValue = b[sortConfig.field];
+
+      // Handle different data types
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        const comparison = aValue.toLowerCase().localeCompare(bValue.toLowerCase());
+        return sortConfig.direction === 'asc' ? comparison : -comparison;
+      }
+
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      // Handle dates
+      if (aValue instanceof Date && bValue instanceof Date) {
+        return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+      }
+
+      // Handle string dates (convert to Date for comparison)
+      if (typeof aValue === 'string' && typeof bValue === 'string' && 
+          (aValue.includes('-') || aValue.includes('/'))) {
+        const dateA = new Date(aValue);
+        const dateB = new Date(bValue);
+        if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+          return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+        }
+      }
+
+      // Fallback to string comparison
+      const aStr = String(aValue || '');
+      const bStr = String(bValue || '');
+      const comparison = aStr.toLowerCase().localeCompare(bStr.toLowerCase());
+      return sortConfig.direction === 'asc' ? comparison : -comparison;
+    });
+  }, [filteredBookings, sortConfig]);
+
   // Pagination logic
-  const totalPages = Math.ceil(filteredBookings.length / displayCount) || 1;
-  const paginatedBookings = filteredBookings.slice(
+  const totalPages = Math.ceil(sortedBookings.length / displayCount) || 1;
+  const paginatedBookings = sortedBookings.slice(
     (currentPage - 1) * displayCount,
     currentPage * displayCount
   );
@@ -457,6 +502,26 @@ export default function EBookingPage() {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
+
+  // Sort handler
+  const handleSort = useCallback((field) => {
+    setSortConfig(prevConfig => {
+      if (prevConfig.field === field) {
+        // Toggle direction if same field
+        return {
+          field,
+          direction: prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        };
+      } else {
+        // New field, start with ascending
+        return {
+          field,
+          direction: 'asc'
+        };
+      }
+    });
+    setCurrentPage(1); // Reset to first page when sorting
+  }, []);
 
   // Memoized callbacks for event handlers
   const handleViewDetails = useCallback((booking) => {
@@ -504,6 +569,20 @@ export default function EBookingPage() {
     { value: 'COMPLETED', label: 'Completed' }
   ], []);
 
+  // Table columns configuration
+  const tableColumns = useMemo(() => [
+    { field: 'id', label: 'ORDER ID' },
+    { field: 'dq', label: 'DQ' },
+    { field: 'sourceCity', label: 'SOURCE CITY' },
+    { field: 'destinationCity', label: 'DESTINATION CITY' },
+    { field: 'status', label: 'STATUS' },
+    { field: 'pickupDate', label: 'PICKUP DATE' },
+    { field: 'deliveryDate', label: 'DELIVERY DATE' },
+    { field: 'weight', label: 'WEIGHT' },
+    { field: 'volume', label: 'VOLUME' },
+    { field: 'bookingType', label: 'BOOKING TYPE' }
+  ], []);
+
   // Toolbar buttons configuration
   const toolbarButtons = useMemo(() => [
     {
@@ -536,12 +615,14 @@ export default function EBookingPage() {
       id: 'sort-toggle',
       label: 'Sort',
       icon: ArrowUpDown,
-      variant: 'outline',
+      variant: sortConfig.field ? 'default' : 'outline',
       hasText: false,
-      title: 'Toggle Sort Order',
-      onClick: () => console.log('Sort toggle clicked')
+      title: sortConfig.field 
+        ? `Sort by ${sortConfig.field} (${sortConfig.direction === 'asc' ? 'Ascending' : 'Descending'})`
+        : 'Sort by Order ID',
+      onClick: () => handleSort('id')
     }
-  ], []);
+  ], [sortConfig, handleSort]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -659,7 +740,7 @@ export default function EBookingPage() {
           </Select>
           <span className="text-sm text-gray-600">records</span>
           <span className="text-sm text-gray-600 ml-4">
-            ({paginatedBookings.length} of {filteredBookings.length} bookings)
+            ({paginatedBookings.length} of {sortedBookings.length} bookings)
           </span>
         </div>
         
@@ -692,16 +773,22 @@ export default function EBookingPage() {
               <TableHeader className="bg-gray-50">
                 <TableRow>
                   <TableHead className="w-12"></TableHead>
-                  <TableHead>ORDER ID</TableHead>
-                  <TableHead>DQ</TableHead>
-                  <TableHead>SOURCE CITY</TableHead>
-                  <TableHead>DESTINATION CITY</TableHead>
-                  <TableHead>STATUS</TableHead>
-                  <TableHead>PICKUP DATE</TableHead>
-                  <TableHead>DELIVERY DATE</TableHead>
-                  <TableHead>WEIGHT</TableHead>
-                  <TableHead>VOLUME</TableHead>
-                  <TableHead>BOOKING TYPE</TableHead>
+                  {tableColumns.map((column) => (
+                    <TableHead 
+                      key={column.field}
+                      className="cursor-pointer hover:bg-gray-100 select-none"
+                      onClick={() => handleSort(column.field)}
+                    >
+                      <div className="flex items-center gap-1">
+                        {column.label}
+                        {sortConfig.field === column.field && (
+                          <span className="text-xs">
+                            {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                          </span>
+                        )}
+                      </div>
+                    </TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
               <TableBody>
