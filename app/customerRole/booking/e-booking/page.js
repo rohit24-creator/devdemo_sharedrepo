@@ -148,17 +148,17 @@ const useBookingFilters = (bookings) => {
     try {
       setSearchError(''); 
       
-      return bookings.filter(booking => {
-        const matchesSearch = 
+    return bookings.filter(booking => {
+      const matchesSearch = 
           booking.id.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
           booking.dq.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
           booking.sourceCity.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
           booking.destinationCity.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
-        
-        const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
-        
-        return matchesSearch && matchesStatus;
-      });
+      
+      const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    });
     } catch (error) {
       setSearchError('Error occurred while filtering results');
       return bookings; 
@@ -273,9 +273,9 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
              <div className="w-3/12">
                <div className="flex items-start">
                  <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                   <Truck className="w-5 h-5 text-blue-600" />
-                 </div>
-                 <div>
+            <Truck className="w-5 h-5 text-blue-600" />
+          </div>
+          <div>
                    <h3 className="font-bold text-lg text-blue-600 mb-1">{booking.id}</h3>
                    <p className="text-sm text-gray-600 mb-1">
                      Order Reference 
@@ -284,35 +284,35 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                    </p>
                    <p className="text-sm text-gray-600">PO: {booking.po}</p>
                  </div>
-               </div>
-             </div>
+          </div>
+        </div>
              
              {/* Pickup Information */}
              <div className="w-3/12 pr-1">
                <h4 className="font-semibold text-sm text-gray-800 mb-1">{booking.origin.name}</h4>
                <p className="text-xs text-gray-600 mb-1">{booking.origin.address}</p>
                <p className="text-xs text-gray-500">By {booking.origin.deadline}</p>
-             </div>
-             
+      </div>
+
              {/* Arrow - Properly centered with more space */}
              <div className="w-1/12 flex items-center justify-center">
                <ArrowRight className="w-5 h-5 text-blue-600" />
-             </div>
+            </div>
              
              {/* Delivery Information */}
              <div className="w-3/12 pl-1">
                <h4 className="font-semibold text-sm text-gray-800 mb-1">{booking.destination.name}</h4>
                <p className="text-xs text-gray-600 mb-1">{booking.destination.address}</p>
                <p className="text-xs text-gray-500">By {booking.destination.deadline}</p>
-             </div>
+          </div>
              
              {/* Status Icon - Dynamic based on status */}
              <div className="w-2/12 flex items-center justify-center">
                <StatusIcon status={booking.status} />
-             </div>
-           </div>
-         </div>
-        
+            </div>
+          </div>
+        </div>
+
          {/* Right Section: Metrics in 3 columns */}
          <div className="w-1/3 ml-4">
            <div className="grid grid-cols-3 gap-2">
@@ -329,10 +329,10 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                  <div className="flex items-center mb-1">
                    <Package className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">Volume</span>
-                 </div>
+          </div>
                  <div className="text-blue-600 font-bold text-sm">{booking.volume}</div>
-               </div>
-             </div>
+            </div>
+          </div>
              
              {/* Column 2 - ETA & Distance */}
              <div className="space-y-2">
@@ -349,9 +349,9 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                    <span className="text-xs text-gray-500">Distance</span>
                  </div>
                  <div className="text-blue-600 font-bold text-sm">{booking.distance}</div>
-               </div>
-             </div>
-             
+          </div>
+        </div>
+
              {/* Column 3 - Vehicle Type & Vehicle ID */}
              <div className="space-y-2">
                <div className="metric-item">
@@ -360,29 +360,29 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                    <span className="text-xs text-gray-500">Vehicle Type</span>
                  </div>
                  <div className="text-blue-600 font-bold text-sm">{booking.vehicleType}</div>
-               </div>
+            </div>
                <div className="metric-item">
                  <div className="flex items-center mb-1">
                    <Truck className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">Vehicle ID</span>
-                 </div>
+          </div>
                  <div className="text-blue-600 font-bold text-sm">{booking.vehicleId}</div>
                </div>
-             </div>
-           </div>
-         </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
+
       {/* Bottom Section: Action Buttons, Status, and CO2 */}
       <hr className="my-3" />
       <div className="flex items-center justify-between">
         {/* Action Buttons */}
         <div className="flex-1">
-          <ActionButtons 
-            booking={booking}
-            onView={onView}
-            onEdit={onEdit}
-            onGenerateLabel={onGenerateLabel}
+        <ActionButtons 
+          booking={booking}
+          onView={onView}
+          onEdit={onEdit}
+          onGenerateLabel={onGenerateLabel}
             onDelete={onDelete}
           />
         </div>
@@ -538,7 +538,7 @@ export default function EBookingPage() {
       if (freshBooking) {
         setSelectedBooking(freshBooking);
         setIsEditMode(true); 
-        setIsEditModalOpen(true);
+    setIsEditModalOpen(true);
         setIsAddModalOpen(false); 
       } else {
         console.error('Booking not found:', id);
@@ -670,14 +670,14 @@ export default function EBookingPage() {
               <TabsTrigger 
                 value={VIEW_MODES.TABLE}
                 className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
-              >
-                Table View
+            >
+              Table View
               </TabsTrigger>
               <TabsTrigger 
                 value={VIEW_MODES.CARD}
                 className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
-              >
-                Card View
+            >
+              Card View
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -791,11 +791,11 @@ export default function EBookingPage() {
       {/* Content */}
       <Tabs value={viewMode} onValueChange={handleViewModeChange}>
         <TabsContent value={VIEW_MODES.TABLE}>
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-            <Table>
-              <TableHeader className="bg-gray-50">
-                <TableRow>
-                  <TableHead className="w-12"></TableHead>
+        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow>
+                <TableHead className="w-12"></TableHead>
                   {tableColumns.map((column) => (
                     <TableHead 
                       key={column.field}
@@ -812,31 +812,31 @@ export default function EBookingPage() {
                       </div>
                     </TableHead>
                   ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
                 {paginatedBookings.map((booking) => (
-                  <TableRow key={booking.id} className="hover:bg-gray-50">
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleViewDetails(booking)}>
-                            <Eye className="w-4 h-4 mr-2" />
-                            View Details
-                          </DropdownMenuItem>
+                <TableRow key={booking.id} className="hover:bg-gray-50">
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleViewDetails(booking)}>
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Details
+                        </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleEdit(booking.id)}>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleGenerateLabel(booking)}>
-                            <FileText className="w-4 h-4 mr-2" />
-                            Generate Label
-                          </DropdownMenuItem>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleGenerateLabel(booking)}>
+                          <FileText className="w-4 h-4 mr-2" />
+                          Generate Label
+                        </DropdownMenuItem>
                           <DropdownMenuItem 
                             onClick={() => handleDelete(booking)}
                             className="text-red-600 focus:text-red-700 focus:bg-red-50"
@@ -844,56 +844,56 @@ export default function EBookingPage() {
                             <Trash2 className="w-4 h-4 mr-2" />
                             Delete
                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                    <TableCell className="font-medium text-blue-600">{booking.id}</TableCell>
-                    <TableCell>{booking.dq}</TableCell>
-                    <TableCell>{booking.sourceCity}</TableCell>
-                    <TableCell>{booking.destinationCity}</TableCell>
-                    <TableCell>
-                      <StatusBadge status={booking.status} />
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-gray-500" />
-                        {formatDate(booking.pickupDate)}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4 text-gray-500" />
-                        {formatDate(booking.deliveryDate)}
-                      </div>
-                    </TableCell>
-                    <TableCell>{booking.weight}</TableCell>
-                    <TableCell>{booking.volume}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1">
-                        <Truck className="w-4 h-4 text-gray-500" />
-                        {booking.bookingType}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                  <TableCell className="font-medium text-blue-600">{booking.id}</TableCell>
+                  <TableCell>{booking.dq}</TableCell>
+                  <TableCell>{booking.sourceCity}</TableCell>
+                  <TableCell>{booking.destinationCity}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={booking.status} />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4 text-gray-500" />
+                      {formatDate(booking.pickupDate)}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4 text-gray-500" />
+                      {formatDate(booking.deliveryDate)}
+                    </div>
+                  </TableCell>
+                  <TableCell>{booking.weight}</TableCell>
+                  <TableCell>{booking.volume}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      <Truck className="w-4 h-4 text-gray-500" />
+                      {booking.bookingType}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
         </TabsContent>
         
         <TabsContent value={VIEW_MODES.CARD}>
-          <div className="space-y-4">
+        <div className="space-y-4">
             {paginatedBookings.map((booking) => (
-              <BookingCard 
-                key={booking.id} 
-                booking={booking}
-                onView={handleViewDetails}
-                onEdit={handleEdit}
-                onGenerateLabel={handleGenerateLabel}
+            <BookingCard 
+              key={booking.id} 
+              booking={booking}
+              onView={handleViewDetails}
+              onEdit={handleEdit}
+              onGenerateLabel={handleGenerateLabel}
                 onDelete={handleDelete}
-              />
-            ))}
-          </div>
+            />
+          ))}
+        </div>
         </TabsContent>
       </Tabs>
 

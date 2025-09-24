@@ -139,6 +139,20 @@ const CARGO_TYPE_OPTIONS = [
 ];
 
 
+// Reusable cargo item schema
+const cargoItemSchema = z.object({
+  item: z.string().min(1, "Item is required"),
+  packageType: z.string().min(1, "Package Type is required"),
+  goodsDescription: z.string().min(1, "Goods Description is required"),
+  quantity: z.number().min(1, "Quantity must be at least 1"),
+  weight: z.number().min(0, "Weight must be positive"),
+  length: z.number().min(0, "Length must be positive"),
+  width: z.number().min(0, "Width must be positive"),
+  height: z.number().min(0, "Height must be positive"),
+  actualVolume: z.number().min(0, "Actual Volume must be positive"),
+  cargoType: z.string().min(1, "Cargo Type is required")
+});
+
 const bookingFormSchema = z.object({
 
   shipperId: z.string().min(1, "Shipper ID is required"),
@@ -185,19 +199,27 @@ const bookingFormSchema = z.object({
   hazmat: z.string().optional(),
   commodityCode: z.string().optional(),
   
-  cargoItems: z.array(z.object({
-    item: z.string().min(1, "Item is required"),
-    packageType: z.string().min(1, "Package Type is required"),
-    goodsDescription: z.string().min(1, "Goods Description is required"),
-    quantity: z.number().min(1, "Quantity must be at least 1"),
-    weight: z.number().min(0, "Weight must be positive"),
-    length: z.number().min(0, "Length must be positive"),
-    width: z.number().min(0, "Width must be positive"),
-    height: z.number().min(0, "Height must be positive"),
-    actualVolume: z.number().min(0, "Actual Volume must be positive"),
-    cargoType: z.string().min(1, "Cargo Type is required")
-  })).optional()
+    cargoItems: z.array(cargoItemSchema).min(1, "At least one cargo item is required"),
+    
+    newCargoItem: cargoItemSchema.optional()
 });
+
+// Cargo field configuration
+const CARGO_FIELDS = [
+  { name: 'item', label: 'Item', type: 'select', options: CARGO_ITEM_OPTIONS },
+  { name: 'packageType', label: 'Package Type', type: 'select', options: CARGO_ITEM_OPTIONS },
+  { name: 'goodsDescription', label: 'Goods Description', type: 'input', placeholder: 'Enter goods description' },
+  { name: 'quantity', label: 'Quantity', type: 'number', placeholder: '1' },
+  { name: 'weight', label: 'Weight (Lbs)', type: 'number', placeholder: 'Enter weight' },
+  { name: 'actualVolume', label: 'Actual Volume (cbm)', type: 'number', placeholder: 'Enter volume' },
+  { name: 'cargoType', label: 'Cargo Type', type: 'select', options: CARGO_TYPE_OPTIONS }
+];
+
+const DIMENSION_FIELDS = [
+  { name: 'length', placeholder: 'L' },
+  { name: 'width', placeholder: 'W' },
+  { name: 'height', placeholder: 'H' }
+];
 
 // Form field configuration arrays
 const PICKUP_FIELDS = [
@@ -237,7 +259,7 @@ const PICKUP_FIELDS = [
     label: 'Country', 
     type: 'select',
     options: COUNTRY_OPTIONS,
-    className: 'h-8 text-sm'
+    className: 'h-8 text-sm w-full'
   },
   { 
     name: 'street', 
@@ -314,7 +336,7 @@ const DELIVERY_FIELDS = [
     label: 'Country', 
     type: 'select',
     options: COUNTRY_OPTIONS,
-    className: 'h-8 text-sm'
+    className: 'h-8 text-sm w-full'
   },
   { 
     name: 'deliveryStreet', 
@@ -852,7 +874,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   useEffect(() => {
     if (mode === 'add') {
       reset({
-        // Pick Up fields
+
         shipperId: "",
         shipperName: "",
         contactPerson: "",
@@ -866,7 +888,6 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         phone: "",
         email: "",
         
-        // Delivery fields
         consigneeId: "",
         consigneeName: "",
         consigneeContactPerson: "",
@@ -880,18 +901,18 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         deliveryPhone: "",
         deliveryEmail: "",
         
-        // Order Attributes
+
         orderType: "",
         service: "",
         modeOfTransport: "",
         pickupInstructions: "",
         
-        // References
+
         customerReference: "",
         purchaseOrder: "",
         deliveryInstructions: "",
         
-        // Additional Details
+
         paymentMethod: "",
         namedPlace: "",
         equipmentGroup: "",
@@ -901,7 +922,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         hazmat: "",
         commodityCode: "",
         
-        // Cargo Items
+
         cargoItems: [],
         newCargoItem: {
           item: '',
@@ -993,26 +1014,18 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
     }
   }, [booking, mode, reset]);
 
-  const onSubmit = useCallback(async (data) => {
-    try {
-      if (mode === 'add') {
+  // Separate handlers for Add and Edit modes
+  const onSubmitWithValidation = useCallback(async (data) => {
+    console.log('Creating new booking:', data);
+    // TODO: Add API call when ready
+  }, []);
 
-        console.log('Creating new booking:', data);
-
-        toast.success("Booking created successfully!");
-      } else {
-
-        console.log('Updating booking:', booking?.id, data);
-
-        toast.success("Booking updated successfully!");
-      }
-      
-      onClose();
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast.error(mode === 'add' ? "Failed to create booking" : "Failed to update booking");
-    }
-  }, [mode, booking?.id, onClose]);
+  const onSubmitWithoutValidation = useCallback(async (event) => {
+    event.preventDefault();
+    const formData = form.getValues();
+    console.log('Updating booking:', booking?.id, formData);
+    // TODO: Add API call when ready
+  }, [form, booking?.id]);
 
   const handleCargoAdd = useCallback(() => {
     const newCargoData = watch('newCargoItem');
@@ -1081,7 +1094,11 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
           </DialogHeader>
 
           <Form {...form}>
-            <form id="booking-form" onSubmit={form.handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6 space-y-8 min-h-0 bg-gray-50">
+            <form 
+              id="booking-form" 
+              onSubmit={mode === 'add' ? form.handleSubmit(onSubmitWithValidation) : onSubmitWithoutValidation}
+              className="flex-1 overflow-y-auto p-6 space-y-8 min-h-0 bg-gray-50"
+            >
             {/* Booking Details Summary - Non-editable */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Booking Details</h2>
@@ -1216,115 +1233,153 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               <div className="space-y-4 p-4 border border-gray-200 rounded-lg bg-white">
                 {/* Row 1: Item, Package Type, Goods Description, Quantity */}
                 <div className="grid grid-cols-4 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Item</Label>
-                    <Select onValueChange={(value) => setValue('newCargoItem.item', value)}>
-                      <SelectTrigger className="h-9 w-full">
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CARGO_ITEM_OPTIONS.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Package Type</Label>
-                    <Select onValueChange={(value) => setValue('newCargoItem.packageType', value)}>
-                      <SelectTrigger className="h-9 w-full">
-                        <SelectValue placeholder="Select Package" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CARGO_ITEM_OPTIONS.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Goods Description</Label>
-                    <Input 
-                      placeholder="Enter goods description" 
-                      className="h-9 w-full"
-                      {...register('newCargoItem.goodsDescription')}
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Quantity</Label>
-                    <Input 
-                      type="number" 
-                      placeholder="1" 
-                      className="h-9 w-full"
-                      {...register('newCargoItem.quantity', { valueAsNumber: true })}
-                    />
-                  </div>
+                  {CARGO_FIELDS.slice(0, 4).map(field => (
+                    <div key={field.name}>
+                      <FormField
+                        control={control}
+                        name={`newCargoItem.${field.name}`}
+                        render={({ field: formField }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">{field.label}</FormLabel>
+                            <FormControl>
+                              {field.type === 'select' ? (
+                                <Select onValueChange={formField.onChange} value={formField.value}>
+                                  <SelectTrigger className="h-9 w-full">
+                                    <SelectValue placeholder={field.name === 'packageType' ? 'Select Package' : 'Select'} />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {field.options.map(option => (
+                                      <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              ) : (
+                                <Input
+                                  type={field.type}
+                                  placeholder={field.placeholder}
+                                  className="h-9 w-full"
+                                  {...formField}
+                                  onChange={field.type === 'number' ? (e) => formField.onChange(Number(e.target.value)) : formField.onChange}
+                                />
+                              )}
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  ))}
                 </div>
                 
                 {/* Row 2: Weight, Dimensions, Actual Volume, Cargo Type */}
                 <div className="grid grid-cols-4 gap-4">
+                  {/* Weight Field */}
                   <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Weight (Lbs)</Label>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter weight" 
-                      className="h-9 w-full"
-                      {...register('newCargoItem.weight', { valueAsNumber: true })}
+                    <FormField
+                      control={control}
+                      name="newCargoItem.weight"
+                      render={({ field: formField }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">Weight (Lbs)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="Enter weight"
+                              className="h-9 w-full"
+                              {...formField}
+                              onChange={(e) => formField.onChange(Number(e.target.value))}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
+                  
+                  {/* Dimensions Field */}
                   <div>
                     <Label className="text-sm font-medium text-gray-700 mb-2 block">Dimensions (cm) per unit</Label>
                     <div className="flex gap-1">
-                      <Input 
-                        placeholder="L" 
-                        className="flex-1 h-9"
-                        {...register('newCargoItem.length', { valueAsNumber: true })}
-                      />
-                      <Input 
-                        placeholder="W" 
-                        className="flex-1 h-9"
-                        {...register('newCargoItem.width', { valueAsNumber: true })}
-                      />
-                      <Input 
-                        placeholder="H" 
-                        className="flex-1 h-9"
-                        {...register('newCargoItem.height', { valueAsNumber: true })}
-                      />
+                      {DIMENSION_FIELDS.map(field => (
+                        <FormField
+                          key={field.name}
+                          control={control}
+                          name={`newCargoItem.${field.name}`}
+                          render={({ field: formField }) => (
+                            <FormItem className="flex-1">
+                              <FormControl>
+                                <Input
+                                  placeholder={field.placeholder}
+                                  className="h-9"
+                                  {...formField}
+                                  onChange={(e) => formField.onChange(Number(e.target.value))}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ))}
                     </div>
                   </div>
+                  
+                  {/* Actual Volume Field */}
                   <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Actual Volume (cbm)</Label>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter volume" 
-                      className="h-9 w-full"
-                      {...register('newCargoItem.actualVolume', { valueAsNumber: true })}
+                    <FormField
+                      control={control}
+                      name="newCargoItem.actualVolume"
+                      render={({ field: formField }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">Actual Volume (cbm)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="Enter volume"
+                              className="h-9 w-full"
+                              {...formField}
+                              onChange={(e) => formField.onChange(Number(e.target.value))}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
+                  
+                  {/* Cargo Type Field */}
                   <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Cargo Type</Label>
-                    <Select onValueChange={(value) => setValue('newCargoItem.cargoType', value)}>
-                      <SelectTrigger className="h-9 w-full">
-                        <SelectValue placeholder="Select Cargo Type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CARGO_TYPE_OPTIONS.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormField
+                      control={control}
+                      name="newCargoItem.cargoType"
+                      render={({ field: formField }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium text-gray-700">Cargo Type</FormLabel>
+                          <FormControl>
+                            <Select onValueChange={formField.onChange} value={formField.value}>
+                              <SelectTrigger className="h-9 w-full">
+                                <SelectValue placeholder="Select Cargo Type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {CARGO_TYPE_OPTIONS.map(option => (
+                                  <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </div>
                 
                 {/* Add Button */}
                 <div className="flex justify-end">
-                  <Button onClick={handleCargoAdd} className="bg-blue-600 hover:bg-blue-700 h-9 px-4">
+                  <Button type="button" onClick={handleCargoAdd} className="bg-blue-600 hover:bg-blue-700 h-9 px-4">
                     <Plus className="w-4 h-4 mr-2" />
                     Add
                   </Button>
