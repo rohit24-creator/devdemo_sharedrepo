@@ -138,9 +138,9 @@ const CARGO_TYPE_OPTIONS = [
   { value: "Hazardous", label: "Hazardous" }
 ];
 
-// Zod Schema for Booking Form
+
 const bookingFormSchema = z.object({
-  // Pick Up fields
+
   shipperId: z.string().min(1, "Shipper ID is required"),
   shipperName: z.string().min(1, "Shipper Name is required"),
   contactPerson: z.string().min(1, "Contact Person is required"),
@@ -154,7 +154,6 @@ const bookingFormSchema = z.object({
   phone: z.string().min(1, "Phone is required"),
   email: z.string().email("Invalid email format"),
   
-  // Delivery fields
   consigneeId: z.string().min(1, "Consignee ID is required"),
   consigneeName: z.string().min(1, "Consignee Name is required"),
   consigneeContactPerson: z.string().min(1, "Contact Person is required"),
@@ -167,19 +166,16 @@ const bookingFormSchema = z.object({
   deliveryPostalCode: z.string().min(1, "Postal Code is required"),
   deliveryPhone: z.string().min(1, "Phone is required"),
   deliveryEmail: z.string().email("Invalid email format"),
-  
-  // Order Attributes
+
   orderType: z.string().min(1, "Order Type is required"),
   service: z.string().min(1, "Service is required"),
   modeOfTransport: z.string().min(1, "Mode of Transport is required"),
   pickupInstructions: z.string().optional(),
   
-  // References
   customerReference: z.string().min(1, "Customer Reference is required"),
   purchaseOrder: z.string().min(1, "Purchase Order is required"),
   deliveryInstructions: z.string().optional(),
   
-  // Additional Details
   paymentMethod: z.string().optional(),
   namedPlace: z.string().optional(),
   equipmentGroup: z.string().optional(),
@@ -189,7 +185,6 @@ const bookingFormSchema = z.object({
   hazmat: z.string().optional(),
   commodityCode: z.string().optional(),
   
-  // Cargo Items
   cargoItems: z.array(z.object({
     item: z.string().min(1, "Item is required"),
     packageType: z.string().min(1, "Package Type is required"),
@@ -463,7 +458,6 @@ const ADDITIONAL_DETAILS_FIELDS = [
   }
 ];
 
-// Reusable renderField function with FormField components
 const renderField = (field, control) => {
   const { name, label, type, options, hasIcons, className, rows, ...props } = field;
   
@@ -649,7 +643,7 @@ const StatusTab = memo(({ booking }) => {
     return booking.statusHistory.map((statusItem, index) => ({
       status: statusItem.status,
       timestamp: statusItem.timestamp,
-      icon: ClockIcon, // Use consistent Clock icon for all statuses (like Active/Pending Orders)
+      icon: ClockIcon, 
       isActive: statusItem.isActive
     }));
   }, [booking.statusHistory]);
@@ -783,11 +777,11 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
   const [newDocument, setNewDocument] = useState({ type: '', name: '', file: null });
 
-  // React Hook Form setup with Zod resolver
+
   const form = useForm({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
-      // Pick Up fields
+
       shipperId: "",
       shipperName: "",
       contactPerson: "",
@@ -801,7 +795,6 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
       phone: "",
       email: "",
       
-      // Delivery fields
       consigneeId: "",
       consigneeName: "",
       consigneeContactPerson: "",
@@ -815,18 +808,15 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
       deliveryPhone: "",
       deliveryEmail: "",
       
-      // Order Attributes
       orderType: "",
       service: "",
       modeOfTransport: "",
       pickupInstructions: "",
       
-      // References
       customerReference: "",
       purchaseOrder: "",
       deliveryInstructions: "",
       
-      // Additional Details
       paymentMethod: "",
       namedPlace: "",
       equipmentGroup: "",
@@ -836,7 +826,6 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
       hazmat: "",
       commodityCode: "",
       
-      // Cargo Items
       cargoItems: [],
       newCargoItem: {
         item: '',
@@ -860,10 +849,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
     name: "cargoItems"
   });
 
-  // Initialize form data when booking changes or mode changes
   useEffect(() => {
     if (mode === 'add') {
-      // Force reset to empty values for add mode
       reset({
         // Pick Up fields
         shipperId: "",
@@ -930,9 +917,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         }
       });
     } else if (booking && mode === 'edit') {
-      // Reset form with existing booking data for edit mode
+
       reset({
-        // Pick Up fields
+
         shipperId: booking.origin?.id || "",
         shipperName: booking.origin?.name || "",
         contactPerson: booking.origin?.name || "",
@@ -946,7 +933,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         phone: booking.origin?.phone || "",
         email: booking.origin?.email || "",
         
-        // Delivery fields
+
         consigneeId: booking.destination?.id || "",
         consigneeName: booking.destination?.name || "",
         consigneeContactPerson: booking.destination?.name || "",
@@ -960,18 +947,15 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         deliveryPhone: booking.destination?.phone || "",
         deliveryEmail: booking.destination?.email || "",
         
-        // Order Attributes
         orderType: booking.orderAttributes?.orderType || "",
         service: booking.orderAttributes?.service || "",
         modeOfTransport: booking.orderAttributes?.modeOfTransport || "",
         pickupInstructions: booking.orderAttributes?.pickupInstructions || "",
         
-        // References
         customerReference: booking.dq || "",
         purchaseOrder: booking.po || "",
         deliveryInstructions: booking.referenceDetails?.deliveryInstructions || "",
         
-        // Additional Details
         paymentMethod: booking.additionalDetails?.paymentMethod || "",
         namedPlace: booking.additionalDetails?.namedPlace || "",
         equipmentGroup: booking.additionalDetails?.equipmentGroup || "",
@@ -981,7 +965,6 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         hazmat: booking.additionalDetails?.hazmat || "",
         commodityCode: booking.additionalDetails?.commodityCode || "",
         
-        // Cargo Items
         cargoItems: booking.cargoDetails ? [{
           item: booking.cargoDetails.packageType || 'BOXES',
           packageType: booking.cargoDetails.packageType || 'BOXES',
@@ -1010,24 +993,20 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
     }
   }, [booking, mode, reset]);
 
-  // Form submission handler - API Ready
   const onSubmit = useCallback(async (data) => {
     try {
       if (mode === 'add') {
-        // Add new booking
+
         console.log('Creating new booking:', data);
-        // TODO: Replace with actual API call
-        // await api.post('/bookings', data);
+
         toast.success("Booking created successfully!");
       } else {
-        // Update existing booking
+
         console.log('Updating booking:', booking?.id, data);
-        // TODO: Replace with actual API call
-        // await api.put(`/bookings/${booking.id}`, data);
+
         toast.success("Booking updated successfully!");
       }
       
-      // Close modal after successful submission
       onClose();
     } catch (error) {
       console.error('Form submission error:', error);
@@ -1091,7 +1070,10 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="lg:max-w-[90rem] w-[95vw] max-h-[95vh] overflow-hidden p-0 flex flex-col">
+        <DialogContent 
+          className="lg:max-w-[90rem] w-[95vw] max-h-[95vh] overflow-hidden p-0 flex flex-col"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <DialogHeader className="px-6 py-4 border-b">
             <DialogTitle className="text-xl text-blue-600">
               {mode === 'add' ? 'Add New Booking' : `Booking Details (Shipment Characteristics) - ${booking?.id}`}
@@ -1480,7 +1462,6 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
 
 EditBookingModal.displayName = 'EditBookingModal';
 
-// Export all components
 export {
   InfoTab,
   StatusTab,

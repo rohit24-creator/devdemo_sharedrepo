@@ -530,16 +530,16 @@ export default function EBookingPage() {
 
   const handleEdit = useCallback(async (id) => {
     try {
-      // Fetch fresh data by booking ID (real-time approach)
+
       const response = await fetch('/bookingList.json');
       const data = await response.json();
       const freshBooking = data.bookings.find(b => b.id === id);
       
       if (freshBooking) {
         setSelectedBooking(freshBooking);
-        setIsEditMode(true); // Set to edit mode
+        setIsEditMode(true); 
         setIsEditModalOpen(true);
-        setIsAddModalOpen(false); // Ensure add modal is closed
+        setIsAddModalOpen(false); 
       } else {
         console.error('Booking not found:', id);
       }
@@ -549,10 +549,10 @@ export default function EBookingPage() {
   }, []);
 
   const handleAdd = useCallback(() => {
-    setSelectedBooking(null); // No existing booking for add mode
-    setIsEditMode(false); // Set to add mode
+    setSelectedBooking(null); 
+    setIsEditMode(false); 
     setIsAddModalOpen(true);
-    setIsEditModalOpen(false); // Ensure edit modal is closed
+    setIsEditModalOpen(false); 
   }, []);
 
   const handleGenerateLabel = useCallback((booking) => {
