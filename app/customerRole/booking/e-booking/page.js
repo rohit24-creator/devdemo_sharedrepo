@@ -223,7 +223,7 @@ const ActionButtons = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete
     <Button
       variant="outline"
       size="sm"
-      onClick={() => onView(booking)}
+      onClick={() => onView(booking.id)}
       className="flex items-center gap-1"
     >
       <Eye className="w-4 h-4" />
@@ -523,9 +523,21 @@ export default function EBookingPage() {
   }, []);
 
   // Memoized callbacks for event handlers
-  const handleViewDetails = useCallback((booking) => {
-    setSelectedBooking(booking);
-    setIsModalOpen(true);
+  const handleViewDetails = useCallback(async (id) => {
+    try {
+      const response = await fetch('/bookingList.json');
+      const data = await response.json();
+      const freshBooking = data.bookings.find(b => b.id === id);
+      
+      if (freshBooking) {
+        setSelectedBooking(freshBooking);
+        setIsModalOpen(true);
+      } else {
+        console.error('Booking not found:', id);
+      }
+    } catch (error) {
+      console.error('Error fetching booking data:', error);
+    }
   }, []);
 
   const handleEdit = useCallback(async (id) => {
@@ -825,7 +837,7 @@ export default function EBookingPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleViewDetails(booking)}>
+                        <DropdownMenuItem onClick={() => handleViewDetails(booking.id)}>
                           <Eye className="w-4 h-4 mr-2" />
                           View Details
                         </DropdownMenuItem>
