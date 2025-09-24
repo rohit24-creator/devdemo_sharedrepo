@@ -45,6 +45,7 @@ import {
   PauseCircle,
   Plus,
   Trash2,
+  DollarSign,
   User,
   Mail,
   Building,
@@ -1201,29 +1202,20 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                 </div>
               </div>
 
-              {/* Documents - 40% width */}
+              {/* Route - 40% width */}
               <div className="col-span-2">
                 <Card className="p-3 h-full">
                   <CardHeader className="pb-2 px-0">
-                    <CardTitle className="text-lg text-blue-600">Documents</CardTitle>
+                    <CardTitle className="text-lg text-blue-600">Route</CardTitle>
                   </CardHeader>
                   <CardContent className="px-0 flex flex-col h-full">
                     <div className="flex-1 flex items-center justify-center">
                       <div className="text-center">
                         <div className="w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Truck className="w-12 h-12 text-gray-400" />
+                          <Navigation className="w-12 h-12 text-gray-400" />
                         </div>
                         <p className="text-gray-500">No Data Available</p>
                       </div>
-                    </div>
-                    <div className="flex justify-end mt-4">
-                      <Button 
-                        onClick={() => setIsDocumentModalOpen(true)}
-                        className="bg-blue-600 hover:bg-blue-700 h-9 px-4"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Document
-                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -1444,7 +1436,58 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               </div>
             </div>
 
-                        {/* Additional Details */}
+            {/* Documents and Charges*/}
+            <div className="grid grid-cols-2 gap-6">
+              {/* Documents */}
+              <div>
+                <Card className="p-3 h-full">
+                  <CardHeader className="pb-2 px-0">
+                    <CardTitle className="text-lg text-blue-600">Documents</CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-0 flex flex-col h-full">
+                    <div className="flex-1 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <Truck className="w-12 h-12 text-gray-400" />
+                        </div>
+                        <p className="text-gray-500">No Data Available</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-end mt-4">
+                      <Button 
+                        type="button"
+                        onClick={() => setIsDocumentModalOpen(true)}
+                        className="bg-blue-600 hover:bg-blue-700 h-9 px-4"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Document
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Charges */}
+              <div>
+                <Card className="p-3 h-full">
+                  <CardHeader className="pb-2 px-0">
+                    <CardTitle className="text-lg text-blue-600">Charges</CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-0 flex flex-col h-full">
+                    <div className="flex-1 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <DollarSign className="w-12 h-12 text-gray-400" />
+                        </div>
+                        <p className="text-gray-500">No Data Available</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Additional Details */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-blue-600">Additional Details</h2>
               <div className="p-4 border border-gray-200 rounded-lg bg-white">
