@@ -865,6 +865,10 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   });
 
   const { control, register, watch, setValue, reset } = form;
+  
+  const cargoItems = watch('cargoItems') || [];
+  const totalWeight = cargoItems.reduce((sum, item) => sum + (item.weight || 0), 0);
+  const totalVolume = cargoItems.reduce((sum, item) => sum + (item.actualVolume || 0), 0);
 
   const { fields, append, remove, update } = useFieldArray({
     control,
@@ -1017,14 +1021,12 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   // Separate handlers for Add and Edit modes
   const onSubmitWithValidation = useCallback(async (data) => {
     console.log('Creating new booking:', data);
-    // TODO: Add API call when ready
   }, []);
 
   const onSubmitWithoutValidation = useCallback(async (event) => {
     event.preventDefault();
     const formData = form.getValues();
     console.log('Updating booking:', booking?.id, formData);
-    // TODO: Add API call when ready
   }, [form, booking?.id]);
 
   const handleCargoAdd = useCallback(() => {
@@ -1108,7 +1110,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                     <Truck className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                      <p className="text-sm font-medium text-gray-900">{form.watch('shipperName') || 'N/A'}</p>
+                      <p className="text-sm font-medium text-gray-900 mb-2">Pickup Address</p>
+                      <p className="text-xs text-gray-600">{form.watch('shipperName') || 'N/A'}</p>
                       <p className="text-xs text-gray-600">{form.watch('shipperAddress') || 'N/A'}</p>
                   </div>
                 </div>
@@ -1117,7 +1120,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                     <Truck className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                      <p className="text-sm font-medium text-gray-900">{form.watch('consigneeName') || 'N/A'}</p>
+                      <p className="text-sm font-medium text-gray-900 mb-2">Delivery Address</p>
+                      <p className="text-xs text-gray-600">{form.watch('consigneeName') || 'N/A'}</p>
                       <p className="text-xs text-gray-600">{form.watch('consigneeAddress') || 'N/A'}</p>
                   </div>
                 </div>
@@ -1126,8 +1130,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                     <Scale className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                      <p className="text-sm font-medium text-gray-900">{booking?.cargoDetails?.actualWeight || 'N/A'}</p>
-                      <p className="text-xs text-gray-600">Actual Volume {booking?.cargoDetails?.actualVolume || 'N/A'}</p>
+                      <p className="text-sm font-medium text-gray-900 mb-2">Weight & Actual Volume</p>
+                      <p className="text-xs text-gray-600">{totalWeight > 0 ? `${totalWeight} lbs` : 'N/A'}</p>
+                      <p className="text-xs text-gray-600">Actual Volume {totalVolume > 0 ? `${totalVolume} cbm` : 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -1135,7 +1140,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                     <Navigation className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Distance</p>
+                    <p className="text-sm font-medium text-gray-900 mb-2">Distance</p>
                       <p className="text-xs text-gray-600">{booking?.distance || 'N/A'}</p>
                   </div>
                 </div>
