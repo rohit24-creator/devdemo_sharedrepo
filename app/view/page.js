@@ -1,10 +1,9 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Truck } from "lucide-react";
 
-export default function Viewpages() {
+export default function View() {
   const data = [
     { label: "Register Number", value: "BKL309" },
     { label: "Vehicle Type", value: "22 WHEELER" },
@@ -24,44 +23,29 @@ export default function Viewpages() {
     { label: "Description", value: "Goods and Services" },
   ];
 
-  return (
-    <div className="min-h-screen bg-slate-150 p-8 space-y-6">
+  return <div className="min-h-screen p-8 bg-slate-100">
+    <div className="flex items-center justify-between mb-2">
+      <h1 className="text-3xl font-semibold">View Information</h1>
+      <Button variant="destructive">Cancel</Button>
+    </div>
 
-      <Card>
-        <CardHeader className="flex items-center justify-between">
-          <CardTitle className="text-3xl font-semibold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-800 bg-clip-text text-transparent">
-            Vehicle Details
-          </CardTitle>
-          <Button variant="destructive">Cancel</Button>
-        </CardHeader>
-      </Card>
+    <Card >
+      <CardHeader className="flex items-center bg-blue-400 px-4 py-6 rounded-t-md" >
+        <Truck className="h-8 w-8 text-white" />
+        <CardTitle className="text-2xl font-medium text-white">VIEW DETAILS</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-8">
+          {data.map((item, index) => (
+            <div key={index} className="grid grid-cols-2">
+              <span className="text-base font-semibold text-gray-700">{item.label} :</span>
+              <span className="text-lg font-medium text-gray-900">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  </div >
 
-      <Card>
-        <CardHeader className="flex itme-center space-x-2">
-          <div className="bg-green-600 rounded-md p-2">
-            <Truck className="text-white" />
-          </div>
-          <CardTitle className="text-xl font-semibold text-blue-700">
-            Vehicle Information
-          </CardTitle>
-        </CardHeader>
 
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {data.map((item, index) => (
-              <div key={index} className="flex flex-col">
-                < span className="text-base font-semibold text-gray-700" >
-                  {item.label}:
-                </span>
-                <span className="text-lg font-medium text-gray-900">
-                  {item.value}
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent >
-      </Card >
-    </div >
-  );
 }
-//
