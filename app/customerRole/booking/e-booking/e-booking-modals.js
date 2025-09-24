@@ -1,6 +1,8 @@
 "use client"
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { useForm, useFieldArray } from 'react-hook-form';
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { toast } from "sonner";
 import { 
   Table, 
@@ -78,6 +80,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import {
   Tabs,
   TabsContent,
   TabsList,
@@ -127,6 +137,72 @@ const CARGO_TYPE_OPTIONS = [
   { value: "Fragile", label: "Fragile" },
   { value: "Hazardous", label: "Hazardous" }
 ];
+
+// Zod Schema for Booking Form
+const bookingFormSchema = z.object({
+  // Pick Up fields
+  shipperId: z.string().min(1, "Shipper ID is required"),
+  shipperName: z.string().min(1, "Shipper Name is required"),
+  contactPerson: z.string().min(1, "Contact Person is required"),
+  estimatedPickupDate: z.string().min(1, "Estimated Pickup Date is required"),
+  shipperAddress: z.string().min(1, "Shipper Address is required"),
+  country: z.string().min(1, "Country is required"),
+  street: z.string().min(1, "Street is required"),
+  suburb: z.string().min(1, "Suburb is required"),
+  city: z.string().min(1, "City is required"),
+  postalCode: z.string().min(1, "Postal Code is required"),
+  phone: z.string().min(1, "Phone is required"),
+  email: z.string().email("Invalid email format"),
+  
+  // Delivery fields
+  consigneeId: z.string().min(1, "Consignee ID is required"),
+  consigneeName: z.string().min(1, "Consignee Name is required"),
+  consigneeContactPerson: z.string().min(1, "Contact Person is required"),
+  estimatedDeliveryDate: z.string().min(1, "Estimated Delivery Date is required"),
+  consigneeAddress: z.string().min(1, "Consignee Address is required"),
+  deliveryCountry: z.string().min(1, "Country is required"),
+  deliveryStreet: z.string().min(1, "Street is required"),
+  deliverySuburb: z.string().min(1, "Suburb is required"),
+  deliveryCity: z.string().min(1, "City is required"),
+  deliveryPostalCode: z.string().min(1, "Postal Code is required"),
+  deliveryPhone: z.string().min(1, "Phone is required"),
+  deliveryEmail: z.string().email("Invalid email format"),
+  
+  // Order Attributes
+  orderType: z.string().min(1, "Order Type is required"),
+  service: z.string().min(1, "Service is required"),
+  modeOfTransport: z.string().min(1, "Mode of Transport is required"),
+  pickupInstructions: z.string().optional(),
+  
+  // References
+  customerReference: z.string().min(1, "Customer Reference is required"),
+  purchaseOrder: z.string().min(1, "Purchase Order is required"),
+  deliveryInstructions: z.string().optional(),
+  
+  // Additional Details
+  paymentMethod: z.string().optional(),
+  namedPlace: z.string().optional(),
+  equipmentGroup: z.string().optional(),
+  otherLocation: z.string().optional(),
+  trailerNumber: z.string().optional(),
+  nmfcClass: z.string().optional(),
+  hazmat: z.string().optional(),
+  commodityCode: z.string().optional(),
+  
+  // Cargo Items
+  cargoItems: z.array(z.object({
+    item: z.string().min(1, "Item is required"),
+    packageType: z.string().min(1, "Package Type is required"),
+    goodsDescription: z.string().min(1, "Goods Description is required"),
+    quantity: z.number().min(1, "Quantity must be at least 1"),
+    weight: z.number().min(0, "Weight must be positive"),
+    length: z.number().min(0, "Length must be positive"),
+    width: z.number().min(0, "Width must be positive"),
+    height: z.number().min(0, "Height must be positive"),
+    actualVolume: z.number().min(0, "Actual Volume must be positive"),
+    cargoType: z.string().min(1, "Cargo Type is required")
+  })).optional()
+});
 
 // Form field configuration arrays
 const PICKUP_FIELDS = [
@@ -387,25 +463,28 @@ const ADDITIONAL_DETAILS_FIELDS = [
   }
 ];
 
-// Reusable renderField function following project patterns
-const renderField = (field, formData, handleInputChange) => {
+// Reusable renderField function with FormField components
+const renderField = (field, control) => {
   const { name, label, type, options, hasIcons, className, rows, ...props } = field;
   
   return (
-    <div key={name}>
-      <Label htmlFor={name} className="text-sm font-medium text-gray-700 mb-1 block">
+    <FormField
+      key={name}
+      control={control}
+      name={name}
+      render={({ field: formField, fieldState }) => (
+        <FormItem>
+          <FormLabel className="text-sm font-medium text-gray-700">
         {label}
-      </Label>
-      
+          </FormLabel>
+          <FormControl>
       {type === 'text' || type === 'tel' || type === 'email' ? (
         hasIcons ? (
           <div className="flex gap-1">
             <Input
-              id={name}
               type={type}
-              value={formData[name] || ''}
-              onChange={(e) => handleInputChange(name, e.target.value)}
               className={className}
+                    {...formField}
               {...props}
             />
             <Button variant="outline" size="sm" className="h-8 w-8 p-0">
@@ -417,16 +496,14 @@ const renderField = (field, formData, handleInputChange) => {
           </div>
         ) : (
           <Input
-            id={name}
             type={type}
-            value={formData[name] || ''}
-            onChange={(e) => handleInputChange(name, e.target.value)}
             className={className}
+                  {...formField}
             {...props}
           />
         )
       ) : type === 'select' ? (
-        <Select value={formData[name] || ''} onValueChange={(value) => handleInputChange(name, value)}>
+              <Select onValueChange={formField.onChange} value={formField.value}>
           <SelectTrigger className={className}>
             <SelectValue placeholder={`Select ${label}`} />
           </SelectTrigger>
@@ -440,15 +517,17 @@ const renderField = (field, formData, handleInputChange) => {
         </Select>
       ) : type === 'textarea' ? (
         <Textarea
-          id={name}
-          value={formData[name] || ''}
-          onChange={(e) => handleInputChange(name, e.target.value)}
           rows={rows || 3}
           className={className}
+                {...formField}
           {...props}
         />
       ) : null}
-    </div>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
 
@@ -699,15 +778,65 @@ const BookingDetailsModal = memo(({ booking, isOpen, onClose, onEdit, onGenerate
 BookingDetailsModal.displayName = 'BookingDetailsModal';
 
 // Edit Modal Component
-const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
-  const [formData, setFormData] = useState({});
+const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   const [documents, setDocuments] = useState([]);
   const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
   const [newDocument, setNewDocument] = useState({ type: '', name: '', file: null });
 
-  // React Hook Form setup
-  const { control, register, watch, setValue } = useForm({
+  // React Hook Form setup with Zod resolver
+  const form = useForm({
+    resolver: zodResolver(bookingFormSchema),
     defaultValues: {
+      // Pick Up fields
+      shipperId: "",
+      shipperName: "",
+      contactPerson: "",
+      estimatedPickupDate: "",
+      shipperAddress: "",
+      country: "",
+      street: "",
+      suburb: "",
+      city: "",
+      postalCode: "",
+      phone: "",
+      email: "",
+      
+      // Delivery fields
+      consigneeId: "",
+      consigneeName: "",
+      consigneeContactPerson: "",
+      estimatedDeliveryDate: "",
+      consigneeAddress: "",
+      deliveryCountry: "",
+      deliveryStreet: "",
+      deliverySuburb: "",
+      deliveryCity: "",
+      deliveryPostalCode: "",
+      deliveryPhone: "",
+      deliveryEmail: "",
+      
+      // Order Attributes
+      orderType: "",
+      service: "",
+      modeOfTransport: "",
+      pickupInstructions: "",
+      
+      // References
+      customerReference: "",
+      purchaseOrder: "",
+      deliveryInstructions: "",
+      
+      // Additional Details
+      paymentMethod: "",
+      namedPlace: "",
+      equipmentGroup: "",
+      otherLocation: "",
+      trailerNumber: "",
+      nmfcClass: "",
+      hazmat: "",
+      commodityCode: "",
+      
+      // Cargo Items
       cargoItems: [],
       newCargoItem: {
         item: '',
@@ -724,82 +853,148 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
     }
   });
 
+  const { control, register, watch, setValue, reset } = form;
+
   const { fields, append, remove, update } = useFieldArray({
     control,
     name: "cargoItems"
   });
 
-  // Initialize form data when booking changes
+  // Initialize form data when booking changes or mode changes
   useEffect(() => {
-    if (booking) {
-      setFormData({
+    if (mode === 'add') {
+      // Force reset to empty values for add mode
+      reset({
         // Pick Up fields
-        shipperId: booking.origin?.id,
-        shipperName: booking.origin?.name,
-        contactPerson: booking.origin?.name,
-        estimatedPickupDate: booking.pickupDate,
-        shipperAddress: `${booking.sourceCity}, ${booking.origin?.country}`,
-        country: booking.origin?.country,
-        street: booking.origin?.street,
-        suburb: booking.origin?.suburb,
-        city: booking.sourceCity,
-        postalCode: booking.origin?.postalCode,
-        phone: booking.origin?.phone,
-        email: booking.origin?.email,
+        shipperId: "",
+        shipperName: "",
+        contactPerson: "",
+        estimatedPickupDate: "",
+        shipperAddress: "",
+        country: "",
+        street: "",
+        suburb: "",
+        city: "",
+        postalCode: "",
+        phone: "",
+        email: "",
         
         // Delivery fields
-        consigneeId: booking.destination?.id,
-        consigneeName: booking.destination?.name,
-        consigneeContactPerson: booking.destination?.name,
-        estimatedDeliveryDate: booking.deliveryDate,
-        consigneeAddress: `${booking.destinationCity}, ${booking.destination?.country}`,
-        deliveryCountry: booking.destination?.country,
-        deliveryStreet: booking.destination?.street,
-        deliverySuburb: booking.destination?.suburb,
-        deliveryCity: booking.destinationCity,
-        deliveryPostalCode: booking.destination?.postalCode,
-        deliveryPhone: booking.destination?.phone,
-        deliveryEmail: booking.destination?.email,
+        consigneeId: "",
+        consigneeName: "",
+        consigneeContactPerson: "",
+        estimatedDeliveryDate: "",
+        consigneeAddress: "",
+        deliveryCountry: "",
+        deliveryStreet: "",
+        deliverySuburb: "",
+        deliveryCity: "",
+        deliveryPostalCode: "",
+        deliveryPhone: "",
+        deliveryEmail: "",
         
         // Order Attributes
-        orderType: booking.orderAttributes?.orderType,
-        service: booking.orderAttributes?.service,
-        modeOfTransport: booking.orderAttributes?.modeOfTransport,
-        pickupInstructions: booking.orderAttributes?.pickupInstructions,
+        orderType: "",
+        service: "",
+        modeOfTransport: "",
+        pickupInstructions: "",
         
         // References
-        customerReference: booking.dq,
-        purchaseOrder: booking.po,
-        deliveryInstructions: booking.referenceDetails?.deliveryInstructions || '',
+        customerReference: "",
+        purchaseOrder: "",
+        deliveryInstructions: "",
         
         // Additional Details
-        paymentMethod: booking.additionalDetails?.paymentMethod,
-        namedPlace: booking.additionalDetails?.namedPlace,
-        equipmentGroup: booking.additionalDetails?.equipmentGroup,
-        otherLocation: booking.additionalDetails?.otherLocation,
-        trailerNumber: booking.additionalDetails?.trailerNumber,
-        nmfcClass: booking.additionalDetails?.nmfcClass,
-        hazmat: booking.additionalDetails?.hazmat,
-        commodityCode: booking.additionalDetails?.commodityCode
+        paymentMethod: "",
+        namedPlace: "",
+        equipmentGroup: "",
+        otherLocation: "",
+        trailerNumber: "",
+        nmfcClass: "",
+        hazmat: "",
+        commodityCode: "",
+        
+        // Cargo Items
+        cargoItems: [],
+        newCargoItem: {
+          item: '',
+          packageType: '',
+          goodsDescription: '',
+          quantity: 1,
+          weight: 0,
+          length: 0,
+          width: 0,
+          height: 0,
+          actualVolume: 0,
+          cargoType: ''
+        }
       });
-      
-      // Initialize cargo items with field array from booking data
-      const initialCargoItem = {
-        item: booking.cargoDetails?.packageType || 'BOXES',
-        packageType: booking.cargoDetails?.packageType || 'BOXES',
-        goodsDescription: booking.cargoDetails?.goodsDescription || '',
-        quantity: booking.cargoDetails?.quantity || 1,
-        weight: booking.cargoDetails?.weight || 0,
-        length: booking.cargoDetails?.length || 0,
-        width: booking.cargoDetails?.width || 0,
-        height: booking.cargoDetails?.height || 0,
-        actualVolume: booking.cargoDetails?.actualVolume || 0,
-        cargoType: booking.cargoDetails?.cargoType || 'General'
-      };
-      setValue('cargoItems', [initialCargoItem]);
-      
-      // Initialize new cargo item form
-      setValue('newCargoItem', {
+    } else if (booking && mode === 'edit') {
+      // Reset form with existing booking data for edit mode
+      reset({
+        // Pick Up fields
+        shipperId: booking.origin?.id || "",
+        shipperName: booking.origin?.name || "",
+        contactPerson: booking.origin?.name || "",
+        estimatedPickupDate: booking.pickupDate || "",
+        shipperAddress: `${booking.sourceCity || ""}, ${booking.origin?.country || ""}`,
+        country: booking.origin?.country || "",
+        street: booking.origin?.street || "",
+        suburb: booking.origin?.suburb || "",
+        city: booking.sourceCity || "",
+        postalCode: booking.origin?.postalCode || "",
+        phone: booking.origin?.phone || "",
+        email: booking.origin?.email || "",
+        
+        // Delivery fields
+        consigneeId: booking.destination?.id || "",
+        consigneeName: booking.destination?.name || "",
+        consigneeContactPerson: booking.destination?.name || "",
+        estimatedDeliveryDate: booking.deliveryDate || "",
+        consigneeAddress: `${booking.destinationCity || ""}, ${booking.destination?.country || ""}`,
+        deliveryCountry: booking.destination?.country || "",
+        deliveryStreet: booking.destination?.street || "",
+        deliverySuburb: booking.destination?.suburb || "",
+        deliveryCity: booking.destinationCity || "",
+        deliveryPostalCode: booking.destination?.postalCode || "",
+        deliveryPhone: booking.destination?.phone || "",
+        deliveryEmail: booking.destination?.email || "",
+        
+        // Order Attributes
+        orderType: booking.orderAttributes?.orderType || "",
+        service: booking.orderAttributes?.service || "",
+        modeOfTransport: booking.orderAttributes?.modeOfTransport || "",
+        pickupInstructions: booking.orderAttributes?.pickupInstructions || "",
+        
+        // References
+        customerReference: booking.dq || "",
+        purchaseOrder: booking.po || "",
+        deliveryInstructions: booking.referenceDetails?.deliveryInstructions || "",
+        
+        // Additional Details
+        paymentMethod: booking.additionalDetails?.paymentMethod || "",
+        namedPlace: booking.additionalDetails?.namedPlace || "",
+        equipmentGroup: booking.additionalDetails?.equipmentGroup || "",
+        otherLocation: booking.additionalDetails?.otherLocation || "",
+        trailerNumber: booking.additionalDetails?.trailerNumber || "",
+        nmfcClass: booking.additionalDetails?.nmfcClass || "",
+        hazmat: booking.additionalDetails?.hazmat || "",
+        commodityCode: booking.additionalDetails?.commodityCode || "",
+        
+        // Cargo Items
+        cargoItems: booking.cargoDetails ? [{
+          item: booking.cargoDetails.packageType || 'BOXES',
+          packageType: booking.cargoDetails.packageType || 'BOXES',
+          goodsDescription: booking.cargoDetails.goodsDescription || '',
+          quantity: booking.cargoDetails.quantity || 1,
+          weight: booking.cargoDetails.weight || 0,
+          length: booking.cargoDetails.length || 0,
+          width: booking.cargoDetails.width || 0,
+          height: booking.cargoDetails.height || 0,
+          actualVolume: booking.cargoDetails.actualVolume || 0,
+          cargoType: booking.cargoDetails.cargoType || 'General'
+        }] : [],
+        newCargoItem: {
         item: '',
         packageType: '',
         goodsDescription: '',
@@ -810,13 +1005,35 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
         height: 0,
         actualVolume: 0,
         cargoType: ''
+        }
       });
     }
-  }, [booking, setValue]);
+  }, [booking, mode, reset]);
 
-  const handleInputChange = useCallback((field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  }, []);
+  // Form submission handler - API Ready
+  const onSubmit = useCallback(async (data) => {
+    try {
+      if (mode === 'add') {
+        // Add new booking
+        console.log('Creating new booking:', data);
+        // TODO: Replace with actual API call
+        // await api.post('/bookings', data);
+        toast.success("Booking created successfully!");
+      } else {
+        // Update existing booking
+        console.log('Updating booking:', booking?.id, data);
+        // TODO: Replace with actual API call
+        // await api.put(`/bookings/${booking.id}`, data);
+        toast.success("Booking updated successfully!");
+      }
+      
+      // Close modal after successful submission
+      onClose();
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast.error(mode === 'add' ? "Failed to create booking" : "Failed to update booking");
+    }
+  }, [mode, booking?.id, onClose]);
 
   const handleCargoAdd = useCallback(() => {
     const newCargoData = watch('newCargoItem');
@@ -869,7 +1086,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
     }
   }, [newDocument]);
 
-  if (!booking) return null;
+  if (!booking && mode === 'edit') return null;
 
   return (
     <>
@@ -877,11 +1094,12 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
         <DialogContent className="lg:max-w-[90rem] w-[95vw] max-h-[95vh] overflow-hidden p-0 flex flex-col">
           <DialogHeader className="px-6 py-4 border-b">
             <DialogTitle className="text-xl text-blue-600">
-              Booking Details (Shipment Characteristics) - {booking.id}
+              {mode === 'add' ? 'Add New Booking' : `Booking Details (Shipment Characteristics) - ${booking?.id}`}
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-8 min-h-0 bg-gray-50">
+          <Form {...form}>
+            <form id="booking-form" onSubmit={form.handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6 space-y-8 min-h-0 bg-gray-50">
             {/* Booking Details Summary - Non-editable */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-900">Booking Details</h2>
@@ -891,8 +1109,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                     <Truck className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{formData.shipperName}</p>
-                    <p className="text-xs text-gray-600">{formData.shipperAddress}</p>
+                      <p className="text-sm font-medium text-gray-900">{form.watch('shipperName') || 'N/A'}</p>
+                      <p className="text-xs text-gray-600">{form.watch('shipperAddress') || 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -900,8 +1118,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                     <Truck className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{formData.consigneeName}</p>
-                    <p className="text-xs text-gray-600">{formData.consigneeAddress}</p>
+                      <p className="text-sm font-medium text-gray-900">{form.watch('consigneeName') || 'N/A'}</p>
+                      <p className="text-xs text-gray-600">{form.watch('consigneeAddress') || 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -909,8 +1127,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                     <Scale className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{booking.cargoDetails?.actualWeight || 'N/A'}</p>
-                    <p className="text-xs text-gray-600">Actual Volume {booking.cargoDetails?.actualVolume || 'N/A'}</p>
+                      <p className="text-sm font-medium text-gray-900">{booking?.cargoDetails?.actualWeight || 'N/A'}</p>
+                      <p className="text-xs text-gray-600">Actual Volume {booking?.cargoDetails?.actualVolume || 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -919,7 +1137,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900">Distance</p>
-                    <p className="text-xs text-gray-600">{booking.distance}</p>
+                      <p className="text-xs text-gray-600">{booking?.distance || 'N/A'}</p>
                   </div>
                 </div>
               </div>
@@ -934,7 +1152,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                 </CardHeader>
                 <CardContent className="space-y-3 px-0">
                   <div className="grid grid-cols-2 gap-3">
-                    {PICKUP_FIELDS.map(field => renderField(field, formData, handleInputChange))}
+                    {PICKUP_FIELDS.map(field => renderField(field, control))}
                   </div>
                 </CardContent>
               </Card>
@@ -946,7 +1164,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                 </CardHeader>
                 <CardContent className="space-y-3 px-0">
                   <div className="grid grid-cols-2 gap-3">
-                    {DELIVERY_FIELDS.map(field => renderField(field, formData, handleInputChange))}
+                    {DELIVERY_FIELDS.map(field => renderField(field, control))}
                   </div>
                 </CardContent>
               </Card>
@@ -963,7 +1181,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                       <CardTitle className="text-lg text-blue-600">Order Attributes</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 px-0">
-                      {ORDER_ATTRIBUTES_FIELDS.map(field => renderField(field, formData, handleInputChange))}
+                      {ORDER_ATTRIBUTES_FIELDS.map(field => renderField(field, control))}
                     </CardContent>
                   </Card>
 
@@ -973,7 +1191,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
                       <CardTitle className="text-lg text-blue-600">References</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 px-0">
-                      {REFERENCES_FIELDS.map(field => renderField(field, formData, handleInputChange))}
+                      {REFERENCES_FIELDS.map(field => renderField(field, control))}
                     </CardContent>
                   </Card>
                 </div>
@@ -1189,21 +1407,22 @@ const EditBookingModal = memo(({ booking, isOpen, onClose }) => {
               <h2 className="text-lg font-semibold text-blue-600">Additional Details</h2>
               <div className="p-4 border border-gray-200 rounded-lg bg-white">
                 <div className="grid grid-cols-4 gap-4">
-                  {ADDITIONAL_DETAILS_FIELDS.map(field => renderField(field, formData, handleInputChange))}
+                  {ADDITIONAL_DETAILS_FIELDS.map(field => renderField(field, control))}
                 </div>
               </div>
             </div>
-          </div>
+            </form>
+          </Form>
 
           <DialogFooter className="px-6 py-4 border-t">
             <div className="flex gap-3">
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => reset()}>
                 Reset
               </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button type="submit" form="booking-form" className="bg-blue-600 hover:bg-blue-700">
                 Save
               </Button>
             </div>

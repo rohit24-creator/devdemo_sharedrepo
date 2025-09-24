@@ -232,7 +232,7 @@ const ActionButtons = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete
     <Button
       variant="outline"
       size="sm"
-      onClick={() => onEdit(booking)}
+      onClick={() => onEdit(booking.id)}
       className="flex items-center gap-1"
     >
       <Edit className="w-4 h-4" />
@@ -435,11 +435,13 @@ export default function EBookingPage() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false); // true = edit, false = add
   const [displayCount, setDisplayCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState({
     field: null,
-    direction: 'asc' // 'asc' or 'desc'
+    direction: 'asc' 
   });
 
   const { bookings, setBookings, pagination, loading } = useBookings();
@@ -463,12 +465,10 @@ export default function EBookingPage() {
         return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
       }
 
-      // Handle dates
       if (aValue instanceof Date && bValue instanceof Date) {
         return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
       }
 
-      // Handle string dates (convert to Date for comparison)
       if (typeof aValue === 'string' && typeof bValue === 'string' && 
           (aValue.includes('-') || aValue.includes('/'))) {
         const dateA = new Date(aValue);
@@ -478,7 +478,6 @@ export default function EBookingPage() {
         }
       }
 
-      // Fallback to string comparison
       const aStr = String(aValue || '');
       const bStr = String(bValue || '');
       const comparison = aStr.toLowerCase().localeCompare(bStr.toLowerCase());
@@ -507,20 +506,20 @@ export default function EBookingPage() {
   const handleSort = useCallback((field) => {
     setSortConfig(prevConfig => {
       if (prevConfig.field === field) {
-        // Toggle direction if same field
+
         return {
           field,
           direction: prevConfig.direction === 'asc' ? 'desc' : 'asc'
         };
       } else {
-        // New field, start with ascending
+
         return {
           field,
           direction: 'asc'
         };
       }
     });
-    setCurrentPage(1); // Reset to first page when sorting
+    setCurrentPage(1); 
   }, []);
 
   // Memoized callbacks for event handlers
@@ -529,9 +528,31 @@ export default function EBookingPage() {
     setIsModalOpen(true);
   }, []);
 
-  const handleEdit = useCallback((booking) => {
-    setSelectedBooking(booking);
-    setIsEditModalOpen(true);
+  const handleEdit = useCallback(async (id) => {
+    try {
+      // Fetch fresh data by booking ID (real-time approach)
+      const response = await fetch('/bookingList.json');
+      const data = await response.json();
+      const freshBooking = data.bookings.find(b => b.id === id);
+      
+      if (freshBooking) {
+        setSelectedBooking(freshBooking);
+        setIsEditMode(true); // Set to edit mode
+        setIsEditModalOpen(true);
+        setIsAddModalOpen(false); // Ensure add modal is closed
+      } else {
+        console.error('Booking not found:', id);
+      }
+    } catch (error) {
+      console.error('Error fetching booking data:', error);
+    }
+  }, []);
+
+  const handleAdd = useCallback(() => {
+    setSelectedBooking(null); // No existing booking for add mode
+    setIsEditMode(false); // Set to add mode
+    setIsAddModalOpen(true);
+    setIsEditModalOpen(false); // Ensure edit modal is closed
   }, []);
 
   const handleGenerateLabel = useCallback((booking) => {
@@ -552,6 +573,8 @@ export default function EBookingPage() {
   const handleCloseEditModal = useCallback(() => {
     setSelectedBooking(null);
     setIsEditModalOpen(false);
+    setIsAddModalOpen(false);
+    setIsEditMode(false);
   }, []);
 
   const handleViewModeChange = useCallback((mode) => {
@@ -591,7 +614,7 @@ export default function EBookingPage() {
       icon: Plus,
       variant: 'outline',
       hasText: true,
-      onClick: () => console.log('Add clicked')
+      onClick: handleAdd
     },
     {
       id: 'download',
@@ -806,7 +829,7 @@ export default function EBookingPage() {
                             <Eye className="w-4 h-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleEdit(booking)}>
+                          <DropdownMenuItem onClick={() => handleEdit(booking.id)}>
                             <Edit className="w-4 h-4 mr-2" />
                             Edit
                           </DropdownMenuItem>
@@ -886,11 +909,13 @@ export default function EBookingPage() {
         onGenerateLabel={handleGenerateLabel}
       />
 
-      {/* Edit Booking Modal */}
+      {/* Edit/Add Booking Modal */}
       <EditBookingModal
+        key={`${isEditMode ? 'edit' : 'add'}-${selectedBooking?.id || 'new'}`}
         booking={selectedBooking}
-        isOpen={isEditModalOpen}
+        isOpen={isAddModalOpen || isEditModalOpen}
         onClose={handleCloseEditModal}
+        mode={isEditMode ? 'edit' : 'add'}
       />
     </div>
   );
