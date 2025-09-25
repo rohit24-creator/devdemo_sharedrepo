@@ -88,6 +88,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { handleMappingChange } from "@/components/ui/reusableComponent/billingForm";
 import {
   Tabs,
   TabsContent,
@@ -128,9 +129,12 @@ const TRANSPORT_MODE_OPTIONS = [
 ];
 
 const CARGO_ITEM_OPTIONS = [
-  { value: "BOXES", label: "BOXES" },
-  { value: "PALLETS", label: "PALLETS" },
-  { value: "CONTAINERS", label: "CONTAINERS" }
+  { value: "BOXES TEST AKL FNT", label: "BOXES TEST AKL FNT" },
+  { value: "PLT", label: "PLT" },
+  { value: "PKG", label: "PKG" },
+  { value: "PCS", label: "PCS" },
+  { value: "CTN", label: "CTN" },
+  { value: "BX", label: "BX" }
 ];
 
 const CARGO_TYPE_OPTIONS = [
@@ -139,6 +143,54 @@ const CARGO_TYPE_OPTIONS = [
   { value: "Hazardous", label: "Hazardous" }
 ];
 
+
+
+// Mapping data for cargo items
+const cargoItemMappingData = [
+  { item: "BOXES TEST AKL FNT", packageType: "BOXES TEST AKL FNT" },
+  { item: "PLT", packageType: "Pallet" },
+  { item: "PKG", packageType: "Package" },
+  { item: "PCS", packageType: "Pieces" },
+  { item: "CTN", packageType: "Carton" },
+  { item: "CNT", packageType: "Container" },
+  { item: "BX", packageType: "Box" }
+];
+
+
+
+const FORM_MAPPING_CONFIG = {
+  'newCargoItem.item': {
+    keyField: "item",
+    data: cargoItemMappingData,
+    mappedFields: ["packageType"],
+    targetField: "newCargoItem.packageType"
+  }
+};
+
+const handleFormMappingChange = (fieldName, value, form) => {
+  const mappingConfig = FORM_MAPPING_CONFIG[fieldName];
+  
+  if (mappingConfig) {
+    const selectedData = mappingConfig.data.find(item => item[mappingConfig.keyField] === value);
+    
+    if (selectedData) {
+      // Handle single target field 
+      if (mappingConfig.targetField) {
+        const mappedValue = selectedData[mappingConfig.mappedFields[0]];
+        form.setValue(mappingConfig.targetField, mappedValue);
+      }
+      
+      // Handle multiple target fields 
+      if (mappingConfig.targetFields) {
+        mappingConfig.mappedFields.forEach((mappedField, index) => {
+          const targetField = mappingConfig.targetFields[index];
+          const mappedValue = selectedData[mappedField];
+          form.setValue(targetField, mappedValue);
+        });
+      }
+    }
+  }
+};
 
 // Reusable cargo item schema
 const cargoItemSchema = z.object({
@@ -208,7 +260,7 @@ const bookingFormSchema = z.object({
 // Cargo field configuration
 const CARGO_FIELDS = [
   { name: 'item', label: 'Item', type: 'select', options: CARGO_ITEM_OPTIONS },
-  { name: 'packageType', label: 'Package Type', type: 'select', options: CARGO_ITEM_OPTIONS },
+  { name: 'packageType', label: 'Package Type', type: 'text', disabled: true },
   { name: 'goodsDescription', label: 'Goods Description', type: 'input', placeholder: 'Enter goods description' },
   { name: 'quantity', label: 'Quantity', type: 'number', placeholder: '1' },
   { name: 'weight', label: 'Weight (Lbs)', type: 'number', placeholder: 'Enter weight' },
@@ -1201,9 +1253,13 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                             <FormLabel className="text-sm font-medium text-gray-700">{field.label}</FormLabel>
                             <FormControl>
                               {field.type === 'select' ? (
-                                <Select onValueChange={formField.onChange} value={formField.value}>
+                                <Select onValueChange={(value) => {
+                                  formField.onChange(value);
+                                  // Auto-mapping using reusable function
+                                  handleFormMappingChange('newCargoItem.item', value, form);
+                                }} value={formField.value}>
                                   <SelectTrigger className="h-9 w-full border-2 border-[#E7ECFD]">
-                                    <SelectValue placeholder={field.name === 'packageType' ? 'Select Package' : 'Select'} />
+                                    <SelectValue placeholder="Select" />
                                   </SelectTrigger>
                                   <SelectContent>
                                     {field.options.map(option => (
@@ -1217,7 +1273,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                                 <Input
                                   type={field.type}
                                   placeholder={field.placeholder}
-                                  className="h-9 w-full border-2 border-[#E7ECFD]"
+                                  className={`h-9 w-full border-2 border-[#E7ECFD] ${field.disabled ? 'bg-gray-100' : ''}`}
+                                  disabled={field.disabled}
                                   {...formField}
                                   onChange={field.type === 'number' ? (e) => formField.onChange(Number(e.target.value)) : formField.onChange}
                                 />
