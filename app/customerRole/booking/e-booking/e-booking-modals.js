@@ -229,74 +229,62 @@ const PICKUP_FIELDS = [
     label: 'Shipper ID', 
     type: 'text', 
     hasIcons: true,
-    className: 'flex-1 h-8 text-sm'
   },
   { 
     name: 'shipperName', 
     label: 'Shipper Name', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'contactPerson', 
     label: 'Contact person', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'estimatedPickupDate', 
     label: 'Estimated Pickup Date', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'shipperAddress', 
     label: 'Shipper Address', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'country', 
     label: 'Country', 
     type: 'select',
     options: COUNTRY_OPTIONS,
-    className: 'h-8 text-sm w-full'
   },
   { 
     name: 'street', 
     label: 'Street', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'suburb', 
     label: 'Suburb', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'city', 
     label: 'City / Town', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'postalCode', 
     label: 'Postal Code', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'phone', 
     label: 'Phone', 
     type: 'tel',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'email', 
     label: 'Email', 
     type: 'email',
-    className: 'h-8 text-sm'
   }
 ];
 
@@ -306,74 +294,62 @@ const DELIVERY_FIELDS = [
     label: 'Consignee ID', 
     type: 'text', 
     hasIcons: true,
-    className: 'flex-1 h-8 text-sm'
   },
   { 
     name: 'consigneeName', 
     label: 'Consignee Name', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'consigneeContactPerson', 
     label: 'Contact person', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'estimatedDeliveryDate', 
     label: 'Estimated Delivery Date', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'consigneeAddress', 
     label: 'Consignee Address', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'deliveryCountry', 
     label: 'Country', 
     type: 'select',
     options: COUNTRY_OPTIONS,
-    className: 'h-8 text-sm w-full'
   },
   { 
     name: 'deliveryStreet', 
     label: 'Street', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'deliverySuburb', 
     label: 'Suburb', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'deliveryCity', 
     label: 'City / Town', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'deliveryPostalCode', 
     label: 'Postal Code', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'deliveryPhone', 
     label: 'Phone', 
     type: 'tel',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'deliveryEmail', 
     label: 'Email', 
     type: 'email',
-    className: 'h-8 text-sm'
   }
 ];
 
@@ -383,28 +359,24 @@ const ORDER_ATTRIBUTES_FIELDS = [
     label: 'Select Order Type', 
     type: 'select',
     options: ORDER_TYPE_OPTIONS,
-    className: 'h-8 w-full'
   },
   { 
     name: 'service', 
     label: 'Select Service', 
     type: 'select',
     options: SERVICE_OPTIONS,
-    className: 'h-8 w-full'
   },
   { 
     name: 'modeOfTransport', 
     label: 'Mode Of Transport', 
     type: 'select',
     options: TRANSPORT_MODE_OPTIONS,
-    className: 'h-8 w-full'
   },
   { 
     name: 'pickupInstructions', 
     label: 'Pick Up Instructions', 
     type: 'textarea',
     rows: 3,
-    className: 'resize-none text-sm'
   }
 ];
 
@@ -413,20 +385,17 @@ const REFERENCES_FIELDS = [
     name: 'customerReference', 
     label: 'DQ/Customer reference', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'purchaseOrder', 
     label: 'Purchase Order', 
     type: 'text',
-    className: 'h-8 text-sm'
   },
   { 
     name: 'deliveryInstructions', 
     label: 'Delivery Instructions', 
     type: 'textarea',
     rows: 3,
-    className: 'resize-none text-sm'
   }
 ];
 
@@ -435,49 +404,41 @@ const ADDITIONAL_DETAILS_FIELDS = [
     name: 'paymentMethod', 
     label: 'Payment Method', 
     type: 'text',
-    className: 'h-9'
   },
   { 
     name: 'namedPlace', 
     label: 'Named Place', 
     type: 'text',
-    className: 'h-9'
   },
   { 
     name: 'equipmentGroup', 
     label: 'Equipment Group', 
     type: 'text',
-    className: 'h-9'
   },
   { 
     name: 'otherLocation', 
     label: 'Other Location', 
     type: 'text',
-    className: 'h-9'
   },
   { 
     name: 'trailerNumber', 
     label: 'Trailer Number', 
     type: 'text',
-    className: 'h-9'
   },
   { 
     name: 'nmfcClass', 
     label: 'NMFC Class', 
     type: 'text',
-    className: 'h-9'
   },
   { 
     name: 'hazmat', 
     label: 'Hazmat', 
     type: 'text',
-    className: 'h-9'
   },
   { 
     name: 'commodityCode', 
     label: 'Commodity Code', 
     type: 'text',
-    className: 'h-9'
   }
 ];
 
@@ -500,28 +461,28 @@ const renderField = (field, control) => {
           <div className="flex gap-1">
             <Input
               type={type}
-              className={className}
+              className="flex-1 h-9 text-sm border-2 border-[#E7ECFD]"
                     {...formField}
               {...props}
             />
-            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+            <Button variant="outline" size="sm" type="button" className="h-9 w-9 p-0 border-2 border-[#E7ECFD]">
               <SearchIcon className="w-3 h-3" />
             </Button>
-            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+            <Button variant="outline" size="sm" type="button" className="h-9 w-9 p-0 border-2 border-[#E7ECFD]">
               <FileIcon className="w-3 h-3" />
             </Button>
           </div>
         ) : (
           <Input
             type={type}
-            className={className}
+            className="h-9 text-sm border-2 border-[#E7ECFD]"
                   {...formField}
             {...props}
           />
         )
       ) : type === 'select' ? (
               <Select onValueChange={formField.onChange} value={formField.value}>
-          <SelectTrigger className={className}>
+          <SelectTrigger className="h-9 text-sm border-2 border-[#E7ECFD] w-full">
             <SelectValue placeholder={`Select ${label}`} />
           </SelectTrigger>
           <SelectContent>
@@ -535,7 +496,7 @@ const renderField = (field, control) => {
       ) : type === 'textarea' ? (
         <Textarea
           rows={rows || 3}
-          className={className}
+          className="border-2 border-[#E7ECFD] text-sm"
                 {...formField}
           {...props}
         />
@@ -1100,7 +1061,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
             <form 
               id="booking-form" 
               onSubmit={mode === 'add' ? form.handleSubmit(onSubmitWithValidation) : onSubmitWithoutValidation}
-              className="flex-1 overflow-y-auto p-6 space-y-8 min-h-0 bg-gray-50"
+              className="flex-1 overflow-y-auto p-6 space-y-8 min-h-0 bg-gray-100"
             >
             {/* Booking Details Summary - Non-editable */}
             <div className="space-y-4">
@@ -1241,7 +1202,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                             <FormControl>
                               {field.type === 'select' ? (
                                 <Select onValueChange={formField.onChange} value={formField.value}>
-                                  <SelectTrigger className="h-9 w-full">
+                                  <SelectTrigger className="h-9 w-full border-2 border-[#E7ECFD]">
                                     <SelectValue placeholder={field.name === 'packageType' ? 'Select Package' : 'Select'} />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1256,7 +1217,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                                 <Input
                                   type={field.type}
                                   placeholder={field.placeholder}
-                                  className="h-9 w-full"
+                                  className="h-9 w-full border-2 border-[#E7ECFD]"
                                   {...formField}
                                   onChange={field.type === 'number' ? (e) => formField.onChange(Number(e.target.value)) : formField.onChange}
                                 />
@@ -1282,9 +1243,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                           <FormLabel className="text-sm font-medium text-gray-700">Weight (Lbs)</FormLabel>
                           <FormControl>
                             <Input
-                              type="number"
-                              placeholder="Enter weight"
-                              className="h-9 w-full"
+                                type="number"
+                                placeholder="Enter weight"
+                                className="h-9 w-full border-2 border-[#E7ECFD]"
                               {...formField}
                               onChange={(e) => formField.onChange(Number(e.target.value))}
                             />
@@ -1309,7 +1270,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                               <FormControl>
                                 <Input
                                   placeholder={field.placeholder}
-                                  className="h-9"
+                                    className="h-9 border-2 border-[#E7ECFD]"
                                   {...formField}
                                   onChange={(e) => formField.onChange(Number(e.target.value))}
                                 />
@@ -1332,9 +1293,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                           <FormLabel className="text-sm font-medium text-gray-700">Actual Volume (cbm)</FormLabel>
                           <FormControl>
                             <Input
-                              type="number"
-                              placeholder="Enter volume"
-                              className="h-9 w-full"
+                                type="number"
+                                placeholder="Enter volume"
+                                className="h-9 w-full border-2 border-[#E7ECFD]"
                               {...formField}
                               onChange={(e) => formField.onChange(Number(e.target.value))}
                             />
@@ -1355,7 +1316,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                           <FormLabel className="text-sm font-medium text-gray-700">Cargo Type</FormLabel>
                           <FormControl>
                             <Select onValueChange={formField.onChange} value={formField.value}>
-                              <SelectTrigger className="h-9 w-full">
+                               <SelectTrigger className="h-9 w-full border-2 border-[#E7ECFD]">
                                 <SelectValue placeholder="Select Cargo Type" />
                               </SelectTrigger>
                               <SelectContent>
