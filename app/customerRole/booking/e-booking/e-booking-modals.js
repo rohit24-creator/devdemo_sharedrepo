@@ -148,86 +148,86 @@ const FIELDS_WITH_MODALS = ['shipperId', 'consigneeId'];
 
 const MODAL_CONFIG = {
   shipperId: {
-    columns: ["Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"],
+    columns: ["ID", "Name", "Party Type", "Street", "City", "Country", "Company Code", "Branch Code"],
     data: [
       {
-        "Shipper ID": "SHIP001",
-        Name: "Acme Shipping",
-        Street: "789 Ocean Ave",
-        City: "Mumbai",
-        Country: "India",
-        Email: "acme@ship.com",
-        "Company Code": "INFY",
-        "Branch Code": "INPUN"
+        "ID": "7755100032",
+        "Name": "ROSS TAY",
+        "Party Type": "Shipper",
+        "Street": "4349 Tujunga Avenue",
+        "City": "Los Angeles",
+        "Country": "United States",
+        "Company Code": "COPELAND",
+        "Branch Code": "COPELANDTX"
       },
       {
-        "Shipper ID": "SHIP002",
-        Name: "Global Freight",
-        Street: "101 River Rd",
-        City: "Bangkok",
-        Country: "Thailand",
-        Email: "global@freight.com",
-        "Company Code": "THKN",
-        "Branch Code": "THBKK"
+        "ID": "PROTRANS",
+        "Name": "ProTrans International",
+        "Party Type": "Shipper",
+        "Street": "PROTRANS INTERNATIONAL,",
+        "City": "TX",
+        "Country": "USA",
+        "Company Code": "COPELAND",
+        "Branch Code": "COPELANDTX"
       },
       {
-        "Shipper ID": "SHIP003",
-        Name: "Express Logistics",
-        Street: "456 Harbor St",
-        City: "Chennai",
-        Country: "India",
-        Email: "express@logistics.com",
-        "Company Code": "TCS01",
-        "Branch Code": "INCHN"
+        "ID": "564577777",
+        "Name": "joseph shippper",
+        "Party Type": "pickup",
+        "Street": "3300 Capitol Avenue",
+        "City": "Fremont",
+        "Country": "United States",
+        "Company Code": "COPELAND",
+        "Branch Code": "COPELANDTX"
       }
     ],
     titles: {
-      list: "List of Shippers",
+      list: "Shipper List",
       search: "Search Shipper Details",
       find: "Select Shipper"
     },
-    valueKey: "Shipper ID"
+    valueKey: "ID"
   },
   consigneeId: {
-    columns: ["Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"],
+    columns: ["ID", "Name", "Party Type", "Street", "City", "Country", "Company Code", "Branch Code"],
     data: [
       {
-        "Consignee ID": "CON001",
-        Name: "Best Consignee",
-        Street: "202 Main Plaza",
-        City: "Chennai",
-        Country: "India",
-        Email: "best@consignee.com",
-        "Company Code": "TCS01",
-        "Branch Code": "INCHN"
+        "ID": "564577777",
+        "Name": "joseph shippper",
+        "Party Type": "Consignee",
+        "Street": "3300 Capitol Avenue",
+        "City": "Fremont",
+        "Country": "United States",
+        "Company Code": "COPELAND",
+        "Branch Code": "COPELANDTX"
       },
       {
-        "Consignee ID": "CON002",
-        Name: "Quick Delivery",
-        Street: "303 Fast Lane",
-        City: "Pune",
-        Country: "India",
-        Email: "quick@delivery.com",
-        "Company Code": "WPR02",
-        "Branch Code": "INPUN"
+        "ID": "564577776",
+        "Name": "joseph consignee",
+        "Party Type": "Consignee",
+        "Street": "Lakeview Boulevard",
+        "City": "Westland",
+        "Country": "United States",
+        "Company Code": "COPELAND",
+        "Branch Code": "COPELANDTX"
       },
       {
-        "Consignee ID": "CON003",
-        Name: "Reliable Receiver",
-        Street: "404 Trust Ave",
-        City: "Delhi",
-        Country: "India",
-        Email: "reliable@receiver.com",
-        "Company Code": "INFY",
-        "Branch Code": "INPUN"
+        "ID": "1739884973",
+        "Name": "joesh pickup",
+        "Party Type": "Consignee",
+        "Street": "2201 Walnut Avenue",
+        "City": "Hanover Park",
+        "Country": "United States",
+        "Company Code": "COPELAND",
+        "Branch Code": "COPELANDTX"
       }
     ],
     titles: {
-      list: "List of Consignees",
+      list: "Consignee List",
       search: "Search Consignee Details",
       find: "Select Consignee"
     },
-    valueKey: "Consignee ID"
+    valueKey: "ID"
   }
 };
 
@@ -1364,7 +1364,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
 
             {/* Order Attributes, References, and Documents */}
             <div className="grid grid-cols-5 gap-6">
-              {/* Order Attributes and References - 60% width */}
+
               <div className="col-span-3">
                 <div className="grid grid-cols-2 gap-6">
                   {/* Order Attributes */}
@@ -1389,7 +1389,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                 </div>
               </div>
 
-              {/* Route - 40% width */}
+              {/* Route -*/}
               <div className="col-span-2">
                 <Card className="p-3 h-full">
                   <CardHeader className="pb-2 px-0">
@@ -1409,13 +1409,12 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               </div>
             </div>
 
-            {/* Cargo Details - Full Width */}
+            {/* Cargo Details */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-blue-600">Cargo Details</h2>
               
-              {/* Add Cargo Form */}
               <div className="space-y-4 p-4 border border-gray-200 rounded-lg bg-white">
-                {/* Row 1: Item, Package Type, Goods Description, Quantity */}
+
                 <div className="grid grid-cols-4 gap-4">
                   {CARGO_FIELDS.slice(0, 4).map(field => (
                     <div key={field.name}>
@@ -1429,7 +1428,6 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                               {field.type === 'select' ? (
                                 <Select onValueChange={(value) => {
                                   formField.onChange(value);
-                                  // Auto-mapping using reusable function
                                   handleFormMappingChange('newCargoItem.item', value, form);
                                 }} value={formField.value}>
                                   <SelectTrigger className="h-9 w-full border-2 border-[#E7ECFD]">
@@ -1462,7 +1460,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                   ))}
                 </div>
                 
-                {/* Row 2: Weight, Dimensions, Actual Volume, Cargo Type */}
+
                 <div className="grid grid-cols-4 gap-4">
                   {/* Weight Field */}
                   <div>
@@ -1752,7 +1750,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         </DialogContent>
       </Dialog>
       
-      {/* Modal for shipper/consignee selection */}
+
       {renderModal()}
     </>
   );

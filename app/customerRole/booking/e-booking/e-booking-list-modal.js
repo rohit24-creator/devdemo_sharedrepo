@@ -45,12 +45,12 @@ export default function EBookingModal({
   const [rowsPerPage, setRowsPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Reset page when rowsPerPage or searchValue changes
+
   React.useEffect(() => {
     setCurrentPage(1);
   }, [rowsPerPage, searchValue, data]);
 
-  // Filtered data
+
   const filteredData = data.filter((row) =>
     columns.some((col) =>
       String(row[col] ?? "")
@@ -63,7 +63,7 @@ export default function EBookingModal({
   const rowsPerPageNum = Number(rowsPerPage);
   const totalPages = Math.ceil(totalRows / rowsPerPageNum);
 
-  // Paginated data
+
   const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPageNum,
     currentPage * rowsPerPageNum
@@ -85,11 +85,9 @@ export default function EBookingModal({
           <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
         </div>
 
-        {/* Controls Section */}
         <div className="bg-white px-6 py-4 border-b border-gray-200">
-          {/* Top row: Dropdown left, Pagination right */}
+
           <div className="flex items-center justify-between mb-4">
-            {/* Dropdown left */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-700">Show:</span>
               <Select
@@ -194,7 +192,7 @@ export default function EBookingModal({
           </div>
         </div>
 
-        {/* Footer - E-booking style */}
+
         <div className="bg-white px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
           <Button
             variant="outline"
