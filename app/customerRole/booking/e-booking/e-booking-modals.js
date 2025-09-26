@@ -101,11 +101,11 @@ import { StatusBadge } from "./page";
 
 // Configuration constants for dropdown options
 const COUNTRY_OPTIONS = [
-  { value: "UNITED STATES OF AMERICA", label: "UNITED STATES OF AMERICA" },
-  { value: "UNITED KINGDOM", label: "UNITED KINGDOM" },
-  { value: "INDIA", label: "INDIA" },
-  { value: "CANADA", label: "CANADA" },
-  { value: "AUSTRALIA", label: "AUSTRALIA" }
+  { value: "United States", label: "United States" },
+  { value: "United Kingdom", label: "United Kingdom" },
+  { value: "India", label: "India" },
+  { value: "Canada", label: "Canada" },
+  { value: "Australia", label: "Australia" }
 ];
 
 const ORDER_TYPE_OPTIONS = [
@@ -158,7 +158,14 @@ const MODAL_CONFIG = {
         "City": "Los Angeles",
         "Country": "United States",
         "Company Code": "COPELAND",
-        "Branch Code": "COPELANDTX"
+        "Branch Code": "COPELANDTX",
+        "Contact Person": "ROSS TAY",
+        "Suburb": "Los Angeles",
+        "City/Town": "Los Angeles",
+        "Postal Code": "90027",
+        "Phone": "+1-323-555-0123",
+        "Email": "ross.tay@example.com",
+        "Estimated Pickup Date": "2024-01-15"
       },
       {
         "ID": "PROTRANS",
@@ -168,7 +175,14 @@ const MODAL_CONFIG = {
         "City": "TX",
         "Country": "USA",
         "Company Code": "COPELAND",
-        "Branch Code": "COPELANDTX"
+        "Branch Code": "COPELANDTX",
+        "Contact Person": "ProTrans International",
+        "Suburb": "TX",
+        "City/Town": "TX",
+        "Postal Code": "75001",
+        "Phone": "+1-214-555-0456",
+        "Email": "protrans@example.com",
+        "Estimated Pickup Date": "2024-01-16"
       },
       {
         "ID": "564577777",
@@ -178,7 +192,14 @@ const MODAL_CONFIG = {
         "City": "Fremont",
         "Country": "United States",
         "Company Code": "COPELAND",
-        "Branch Code": "COPELANDTX"
+        "Branch Code": "COPELANDTX",
+        "Contact Person": "joseph shippper",
+        "Suburb": "Fremont",
+        "City/Town": "Fremont",
+        "Postal Code": "94538",
+        "Phone": "+1-510-555-0789",
+        "Email": "joseph.shipper@example.com",
+        "Estimated Pickup Date": "2024-01-17"
       }
     ],
     titles: {
@@ -199,7 +220,14 @@ const MODAL_CONFIG = {
         "City": "Fremont",
         "Country": "United States",
         "Company Code": "COPELAND",
-        "Branch Code": "COPELANDTX"
+        "Branch Code": "COPELANDTX",
+        "Contact Person": "joseph shippper",
+        "Suburb": "Fremont",
+        "City/Town": "Fremont",
+        "Postal Code": "94538",
+        "Phone": "+1-510-555-0789",
+        "Email": "joseph.shipper@example.com",
+        "Estimated Pickup Date": "2024-01-17"
       },
       {
         "ID": "564577776",
@@ -209,7 +237,14 @@ const MODAL_CONFIG = {
         "City": "Westland",
         "Country": "United States",
         "Company Code": "COPELAND",
-        "Branch Code": "COPELANDTX"
+        "Branch Code": "COPELANDTX",
+        "Contact Person": "joseph consignee",
+        "Suburb": "Westland",
+        "City/Town": "Westland",
+        "Postal Code": "48185",
+        "Phone": "+1-734-555-0123",
+        "Email": "joseph.consignee@example.com",
+        "Estimated Pickup Date": "2024-01-18"
       },
       {
         "ID": "1739884973",
@@ -219,7 +254,14 @@ const MODAL_CONFIG = {
         "City": "Hanover Park",
         "Country": "United States",
         "Company Code": "COPELAND",
-        "Branch Code": "COPELANDTX"
+        "Branch Code": "COPELANDTX",
+        "Contact Person": "joesh pickup",
+        "Suburb": "Hanover Park",
+        "City/Town": "Hanover Park",
+        "Postal Code": "60133",
+        "Phone": "+1-630-555-0456",
+        "Email": "joesh.pickup@example.com",
+        "Estimated Pickup Date": "2024-01-19"
       }
     ],
     titles: {
@@ -250,6 +292,40 @@ const FORM_MAPPING_CONFIG = {
     data: cargoItemMappingData,
     mappedFields: ["packageType"],
     targetField: "newCargoItem.packageType"
+  },
+  'shipperId': {
+    keyField: "ID",
+    data: MODAL_CONFIG.shipperId.data,
+    mappedFields: ["Name", "Contact Person", "City", "Country", "Street", "Suburb", "City/Town", "Postal Code", "Phone", "Email", "Estimated Pickup Date"],
+    targetFields: {
+      "Name": "shipperName",
+      "Contact Person": "contactPerson", 
+      "Country": "country",
+      "Street": "street",
+      "Suburb": "suburb",
+      "City/Town": "city",
+      "Postal Code": "postalCode",
+      "Phone": "phone",
+      "Email": "email",
+      "Estimated Pickup Date": "estimatedPickupDate"
+    }
+  },
+  'consigneeId': {
+    keyField: "ID",
+    data: MODAL_CONFIG.consigneeId.data,
+    mappedFields: ["Name", "Contact Person", "City", "Country", "Street", "Suburb", "City/Town", "Postal Code", "Phone", "Email", "Estimated Pickup Date"],
+    targetFields: {
+      "Name": "consigneeName",
+      "Contact Person": "consigneeContactPerson",
+      "Country": "deliveryCountry",
+      "Street": "deliveryStreet",
+      "Suburb": "deliverySuburb",
+      "City/Town": "deliveryCity",
+      "Postal Code": "deliveryPostalCode",
+      "Phone": "deliveryPhone",
+      "Email": "deliveryEmail",
+      "Estimated Pickup Date": "estimatedDeliveryDate"
+    }
   }
 };
 
@@ -268,11 +344,22 @@ const handleFormMappingChange = (fieldName, value, form) => {
       
       // Handle multiple target fields 
       if (mappingConfig.targetFields) {
-        mappingConfig.mappedFields.forEach((mappedField, index) => {
-          const targetField = mappingConfig.targetFields[index];
-          const mappedValue = selectedData[mappedField];
+        Object.entries(mappingConfig.targetFields).forEach(([sourceField, targetField]) => {
+          const mappedValue = selectedData[sourceField];
           form.setValue(targetField, mappedValue);
         });
+      }
+      
+      if (fieldName === 'shipperId') {
+        const city = selectedData['City'] || '';
+        const country = selectedData['Country'] || '';
+        form.setValue('shipperAddress', `${city}, ${country}`);
+      }
+      
+      if (fieldName === 'consigneeId') {
+        const city = selectedData['City'] || '';
+        const country = selectedData['Country'] || '';
+        form.setValue('consigneeAddress', `${city}, ${country}`);
       }
     }
   }
@@ -1261,7 +1348,13 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
         onSelect={(row) => {
           const fieldName = modalField.name;
           const value = row[config.valueKey];
+          
+          // Set the main field value (ID)
           form.setValue(fieldName, value);
+          
+          // Use existing mapping logic for comprehensive field mapping
+          handleFormMappingChange(fieldName, value, form);
+          
           handleModalSelect();
         }}
       />
