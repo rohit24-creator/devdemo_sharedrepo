@@ -88,7 +88,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { handleMappingChange } from "@/components/ui/reusableComponent/billingForm";
+import EBookingModal from "./e-booking-list-modal";
 import {
   Tabs,
   TabsContent,
@@ -144,6 +144,92 @@ const CARGO_TYPE_OPTIONS = [
 ];
 
 
+const FIELDS_WITH_MODALS = ['shipperId', 'consigneeId'];
+
+const MODAL_CONFIG = {
+  shipperId: {
+    columns: ["Shipper ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"],
+    data: [
+      {
+        "Shipper ID": "SHIP001",
+        Name: "Acme Shipping",
+        Street: "789 Ocean Ave",
+        City: "Mumbai",
+        Country: "India",
+        Email: "acme@ship.com",
+        "Company Code": "INFY",
+        "Branch Code": "INPUN"
+      },
+      {
+        "Shipper ID": "SHIP002",
+        Name: "Global Freight",
+        Street: "101 River Rd",
+        City: "Bangkok",
+        Country: "Thailand",
+        Email: "global@freight.com",
+        "Company Code": "THKN",
+        "Branch Code": "THBKK"
+      },
+      {
+        "Shipper ID": "SHIP003",
+        Name: "Express Logistics",
+        Street: "456 Harbor St",
+        City: "Chennai",
+        Country: "India",
+        Email: "express@logistics.com",
+        "Company Code": "TCS01",
+        "Branch Code": "INCHN"
+      }
+    ],
+    titles: {
+      list: "List of Shippers",
+      search: "Search Shipper Details",
+      find: "Select Shipper"
+    },
+    valueKey: "Shipper ID"
+  },
+  consigneeId: {
+    columns: ["Consignee ID", "Name", "Street", "City", "Country", "Email", "Company Code", "Branch Code"],
+    data: [
+      {
+        "Consignee ID": "CON001",
+        Name: "Best Consignee",
+        Street: "202 Main Plaza",
+        City: "Chennai",
+        Country: "India",
+        Email: "best@consignee.com",
+        "Company Code": "TCS01",
+        "Branch Code": "INCHN"
+      },
+      {
+        "Consignee ID": "CON002",
+        Name: "Quick Delivery",
+        Street: "303 Fast Lane",
+        City: "Pune",
+        Country: "India",
+        Email: "quick@delivery.com",
+        "Company Code": "WPR02",
+        "Branch Code": "INPUN"
+      },
+      {
+        "Consignee ID": "CON003",
+        Name: "Reliable Receiver",
+        Street: "404 Trust Ave",
+        City: "Delhi",
+        Country: "India",
+        Email: "reliable@receiver.com",
+        "Company Code": "INFY",
+        "Branch Code": "INPUN"
+      }
+    ],
+    titles: {
+      list: "List of Consignees",
+      search: "Search Consignee Details",
+      find: "Select Consignee"
+    },
+    valueKey: "Consignee ID"
+  }
+};
 
 // Mapping data for cargo items
 const cargoItemMappingData = [
@@ -280,7 +366,6 @@ const PICKUP_FIELDS = [
     name: 'shipperId', 
     label: 'Shipper ID', 
     type: 'text', 
-    hasIcons: true,
   },
   { 
     name: 'shipperName', 
@@ -345,7 +430,6 @@ const DELIVERY_FIELDS = [
     name: 'consigneeId', 
     label: 'Consignee ID', 
     type: 'text', 
-    hasIcons: true,
   },
   { 
     name: 'consigneeName', 
@@ -493,73 +577,6 @@ const ADDITIONAL_DETAILS_FIELDS = [
     type: 'text',
   }
 ];
-
-const renderField = (field, control) => {
-  const { name, label, type, options, hasIcons, className, rows, ...props } = field;
-  
-  return (
-    <FormField
-      key={name}
-      control={control}
-      name={name}
-      render={({ field: formField, fieldState }) => (
-        <FormItem>
-          <FormLabel className="text-sm font-medium text-gray-700">
-        {label}
-          </FormLabel>
-          <FormControl>
-      {type === 'text' || type === 'tel' || type === 'email' ? (
-        hasIcons ? (
-          <div className="flex gap-1">
-            <Input
-              type={type}
-              className="flex-1 h-9 text-sm border-2 border-[#E7ECFD]"
-                    {...formField}
-              {...props}
-            />
-            <Button variant="outline" size="sm" type="button" className="h-9 w-9 p-0 border-2 border-[#E7ECFD]">
-              <SearchIcon className="w-3 h-3" />
-            </Button>
-            <Button variant="outline" size="sm" type="button" className="h-9 w-9 p-0 border-2 border-[#E7ECFD]">
-              <FileIcon className="w-3 h-3" />
-            </Button>
-          </div>
-        ) : (
-          <Input
-            type={type}
-            className="h-9 text-sm border-2 border-[#E7ECFD]"
-                  {...formField}
-            {...props}
-          />
-        )
-      ) : type === 'select' ? (
-              <Select onValueChange={formField.onChange} value={formField.value}>
-          <SelectTrigger className="h-9 text-sm border-2 border-[#E7ECFD] w-full">
-            <SelectValue placeholder={`Select ${label}`} />
-          </SelectTrigger>
-          <SelectContent>
-            {options?.map(option => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ) : type === 'textarea' ? (
-        <Textarea
-          rows={rows || 3}
-          className="border-2 border-[#E7ECFD] text-sm"
-                {...formField}
-          {...props}
-        />
-      ) : null}
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
-};
 
 // Info Tab Component
 const InfoTab = memo(({ booking }) => (
@@ -812,6 +829,116 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   const [documents, setDocuments] = useState([]);
   const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
   const [newDocument, setNewDocument] = useState({ type: '', name: '', file: null });
+
+  const [modalField, setModalField] = useState(null);
+  const [modalType, setModalType] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
+
+
+  const renderField = (field, formControl) => {
+    const { name, label, type, options, className, rows, ...props } = field;
+    const hasIcons = FIELDS_WITH_MODALS.includes(name);
+    
+    return (
+      <FormField
+        key={name}
+        control={formControl}
+        name={name}
+        render={({ field: formField, fieldState }) => (
+          <FormItem>
+            <FormLabel className="text-sm font-medium text-gray-700">
+              {label}
+            </FormLabel>
+            <FormControl>
+              {type === 'text' || type === 'tel' || type === 'email' ? (
+                hasIcons ? (
+                  <div className="flex gap-1">
+                    <Input
+                      type={type}
+                      className="flex-1 h-9 text-sm border-2 border-[#E7ECFD]"
+                      {...formField}
+                      {...props}
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      type="button" 
+                      className="h-9 w-9 p-0 border-2 border-[#E7ECFD]"
+                      onClick={() => {
+                        setModalField({ name, form: form });
+                        setModalType("search");
+                        if (MODAL_CONFIG[name]) {
+                          const currentValue = form.getValues(name);
+                          if (!currentValue || currentValue.trim() === '') {
+                            setFilteredData([]);
+                          } else {
+                            const match = MODAL_CONFIG[name].data.filter((x) => 
+                              x[MODAL_CONFIG[name].columns[0]].trim().toLowerCase() === currentValue?.trim().toLowerCase()
+                            );
+                            setFilteredData(match.length > 0 ? match : []);
+                          }
+                        }
+                      }}
+                    >
+                      <SearchIcon className="w-3 h-3" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      type="button" 
+                      className="h-9 w-9 p-0 border-2 border-[#E7ECFD]"
+                      onClick={() => {
+                        setModalField({ name, form: form });
+                        setModalType("list");
+                        setFilteredData(MODAL_CONFIG[name]?.data || []);
+                      }}
+                    >
+                      <FileIcon className="w-3 h-3" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Input
+                    type={type}
+                    className="h-9 text-sm border-2 border-[#E7ECFD]"
+                    {...formField}
+                    {...props}
+                  />
+                )
+              ) : type === 'select' ? (
+                <Select onValueChange={formField.onChange} value={formField.value}>
+                  <SelectTrigger className="h-9 text-sm border-2 border-[#E7ECFD] w-full">
+                    <SelectValue placeholder={`Select ${label}`} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {options?.map(option => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : type === 'textarea' ? (
+                <Textarea
+                  rows={rows || 3}
+                  className="border-2 border-[#E7ECFD] text-sm"
+                  {...formField}
+                  {...props}
+                />
+              ) : (
+                <Input
+                  type={type}
+                  className="h-9 text-sm border-2 border-[#E7ECFD]"
+                  {...formField}
+                  {...props}
+                />
+              )}
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  };
 
 
   const form = useForm({
@@ -1094,6 +1221,53 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
     }
   }, [newDocument]);
 
+  // edit Modal handlers
+  const handleModalClose = () => {
+    setModalField(null);
+    setModalType(null);
+  };
+
+  const handleModalSelect = () => {
+    setModalField(null);
+    setModalType(null);
+  };
+
+  const renderModal = () => {
+    if (!modalField) return null;
+    
+    const baseFieldName = modalField.baseFieldName || modalField.name;
+    const config = MODAL_CONFIG[baseFieldName];
+    
+    if (!config) return null;
+
+    let modalData = config.data;
+    if (Array.isArray(config.data)) {
+      if (modalType === "search") {
+        modalData = filteredData;
+      } else {
+        modalData = config.data;
+      }
+    } else {
+      modalData = config.data[modalType] || config.data.list || [];
+    }
+
+    return (
+      <EBookingModal
+        open={modalField !== null}
+        onClose={handleModalClose}
+        title={config.titles[modalType] || config.titles.list}
+        columns={config.columns}
+        data={modalData}
+        onSelect={(row) => {
+          const fieldName = modalField.name;
+          const value = row[config.valueKey];
+          form.setValue(fieldName, value);
+          handleModalSelect();
+        }}
+      />
+    );
+  };
+
   if (!booking && mode === 'edit') return null;
 
   return (
@@ -1259,18 +1433,18 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                                   handleFormMappingChange('newCargoItem.item', value, form);
                                 }} value={formField.value}>
                                   <SelectTrigger className="h-9 w-full border-2 border-[#E7ECFD]">
-                                    <SelectValue placeholder="Select" />
-                                  </SelectTrigger>
-                                  <SelectContent>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
                                     {field.options.map(option => (
-                                      <SelectItem key={option.value} value={option.value}>
-                                        {option.label}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                               ) : (
-                                <Input
+                    <Input 
                                   type={field.type}
                                   placeholder={field.placeholder}
                                   className={`h-9 w-full border-2 border-[#E7ECFD] ${field.disabled ? 'bg-gray-100' : ''}`}
@@ -1283,8 +1457,8 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                             <FormMessage />
                           </FormItem>
                         )}
-                      />
-                    </div>
+                    />
+                  </div>
                   ))}
                 </div>
                 
@@ -1299,9 +1473,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">Weight (Lbs)</FormLabel>
                           <FormControl>
-                            <Input
-                                type="number"
-                                placeholder="Enter weight"
+                    <Input 
+                      type="number" 
+                      placeholder="Enter weight" 
                                 className="h-9 w-full border-2 border-[#E7ECFD]"
                               {...formField}
                               onChange={(e) => formField.onChange(Number(e.target.value))}
@@ -1325,7 +1499,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                           render={({ field: formField }) => (
                             <FormItem className="flex-1">
                               <FormControl>
-                                <Input
+                      <Input 
                                   placeholder={field.placeholder}
                                     className="h-9 border-2 border-[#E7ECFD]"
                                   {...formField}
@@ -1349,9 +1523,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">Actual Volume (cbm)</FormLabel>
                           <FormControl>
-                            <Input
-                                type="number"
-                                placeholder="Enter volume"
+                    <Input 
+                      type="number" 
+                      placeholder="Enter volume" 
                                 className="h-9 w-full border-2 border-[#E7ECFD]"
                               {...formField}
                               onChange={(e) => formField.onChange(Number(e.target.value))}
@@ -1374,16 +1548,16 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                           <FormControl>
                             <Select onValueChange={formField.onChange} value={formField.value}>
                                <SelectTrigger className="h-9 w-full border-2 border-[#E7ECFD]">
-                                <SelectValue placeholder="Select Cargo Type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {CARGO_TYPE_OPTIONS.map(option => (
-                                  <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                        <SelectValue placeholder="Select Cargo Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CARGO_TYPE_OPTIONS.map(option => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1505,7 +1679,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               </div>
             </div>
 
-            {/* Additional Details */}
+                        {/* Additional Details */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-blue-600">Additional Details</h2>
               <div className="p-4 border border-gray-200 rounded-lg bg-white">
@@ -1577,6 +1751,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      {/* Modal for shipper/consignee selection */}
+      {renderModal()}
     </>
   );
 });
