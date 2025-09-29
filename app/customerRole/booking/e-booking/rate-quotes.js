@@ -35,17 +35,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-// Mock carrier logos - in real app, these would be actual image files
-const CARRIER_LOGOS = {
-  "SAIA": "/carrier-logos/saia.png",
-  "C.H. ROBINSON": "/carrier-logos/ch-robinson.png", 
-  "CRST": "/carrier-logos/crst.png",
-  "DHL": "/carrier-logos/dhl.png",
-  "KUEHNE+NAGEL": "/carrier-logos/kuehne-nagel.png",
-  "FEDEX": "/carrier-logos/fedex.png",
-  "UPS": "/carrier-logos/ups.png"
-};
-
 // Mode of transport icons
 const getTransportIcon = (type) => {
   switch (type.toLowerCase()) {
@@ -112,6 +101,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState("all");
   const [showQuotes, setShowQuotes] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   // Fetch rate quotes data
   const fetchRateQuotes = async () => {
@@ -151,26 +141,19 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
 
   // Handle quote selection
   const handleQuoteSelect = (quoteId) => {
-    const updatedQuotes = quotes.map(quote => ({
-      ...quote,
-      isSelected: quote.id === quoteId
-    }));
-    setQuotes(updatedQuotes);
-    onQuoteSelect(quotes.find(q => q.id === quoteId));
+    setSelectedId(quoteId);
+    const selectedQuote = quotes.find(q => q.id === quoteId);
+    onQuoteSelect(selectedQuote);
   };
 
   // Handle quote deselection
   const handleQuoteDeselect = () => {
-    const updatedQuotes = quotes.map(quote => ({
-      ...quote,
-      isSelected: false
-    }));
-    setQuotes(updatedQuotes);
+    setSelectedId(null);
     onQuoteSelect(null);
   };
 
   const sortedQuotes = getSortedQuotes();
-  const selectedQuote = quotes.find(q => q.isSelected);
+  const selectedQuote = quotes.find(q => q.id === selectedId);
 
   return (
     <div className="space-y-4">
@@ -262,7 +245,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
               {sortedQuotes.map((quote, index) => (
                 <TableRow 
                   key={quote.id}
-                  className={`hover:bg-blue-50 ${quote.isSelected ? 'bg-blue-100' : ''}`}
+                  className={`hover:bg-blue-50 ${selectedId === quote.id ? 'bg-blue-100' : ''}`}
                 >
                   <TableCell className="font-medium">
                     Option-{index + 1}
@@ -325,11 +308,11 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
                     <Button
                       type="button"
                       size="sm"
-                      variant={quote.isSelected ? "outline" : "default"}
-                      onClick={() => quote.isSelected ? handleQuoteDeselect() : handleQuoteSelect(quote.id)}
-                      className={quote.isSelected ? "text-red-600 border-red-200 hover:bg-red-50" : "bg-[#006397] hover:bg-[#02abf5] text-white"}
+                      variant={selectedId === quote.id ? "outline" : "default"}
+                      onClick={() => selectedId === quote.id ? handleQuoteDeselect() : handleQuoteSelect(quote.id)}
+                      className={selectedId === quote.id ? "text-red-600 border-red-200 hover:bg-red-50" : "bg-[#006397] hover:bg-[#02abf5] text-white"}
                     >
-                      {quote.isSelected ? "Deselect" : "Select"}
+                      {selectedId === quote.id ? "Deselect" : "Select"}
                     </Button>
                   </TableCell>
                 </TableRow>

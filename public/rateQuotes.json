@@ -18,7 +18,6 @@
       "doorToDoorTime": "3 Days",
       "status": "Active",
       "isRecommended": false,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 2800.00,
         "serviceFee": 450.25,
@@ -45,7 +44,6 @@
       "doorToDoorTime": "4 Days",
       "status": "Active",
       "isRecommended": true,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 2200.00,
         "serviceFee": 350.15,
@@ -72,7 +70,6 @@
       "doorToDoorTime": "2 Days",
       "status": "Active",
       "isRecommended": false,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 2014.35,
         "serviceFee": 402.57,
@@ -99,7 +96,6 @@
       "doorToDoorTime": "5 Days",
       "status": "Active",
       "isRecommended": false,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 2000.00,
         "serviceFee": 300.75,
@@ -126,7 +122,6 @@
       "doorToDoorTime": "1 Day",
       "status": "Active",
       "isRecommended": false,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 3500.00,
         "serviceFee": 650.25,
@@ -153,7 +148,6 @@
       "doorToDoorTime": "7 Days",
       "status": "Active",
       "isRecommended": false,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 1200.00,
         "serviceFee": 200.50,
@@ -180,7 +174,6 @@
       "doorToDoorTime": "2 Days",
       "status": "Active",
       "isRecommended": false,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 3000.00,
         "serviceFee": 500.80,
@@ -207,7 +200,6 @@
       "doorToDoorTime": "3 Days",
       "status": "Active",
       "isRecommended": false,
-      "isSelected": false,
       "priceBreakdown": {
         "basicFee": 2200.00,
         "serviceFee": 400.45,
