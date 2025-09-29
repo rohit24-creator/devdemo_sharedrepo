@@ -96,7 +96,7 @@ const PriceBreakdownPopover = ({ priceBreakdown, totalCost, currency }) => {
 };
 
 // Main Rate Quotes component
-export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
+export default function RateQuotes({ onQuoteSelect, selectedQuoteId, onReset }) {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState("all");
@@ -107,7 +107,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
   const fetchRateQuotes = async () => {
     setLoading(true);
     try {
-      // Simulate API call - in real app, this would be an actual API
+
       const response = await fetch('/rateQuotes.json');
       const data = await response.json();
       setQuotes(data.rateQuotes);
@@ -151,6 +151,20 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
     setSelectedId(null);
     onQuoteSelect(null);
   };
+
+  // Provide reset function to parent
+  useEffect(() => {
+    if (onReset) {
+      onReset(() => {
+        // Reset all component state to initial values
+        setSelectedId(null);
+        setQuotes([]);
+        setLoading(false);
+        setSortBy("all");
+        setShowQuotes(false);
+      });
+    }
+  }, [onReset]);
 
   const sortedQuotes = getSortedQuotes();
   const selectedQuote = quotes.find(q => q.id === selectedId);

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from "react";
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -921,6 +921,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   const [modalField, setModalField] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
+  const resetFunctionRef = useRef(null);
 
 
   const renderField = (field, formControl) => {
@@ -1782,6 +1783,9 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                   }
                 }}
                 selectedQuoteId={watch('selectedRateQuote')?.id}
+                onReset={(resetFn) => {
+                  resetFunctionRef.current = resetFn;
+                }}
               />
             </div>
 
@@ -1802,7 +1806,12 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button variant="outline" onClick={() => reset()}>
+              <Button variant="outline" onClick={() => {
+                reset();  // Reset form fields
+                if (resetFunctionRef.current) {
+                  resetFunctionRef.current();  // Reset component state
+                }
+              }}>
                 Reset
               </Button>
               <Button type="submit" form="booking-form" className="bg-blue-600 hover:bg-blue-700">
