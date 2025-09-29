@@ -89,6 +89,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import EBookingModal from "./e-booking-list-modal";
+import RateQuotes from "./rate-quotes";
 import {
   Tabs,
   TabsContent,
@@ -1768,6 +1769,20 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                   </CardContent>
                 </Card>
               </div>
+            </div>
+
+            {/* Rate Quotes Section */}
+            <div className="space-y-4">
+              <RateQuotes 
+                onQuoteSelect={(quote) => {
+                  if (quote) {
+                    setValue('selectedRateQuote', quote);
+                  } else {
+                    setValue('selectedRateQuote', null);
+                  }
+                }}
+                selectedQuoteId={watch('selectedRateQuote')?.id}
+              />
             </div>
 
                         {/* Additional Details */}

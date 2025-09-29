@@ -1,0 +1,220 @@
+{
+  "rateQuotes": [
+    {
+      "id": "RQ001",
+      "rateId": "149",
+      "carrier": {
+        "name": "SAIA",
+        "logo": "/carrier-logos/saia.png",
+        "code": "SAIA"
+      },
+      "modeOfTransport": {
+        "type": "Road",
+        "subtype": "LTL",
+        "fullName": "Road - LTL"
+      },
+      "totalCost": 3935.13,
+      "currency": "USD",
+      "doorToDoorTime": "3 Days",
+      "status": "Active",
+      "isRecommended": false,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 2800.00,
+        "serviceFee": 450.25,
+        "fuelSurcharge": 385.88,
+        "chassisFee": 200.00,
+        "tollFee": 99.00
+      }
+    },
+    {
+      "id": "RQ002",
+      "rateId": "150",
+      "carrier": {
+        "name": "C.H. ROBINSON",
+        "logo": "/carrier-logos/ch-robinson.png",
+        "code": "CHR"
+      },
+      "modeOfTransport": {
+        "type": "Road",
+        "subtype": "FTL",
+        "fullName": "Road - FTL"
+      },
+      "totalCost": 3058.15,
+      "currency": "USD",
+      "doorToDoorTime": "4 Days",
+      "status": "Active",
+      "isRecommended": true,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 2200.00,
+        "serviceFee": 350.15,
+        "fuelSurcharge": 308.00,
+        "chassisFee": 150.00,
+        "tollFee": 50.00
+      }
+    },
+    {
+      "id": "RQ003",
+      "rateId": "151",
+      "carrier": {
+        "name": "C.H. ROBINSON",
+        "logo": "/carrier-logos/ch-robinson.png",
+        "code": "CHR"
+      },
+      "modeOfTransport": {
+        "type": "Road",
+        "subtype": "LTL",
+        "fullName": "Road - LTL"
+      },
+      "totalCost": 3322.18,
+      "currency": "USD",
+      "doorToDoorTime": "2 Days",
+      "status": "Active",
+      "isRecommended": false,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 2014.35,
+        "serviceFee": 402.57,
+        "fuelSurcharge": 361.76,
+        "chassisFee": 282.02,
+        "tollFee": 261.48
+      }
+    },
+    {
+      "id": "RQ004",
+      "rateId": "152",
+      "carrier": {
+        "name": "CRST",
+        "logo": "/carrier-logos/crst.png",
+        "code": "CRST"
+      },
+      "modeOfTransport": {
+        "type": "Road",
+        "subtype": "FTL",
+        "fullName": "Road - FTL"
+      },
+      "totalCost": 2850.75,
+      "currency": "USD",
+      "doorToDoorTime": "5 Days",
+      "status": "Active",
+      "isRecommended": false,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 2000.00,
+        "serviceFee": 300.75,
+        "fuelSurcharge": 350.00,
+        "chassisFee": 150.00,
+        "tollFee": 50.00
+      }
+    },
+    {
+      "id": "RQ005",
+      "rateId": "153",
+      "carrier": {
+        "name": "DHL",
+        "logo": "/carrier-logos/dhl.png",
+        "code": "DHL"
+      },
+      "modeOfTransport": {
+        "type": "Air",
+        "subtype": "Express",
+        "fullName": "Air - Express"
+      },
+      "totalCost": 4850.25,
+      "currency": "USD",
+      "doorToDoorTime": "1 Day",
+      "status": "Active",
+      "isRecommended": false,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 3500.00,
+        "serviceFee": 650.25,
+        "fuelSurcharge": 500.00,
+        "chassisFee": 100.00,
+        "tollFee": 100.00
+      }
+    },
+    {
+      "id": "RQ006",
+      "rateId": "154",
+      "carrier": {
+        "name": "KUEHNE+NAGEL",
+        "logo": "/carrier-logos/kuehne-nagel.png",
+        "code": "KN"
+      },
+      "modeOfTransport": {
+        "type": "Sea",
+        "subtype": "Container",
+        "fullName": "Sea - Container"
+      },
+      "totalCost": 1850.50,
+      "currency": "USD",
+      "doorToDoorTime": "7 Days",
+      "status": "Active",
+      "isRecommended": false,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 1200.00,
+        "serviceFee": 200.50,
+        "fuelSurcharge": 300.00,
+        "chassisFee": 100.00,
+        "tollFee": 50.00
+      }
+    },
+    {
+      "id": "RQ007",
+      "rateId": "155",
+      "carrier": {
+        "name": "FEDEX",
+        "logo": "/carrier-logos/fedex.png",
+        "code": "FDX"
+      },
+      "modeOfTransport": {
+        "type": "Air",
+        "subtype": "Standard",
+        "fullName": "Air - Standard"
+      },
+      "totalCost": 4200.80,
+      "currency": "USD",
+      "doorToDoorTime": "2 Days",
+      "status": "Active",
+      "isRecommended": false,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 3000.00,
+        "serviceFee": 500.80,
+        "fuelSurcharge": 450.00,
+        "chassisFee": 150.00,
+        "tollFee": 100.00
+      }
+    },
+    {
+      "id": "RQ008",
+      "rateId": "156",
+      "carrier": {
+        "name": "UPS",
+        "logo": "/carrier-logos/ups.png",
+        "code": "UPS"
+      },
+      "modeOfTransport": {
+        "type": "Road",
+        "subtype": "LTL",
+        "fullName": "Road - LTL"
+      },
+      "totalCost": 3150.45,
+      "currency": "USD",
+      "doorToDoorTime": "3 Days",
+      "status": "Active",
+      "isRecommended": false,
+      "isSelected": false,
+      "priceBreakdown": {
+        "basicFee": 2200.00,
+        "serviceFee": 400.45,
+        "fuelSurcharge": 350.00,
+        "chassisFee": 150.00,
+        "tollFee": 50.00
+      }
+    }
+  ]
+}
