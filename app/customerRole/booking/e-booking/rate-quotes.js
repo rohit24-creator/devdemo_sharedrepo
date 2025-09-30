@@ -30,10 +30,8 @@ import {
   Ship, 
   Train,
   CheckCircle,
-  Clock,
-  DollarSign
+  Clock
 } from "lucide-react";
-import Image from "next/image";
 
 // Configuration constants
 const CONFIG = {
@@ -184,8 +182,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId, onReset }) 
 
   const handleQuoteSelect = useCallback((quoteId) => {
     setSelectedId(quoteId);
-    const selectedQuote = quotes.find(q => q.id === quoteId);
-    onQuoteSelect(selectedQuote);
+    onQuoteSelect(quotes.find(q => q.id === quoteId));
   }, [quotes, onQuoteSelect]);
 
   const handleQuoteDeselect = useCallback(() => {

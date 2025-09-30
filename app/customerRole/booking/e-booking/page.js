@@ -531,7 +531,7 @@ export default function EBookingPage() {
       
       if (freshBooking) {
         setSelectedBooking(freshBooking);
-        setIsModalOpen(true);
+    setIsModalOpen(true);
       } else {
         console.error('Booking not found:', id);
       }
@@ -855,7 +855,7 @@ export default function EBookingPage() {
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
                             Delete
-                          </DropdownMenuItem>
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
