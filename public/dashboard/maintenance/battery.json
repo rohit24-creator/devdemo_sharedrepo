@@ -1,32 +1,68 @@
 {
-  "columns": [
-    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
-    { "accessorKey": "name", "header": "Name" },
-    { "accessorKey": "number", "header": "Number" },
-    { "accessorKey": "size", "header": "Size" },
-    { "accessorKey": "amount", "header": "Amount" },
-    { "accessorKey": "brand", "header": "Brand" },
-    { "accessorKey": "carrier", "header": "Carrier" },
-    { "accessorKey": "quantity", "header": "Quantity" },
-    { "accessorKey": "purchasedDate", "header": "Purchased Date" },
-    { "accessorKey": "warrantyFrom", "header": "Warranty From" },
-    { "accessorKey": "warrantyTo", "header": "Warranty To" },
-    { "accessorKey": "warrantyInfo", "header": "Warranty Info" }
+  "headers": [
+    {
+      "accessorKey": "vehicleNumber",
+      "header": "Vehicle Number"
+    },
+    {
+      "accessorKey": "batteryBrand",
+      "header": "Battery Brand"
+    },
+    {
+      "accessorKey": "batteryType",
+      "header": "Battery Type"
+    },
+    {
+      "accessorKey": "capacity",
+      "header": "Capacity (Ah)"
+    },
+    {
+      "accessorKey": "purchaseDate",
+      "header": "Purchase Date"
+    },
+    {
+      "accessorKey": "batteryStatus",
+      "header": "Battery Status"
+    },
+    {
+      "accessorKey": "lastCheck",
+      "header": "Last Check"
+    },
+    {
+      "accessorKey": "cost",
+      "header": "Cost"
+    }
   ],
   "rows": [
     {
-      "vehicleNumber": "KN42602193",
-      "name": "sx001",
-      "number": "34343",
-      "size": "56",
-      "amount": "100.00",
-      "brand": "RT",
-      "carrier": "Speedy Freight Inc.",
-      "quantity": "66",
-      "purchasedDate": "2025-04-09 00:00:00",
-      "warrantyFrom": "2025-04-10 00:00:00",
-      "warrantyTo": "2025-04-11 00:00:00",
-      "warrantyInfo": ""
+      "vehicleNumber": "TN01AB1234",
+      "batteryBrand": "Exide",
+      "batteryType": "Lead Acid",
+      "capacity": "65",
+      "purchaseDate": "2024-01-20",
+      "batteryStatus": "Good",
+      "lastCheck": "2024-04-15",
+      "cost": "₹4,500"
+    },
+    {
+      "vehicleNumber": "TN02CD5678",
+      "batteryBrand": "Amaron",
+      "batteryType": "Maintenance Free",
+      "capacity": "70",
+      "purchaseDate": "2024-02-15",
+      "batteryStatus": "Fair",
+      "lastCheck": "2024-04-10",
+      "cost": "₹5,200"
+    },
+    {
+      "vehicleNumber": "TN03EF9012",
+      "batteryBrand": "Luminous",
+      "batteryType": "AGM",
+      "capacity": "75",
+      "purchaseDate": "2023-11-10",
+      "batteryStatus": "Poor",
+      "lastCheck": "2024-03-25",
+      "cost": "₹6,800"
     }
   ]
 }

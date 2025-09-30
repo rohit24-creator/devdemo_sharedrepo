@@ -198,8 +198,7 @@ export default function ReferenceInfoPage() {
 
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-[#006397] mb-4">Reference Info</h1>
+    <div>
       <BillingForm sections={sections} useAccordion={true} />
       
       <div className="mt-6 flex justify-end">

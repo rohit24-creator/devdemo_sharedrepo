@@ -1,26 +1,68 @@
 {
-  "columns": [
-    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
-    { "accessorKey": "financeCompanyName", "header": "Finance Company Name" },
-    { "accessorKey": "userName", "header": "User Name" },
-    { "accessorKey": "loanType", "header": "Loan Type" },
-    { "accessorKey": "financeAmount", "header": "Finance Amount" },
-    { "accessorKey": "startDate", "header": "Start Date" },
-    { "accessorKey": "dueDate", "header": "Due Date" },
-    { "accessorKey": "emiRate", "header": "EMI Rate" },
-    { "accessorKey": "numberOfMonths", "header": "Number of Months" }
+  "headers": [
+    {
+      "accessorKey": "vehicleNumber",
+      "header": "Vehicle Number"
+    },
+    {
+      "accessorKey": "financeType",
+      "header": "Finance Type"
+    },
+    {
+      "accessorKey": "loanAmount",
+      "header": "Loan Amount"
+    },
+    {
+      "accessorKey": "emiAmount",
+      "header": "EMI Amount"
+    },
+    {
+      "accessorKey": "startDate",
+      "header": "Start Date"
+    },
+    {
+      "accessorKey": "endDate",
+      "header": "End Date"
+    },
+    {
+      "accessorKey": "bankName",
+      "header": "Bank Name"
+    },
+    {
+      "accessorKey": "status",
+      "header": "Status"
+    }
   ],
   "rows": [
     {
-      "vehicleNumber": "KN42602193",
-      "financeCompanyName": "SX 0012",
-      "userName": "M Srinivasa Reddy",
-      "loanType": "Vehicle Load",
-      "financeAmount": "435345.00",
-      "startDate": "2025-03-27",
-      "dueDate": "2025-03-29",
-      "emiRate": "0.00",
-      "numberOfMonths": "6"
+      "vehicleNumber": "TN01AB1234",
+      "financeType": "Loan",
+      "loanAmount": "₹8,50,000",
+      "emiAmount": "₹18,500",
+      "startDate": "2024-01-01",
+      "endDate": "2029-12-31",
+      "bankName": "HDFC Bank",
+      "status": "Active"
+    },
+    {
+      "vehicleNumber": "TN02CD5678",
+      "financeType": "Lease",
+      "loanAmount": "₹6,20,000",
+      "emiAmount": "₹15,200",
+      "startDate": "2024-03-01",
+      "endDate": "2027-02-28",
+      "bankName": "ICICI Bank",
+      "status": "Active"
+    },
+    {
+      "vehicleNumber": "TN03EF9012",
+      "financeType": "Purchase",
+      "loanAmount": "₹9,80,000",
+      "emiAmount": "₹22,000",
+      "startDate": "2024-02-01",
+      "endDate": "2030-01-31",
+      "bankName": "SBI",
+      "status": "Active"
     }
   ]
 }

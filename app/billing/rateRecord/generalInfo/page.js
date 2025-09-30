@@ -4,7 +4,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { BillingForm } from "@/components/ui/reusableComponent/billingForm";
+import { TabsNavbar } from "@/components/ui/reusableComponent/tabsNavbar";
 
+// Import the other pages as components
+import ServicePage from "../service/page";
+import ChargesPage from "../charges/page";
 
 const generalInfoSchema = z.object({
   rateId: z.string().min(1, "Rate ID is required"),
@@ -15,14 +19,12 @@ const generalInfoSchema = z.object({
   branchCode: z.string().min(1, "Branch Code is required"),
 });
 
-
 const conditionsRowSchema = z.object({
   referenceId: z.string().min(1, "Reference ID is required"),
   referenceName: z.string().optional(), 
   referenceValue: z.string().min(1, "Reference Value is required"),
   conditionType: z.string().min(1, "Condition Type is required"),
 });
-
 
 const generalInfoFields = [
   { 
@@ -70,7 +72,6 @@ const generalInfoFields = [
   },
 ];
 
-
 const referenceData = [
   { referenceId: "REF001", referenceName: "Customer Type" },
   { referenceId: "REF002", referenceName: "Shipment Weight" },
@@ -81,7 +82,6 @@ const referenceData = [
   { referenceId: "REF007", referenceName: "Seasonal Factor" },
   { referenceId: "REF008", referenceName: "Priority Level" },
 ];
-
 
 const conditionTypeData = [
   { value: "equals", label: "Equals" },
@@ -95,7 +95,6 @@ const conditionTypeData = [
   { value: "in_list", label: "In List" },
   { value: "not_in_list", label: "Not In List" }
 ];
-
 
 const conditionsColumns = [
   { 
@@ -127,7 +126,8 @@ const conditionsColumns = [
   },
 ];
 
-export default function RateRecordGeneralInfoPage() {
+// General Info Content Component
+function GeneralInfoContent() {
   const form = useForm({
     resolver: zodResolver(generalInfoSchema),
     defaultValues: {
@@ -191,9 +191,39 @@ export default function RateRecordGeneralInfoPage() {
   ];
 
   return (
+    <BillingForm sections={sections} useAccordion={true} />
+  );
+}
+
+export default function RateRecordPage() {
+  // Define tabs configuration
+  const tabs = [
+    {
+      value: "generalInfo",
+      label: "General Info",
+      component: GeneralInfoContent,
+    },
+    {
+      value: "service",
+      label: "Service",
+      component: ServicePage,
+    },
+    {
+      value: "charges",
+      label: "Charges",
+      component: ChargesPage,
+    },
+  ];
+
+  return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-[#006397] mb-4">Rate Record - General Info</h1>
-      <BillingForm sections={sections} useAccordion={true} />
+      {/* Heading */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-[#006397]">Rate Record</h2>
+      </div>
+
+      {/* Tabs Navigation */}
+      <TabsNavbar tabs={tabs} defaultTab="generalInfo" />
     </div>
   );
 }

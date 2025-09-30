@@ -71,7 +71,6 @@ const navigationData = {
     items: [
 
       { href: '/bookings/list', label: 'Order view' },
-      { href: '/bookings/orderFinancials', label: 'Order Financials' },
       { href: '/bookings/lists/orders', label: 'Orders' },
       { href: '/bookings/lists/massStatus', label: 'Mass Status' },
       { href: '/bookings/lists/documentControl', label: 'Document Control' },
@@ -146,6 +145,29 @@ const navigationData = {
       { href: '/trip/lists/returnTrucks', label: 'Return Trucks' },
       { href: '/trip/lists/routing', label: 'Routing' },
       { href: '/trip/shipmentplan', label: 'Shipment Plan' },
+    ],
+  },
+  dashboard: {
+    label: 'Dashboard',
+    items: [
+      { href: '/dashboard/fleetView', label: 'Fleet View' },
+      {
+        label: 'Maintenance',
+        items: [
+          { href: '/dashboard/maintenance/lists/tyre', label: 'Tyre' },
+          { href: '/dashboard/maintenance/lists/regularMaintenance', label: 'Regular Maintenance' },
+          { href: '/dashboard/maintenance/lists/insurance', label: 'Insurance' },
+          { href: '/dashboard/maintenance/lists/battery', label: 'Battery' },
+          { href: '/dashboard/maintenance/lists/finance', label: 'Finance' },
+          { href: '/dashboard/maintenance/lists/addPurchaseOrder', label: 'Add Purchase Order' },
+        ],
+      },
+    ],
+  },
+  tenders: {
+    label: 'Tenders',
+    items: [
+      { href: '/tenders/lists/shipmentTender', label: 'Shipment Tender' },
     ],
   },
   billing: {

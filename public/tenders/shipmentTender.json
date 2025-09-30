@@ -1,0 +1,106 @@
+{
+  "headers": [
+    {
+      "accessorKey": "tenderId",
+      "header": "Tender ID"
+    },
+    {
+      "accessorKey": "bookingId",
+      "header": "Booking ID"
+    },
+    {
+      "accessorKey": "tenderApproxCost",
+      "header": "Tender Approx Cost"
+    },
+    {
+      "accessorKey": "tenderStatus",
+      "header": "Tender Status"
+    },
+    {
+      "accessorKey": "tenderVehicleTypeCode",
+      "header": "Tender Vehicle Type Code"
+    },
+    {
+      "accessorKey": "pickUp",
+      "header": "Pick Up"
+    },
+    {
+      "accessorKey": "delivery",
+      "header": "Delivery"
+    },
+    {
+      "accessorKey": "createdOn",
+      "header": "Created On"
+    },
+    {
+      "accessorKey": "modeOfTransport",
+      "header": "Mode Of Transport"
+    },
+    {
+      "accessorKey": "tenderAwardTo",
+      "header": "Tender Award To"
+    }
+  ],
+  "rows": [
+    {
+      "tenderId": "TND001",
+      "bookingId": "BK001",
+      "tenderApproxCost": "₹15,000",
+      "tenderStatus": "Open",
+      "tenderVehicleTypeCode": "TRK001",
+      "pickUp": "Mumbai",
+      "delivery": "Delhi",
+      "createdOn": "2024-01-15",
+      "modeOfTransport": "Road",
+      "tenderAwardTo": "Carrier A"
+    },
+    {
+      "tenderId": "TND002",
+      "bookingId": "BK002",
+      "tenderApproxCost": "₹25,000",
+      "tenderStatus": "Closed",
+      "tenderVehicleTypeCode": "TRK002",
+      "pickUp": "Chennai",
+      "delivery": "Bangalore",
+      "createdOn": "2024-01-16",
+      "modeOfTransport": "Road",
+      "tenderAwardTo": "Carrier B"
+    },
+    {
+      "tenderId": "TND003",
+      "bookingId": "BK003",
+      "tenderApproxCost": "₹35,000",
+      "tenderStatus": "Pending",
+      "tenderVehicleTypeCode": "TRK003",
+      "pickUp": "Kolkata",
+      "delivery": "Hyderabad",
+      "createdOn": "2024-01-17",
+      "modeOfTransport": "Rail",
+      "tenderAwardTo": "Pending"
+    },
+    {
+      "tenderId": "TND004",
+      "bookingId": "BK004",
+      "tenderApproxCost": "₹45,000",
+      "tenderStatus": "Open",
+      "tenderVehicleTypeCode": "TRK004",
+      "pickUp": "Pune",
+      "delivery": "Ahmedabad",
+      "createdOn": "2024-01-18",
+      "modeOfTransport": "Road",
+      "tenderAwardTo": "Pending"
+    },
+    {
+      "tenderId": "TND005",
+      "bookingId": "BK005",
+      "tenderApproxCost": "₹55,000",
+      "tenderStatus": "Closed",
+      "tenderVehicleTypeCode": "TRK005",
+      "pickUp": "Jaipur",
+      "delivery": "Lucknow",
+      "createdOn": "2024-01-19",
+      "modeOfTransport": "Road",
+      "tenderAwardTo": "Carrier C"
+    }
+  ]
+}

@@ -4,19 +4,66 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import ReusableTable from "@/components/ui/reusableComponent/masterList";
-import { DASHBOARD_ROUTES } from "@/lib/dashboardRoutes";
+import { TENDER_ROUTES } from "@/lib/tenderRoutes";
 import { formatRowsWithId } from "@/lib/utils";
 
-export default function TyrePage() {
+export default function ShipmentTenderPage() {
   const router = useRouter();
   const [columns, setColumns] = useState([]);
   const [rows, setRows] = useState([]);
-  const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Simple axios instance
+  const api = axios.create({
+    timeout: 30000,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const { data } = await api.get("/tenders/shipmentTender.json");
+        
+        const formattedColumns = data?.headers?.map((header) => ({
+          accessorKey: header.accessorKey,
+          header: header.header,
+          sortable: true,
+        })) || [];
+
+        const formattedRows = formatRowsWithId(data?.rows || []);
+        
+        setColumns(formattedColumns);
+        setRows(formattedRows);
+        
+      } catch (err) {
+        setError(err.message || "Failed to fetch data");
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const filterFields = [
-    { name: "vehicleNumber", label: "Vehicle No.", value: "" }
+    { name: "tenderId", label: "Tender ID" },
+    { name: "bookingId", label: "Booking ID" }
+  ];
+
+  const secondIconMenu = [
+    { label: "+ Add New", onClick: () => router.push(TENDER_ROUTES.shipmentTender) },
+    { label: "Grid View", onClick: () => console.log("Grid View") },
+    { label: "Table View", onClick: () => console.log("Table View") },
+  ];
+
+  const thirdIconMenu = [
+    { label: "PDF", onClick: () => console.log("PDF") },
+    { label: "Excel", onClick: () => console.log("Excel") },
+    { label: "Print", onClick: () => console.log("Print") },
   ];
 
   // Action handler for actions like Edit, View, Delete
@@ -33,55 +80,6 @@ export default function TyrePage() {
     }
   };
 
-  // Menu configurations
-  const secondIconMenu = [
-    { label: "+ Add New", onClick: () => router.push(DASHBOARD_ROUTES.tyre) },
-    { label: "Tyre Template", onClick: () => console.log("Tyre Template") },
-    { label: "Upload Excel", onClick: () => console.log("Upload Excel") },
-  ];
-
-  const thirdIconMenu = [
-    { label: "PDF", onClick: () => console.log("PDF") },
-    { label: "Excel", onClick: () => console.log("Excel") },
-    { label: "Print", onClick: () => console.log("Print") },
-  ];
-
-  // Simple axios instance
-  const api = axios.create({
-    timeout: 30000,
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const { data } = await api.get("/dashboard/maintenance/tyre.json");
-
-        // Format columns
-        const formattedColumns = data?.headers?.map((header) => ({
-          accessorKey: header.accessorKey,
-          header: header.header,
-          sortable: true,
-        })) || [];
-
-        // Add unique ID to each row 
-        const formattedRows = formatRowsWithId(data?.rows || []);
-
-        setColumns(formattedColumns);
-        setRows(formattedRows);
-        
-      } catch (err) {
-        setError(err.message || "Failed to fetch data");
-        console.error("Fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!columns.length || !rows.length) return <div>No data available</div>;
@@ -89,7 +87,7 @@ export default function TyrePage() {
   return (
     <div className="p-6">
       <ReusableTable
-        title="Tyre"
+        title="Shipment Tender"
         filterFields={filterFields}
         columns={columns}
         rows={rows}
@@ -107,4 +105,4 @@ export default function TyrePage() {
       />
     </div>
   );
-} 
+}

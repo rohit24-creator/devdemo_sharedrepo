@@ -35,7 +35,7 @@ const tableHeaders = [
 
 export default function OrderFinancialsPage() {
   return (
-    <div className="px-4 md:px-8 py-6">
+    <div>
       {/* Heading */}
       <h2 className="text-2xl font-bold text-[#162d56] mb-4">Order Financials</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-6">

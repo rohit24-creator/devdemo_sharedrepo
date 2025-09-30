@@ -1,20 +1,68 @@
 {
-  "columns": [
-    { "accessorKey": "vehicleNumber", "header": "Vehicle Number" },
-    { "accessorKey": "maintenanceType", "header": "Maintenance Type" },
-    { "accessorKey": "daysOrKm", "header": "Days/KM" },
-    { "accessorKey": "daysOrKmCount", "header": "Days/KM Count" },
-    { "accessorKey": "startDate", "header": "Start Date" },
-    { "accessorKey": "endDate", "header": "End Date" }
+  "headers": [
+    {
+      "accessorKey": "vehicleNumber",
+      "header": "Vehicle Number"
+    },
+    {
+      "accessorKey": "maintenanceType",
+      "header": "Maintenance Type"
+    },
+    {
+      "accessorKey": "scheduledDate",
+      "header": "Scheduled Date"
+    },
+    {
+      "accessorKey": "lastServiceDate",
+      "header": "Last Service Date"
+    },
+    {
+      "accessorKey": "nextServiceDate",
+      "header": "Next Service Date"
+    },
+    {
+      "accessorKey": "serviceCenter",
+      "header": "Service Center"
+    },
+    {
+      "accessorKey": "cost",
+      "header": "Cost"
+    },
+    {
+      "accessorKey": "status",
+      "header": "Status"
+    }
   ],
   "rows": [
     {
-      "vehicleNumber": "73-2539",
-      "maintenanceType": "Commodity Type",
-      "daysOrKm": "Days",
-      "daysOrKmCount": "8",
-      "startDate": "2025-04-07 13:00:00",
-      "endDate": "2025-04-17 12:47:00"
+      "vehicleNumber": "TN01AB1234",
+      "maintenanceType": "Scheduled",
+      "scheduledDate": "2024-05-15",
+      "lastServiceDate": "2024-02-15",
+      "nextServiceDate": "2024-08-15",
+      "serviceCenter": "ABC Motors",
+      "cost": "₹5,500",
+      "status": "Pending"
+    },
+    {
+      "vehicleNumber": "TN02CD5678",
+      "maintenanceType": "Preventive",
+      "scheduledDate": "2024-06-20",
+      "lastServiceDate": "2024-03-20",
+      "nextServiceDate": "2024-09-20",
+      "serviceCenter": "XYZ Service",
+      "cost": "₹4,800",
+      "status": "Scheduled"
+    },
+    {
+      "vehicleNumber": "TN03EF9012",
+      "maintenanceType": "Emergency",
+      "scheduledDate": "2024-04-10",
+      "lastServiceDate": "2024-01-10",
+      "nextServiceDate": "2024-07-10",
+      "serviceCenter": "Quick Fix",
+      "cost": "₹7,200",
+      "status": "Completed"
     }
   ]
 }

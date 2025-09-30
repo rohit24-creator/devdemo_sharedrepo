@@ -11,8 +11,7 @@ import { Label } from '@/components/ui/label'
 
 export default function SwitchesAccordion() {
   return (
-    <div className="p-4 sm:p-6">
-      <Accordion type="single" collapsible defaultValue="item-switches">
+    <Accordion type="single" collapsible defaultValue="item-switches">
         <AccordionItem value="item-switches">
           <AccordionTrigger 
             className="bg-[#02abf5] text-white px-4 py-2 rounded-md cursor-default [&>svg]:hidden"
@@ -104,6 +103,5 @@ export default function SwitchesAccordion() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
   )
 }
