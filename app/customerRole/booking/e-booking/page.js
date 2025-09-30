@@ -187,7 +187,7 @@ const StatusIcon = memo(({ status }) => {
   
   return (
     <div className="p-2 bg-blue-100 rounded-lg">
-      <IconComponent className="w-5 h-5 text-blue-600" />
+      <IconComponent className="w-5 h-5 text-[#0088d2]" />
     </div>
   );
 });
@@ -273,14 +273,14 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
              <div className="w-3/12">
                <div className="flex items-start">
                  <div className="p-2 bg-blue-100 rounded-lg mr-3">
-            <Truck className="w-5 h-5 text-blue-600" />
+            <Truck className="w-5 h-5 text-[#0088d2]" />
           </div>
           <div>
-                   <h3 className="font-bold text-lg text-blue-600 mb-1">{booking.id}</h3>
+                   <h3 className="font-bold text-lg text-[#0088d2] mb-1">{booking.id}</h3>
                    <p className="text-sm text-gray-600 mb-1">
                      Order Reference 
                      <span className="text-gray-800 ml-1">DQ: {booking.dq}</span>
-                     <Info className="w-3 h-3 text-blue-600 ml-1 inline" />
+                     <Info className="w-3 h-3 text-[#0088d2] ml-1 inline" />
                    </p>
                    <p className="text-sm text-gray-600">PO: {booking.po}</p>
                  </div>
@@ -296,7 +296,7 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
 
              {/* Arrow - Properly centered with more space */}
              <div className="w-1/12 flex items-center justify-center">
-               <ArrowRight className="w-5 h-5 text-blue-600" />
+               <ArrowRight className="w-5 h-5 text-[#0088d2]" />
             </div>
              
              {/* Delivery Information */}
@@ -323,14 +323,14 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                    <Scale className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">Weight</span>
                  </div>
-                 <div className="text-blue-600 font-bold text-sm">{booking.weight}</div>
+                 <div className="text-[#0088d2] font-bold text-sm">{booking.weight}</div>
                </div>
                <div className="metric-item">
                  <div className="flex items-center mb-1">
                    <Package className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">Volume</span>
           </div>
-                 <div className="text-blue-600 font-bold text-sm">{booking.volume}</div>
+                 <div className="text-[#0088d2] font-bold text-sm">{booking.volume}</div>
             </div>
           </div>
              
@@ -341,14 +341,14 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                    <Clock className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">ETA</span>
                  </div>
-                 <div className="text-blue-600 font-bold text-xs">{booking.eta}</div>
+                 <div className="text-[#0088d2] font-bold text-xs">{booking.eta}</div>
                </div>
                <div className="metric-item">
                  <div className="flex items-center mb-1">
                    <Navigation className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">Distance</span>
                  </div>
-                 <div className="text-blue-600 font-bold text-sm">{booking.distance}</div>
+                 <div className="text-[#0088d2] font-bold text-sm">{booking.distance}</div>
           </div>
         </div>
 
@@ -359,14 +359,14 @@ const BookingCard = memo(({ booking, onView, onEdit, onGenerateLabel, onDelete }
                    <Truck className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">Vehicle Type</span>
                  </div>
-                 <div className="text-blue-600 font-bold text-sm">{booking.vehicleType}</div>
+                 <div className="text-[#0088d2] font-bold text-sm">{booking.vehicleType}</div>
             </div>
                <div className="metric-item">
                  <div className="flex items-center mb-1">
                    <Truck className="w-4 h-4 text-gray-500 mr-2" />
                    <span className="text-xs text-gray-500">Vehicle ID</span>
           </div>
-                 <div className="text-blue-600 font-bold text-sm">{booking.vehicleId}</div>
+                 <div className="text-[#0088d2] font-bold text-sm">{booking.vehicleId}</div>
                </div>
             </div>
           </div>
@@ -681,13 +681,13 @@ export default function EBookingPage() {
             <TabsList className="flex bg-gray-100 rounded-lg p-1 h-auto">
               <TabsTrigger 
                 value={VIEW_MODES.TABLE}
-                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
+                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#0088d2] data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
             >
               Table View
               </TabsTrigger>
               <TabsTrigger 
                 value={VIEW_MODES.CARD}
-                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
+                className="text-xs font-medium text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#0088d2] data-[state=active]:shadow-sm data-[state=active]:font-semibold hover:text-gray-800 transition-colors"
             >
               Card View
               </TabsTrigger>
@@ -859,7 +859,7 @@ export default function EBookingPage() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
-                  <TableCell className="font-medium text-blue-600">{booking.id}</TableCell>
+                  <TableCell className="font-medium text-[#0088d2]">{booking.id}</TableCell>
                   <TableCell>{booking.dq}</TableCell>
                   <TableCell>{booking.sourceCity}</TableCell>
                   <TableCell>{booking.destinationCity}</TableCell>

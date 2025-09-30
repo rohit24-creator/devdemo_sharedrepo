@@ -48,7 +48,7 @@ const CONFIG = {
     { value: 'recommended', label: 'Recommended' }
   ],
   transportIcons: {
-    road: { icon: Truck, color: 'text-blue-600' },
+    road: { icon: Truck, color: 'text-[#0088d2]' },
     air: { icon: Plane, color: 'text-red-600' },
     sea: { icon: Ship, color: 'text-green-600' },
     rail: { icon: Train, color: 'text-purple-600' }
@@ -106,7 +106,7 @@ const PriceBreakdownPopover = memo(({ priceBreakdown, totalCost, currency }) => 
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-          <Info className="w-3 h-3 text-blue-600" />
+          <Info className="w-3 h-3 text-[#0088d2]" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-4">
@@ -303,7 +303,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId, onReset }) 
                     Option-{index + 1}
                   </TableCell>
                   
-                  <TableCell className="font-medium text-blue-600">
+                  <TableCell className="font-medium text-[#0088d2]">
                     {quote.rateId}
                   </TableCell>
                   
