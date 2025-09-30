@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -30,84 +30,119 @@ import {
   Ship, 
   Train,
   CheckCircle,
-  Clock,
-  DollarSign
+  Clock
 } from "lucide-react";
-import Image from "next/image";
 
-// Mode of transport icons
-const getTransportIcon = (type) => {
-  switch (type.toLowerCase()) {
-    case 'road':
-      return <Truck className="w-4 h-4 text-blue-600" />;
-    case 'air':
-      return <Plane className="w-4 h-4 text-red-600" />;
-    case 'sea':
-      return <Ship className="w-4 h-4 text-green-600" />;
-    case 'rail':
-      return <Train className="w-4 h-4 text-purple-600" />;
-    default:
-      return <Truck className="w-4 h-4 text-gray-600" />;
+// Configuration constants
+const CONFIG = {
+  currency: {
+    USD: { symbol: '$', position: 'before' },
+    EUR: { symbol: '€', position: 'after' },
+    GBP: { symbol: '£', position: 'before' },
+    JPY: { symbol: '¥', position: 'before' }
+  },
+  sortOptions: [
+    { value: 'all', label: 'All' },
+    { value: 'cheapest', label: 'Cheapest' },
+    { value: 'fastest', label: 'Fastest' },
+    { value: 'recommended', label: 'Recommended' }
+  ],
+  transportIcons: {
+    road: { icon: Truck, color: 'text-[#0088d2]' },
+    air: { icon: Plane, color: 'text-red-600' },
+    sea: { icon: Ship, color: 'text-green-600' },
+    rail: { icon: Train, color: 'text-purple-600' }
+  },
+  priceBreakdownLabels: {
+    basicFee: 'Basic Fee',
+    serviceFee: 'Service Fee',
+    fuelSurcharge: 'Fuel Surcharge',
+    chassisFee: 'Chassis Fee',
+    tollFee: 'Toll Fee'
+  },
+  tableHeaders: [
+    'Options',
+    'Rate ID', 
+    'Carrier',
+    'Mode of Transport',
+    'Total Cost',
+    'Currency',
+    'Door-Door Time',
+    'Status',
+    'Action'
+  ]
+};
+
+
+const formatCurrency = (amount, currency = 'USD') => {
+  const currencyConfig = CONFIG.currency[currency] || CONFIG.currency.USD;
+  const formattedAmount = amount.toFixed(2);
+  
+  if (currencyConfig.position === 'before') {
+    return `${currencyConfig.symbol}${formattedAmount}`;
+  } else {
+    return `${formattedAmount}${currencyConfig.symbol}`;
   }
 };
 
-// Price breakdown component
-const PriceBreakdownPopover = ({ priceBreakdown, totalCost, currency }) => {
+
+const getTransportIcon = (type) => {
+  const transportConfig = CONFIG.transportIcons[type.toLowerCase()] || CONFIG.transportIcons.road;
+  const IconComponent = transportConfig.icon;
+  return <IconComponent className={`w-4 h-4 ${transportConfig.color}`} />;
+};
+
+
+const PriceBreakdownPopover = memo(({ priceBreakdown, totalCost, currency }) => {
+  const breakdownItems = [
+    { key: 'basicFee', value: priceBreakdown.basicFee },
+    { key: 'serviceFee', value: priceBreakdown.serviceFee },
+    { key: 'fuelSurcharge', value: priceBreakdown.fuelSurcharge },
+    { key: 'chassisFee', value: priceBreakdown.chassisFee },
+    { key: 'tollFee', value: priceBreakdown.tollFee }
+  ];
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-          <Info className="w-3 h-3 text-blue-600" />
+          <Info className="w-3 h-3 text-[#0088d2]" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-4">
         <div className="space-y-3">
           <h4 className="font-semibold text-gray-900">Price Breakdown</h4>
           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Basic Fee:</span>
-              <span className="font-medium">${priceBreakdown.basicFee.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Service Fee:</span>
-              <span className="font-medium">${priceBreakdown.serviceFee.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Fuel Surcharge:</span>
-              <span className="font-medium">${priceBreakdown.fuelSurcharge.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Chassis Fee:</span>
-              <span className="font-medium">${priceBreakdown.chassisFee.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Toll Fee:</span>
-              <span className="font-medium">${priceBreakdown.tollFee.toFixed(2)}</span>
-            </div>
+            {breakdownItems.map(({ key, value }) => (
+              <div key={key} className="flex justify-between text-sm">
+                <span className="text-gray-600">{CONFIG.priceBreakdownLabels[key]}:</span>
+                <span className="font-medium">{formatCurrency(value, currency)}</span>
+              </div>
+            ))}
             <div className="border-t pt-2 flex justify-between font-semibold">
               <span>Total Cost:</span>
-              <span>${totalCost.toFixed(2)} {currency}</span>
+              <span>{formatCurrency(totalCost, currency)} {currency}</span>
             </div>
           </div>
         </div>
       </PopoverContent>
     </Popover>
   );
-};
+});
 
 // Main Rate Quotes component
-export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
+export default function RateQuotes({ onQuoteSelect, selectedQuoteId, onReset }) {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState("all");
   const [showQuotes, setShowQuotes] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
-  // Fetch rate quotes data
+
   const fetchRateQuotes = async () => {
     setLoading(true);
     try {
-      // Simulate API call - in real app, this would be an actual API
+
       const response = await fetch('/rateQuotes.json');
       const data = await response.json();
       setQuotes(data.rateQuotes);
@@ -119,11 +154,12 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
     }
   };
 
-  // Sort quotes based on selected criteria
-  const getSortedQuotes = () => {
+
+
+  const sortedQuotes = useMemo(() => {
     if (sortBy === "all") return quotes;
     
-    const sorted = [...quotes].sort((a, b) => {
+    return [...quotes].sort((a, b) => {
       switch (sortBy) {
         case "cheapest":
           return a.totalCost - b.totalCost;
@@ -135,25 +171,46 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
           return 0;
       }
     });
-    
-    return sorted;
-  };
+  }, [quotes, sortBy]);
 
-  // Handle quote selection
-  const handleQuoteSelect = (quoteId) => {
+  // Memoized selected quote lookup
+  const selectedQuote = useMemo(() => 
+    quotes.find(q => q.id === selectedId), 
+    [quotes, selectedId]
+  );
+
+
+  const handleQuoteSelect = useCallback((quoteId) => {
     setSelectedId(quoteId);
-    const selectedQuote = quotes.find(q => q.id === quoteId);
-    onQuoteSelect(selectedQuote);
-  };
+    onQuoteSelect(quotes.find(q => q.id === quoteId));
+  }, [quotes, onQuoteSelect]);
 
-  // Handle quote deselection
-  const handleQuoteDeselect = () => {
+  const handleQuoteDeselect = useCallback(() => {
     setSelectedId(null);
     onQuoteSelect(null);
-  };
+  }, [onQuoteSelect]);
 
-  const sortedQuotes = getSortedQuotes();
-  const selectedQuote = quotes.find(q => q.id === selectedId);
+
+  const handleQuoteAction = useCallback((quoteId) => {
+    if (selectedId === quoteId) {
+      handleQuoteDeselect();
+    } else {
+      handleQuoteSelect(quoteId);
+    }
+  }, [selectedId, handleQuoteSelect, handleQuoteDeselect]);
+
+
+  useEffect(() => {
+    if (onReset) {
+      onReset(() => {
+        setSelectedId(null);
+        setQuotes([]);
+        setLoading(false);
+        setSortBy("all");
+        setShowQuotes(false);
+      });
+    }
+  }, [onReset]);
 
   return (
     <div className="space-y-4">
@@ -186,10 +243,11 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="cheapest">Cheapest</SelectItem>
-                <SelectItem value="fastest">Fastest</SelectItem>
-                <SelectItem value="recommended">Recommended</SelectItem>
+                {CONFIG.sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -204,7 +262,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
               <CheckCircle className="w-5 h-5 text-green-600" />
               <div>
                 <span className="font-medium text-green-800">
-                  Selected Quote: {selectedQuote.carrier.name} - ${selectedQuote.totalCost} {selectedQuote.currency}
+                  Selected Quote: {selectedQuote.carrier.name} - {formatCurrency(selectedQuote.totalCost, selectedQuote.currency)} {selectedQuote.currency}
                 </span>
                 <p className="text-sm text-green-600">
                   {selectedQuote.modeOfTransport.fullName} • {selectedQuote.doorToDoorTime}
@@ -230,15 +288,9 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="font-semibold">Options</TableHead>
-                <TableHead className="font-semibold">Rate ID</TableHead>
-                <TableHead className="font-semibold">Carrier</TableHead>
-                <TableHead className="font-semibold">Mode of Transport</TableHead>
-                <TableHead className="font-semibold">Total Cost</TableHead>
-                <TableHead className="font-semibold">Currency</TableHead>
-                <TableHead className="font-semibold">Door-Door Time</TableHead>
-                <TableHead className="font-semibold">Status</TableHead>
-                <TableHead className="font-semibold">Action</TableHead>
+                {CONFIG.tableHeaders.map((header) => (
+                  <TableHead key={header} className="font-semibold">{header}</TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -251,7 +303,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
                     Option-{index + 1}
                   </TableCell>
                   
-                  <TableCell className="font-medium text-blue-600">
+                  <TableCell className="font-medium text-[#0088d2]">
                     {quote.rateId}
                   </TableCell>
                   
@@ -280,7 +332,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
                   
                   <TableCell>
                     <div className="flex items-center space-x-1">
-                      <span className="font-semibold">${quote.totalCost.toFixed(2)}</span>
+                      <span className="font-semibold">{formatCurrency(quote.totalCost, quote.currency)}</span>
                       <PriceBreakdownPopover 
                         priceBreakdown={quote.priceBreakdown}
                         totalCost={quote.totalCost}
@@ -309,7 +361,7 @@ export default function RateQuotes({ onQuoteSelect, selectedQuoteId }) {
                       type="button"
                       size="sm"
                       variant={selectedId === quote.id ? "outline" : "default"}
-                      onClick={() => selectedId === quote.id ? handleQuoteDeselect() : handleQuoteSelect(quote.id)}
+                      onClick={() => handleQuoteAction(quote.id)}
                       className={selectedId === quote.id ? "text-red-600 border-red-200 hover:bg-red-50" : "bg-[#006397] hover:bg-[#02abf5] text-white"}
                     >
                       {selectedId === quote.id ? "Deselect" : "Select"}

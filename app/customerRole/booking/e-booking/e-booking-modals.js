@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, memo, useRef } from "react";
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -676,10 +676,10 @@ const InfoTab = memo(({ booking }) => (
         <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <Truck className="w-5 h-5 text-blue-600" />
+              <Truck className="w-5 h-5 text-[#0088d2]" />
             </div>
             <div>
-              <CardTitle className="text-lg text-blue-600">PICK UP</CardTitle>
+              <CardTitle className="text-lg text-[#0088d2]">PICK UP</CardTitle>
               <p className="text-sm text-gray-600 font-medium">{booking.origin.name}</p>
             </div>
           </div>
@@ -698,10 +698,10 @@ const InfoTab = memo(({ booking }) => (
         <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <Truck className="w-5 h-5 text-blue-600" />
+              <Truck className="w-5 h-5 text-[#0088d2]" />
             </div>
             <div>
-              <CardTitle className="text-lg text-blue-600">DELIVERY</CardTitle>
+              <CardTitle className="text-lg text-[#0088d2]">DELIVERY</CardTitle>
               <p className="text-sm text-gray-600 font-medium">{booking.destination.name}</p>
             </div>
           </div>
@@ -721,15 +721,15 @@ const InfoTab = memo(({ booking }) => (
       {/* Cargo Details */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg text-blue-600">CARGO DETAILS</CardTitle>
+          <CardTitle className="text-lg text-[#0088d2]">CARGO DETAILS</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-blue-600 font-semibold">Package Type</TableHead>
-                <TableHead className="text-blue-600 font-semibold">Actual Weight</TableHead>
-                <TableHead className="text-blue-600 font-semibold">Actual Volume</TableHead>
+                <TableHead className="text-[#0088d2] font-semibold">Package Type</TableHead>
+                <TableHead className="text-[#0088d2] font-semibold">Actual Weight</TableHead>
+                <TableHead className="text-[#0088d2] font-semibold">Actual Volume</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -747,15 +747,15 @@ const InfoTab = memo(({ booking }) => (
       {/* Reference Details */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg text-blue-600">REFERENCE DETAILS</CardTitle>
+          <CardTitle className="text-lg text-[#0088d2]">REFERENCE DETAILS</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-blue-600 font-semibold">Reference ID</TableHead>
-                <TableHead className="text-blue-600 font-semibold">Reference Name</TableHead>
-                <TableHead className="text-blue-600 font-semibold">Value</TableHead>
+                <TableHead className="text-[#0088d2] font-semibold">Reference ID</TableHead>
+                <TableHead className="text-[#0088d2] font-semibold">Reference Name</TableHead>
+                <TableHead className="text-[#0088d2] font-semibold">Value</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -796,7 +796,7 @@ const StatusTab = memo(({ booking }) => {
           {statusTimeline.map((item, index) => (
             <li key={index} className="mb-8 ml-6 flex flex-col gap-1">
               <span className="absolute -left-4 flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full ring-8 ring-white">
-                <ClockIcon className="w-5 h-5 text-blue-600" />
+                <ClockIcon className="w-5 h-5 text-[#0088d2]" />
               </span>
               <div className="flex flex-col gap-1">
                 <span className="font-semibold text-blue-800 text-lg">{item.status}</span>
@@ -824,13 +824,13 @@ const AttachmentsTab = memo(({ booking }) => (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-blue-600 font-semibold">Location</TableHead>
-          <TableHead className="text-blue-600 font-semibold">Doc Type</TableHead>
-          <TableHead className="text-blue-600 font-semibold">Document</TableHead>
-          <TableHead className="text-blue-600 font-semibold">Stop ID</TableHead>
-          <TableHead className="text-blue-600 font-semibold">Stop Type</TableHead>
-          <TableHead className="text-blue-600 font-semibold">Created By</TableHead>
-          <TableHead className="text-blue-600 font-semibold">Time</TableHead>
+          <TableHead className="text-[#0088d2] font-semibold">Location</TableHead>
+          <TableHead className="text-[#0088d2] font-semibold">Doc Type</TableHead>
+          <TableHead className="text-[#0088d2] font-semibold">Document</TableHead>
+          <TableHead className="text-[#0088d2] font-semibold">Stop ID</TableHead>
+          <TableHead className="text-[#0088d2] font-semibold">Stop Type</TableHead>
+          <TableHead className="text-[#0088d2] font-semibold">Created By</TableHead>
+          <TableHead className="text-[#0088d2] font-semibold">Time</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -861,10 +861,10 @@ const BookingDetailsModal = memo(({ booking, isOpen, onClose, onEdit, onGenerate
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <Truck className="w-5 h-5 text-blue-600" />
+                <Truck className="w-5 h-5 text-[#0088d2]" />
               </div>
               <div>
-                <DialogTitle className="text-xl text-blue-600">{booking.id}</DialogTitle>
+                <DialogTitle className="text-xl text-[#0088d2]">{booking.id}</DialogTitle>
                 <p className="text-sm text-gray-600">{booking.orderReference}</p>
               </div>
             </div>
@@ -921,6 +921,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
   const [modalField, setModalField] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
+  const resetFunctionRef = useRef(null);
 
 
   const renderField = (field, formControl) => {
@@ -1372,7 +1373,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <DialogHeader className="px-6 py-4 border-b">
-            <DialogTitle className="text-xl text-blue-600">
+            <DialogTitle className="text-xl text-[#0088d2]">
               {mode === 'add' ? 'Add New Booking' : `Booking Details (Shipment Characteristics) - ${booking?.id}`}
             </DialogTitle>
           </DialogHeader>
@@ -1389,7 +1390,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               <div className="grid grid-cols-4 gap-4">
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                   <div className="p-2 bg-blue-100 rounded-lg">
-                    <Truck className="w-5 h-5 text-blue-600" />
+                    <Truck className="w-5 h-5 text-[#0088d2]" />
                   </div>
                   <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900 mb-2">Pickup Address</p>
@@ -1399,7 +1400,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                   <div className="p-2 bg-blue-100 rounded-lg">
-                    <Truck className="w-5 h-5 text-blue-600" />
+                    <Truck className="w-5 h-5 text-[#0088d2]" />
                   </div>
                   <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900 mb-2">Delivery Address</p>
@@ -1409,7 +1410,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                   <div className="p-2 bg-blue-100 rounded-lg">
-                    <Scale className="w-5 h-5 text-blue-600" />
+                    <Scale className="w-5 h-5 text-[#0088d2]" />
                   </div>
                   <div>
                       <p className="text-sm font-medium text-gray-900 mb-2">Weight & Actual Volume</p>
@@ -1419,7 +1420,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                 </div>
                 <div className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
                   <div className="p-2 bg-blue-100 rounded-lg">
-                    <Navigation className="w-5 h-5 text-blue-600" />
+                    <Navigation className="w-5 h-5 text-[#0088d2]" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900 mb-2">Distance</p>
@@ -1434,7 +1435,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               {/* Pick Up Section */}
               <Card className="p-6">
                 <CardHeader className="pb-2 px-0">
-                  <CardTitle className="text-lg text-blue-600">Pick Up</CardTitle>
+                  <CardTitle className="text-lg text-[#0088d2]">Pick Up</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 px-0">
                   <div className="grid grid-cols-2 gap-3">
@@ -1446,7 +1447,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               {/* Delivery Section */}
               <Card className="p-6">
                 <CardHeader className="pb-2 px-0">
-                  <CardTitle className="text-lg text-blue-600">Delivery</CardTitle>
+                  <CardTitle className="text-lg text-[#0088d2]">Delivery</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 px-0">
                   <div className="grid grid-cols-2 gap-3">
@@ -1464,7 +1465,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                   {/* Order Attributes */}
                   <Card className="p-3">
                     <CardHeader className="pb-2 px-0">
-                      <CardTitle className="text-lg text-blue-600">Order Attributes</CardTitle>
+                      <CardTitle className="text-lg text-[#0088d2]">Order Attributes</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 px-0">
                       {ORDER_ATTRIBUTES_FIELDS.map(field => renderField(field, control))}
@@ -1474,7 +1475,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                   {/* References */}
                   <Card className="p-3">
                     <CardHeader className="pb-2 px-0">
-                      <CardTitle className="text-lg text-blue-600">References</CardTitle>
+                      <CardTitle className="text-lg text-[#0088d2]">References</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3 px-0">
                       {REFERENCES_FIELDS.map(field => renderField(field, control))}
@@ -1487,7 +1488,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               <div className="col-span-2">
                 <Card className="p-3 h-full">
                   <CardHeader className="pb-2 px-0">
-                    <CardTitle className="text-lg text-blue-600">Route</CardTitle>
+                    <CardTitle className="text-lg text-[#0088d2]">Route</CardTitle>
                   </CardHeader>
                   <CardContent className="px-0 flex flex-col h-full">
                     <div className="flex-1 flex items-center justify-center">
@@ -1505,7 +1506,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
 
             {/* Cargo Details */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-blue-600">Cargo Details</h2>
+              <h2 className="text-lg font-semibold text-[#0088d2]">Cargo Details</h2>
               
               <div className="space-y-4 p-4 border border-gray-200 rounded-lg bg-white">
 
@@ -1726,7 +1727,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               <div>
                 <Card className="p-3 h-full">
                   <CardHeader className="pb-2 px-0">
-                    <CardTitle className="text-lg text-blue-600">Documents</CardTitle>
+                    <CardTitle className="text-lg text-[#0088d2]">Documents</CardTitle>
                   </CardHeader>
                   <CardContent className="px-0 flex flex-col h-full">
                     <div className="flex-1 flex items-center justify-center">
@@ -1755,7 +1756,7 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               <div>
                 <Card className="p-3 h-full">
                   <CardHeader className="pb-2 px-0">
-                    <CardTitle className="text-lg text-blue-600">Charges</CardTitle>
+                    <CardTitle className="text-lg text-[#0088d2]">Charges</CardTitle>
                   </CardHeader>
                   <CardContent className="px-0 flex flex-col h-full">
                     <div className="flex-1 flex items-center justify-center">
@@ -1782,12 +1783,15 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
                   }
                 }}
                 selectedQuoteId={watch('selectedRateQuote')?.id}
+                onReset={(resetFn) => {
+                  resetFunctionRef.current = resetFn;
+                }}
               />
             </div>
 
                         {/* Additional Details */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-blue-600">Additional Details</h2>
+              <h2 className="text-lg font-semibold text-[#0088d2]">Additional Details</h2>
               <div className="p-4 border border-gray-200 rounded-lg bg-white">
                 <div className="grid grid-cols-4 gap-4">
                   {ADDITIONAL_DETAILS_FIELDS.map(field => renderField(field, control))}
@@ -1802,7 +1806,12 @@ const EditBookingModal = memo(({ booking, isOpen, onClose, mode = 'edit' }) => {
               <Button variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button variant="outline" onClick={() => reset()}>
+              <Button variant="outline" onClick={() => {
+                reset();  // Reset form fields
+                if (resetFunctionRef.current) {
+                  resetFunctionRef.current();  // Reset component state
+                }
+              }}>
                 Reset
               </Button>
               <Button type="submit" form="booking-form" className="bg-blue-600 hover:bg-blue-700">
