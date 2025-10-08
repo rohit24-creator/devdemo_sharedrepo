@@ -580,6 +580,7 @@ const OrderCard = React.memo(({
 // --- Main Reusable Order List Component ---
 export default function OrderListWithActions({
   orders = [],
+  filteredOrders = [],
   filterFields = [],
   actionsConfig = {},
   onSearch = () => {},
@@ -588,6 +589,10 @@ export default function OrderListWithActions({
   onDownloadEPOD = () => {},
   orderType = 'active'
 }) {
+
+  // Use filteredOrders instead of orders for display
+  const displayOrders = filteredOrders.length > 0 ? filteredOrders : orders;
+
   // Custom hooks
   const {
     formValues,
@@ -601,7 +606,7 @@ export default function OrderListWithActions({
     referenceIds,
     openModal,
     closeModal
-  } = useOrderState(orders);
+  } = useOrderState(displayOrders);
 
   const {
     currentPage,
@@ -609,7 +614,7 @@ export default function OrderListWithActions({
     paginatedItems: paginatedOrders,
     goToPage,
     resetToFirstPage
-  } = usePagination(orders, CONSTANTS.ORDERS_PER_PAGE);
+  } = usePagination(displayOrders, CONSTANTS.ORDERS_PER_PAGE);
 
   const {
     allSelected,
