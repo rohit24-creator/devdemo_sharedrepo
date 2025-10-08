@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 
-// Shared LoadingSpinner component
+
 const LoadingSpinner = memo(() => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="text-center">
@@ -12,7 +12,7 @@ const LoadingSpinner = memo(() => (
 
 LoadingSpinner.displayName = 'LoadingSpinner';
 
-// Shared ErrorMessage component
+
 const ErrorMessage = memo(({ error, onRetry }) => (
   <div className="flex items-center justify-center min-h-screen">
     <div className="text-center">
@@ -35,6 +35,6 @@ const ErrorMessage = memo(({ error, onRetry }) => (
 
 ErrorMessage.displayName = 'ErrorMessage';
 
-// Export both components
+
 export default LoadingSpinner;
 export { ErrorMessage };

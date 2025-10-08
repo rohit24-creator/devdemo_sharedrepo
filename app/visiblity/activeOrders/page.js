@@ -5,7 +5,7 @@ import { useOrders } from "@/lib/hooks/useOrders";
 import { ORDER_TYPES } from "@/lib/slices/ordersSlice";
 import LoadingSpinner, { ErrorMessage } from "@/components/ui/LoadingSpinner";
 
-// Constants to avoid hardcoding
+
 const FILTER_FIELDS = [
   { name: "fromDate", label: "From Date", type: "date" },
   { name: "toDate", label: "To Date", type: "date" },
@@ -24,7 +24,7 @@ const ACTIONS_CONFIG = {
 };
 
 export default function ActiveOrdersPage() {
-  // Use Redux hooks for orders management
+
   const { 
     orders, 
     filteredOrders, 
@@ -35,12 +35,12 @@ export default function ActiveOrdersPage() {
     handleSearch 
   } = useOrders(ORDER_TYPES.ACTIVE);
 
-  // Fetch orders on component mount
+
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
 
-  // Retry handler
+
   const handleRetry = useCallback(() => {
     clearError();
     fetchOrders();
@@ -64,24 +64,13 @@ export default function ActiveOrdersPage() {
     // Implement EPOD download logic here
   }, []);
 
-  // Handle loading state
+
   if (loading) {
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-[#006397] mb-4">Active Orders</h1>
-        <LoadingSpinner />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
-  // Handle error state
   if (error) {
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-[#006397] mb-4">Active Orders</h1>
-        <ErrorMessage error={error} onRetry={handleRetry} />
-      </div>
-    );
+    return <ErrorMessage error={error} onRetry={handleRetry} />;
   }
 
   // Main content
