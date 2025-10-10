@@ -138,15 +138,17 @@ export default function OrderPage() {
         setLoading(true);
         setError(null);
         
-        const { data } = await api.get("/bookings/order.json");
+        const { data } = await api.get("/bookingData.json");
         
-        const formattedColumns = data?.headers?.map((header) => ({
+        const ordersListData = data?.ordersList;
+        
+        const formattedColumns = ordersListData?.headers?.map((header) => ({
           accessorKey: header.accessorKey,
           header: header.header,
           sortable: true,
         })) || [];
 
-        const formattedRows = formatRowsWithId(data?.rows || []);
+        const formattedRows = formatRowsWithId(ordersListData?.rows || []);
         
         setColumns(formattedColumns);
         setRows(formattedRows);
@@ -175,7 +177,7 @@ export default function OrderPage() {
     } else if (action === "edit") {
       console.log("Edit row", row);
     } else if (action === "view") {
-      console.log("View row", row);
+      router.push(`/bookings/view/${row.bookingId}`);
     } else {
       console.log("Unknown action", action, row);
     }
@@ -195,8 +197,7 @@ export default function OrderPage() {
     console.log("Creating trip with selected orders:", selectedRows);
     console.log("Trip form data:", tripFormData);
     
-    // Here you would typically make an API call to create the trip
-    // For now, we'll just close the dialog and show a success message
+
     setTripCreateDialogOpen(false);
     setTripFormData({
       allocationRulePriority: "",
@@ -226,11 +227,10 @@ export default function OrderPage() {
   if (error) return <div>Error: {error}</div>;
   if (!columns.length || !rows.length) return <div>No data available</div>;
 
-  // Update renderField to handle smaller input sizes
   const renderField = (field) => {
     const { name, label, type, options, readOnly, className, rows, required } = field;
     
-    // Handle empty fields
+
     if (type === 'empty') {
       return <div key={`empty-${Math.random()}`}></div>;
     }
